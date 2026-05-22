@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.utils import timezone
 
 from asociados.models import Asociado
@@ -28,7 +29,6 @@ def beneficios_vigentes_para_comercio(comercio: Comercio):
         comercio=comercio,
         activo=True,
     ).filter(
-        models.Q(fecha_desde__isnull=True) | models.Q(fecha_desde__lte=today),
-        models.Q(fecha_hasta__isnull=True) | models.Q(fecha_hasta__gte=today),
+        Q(fecha_desde__isnull=True) | Q(fecha_desde__lte=today),
+        Q(fecha_hasta__isnull=True) | Q(fecha_hasta__gte=today),
     )
-

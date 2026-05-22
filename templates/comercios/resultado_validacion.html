@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Resultado de validacion | Uni2{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-3">Resultado de validacion</h1>
+                {% if resultado.valida %}
+                    <div class="alert alert-success">Credencial valida.</div>
+                {% else %}
+                    <div class="alert alert-danger">{{ resultado.mensaje|default:"Credencial invalida o inactiva." }}</div>
+                {% endif %}
+
+                {% if resultado.nombre %}
+                    <p class="mb-2"><strong>Nombre:</strong> {{ resultado.nombre }} {{ resultado.apellido }}</p>
+                    <p class="mb-2"><strong>Tipo:</strong> {{ resultado.tipo }}</p>
+                    <p class="mb-0"><strong>Estado:</strong> {{ resultado.estado }}</p>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a class="btn btn-outline-primary" href="{% url 'comercios:validar_credencial' %}">Validar otra credencial</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Servicios | Uni2{% endblock %}
+
+{% block content %}
+<h1 class="h2 mb-4">Servicios</h1>
+<div class="row g-3">
+    {% for servicio in servicios %}
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5">{{ servicio.nombre }}</h2>
+                    <p class="text-secondary">{{ servicio.descripcion }}</p>
+                    {% if servicio.precio_referencia %}
+                        <p class="mb-0"><strong>Precio de referencia:</strong> ${{ servicio.precio_referencia }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No hay servicios cargados.</p>
+    {% endfor %}
+</div>
+{% endblock %}

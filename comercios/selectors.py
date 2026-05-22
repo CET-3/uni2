@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.utils import timezone
 
 from .models import BeneficioComercio, Comercio
@@ -13,7 +14,6 @@ def get_beneficios_vigentes():
         activo=True,
         comercio__activo=True,
     ).filter(
-        models.Q(fecha_desde__isnull=True) | models.Q(fecha_desde__lte=today),
-        models.Q(fecha_hasta__isnull=True) | models.Q(fecha_hasta__gte=today),
+        Q(fecha_desde__isnull=True) | Q(fecha_desde__lte=today),
+        Q(fecha_hasta__isnull=True) | Q(fecha_hasta__gte=today),
     )
-

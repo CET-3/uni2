@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de asociado | Uni2{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">Hola, {{ asociado.nombre }}</h1>
+        <p class="text-secondary mb-0">Numero de asociado: {{ asociado.numero_asociado }}</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'asociados:credencial' %}">Ver credencial</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5">Estado</h2>
+                <p class="mb-2"><strong>Tipo:</strong> {{ asociado.get_tipo_display }}</p>
+                <p class="mb-2"><strong>Estado:</strong> {{ asociado.get_estado_display }}</p>
+                <p class="mb-0"><strong>Curso actual:</strong> {{ asociado.curso_actual|default:"Sin curso asignado" }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5">Deuda actual</h2>
+                <p class="display-6 mb-0">${{ total_deuda }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5">Acciones</h2>
+                <div class="d-grid gap-2">
+                    <a class="btn btn-outline-primary" href="{% url 'asociados:cuotas' %}">Ver mis cuotas</a>
+                    <a class="btn btn-outline-primary" href="{% url 'asociados:credencial' %}">Mi credencial</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="mt-4">
+    <h2 class="h4 mb-3">Cuotas con deuda</h2>
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Periodo</th>
+                        <th>Importe</th>
+                        <th>Pagado</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cuota in cuotas_deudoras %}
+                        <tr>
+                            <td>{{ cuota.periodo }}</td>
+                            <td>${{ cuota.importe }}</td>
+                            <td>${{ cuota.importe_pagado }}</td>
+                            <td>{{ cuota.get_estado_display }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">No tenes cuotas pendientes.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
