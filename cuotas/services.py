@@ -16,11 +16,18 @@ def _periodo_key(periodo: PeriodoCuota) -> tuple[int, int]:
 
 
 def _recompute_estado(cuota: Cuota):
+    from django.utils import timezone
+
+    fecha_referencia = timezone.localdate()
+    total_exigible = cuota.get_total_exigible(fecha_referencia)
     if cuota.importe_pagado == 0:
-        cuota.estado = Cuota.ESTADO_PENDIENTE
-    elif cuota.importe_pagado < cuota.importe:
+        if cuota.paga_mora(fecha_referencia):
+            cuota.estado = Cuota.ESTADO_VENCIDA
+        else:
+            cuota.estado = Cuota.ESTADO_PENDIENTE
+    elif cuota.importe_pagado < total_exigible:
         cuota.estado = Cuota.ESTADO_PARCIAL
-    elif cuota.importe_pagado == cuota.importe:
+    elif cuota.importe_pagado >= total_exigible:
         cuota.estado = Cuota.ESTADO_PAGADA
     cuota.save(update_fields=["importe_pagado", "estado"])
 
@@ -39,7 +46,10 @@ def generar_cuotas_para_periodo(periodo: PeriodoCuota) -> int:
         _, was_created = Cuota.objects.get_or_create(
             asociado=asociado,
             periodo=periodo,
-            defaults={"importe": periodo.importe},
+            defaults={
+                "importe": periodo.importe,
+                "importe_recargo_mora": periodo.importe_recargo_mora,
+            },
         )
         created += int(was_created)
     return created
@@ -48,7 +58,7 @@ def generar_cuotas_para_periodo(periodo: PeriodoCuota) -> int:
 @transaction.atomic
 def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por=None, observaciones=""):
     importe = Decimal(str(importe))
-    deuda_total = get_total_deuda(asociado)
+    deuda_total = get_total_deuda(asociado, fecha)
     if deuda_total <= 0:
         raise ValueError("El asociado no tiene deuda.")
     if importe > deuda_total:
@@ -68,7 +78,7 @@ def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por
     for cuota in cuotas:
         if restante <= 0:
             break
-        saldo = cuota.importe - cuota.importe_pagado
+        saldo = cuota.get_saldo_pendiente(fecha)
         aplicado = min(restante, saldo)
         if aplicado <= 0:
             continue

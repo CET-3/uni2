@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.conf import settings
 from django.db import models
 
@@ -8,6 +10,7 @@ class PeriodoCuota(models.Model):
     mes = models.PositiveSmallIntegerField()
     anio = models.PositiveSmallIntegerField()
     importe = models.DecimalField(max_digits=10, decimal_places=2)
+    importe_recargo_mora = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     fecha_vencimiento = models.DateField()
     activo = models.BooleanField(default=True)
 
@@ -41,6 +44,7 @@ class Cuota(models.Model):
     asociado = models.ForeignKey(Asociado, on_delete=models.CASCADE, related_name="cuotas")
     periodo = models.ForeignKey(PeriodoCuota, on_delete=models.PROTECT, related_name="cuotas")
     importe = models.DecimalField(max_digits=10, decimal_places=2)
+    importe_recargo_mora = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     importe_pagado = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     estado = models.CharField(max_length=20, choices=ESTADOS, default=ESTADO_PENDIENTE)
     fecha_generacion = models.DateField(auto_now_add=True)
@@ -59,6 +63,32 @@ class Cuota(models.Model):
 
     def __str__(self):
         return f"{self.asociado} - {self.periodo}"
+
+    def get_importe_total_base(self) -> Decimal:
+        return Decimal(str(self.importe))
+
+    def get_importe_total_con_mora(self) -> Decimal:
+        return self.get_importe_total_base() + Decimal(str(self.importe_recargo_mora))
+
+    def paga_mora(self, fecha_referencia) -> bool:
+        if fecha_referencia <= self.periodo.fecha_vencimiento:
+            return False
+        pagado_al_vencimiento = (
+            self.aplicaciones.filter(pago__fecha__lte=self.periodo.fecha_vencimiento).aggregate(
+                total=models.Sum("importe")
+            )["total"]
+            or Decimal("0")
+        )
+        return pagado_al_vencimiento < self.get_importe_total_base()
+
+    def get_total_exigible(self, fecha_referencia) -> Decimal:
+        if self.paga_mora(fecha_referencia):
+            return self.get_importe_total_con_mora()
+        return self.get_importe_total_base()
+
+    def get_saldo_pendiente(self, fecha_referencia) -> Decimal:
+        saldo = self.get_total_exigible(fecha_referencia) - Decimal(str(self.importe_pagado))
+        return max(saldo, Decimal("0"))
 
 
 class Pago(models.Model):
@@ -105,4 +135,3 @@ class PagoCuota(models.Model):
 
     def __str__(self):
         return f"{self.pago} -> {self.cuota}"
-
