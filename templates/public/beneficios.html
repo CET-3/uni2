@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Beneficios | Uni2{% endblock %}
+
+{% block content %}
+<h1 class="h2 mb-4">Beneficios institucionales</h1>
+<div class="row g-3">
+    {% for beneficio in beneficios %}
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5">{{ beneficio.titulo }}</h2>
+                    <p class="mb-0 text-secondary">{{ beneficio.descripcion }}</p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No hay beneficios cargados.</p>
+    {% endfor %}
+</div>
+{% endblock %}

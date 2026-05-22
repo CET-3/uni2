@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Mis cuotas | Uni2{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2 mb-0">Mis cuotas</h1>
+    <div class="text-end">
+        <div class="small text-secondary">Deuda total</div>
+        <div class="h4 mb-0">${{ total_deuda }}</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Periodo</th>
+                    <th>Importe</th>
+                    <th>Pagado</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cuota in cuotas %}
+                    <tr>
+                        <td>{{ cuota.periodo }}</td>
+                        <td>${{ cuota.importe }}</td>
+                        <td>${{ cuota.importe_pagado }}</td>
+                        <td>{{ cuota.get_estado_display }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">Todavia no hay cuotas generadas.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

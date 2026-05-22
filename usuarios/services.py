@@ -16,6 +16,18 @@ def ensure_default_groups():
         Group.objects.get_or_create(name=group_name)
 
 
+def user_has_group(user, group_name: str) -> bool:
+    return user.is_authenticated and user.groups.filter(name=group_name).exists()
+
+
+def user_is_asociado(user) -> bool:
+    return user_has_group(user, ASOCIADO_GROUP) or hasattr(user, "asociado")
+
+
+def user_is_comercio(user) -> bool:
+    return user_has_group(user, COMERCIO_GROUP) or hasattr(user, "comercio")
+
+
 @transaction.atomic
 def create_user_for_asociado(asociado: Asociado, password: str, email: str | None = None):
     if asociado.usuario_id:
@@ -39,4 +51,3 @@ def create_user_for_asociado(asociado: Asociado, password: str, email: str | Non
     group = Group.objects.get(name=ASOCIADO_GROUP)
     user.groups.add(group)
     return user
-
