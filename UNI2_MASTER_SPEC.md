@@ -142,7 +142,7 @@ Usuario vinculado a un comercio adherido. Puede:
 - Push notifications.
 - Pago online.
 - Saldo a favor.
-- Intereses por mora.
+- Intereses por mora acumulativos.
 - Contabilidad completa.
 - Asambleas.
 - Votaciones.
@@ -196,6 +196,7 @@ Estados posibles:
 - Los pagos se aplican a la deuda más antigua.
 - No se permite registrar un pago mayor que la deuda seleccionada.
 - Los asociados inactivos o egresados no generan nuevas cuotas, salvo decisión administrativa futura.
+- Si una cuota no queda cancelada al vencimiento, se aplica un recargo fijo por mora una sola vez.
 
 ## Comercios
 
@@ -371,6 +372,7 @@ Campos:
 - mes
 - anio
 - importe
+- importe_recargo_mora
 - fecha_vencimiento
 - activo
 
@@ -381,7 +383,9 @@ Ejemplo:
 Reglas:
 
 - El importe del período sirve como base para generar cuotas.
+- El período define también el recargo fijo por mora a aplicar una sola vez si la cuota vence impaga.
 - La cuota generada debe copiar el importe para conservar historial.
+- La cuota generada debe copiar también el recargo por mora para conservar historial.
 - El cambio de importe en un período futuro no debe modificar cuotas ya generadas.
 
 ---
@@ -396,6 +400,7 @@ Campos:
 - asociado
 - periodo
 - importe
+- importe_recargo_mora
 - importe_pagado
 - estado
 - fecha_generacion
@@ -418,6 +423,7 @@ Reglas:
 - Si importe_pagado es mayor que 0 pero menor que importe, queda parcial.
 - Si importe_pagado es igual a importe, queda pagada.
 - Si se bonifica, queda bonificada.
+- Si al vencimiento no fue cancelada por completo, pasa a exigir `importe + importe_recargo_mora`.
 
 ---
 
@@ -845,6 +851,14 @@ Se generan cuotas para asociados activos cuya fecha_inicio_cobro sea menor o igu
 
 Si la cuota ya existe para el asociado y período, no debe generarse otra.
 
+### RN-020 bis Recargo por mora
+
+Si al vencimiento la cuota no está totalmente cancelada, se aplica un recargo fijo por mora una sola vez.
+
+### RN-020 ter Historial de mora
+
+El recargo por mora debe copiarse desde `PeriodoCuota` a `Cuota` al momento de generar la cuota.
+
 ---
 
 ## Pagos
@@ -860,6 +874,10 @@ Se permiten pagos parciales de cuotas.
 ### RN-023 Pago mayor a deuda
 
 No se permite registrar un pago mayor que la deuda seleccionada.
+
+### RN-023 bis Pago fuera de término
+
+Si el pago se registra después del vencimiento y la cuota no había sido cancelada, la deuda exigible incluye el recargo fijo por mora.
 
 ### RN-024 Pago de múltiples cuotas
 
