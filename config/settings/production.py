@@ -21,7 +21,7 @@ DATABASES = {
     )
 }
 
-# --- Archivos estáticos (CDN de Vercel) -------------------------------------
-# Vercel sirve el directorio public/ como CDN; los estáticos van en public/static/
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "public" / "static"  # noqa: F405
+# --- Archivos estáticos (WhiteNoise) ----------------------------------------
+MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")  # noqa: F405
+STATIC_ROOT = BASE_DIR / "staticfiles"  # noqa: F405
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
