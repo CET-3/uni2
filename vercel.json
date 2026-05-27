@@ -1,15 +1,15 @@
 {
   "version": 2,
   "functions": {
-    "wsgi_app.py": {
+    "api/index.py": {
       "maxDuration": 30,
-      "includeFiles": "templates/**"
+      "includeFiles": "../templates/**"
     }
   },
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "wsgi_app.py"
+      "dest": "api/index.py"
     }
   ]
 }
