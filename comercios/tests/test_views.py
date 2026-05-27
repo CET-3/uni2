@@ -27,4 +27,4 @@ def test_validacion_credencial_comercio(client):
     )
 
     assert response.status_code == 200
-    assert "Credencial valida" in response.content.decode()
+    assert "Credencial válida" in response.content.decode()

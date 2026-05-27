@@ -277,7 +277,7 @@ def test_cobros_gestion_busca_asociado_y_registra_pago(client):
     assert Pago.objects.filter(asociado=asociado, importe="3000.00").exists()
     cuota = asociado.cuotas.get(periodo=periodo)
     assert cuota.estado == cuota.ESTADO_PAGADA
-    assert "Pago #1 registrado" in response_cobro.content.decode()
+    assert "registrado para Gimenez, Paula" in response_cobro.content.decode()
 
 
 @pytest.mark.django_db

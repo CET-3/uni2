@@ -9,3 +9,9 @@ dependencies = [
     "dj-database-url>=2.3",
     "pillow>=12.2.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-django>=4.12.0",
+]
