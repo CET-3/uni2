@@ -4,11 +4,11 @@ import dj_database_url
 
 from .base import *  # noqa: F403
 
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 
