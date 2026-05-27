@@ -11,7 +11,7 @@ from .selectors import (
 
 
 class HomeView(TemplateView):
-    template_name = "public/home.html"
+    template_name = "web/home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,7 +23,7 @@ class HomeView(TemplateView):
 
 
 class BeneficiosPublicosView(TemplateView):
-    template_name = "public/beneficios.html"
+    template_name = "web/beneficios.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -32,7 +32,7 @@ class BeneficiosPublicosView(TemplateView):
 
 
 class ServiciosPublicosView(TemplateView):
-    template_name = "public/servicios.html"
+    template_name = "web/servicios.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -41,7 +41,7 @@ class ServiciosPublicosView(TemplateView):
 
 
 class HorariosPublicosView(TemplateView):
-    template_name = "public/horarios.html"
+    template_name = "web/horarios.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,7 +50,7 @@ class HorariosPublicosView(TemplateView):
 
 
 class ComerciosPublicosView(TemplateView):
-    template_name = "public/comercios.html"
+    template_name = "web/comercios.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
