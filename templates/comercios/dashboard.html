@@ -6,7 +6,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="h2 mb-1">{{ comercio.nombre }}</h1>
-        <p class="text-secondary mb-0">Panel de validacion de credenciales y beneficios</p>
+        <p class="text-secondary mb-0">Panel de validación de credenciales y beneficios</p>
     </div>
     <a class="btn btn-primary" href="{% url 'comercios:validar_credencial' %}">Validar credencial</a>
 </div>
@@ -17,8 +17,8 @@
             <div class="card-body">
                 <h2 class="h5">Datos del comercio</h2>
                 <p class="mb-2"><strong>Responsable:</strong> {{ comercio.responsable|default:"-" }}</p>
-                <p class="mb-2"><strong>Direccion:</strong> {{ comercio.direccion }}</p>
-                <p class="mb-2"><strong>Telefono:</strong> {{ comercio.telefono|default:"-" }}</p>
+                <p class="mb-2"><strong>Dirección:</strong> {{ comercio.direccion }}</p>
+                <p class="mb-2"><strong>Teléfono:</strong> {{ comercio.telefono|default:"-" }}</p>
                 <p class="mb-0"><strong>Estado:</strong> {% if comercio.activo %}Activo{% else %}Inactivo{% endif %}</p>
             </div>
         </div>

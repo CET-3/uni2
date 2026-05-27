@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Resultado de validacion | Uni2{% endblock %}
+{% block title %}Resultado de validación | Uni2{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-7">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <h1 class="h3 mb-3">Resultado de validacion</h1>
+                <h1 class="h3 mb-3">Resultado de validación</h1>
                 {% if resultado.valida %}
-                    <div class="alert alert-success">Credencial valida.</div>
+                    <div class="alert alert-success">Credencial válida.</div>
                 {% else %}
-                    <div class="alert alert-danger">{{ resultado.mensaje|default:"Credencial invalida o inactiva." }}</div>
+                    <div class="alert alert-danger">{{ resultado.mensaje|default:"Credencial inválida o inactiva." }}</div>
                 {% endif %}
 
                 {% if resultado.nombre %}
