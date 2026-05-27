@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de asociado | Uni2{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">{{ asociado.apellido }}, {{ asociado.nombre }}</h1>
+        <p class="text-secondary mb-0">Numero {{ asociado.numero_asociado }} · DNI {{ asociado.dni }}</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_asociados' %}">Volver al listado</a>
+        <a class="btn btn-primary" href="{{ cobro_url }}">Cobrar</a>
+        <a class="btn btn-outline-primary" href="{{ admin_change_url }}">Editar en admin</a>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-4">
+        <div class="card h-100"><div class="card-body">
+            <h2 class="h5 mb-3">Estado general</h2>
+            <p class="mb-2"><strong>Tipo:</strong> {{ asociado.get_tipo_display }}</p>
+            <p class="mb-2"><strong>Estado:</strong> {{ asociado.get_estado_display }}</p>
+            <p class="mb-2"><strong>Curso actual:</strong> {{ asociado.curso_actual|default:"-" }}</p>
+            <p class="mb-2"><strong>Alta:</strong> {{ asociado.fecha_alta|date:"d/m/Y" }}</p>
+            <p class="mb-0"><strong>Inicio cobro:</strong> {{ asociado.fecha_inicio_cobro|date:"d/m/Y" }}</p>
+        </div></div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100"><div class="card-body">
+            <h2 class="h5 mb-3">Contacto y acceso</h2>
+            <p class="mb-2"><strong>Email:</strong> {{ asociado.email|default:"-" }}</p>
+            <p class="mb-2"><strong>Telefono:</strong> {{ asociado.telefono|default:"-" }}</p>
+            <p class="mb-2"><strong>Usuario:</strong> {% if asociado.usuario %}{{ asociado.usuario.username }}{% else %}Sin usuario{% endif %}</p>
+            <p class="mb-0"><strong>Ultimo acceso:</strong> {% if asociado.usuario and asociado.usuario.last_login %}{{ asociado.usuario.last_login|date:"d/m/Y H:i" }}{% else %}-{% endif %}</p>
+        </div></div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100"><div class="card-body">
+            <h2 class="h5 mb-3">Deuda</h2>
+            <p class="display-6 mb-2">${{ total_deuda }}</p>
+            <p class="text-secondary mb-0">Calculada al {{ fecha_referencia|date:"d/m/Y" }}</p>
+        </div></div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card mb-4"><div class="card-body">
+            <h2 class="h5 mb-3">Editar asociado</h2>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ asociado_form.nombre.id_for_label }}">Nombre</label>
+                        {{ asociado_form.nombre }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ asociado_form.apellido.id_for_label }}">Apellido</label>
+                        {{ asociado_form.apellido }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ asociado_form.dni.id_for_label }}">DNI</label>
+                        {{ asociado_form.dni }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ asociado_form.tipo.id_for_label }}">Tipo</label>
+                        {{ asociado_form.tipo }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ asociado_form.email.id_for_label }}">Email</label>
+                        {{ asociado_form.email }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ asociado_form.telefono.id_for_label }}">Telefono</label>
+                        {{ asociado_form.telefono }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ asociado_form.curso_actual.id_for_label }}">Curso actual</label>
+                        {{ asociado_form.curso_actual }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ asociado_form.estado.id_for_label }}">Estado</label>
+                        {{ asociado_form.estado }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ asociado_form.fecha_alta.id_for_label }}">Fecha alta</label>
+                        {{ asociado_form.fecha_alta }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ asociado_form.fecha_inicio_cobro.id_for_label }}">Inicio cobro</label>
+                        {{ asociado_form.fecha_inicio_cobro }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ asociado_form.fecha_baja.id_for_label }}">Fecha baja</label>
+                        {{ asociado_form.fecha_baja }}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ asociado_form.motivo_baja.id_for_label }}">Motivo baja</label>
+                        {{ asociado_form.motivo_baja }}
+                    </div>
+                </div>
+                {% for field in asociado_form %}
+                    {% for error in field.errors %}
+                        <div class="text-danger small mt-2">{{ error }}</div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in asociado_form.non_field_errors %}
+                    <div class="text-danger small mt-2">{{ error }}</div>
+                {% endfor %}
+                <div class="mt-3">
+                    <button class="btn btn-primary" type="submit">Guardar cambios</button>
+                </div>
+            </form>
+        </div></div>
+        <div class="card h-100"><div class="card-body">
+            <h2 class="h5 mb-3">Cuotas con deuda</h2>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead><tr><th>Periodo</th><th>Importe</th><th>Pagado</th><th>Saldo</th><th>Estado</th></tr></thead>
+                    <tbody>
+                        {% for item in cuotas_deudoras %}
+                            <tr>
+                                <td>{{ item.cuota.periodo }}</td>
+                                <td>${{ item.cuota.importe }}</td>
+                                <td>${{ item.cuota.importe_pagado }}</td>
+                                <td>${{ item.saldo_pendiente }}</td>
+                                <td>{{ item.cuota.get_estado_display }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="5">No tiene cuotas pendientes.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div></div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card mb-4"><div class="card-body">
+            <h2 class="h5 mb-3">Historial de cursos</h2>
+            <ul class="list-group list-group-flush">
+                {% for inscripcion in historial_cursos %}
+                    <li class="list-group-item px-0">{{ inscripcion.curso }} · {{ inscripcion.ciclo_lectivo }}</li>
+                {% empty %}
+                    <li class="list-group-item px-0">Sin historial cargado.</li>
+                {% endfor %}
+            </ul>
+        </div></div>
+        <div class="card"><div class="card-body">
+            <h2 class="h5 mb-3">Pagos recientes</h2>
+            <ul class="list-group list-group-flush">
+                {% for pago in pagos_recientes %}
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span>{{ pago.fecha|date:"d/m/Y" }} · {{ pago.get_metodo_display }}</span>
+                        <strong>${{ pago.importe }}</strong>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item px-0">No hay pagos registrados.</li>
+                {% endfor %}
+            </ul>
+        </div></div>
+    </div>
+</div>
+{% endblock %}

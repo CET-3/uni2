@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Gestion mutual | Uni2{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Panel de gestion</h1>
+        <p class="text-secondary mb-0">Resumen operativo de la mutual para administracion interna.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_asociados' %}">Gestionar asociados</a>
+        <a class="btn btn-primary" href="{% url 'usuarios:gestion_cobros' %}">Cobrar cuotas</a>
+        <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_periodos_cuota' %}">Generar cuotas</a>
+        <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_deudores' %}">Ver deudores</a>
+        <a class="btn btn-outline-primary" href="{% url 'admin:index' %}">Admin Django</a>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-xl-2"><div class="card h-100"><div class="card-body"><div class="text-secondary small">Activos</div><div class="fs-3 fw-semibold">{{ resumen.asociados_activos }}</div></div></div></div>
+    <div class="col-6 col-xl-2"><div class="card h-100"><div class="card-body"><div class="text-secondary small">Sin usuario</div><div class="fs-3 fw-semibold">{{ resumen.asociados_sin_usuario }}</div></div></div></div>
+    <div class="col-6 col-xl-2"><div class="card h-100"><div class="card-body"><div class="text-secondary small">Deudores</div><div class="fs-3 fw-semibold">{{ resumen.deudores }}</div></div></div></div>
+    <div class="col-6 col-xl-2"><div class="card h-100"><div class="card-body"><div class="text-secondary small">Cuotas vencidas</div><div class="fs-3 fw-semibold">{{ resumen.cuotas_vencidas }}</div></div></div></div>
+    <div class="col-6 col-xl-2"><div class="card h-100"><div class="card-body"><div class="text-secondary small">Cuotas pagadas</div><div class="fs-3 fw-semibold">{{ resumen.cuotas_pagadas }}</div></div></div></div>
+    <div class="col-6 col-xl-2"><div class="card h-100"><div class="card-body"><div class="text-secondary small">Recaudacion del mes</div><div class="fs-5 fw-semibold">${{ resumen.recaudacion_mes }}</div></div></div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Deudores prioritarios</h2>
+                <div class="mb-3">
+                    <a class="btn btn-outline-primary btn-sm" href="{% url 'usuarios:gestion_deudores' %}">Abrir listado completo</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Asociado</th>
+                                <th>Curso</th>
+                                <th>Estado</th>
+                                <th>Deuda</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in deudores %}
+                                <tr>
+                                    <td>{{ item.asociado.apellido }}, {{ item.asociado.nombre }}</td>
+                                    <td>{{ item.asociado.curso_actual|default:"-" }}</td>
+                                    <td>{{ item.asociado.get_estado_display }}</td>
+                                    <td>${{ item.deuda }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="4">No hay asociados con deuda.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Ultimos accesos</h2>
+                <ul class="list-group list-group-flush">
+                    {% for asociado in ultimos_accesos %}
+                        <li class="list-group-item px-0">
+                            <div class="fw-semibold">{{ asociado.apellido }}, {{ asociado.nombre }}</div>
+                            <div class="small text-secondary">{{ asociado.usuario.username }} · {{ asociado.usuario.last_login|date:"d/m/Y H:i" }}</div>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item px-0">Todavia no hay accesos registrados.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Asociados por curso</h2>
+                <ul class="list-group list-group-flush">
+                    {% for item in asociados_por_curso %}
+                        <li class="list-group-item px-0 d-flex justify-content-between">
+                            <span>{{ item.curso_actual__nombre }}</span>
+                            <strong>{{ item.total }}</strong>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item px-0">No hay cursos asignados.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Cuotas</h2>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item px-0 d-flex justify-content-between"><span>Pendientes</span><strong>{{ resumen.cuotas_pendientes }}</strong></li>
+                    <li class="list-group-item px-0 d-flex justify-content-between"><span>Parciales</span><strong>{{ resumen.cuotas_parciales }}</strong></li>
+                    <li class="list-group-item px-0 d-flex justify-content-between"><span>Vencidas</span><strong>{{ resumen.cuotas_vencidas }}</strong></li>
+                    <li class="list-group-item px-0 d-flex justify-content-between"><span>Pagadas</span><strong>{{ resumen.cuotas_pagadas }}</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Pagos del mes por metodo</h2>
+                <ul class="list-group list-group-flush">
+                    {% for item in pagos_por_metodo %}
+                        <li class="list-group-item px-0 d-flex justify-content-between">
+                            <span>{{ item.metodo }}</span>
+                            <strong>${{ item.total }}</strong>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item px-0">No hay pagos registrados este mes.</li>
+                    {% endfor %}
+                </ul>
+                <hr>
+                <div class="small text-secondary">Beneficios vigentes en comercios: <strong>{{ resumen.beneficios_vigentes }}</strong></div>
+                <div class="small text-secondary">Asociados con usuario: <strong>{{ resumen.asociados_con_usuario }}</strong></div>
+                <div class="small text-secondary">Asociados inactivos: <strong>{{ resumen.asociados_inactivos }}</strong></div>
+                <div class="small text-secondary">Asociados egresados: <strong>{{ resumen.asociados_egresados }}</strong></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
