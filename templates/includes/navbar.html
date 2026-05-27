@@ -14,7 +14,7 @@
             <div class="d-flex gap-2">
                 {% if user.is_authenticated %}
                     {% if user.is_staff %}
-                        <a class="btn btn-light btn-sm" href="{% url 'usuarios:gestion_dashboard' %}">Gestion</a>
+                        <a class="btn btn-light btn-sm" href="{% url 'usuarios:gestion_dashboard' %}">Gestión</a>
                         <a class="btn btn-outline-light btn-sm" href="{% url 'admin:index' %}">Admin</a>
                     {% elif es_asociado %}
                         <a class="btn btn-outline-light btn-sm" href="{% url 'asociados:dashboard' %}">Mi panel</a>

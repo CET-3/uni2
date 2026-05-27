@@ -5,8 +5,8 @@
 {% block content %}
 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
     <div>
-        <h1 class="h2 mb-1">Gestion de asociados</h1>
-        <p class="text-secondary mb-0">Busca asociados por DNI, numero, apellido o nombre.</p>
+        <h1 class="h2 mb-1">Gestión de asociados</h1>
+        <p class="text-secondary mb-0">Busca asociados por DNI, número, apellido o nombre.</p>
     </div>
     <div class="d-flex gap-2">
         <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_dashboard' %}">Volver al panel</a>
@@ -19,7 +19,7 @@
         <form method="get" class="row g-3 align-items-end">
             <div class="col-lg-9">
                 <label class="form-label" for="id_q">Buscar asociado</label>
-                <input id="id_q" class="form-control" type="text" name="q" value="{{ query }}" placeholder="DNI, numero, apellido o nombre">
+                <input id="id_q" class="form-control" type="text" name="q" value="{{ query }}" placeholder="DNI, número, apellido o nombre">
             </div>
             <div class="col-lg-3">
                 <button class="btn btn-primary w-100" type="submit">Buscar</button>
@@ -64,6 +64,6 @@
         </div>
     </div>
 {% elif query %}
-    <div class="alert alert-warning">No se encontraron asociados para la busqueda ingresada.</div>
+    <div class="alert alert-warning">No se encontraron asociados para la búsqueda ingresada.</div>
 {% endif %}
 {% endblock %}

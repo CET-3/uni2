@@ -16,7 +16,7 @@
         <form method="get" class="row g-3 align-items-end">
             <div class="col-lg-8">
                 <label class="form-label" for="id_q">Buscar asociado</label>
-                <input id="id_q" class="form-control" type="text" name="q" value="{{ query }}" placeholder="DNI, numero, apellido o nombre">
+                <input id="id_q" class="form-control" type="text" name="q" value="{{ query }}" placeholder="DNI, número, apellido o nombre">
             </div>
             <div class="col-lg-4">
                 <button class="btn btn-primary w-100" type="submit">Buscar</button>
@@ -58,7 +58,7 @@
         </div>
     </div>
 {% elif query %}
-    <div class="alert alert-warning">No se encontraron asociados para la busqueda ingresada.</div>
+    <div class="alert alert-warning">No se encontraron asociados para la búsqueda ingresada.</div>
 {% endif %}
 
 {% if selected_asociado %}
@@ -68,7 +68,7 @@
                 <div class="card-body">
                     <h2 class="h5 mb-3">Asociado seleccionado</h2>
                     <p class="mb-2"><strong>Nombre:</strong> {{ selected_asociado.apellido }}, {{ selected_asociado.nombre }}</p>
-                    <p class="mb-2"><strong>Numero:</strong> {{ selected_asociado.numero_asociado }}</p>
+                    <p class="mb-2"><strong>Número:</strong> {{ selected_asociado.numero_asociado }}</p>
                     <p class="mb-2"><strong>DNI:</strong> {{ selected_asociado.dni }}</p>
                     <p class="mb-2"><strong>Curso:</strong> {{ selected_asociado.curso_actual|default:"-" }}</p>
                     <p class="mb-0"><strong>Deuda al {{ fecha_referencia|date:"d/m/Y" }}:</strong> ${{ total_deuda }}</p>
