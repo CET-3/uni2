@@ -10,6 +10,7 @@ def navigation_roles(request):
     return {
         "es_asociado": es_asociado,
         "es_comercio": es_comercio,
+        "es_staff": bool(user.is_authenticated and user.is_staff),
         "tiene_perfil_asociado": tiene_perfil_asociado,
         "tiene_perfil_comercio": tiene_perfil_comercio,
     }
