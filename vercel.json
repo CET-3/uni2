@@ -1,15 +1,11 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "wsgi_app.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "includeFiles": ["templates/**", "static/**", "*/migrations/**", "config/**"]
-      }
+  "functions": {
+    "wsgi_app.py": {
+      "maxDuration": 30,
+      "includeFiles": "templates/**"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/(.*)",
