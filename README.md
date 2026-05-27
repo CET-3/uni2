@@ -1,71 +1,73 @@
 # Uni2
 
-## Correr localmente
+Sistema de gestión para la Mutual Escolar del CET 3.
 
-### 1. Crear entorno virtual
+## Requisitos
 
-```bash
-cd /home/milena/CET3/uni2
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements/dev.txt
-```
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
-### 2. Configurar base de datos
-
-Por defecto el proyecto usa SQLite.
-
-Si queres usar PostgreSQL, exporta estas variables:
+## Setup local
 
 ```bash
+# Instalar dependencias
+uv sync
+
+# Copiar variables de entorno
 cp .env.example .env
+# Editar .env con las credenciales locales si es necesario
+
+# Aplicar migraciones
+uv run python manage.py migrate
+
+# Cargar datos iniciales
+uv run python manage.py bootstrap_uni2
+
+# Levantar servidor
+uv run python manage.py runserver
 ```
 
-Luego ajusta `.env` si necesitas cambiar el nombre de la base o el usuario.
+Usuario inicial: `admin` / `admin1234`
 
-En esta maquina PostgreSQL esta funcionando por socket local, asi que no hace falta
-usar `127.0.0.1` ni password si te conectas como `root`.
+La app corre en http://127.0.0.1:8000
 
-Antes de migrar, crea la base:
+## Tests
 
 ```bash
-createdb uni2
+uv run pytest
 ```
 
-Django carga `.env` automaticamente al iniciar.
-
-### 3. Crear migraciones y aplicar esquema
+## Agregar dependencias
 
 ```bash
-python3 manage.py makemigrations
-python3 manage.py migrate
+# Dependencia de producción
+uv add nombre-paquete
+
+# Dependencia de desarrollo (tests, herramientas)
+uv add --dev nombre-paquete
+
+# Siempre commitear pyproject.toml y uv.lock juntos
+git add pyproject.toml uv.lock
 ```
 
-### 4. Cargar datos iniciales
+## Deploy
+
+El deploy es automático via GitHub → Vercel al hacer push a `main`.
+
+Para deployar manualmente:
 
 ```bash
-python3 manage.py bootstrap_uni2
+vercel --prod
 ```
 
-Esto crea:
+Variables de entorno necesarias en Vercel:
+- `SECRET_KEY`
+- `DATABASE_URL`
+- `ALLOWED_HOSTS`
+- `CSRF_TRUSTED_ORIGINS`
 
-- grupos base
-- colegio CET 3
-- cursos iniciales
-- cuentas contables iniciales
-- usuario administrador local
-
-Usuario inicial:
-
-- username: `admin`
-- password: `admin1234`
-
-### 5. Levantar servidor
+La base de datos de producción es Supabase (PostgreSQL). Para correr migraciones en producción:
 
 ```bash
-python3 manage.py runserver
+DATABASE_URL=<url-de-supabase> uv run python manage.py migrate
 ```
-
-Admin Django:
-
-- http://127.0.0.1:8000/admin/
