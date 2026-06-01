@@ -1,14 +1,11 @@
-from django.db.models import Q
-from django.utils import timezone
-
 from asociados.models import Asociado
 
-from .models import BeneficioComercio, Comercio
+from .models import Comercio
 
 
 def validar_credencial(*, comercio: Comercio, token):
-    if not comercio.activo:
-        raise ValueError("El comercio esta inactivo.")
+    if comercio.estado != Comercio.ESTADO_FIRMADO:
+        raise ValueError("El comercio no tiene un convenio firmado.")
 
     asociado = Asociado.objects.filter(token_credencial=token).first()
     if asociado is None:
@@ -21,14 +18,3 @@ def validar_credencial(*, comercio: Comercio, token):
         "tipo": asociado.tipo,
         "estado": asociado.estado,
     }
-
-
-def beneficios_vigentes_para_comercio(comercio: Comercio):
-    today = timezone.localdate()
-    return BeneficioComercio.objects.filter(
-        comercio=comercio,
-        activo=True,
-    ).filter(
-        Q(fecha_desde__isnull=True) | Q(fecha_desde__lte=today),
-        Q(fecha_hasta__isnull=True) | Q(fecha_hasta__gte=today),
-    )

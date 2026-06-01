@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.generic import FormView, TemplateView
 
-from .services import beneficios_vigentes_para_comercio, validar_credencial
+from .services import validar_credencial
 from usuarios.services import user_is_comercio
 
 
@@ -36,7 +36,6 @@ class ComercioDashboardView(ComercioRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         comercio = self.request.user.comercio
         context["comercio"] = comercio
-        context["beneficios"] = beneficios_vigentes_para_comercio(comercio)
         return context
 
 

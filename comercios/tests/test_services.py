@@ -1,10 +1,10 @@
-from datetime import date, timedelta
+from datetime import date
 
 import pytest
 
 from asociados.models import Asociado
 from asociados.services import create_asociado
-from comercios.models import BeneficioComercio, Comercio
+from comercios.models import ActividadComercial, Comercio
 from comercios.services import validar_credencial
 
 
@@ -21,7 +21,14 @@ def asociado():
 
 @pytest.fixture
 def comercio():
-    return Comercio.objects.create(nombre="Libreria Sur", direccion="Mitre 123", activo=True)
+    actividad = ActividadComercial.objects.create(nombre="Libreria")
+    return Comercio.objects.create(
+        nombre="Libreria Sur",
+        direccion="Mitre 123",
+        actividad_comercial=actividad,
+        beneficio_texto="10% en utiles",
+        estado=Comercio.ESTADO_FIRMADO,
+    )
 
 
 @pytest.mark.django_db
@@ -41,29 +48,14 @@ def test_rechazo_de_credencial_inactiva(asociado, comercio):
 
 
 @pytest.mark.django_db
-def test_beneficios_vigentes(comercio):
-    beneficio = BeneficioComercio.objects.create(
-        comercio=comercio,
-        titulo="10% utiles",
-        descripcion="Descuento",
-        tipo_descuento=BeneficioComercio.TIPO_PORCENTAJE,
-        valor_descuento=10,
-        fecha_desde=date.today() - timedelta(days=1),
-        fecha_hasta=date.today() + timedelta(days=5),
-        activo=True,
-    )
-    assert beneficio.activo is True
+def test_rechazo_de_validacion_para_comercio_sin_convenio_firmado(asociado, comercio):
+    comercio.estado = Comercio.ESTADO_PENDIENTE
+    comercio.save(update_fields=["estado"])
+
+    with pytest.raises(ValueError, match="convenio firmado"):
+        validar_credencial(comercio=comercio, token=asociado.token_credencial)
 
 
 @pytest.mark.django_db
-def test_beneficios_vencidos(comercio):
-    beneficio = BeneficioComercio.objects.create(
-        comercio=comercio,
-        titulo="Promo vieja",
-        descripcion="Descuento",
-        tipo_descuento=BeneficioComercio.TIPO_PROMOCION,
-        fecha_hasta=date.today() - timedelta(days=1),
-        activo=True,
-    )
-    assert beneficio.fecha_hasta < date.today()
-
+def test_comercio_guarda_beneficio_como_texto(comercio):
+    assert comercio.beneficio_texto == "10% en utiles"

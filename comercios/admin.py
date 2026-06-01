@@ -1,23 +1,23 @@
 from django.contrib import admin
 
-from .models import BeneficioComercio, Comercio
+from .models import ActividadComercial, Comercio
 
 
-class BeneficioComercioInline(admin.TabularInline):
-    model = BeneficioComercio
-    extra = 0
+@admin.register(ActividadComercial)
+class ActividadComercialAdmin(admin.ModelAdmin):
+    list_display = ("nombre",)
+    search_fields = ("nombre",)
 
 
 @admin.register(Comercio)
 class ComercioAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "responsable", "telefono", "url_presencia_web", "ciudad", "activo")
-    list_filter = ("activo", "provincia")
-    search_fields = ("nombre", "responsable", "url_presencia_web")
-    inlines = [BeneficioComercioInline]
-
-
-@admin.register(BeneficioComercio)
-class BeneficioComercioAdmin(admin.ModelAdmin):
-    list_display = ("titulo", "comercio", "tipo_descuento", "activo", "fecha_desde", "fecha_hasta")
-    list_filter = ("activo", "tipo_descuento")
-    search_fields = ("titulo", "comercio__nombre")
+    list_display = (
+        "nombre",
+        "actividad_comercial",
+        "propietario",
+        "estado",
+        "telefono",
+        "ciudad",
+    )
+    list_filter = ("estado", "provincia", "actividad_comercial")
+    search_fields = ("nombre", "propietario", "beneficio_texto", "url_presencia_web")
