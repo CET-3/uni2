@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uni2 | Especificación Funcional</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="eyebrow">Especificación funcional</p>
+      <h1>Uni2</h1>
+      <p class="hero__lead">Plataforma de gestión para mutuales escolares. Esta versión HTML toma <code>UNI2_MASTER_SPEC.md</code> como fuente de verdad y organiza el contenido para lectura ejecutiva y consulta operativa.</p>
+      <div class="hero__meta">
+        <span class="pill pill--solid">MVP definido</span>
+        <span class="pill">Documento base navegable</span>
+        <span class="pill">Preparado para crecimiento multi colegio</span>
+      </div>
+    </div>
+    <aside class="hero__summary">
+      <h2>Resumen rápido</h2>
+      <ul>
+        <li>Administra asociados, cuotas, pagos, credenciales, beneficios, comercios y reportes básicos.</li>
+        <li>Incluye contabilidad simple con asientos y partidas.</li>
+        <li>Deja aprobada una V2 para productos, pedidos y stock.</li>
+      </ul>
+    </aside>
+  </header>
+
+  <main class="layout">
+    <nav class="toc">
+      <h2>Índice</h2>
+      <ol>
+        <li><a href="#vision">Visión del producto</a></li>
+        <li><a href="#roles">Roles</a></li>
+        <li><a href="#alcance">Alcance del MVP</a></li>
+        <li>
+          <details class="toc-tree">
+            <summary><a href="#modelo">Modelo de datos MVP</a></summary>
+            <ol>
+              <li><a href="#entidad-usuario">Usuario</a></li>
+              <li><a href="#entidad-colegio">Colegio</a></li>
+              <li><a href="#entidad-curso">Curso</a></li>
+              <li><a href="#entidad-asociado">Asociado</a></li>
+              <li><a href="#entidad-inscripcion-curso">InscripciónCurso</a></li>
+              <li><a href="#entidad-periodo-cuota">PeríodoCuota</a></li>
+              <li><a href="#entidad-cuota">Cuota</a></li>
+              <li><a href="#entidad-pago">Pago</a></li>
+              <li><a href="#entidad-pago-cuota">PagoCuota</a></li>
+              <li><a href="#entidad-beneficio">Beneficio</a></li>
+              <li><a href="#entidad-servicio">Servicio</a></li>
+              <li><a href="#entidad-publicidad">Publicidad</a></li>
+              <li><a href="#entidad-horario-atencion">HorarioAtención</a></li>
+              <li><a href="#entidad-comercio">Comercio</a></li>
+              <li><a href="#entidad-beneficio-comercio">BeneficioComercio</a></li>
+              <li><a href="#entidad-notificacion">Notificación</a></li>
+              <li><a href="#entidad-cuenta-contable">CuentaContable</a></li>
+              <li><a href="#entidad-asiento">Asiento</a></li>
+              <li><a href="#entidad-partida-asiento">PartidaAsiento</a></li>
+            </ol>
+          </details>
+        </li>
+        <li><a href="#relaciones">Relaciones del MVP</a></li>
+        <li><a href="#reglas">Reglas de negocio</a></li>
+        <li>
+          <details class="toc-tree">
+            <summary><a href="#casos-uso">Casos de uso MVP</a></summary>
+            <ol>
+              <li><a href="#cu-consultar-sitio-publico">CU-consultar-sitio-publico</a></li>
+              <li><a href="#cu-ver-credencial">CU-ver-credencial</a></li>
+              <li><a href="#cu-ver-estado-cuotas">CU-ver-estado-cuotas</a></li>
+              <li><a href="#cu-crear-asociado">CU-crear-asociado</a></li>
+              <li><a href="#cu-importar-asociados">CU-importar-asociados</a></li>
+              <li><a href="#cu-crear-usuario-asociado">CU-crear-usuario-asociado</a></li>
+              <li><a href="#cu-generar-periodo-cuota">CU-generar-periodo-cuota</a></li>
+              <li><a href="#cu-registrar-pago-cuota">CU-registrar-pago-cuota</a></li>
+              <li><a href="#cu-dar-baja-asociado">CU-dar-baja-asociado</a></li>
+              <li><a href="#cu-marcar-asociado-egresado">CU-marcar-asociado-egresado</a></li>
+              <li><a href="#cu-cambiar-curso">CU-cambiar-curso</a></li>
+              <li><a href="#cu-validar-credencial">CU-validar-credencial</a></li>
+              <li><a href="#cu-gestionar-comercio">CU-gestionar-comercio</a></li>
+              <li><a href="#cu-gestionar-beneficio-comercio">CU-gestionar-beneficio-comercio</a></li>
+            </ol>
+          </details>
+        </li>
+        <li>
+          <details class="toc-tree">
+            <summary><a href="#casos-borde">Casos borde</a></summary>
+            <ol>
+              <li><a href="#cb-alta-mitad-mes">CB-alta-mitad-mes</a></li>
+              <li><a href="#cb-asociado-sin-usuario">CB-asociado-sin-usuario</a></li>
+              <li><a href="#cb-usuario-desactivado">CB-usuario-desactivado</a></li>
+              <li><a href="#cb-cambio-curso">CB-cambio-curso</a></li>
+              <li><a href="#cb-repite-curso">CB-repite-curso</a></li>
+              <li><a href="#cb-baja-con-deuda">CB-baja-con-deuda</a></li>
+              <li><a href="#cb-egresado-con-deuda">CB-egresado-con-deuda</a></li>
+              <li><a href="#cb-cuota-ya-generada">CB-cuota-ya-generada</a></li>
+              <li><a href="#cb-pago-parcial">CB-pago-parcial</a></li>
+              <li><a href="#cb-pago-mayor-a-deuda">CB-pago-mayor-a-deuda</a></li>
+              <li><a href="#cb-asociado-sin-deuda">CB-asociado-sin-deuda</a></li>
+              <li><a href="#cb-qr-invalido">CB-qr-invalido</a></li>
+              <li><a href="#cb-comercio-inactivo">CB-comercio-inactivo</a></li>
+              <li><a href="#cb-beneficio-vencido">CB-beneficio-vencido</a></li>
+              <li><a href="#cb-beneficio-futuro">CB-beneficio-futuro</a></li>
+            </ol>
+          </details>
+        </li>
+        <li><a href="#reportes">Reportes MVP</a></li>
+        <li><a href="#pantallas">Pantallas MVP</a></li>
+        <li><a href="#v2">Diseño aprobado para Versión 2</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+      </ol>
+    </nav>
+
+    <div class="content">
+      <section id="vision" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">1</p>
+          <h2>Visión del producto</h2>
+        </div>
+        <div class="panel">
+          <h3>Nombre</h3>
+          <p>Uni2</p>
+          <h3>Descripción</h3>
+          <p>Uni2 es una plataforma de gestión para mutuales escolares. Inicialmente será utilizada por la mutual del CET 3, pero el modelo queda preparado para soportar más colegios en el futuro.</p>
+        </div>
+        <div class="grid grid--3">
+          <article class="card">
+            <h3>El sistema permitirá administrar</h3>
+            <ul>
+              <li>Asociados y adherentes.</li>
+              <li>Colegios, cursos e historial escolar.</li>
+              <li>Cuotas y pagos.</li>
+              <li>Credenciales digitales.</li>
+              <li>Beneficios institucionales.</li>
+              <li>Comercios adheridos y beneficios comerciales.</li>
+              <li>Reportes administrativos básicos.</li>
+              <li>Contabilidad simple con asientos y partidas.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>En versiones futuras incorporará</h3>
+            <ul>
+              <li>Productos.</li>
+              <li>Pedidos.</li>
+              <li>Stock.</li>
+              <li>Pagos de pedidos.</li>
+              <li>Tickets de consultas.</li>
+              <li>Notificaciones push.</li>
+              <li>Pago online.</li>
+              <li>Contabilidad ampliada.</li>
+              <li>Mapa de comercios.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="roles" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">2</p>
+          <h2>Roles</h2>
+        </div>
+        <div class="grid grid--2">
+          <article class="card">
+            <h3>Visitante</h3>
+            <p>Usuario no autenticado. Puede consultar:</p>
+            <ul>
+              <li>Página de inicio.</li>
+              <li>Información institucional.</li>
+              <li>Beneficios.</li>
+              <li>Servicios.</li>
+              <li>Horarios de atención.</li>
+              <li>Comercios adheridos.</li>
+              <li>Acceso al login.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Asociado</h3>
+            <p>Usuario autenticado vinculado a un asociado o adherente. Puede:</p>
+            <ul>
+              <li>Ver su panel.</li>
+              <li>Ver su credencial digital.</li>
+              <li>Ver estado de cuotas.</li>
+              <li>Consultar beneficios.</li>
+              <li>Consultar servicios.</li>
+              <li>Consultar comercios adheridos.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Administrador</h3>
+            <p>Usuario interno de gestión. Puede:</p>
+            <ul>
+              <li>Gestionar asociados e importarlos.</li>
+              <li>Crear usuarios para asociados.</li>
+              <li>Gestionar colegios y cursos.</li>
+              <li>Gestionar cuotas y registrar pagos.</li>
+              <li>Gestionar beneficios, servicios, publicidades y horarios.</li>
+              <li>Gestionar comercios.</li>
+              <li>Consultar reportes.</li>
+              <li>Registrar o consultar asientos simples.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Comercio</h3>
+            <p>Usuario vinculado a un comercio adherido. Puede:</p>
+            <ul>
+              <li>Iniciar sesión.</li>
+              <li>Validar credenciales.</li>
+              <li>Consultar beneficios propios.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="alcance" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">3</p>
+          <h2>Alcance del MVP</h2>
+        </div>
+        <div class="grid grid--2">
+          <article class="card card--accent">
+            <h3>Incluye</h3>
+            <ul class="columns">
+              <li>Sitio público.</li>
+              <li>Login.</li>
+              <li>Roles básicos.</li>
+              <li>Gestión de colegios.</li>
+              <li>Gestión de cursos.</li>
+              <li>Gestión de asociados y adherentes.</li>
+              <li>Curso actual e historial de curso.</li>
+              <li>Importación inicial desde Excel/CSV.</li>
+              <li>Creación manual de usuarios para asociados.</li>
+              <li>Generación de cuotas.</li>
+              <li>Registro de pagos de cuotas.</li>
+              <li>Pagos parciales de cuotas.</li>
+              <li>Deudores.</li>
+              <li>Credencial digital.</li>
+              <li>Validación de credencial por comercio.</li>
+              <li>Beneficios institucionales.</li>
+              <li>Servicios informativos.</li>
+              <li>Publicidades.</li>
+              <li>Horarios de atención.</li>
+              <li>Comercios adheridos.</li>
+              <li>Beneficios de comercios.</li>
+              <li>Reportes básicos.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>No incluye en MVP</h3>
+            <ul class="columns">
+              <li>Pedidos.</li>
+              <li>Stock.</li>
+              <li>Productos para venta.</li>
+              <li>Pago de pedidos.</li>
+              <li>Tickets de consultas.</li>
+              <li>Mensajería.</li>
+              <li>PWA.</li>
+              <li>Push notifications.</li>
+              <li>Pago online.</li>
+              <li>Saldo a favor.</li>
+              <li>Intereses por mora acumulativos.</li>
+              <li>Contabilidad completa.</li>
+              <li>Asambleas.</li>
+              <li>Votaciones.</li>
+              <li>Mapa de comercios.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="modelo" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">4</p>
+          <h2>Modelo de datos MVP</h2>
+        </div>
+        <div class="entity-list">
+          <article class="entity" id="entidad-usuario">
+            <h3>Usuario</h3>
+            <p>Usuario de autenticación de Django. Se recomienda usar el sistema estandar inicialmente.</p>
+            <p><strong>Grupos sugeridos:</strong> Administradores, Asociados, Comercios.</p>
+            <p><strong>Campos relevantes:</strong> username, email, password, first_name, last_name, is_active, is_staff, last_login, date_joined.</p>
+          </article>
+          <article class="entity" id="entidad-colegio">
+            <h3>Colegio</h3>
+            <p>Representa una institución educativa.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>nombre</li>
+              <li>direccion</li>
+              <li>teléfono</li>
+              <li>email</li>
+              <li>activo</li>
+            </ul>
+            <p><strong>Notas:</strong> inicialmente existirá CET 3 y se incluye desde el inicio para dejar preparado el sistema para otros colegios.</p>
+          </article>
+          <article class="entity" id="entidad-curso">
+            <h3>Curso</h3>
+            <p>Representa un curso de un colegio.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>colegio</li>
+              <li>nombre</li>
+              <li>activo</li>
+            </ul>
+            <p><strong>Ejemplos:</strong> 1° 1°, 1° 2°, 3° 2°, 5° 1°.</p>
+            <p><strong>Relación:</strong> Colegio 1 a N Curso.</p>
+          </article>
+          <article class="entity" id="entidad-asociado">
+            <h3>Asociado</h3>
+            <p>Representa a una persona asociada o adherente a la mutual.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>usuario</li>
+              <li>nombre</li>
+              <li>apellido</li>
+              <li>dni</li>
+              <li>email</li>
+              <li>teléfono</li>
+              <li>fecha_nacimiento</li>
+              <li>tipo</li>
+              <li>número_asociado</li>
+              <li>token_credencial</li>
+              <li>curso_actual</li>
+              <li>estado</li>
+              <li>fecha_alta</li>
+              <li>fecha_inicio_cobro</li>
+              <li>fecha_baja</li>
+              <li>motivo_baja</li>
+            </ul>
+            <p><strong>Tipos:</strong> asociado, adherente.</p>
+            <p><strong>Estados:</strong> activo, inactivo, egresado.</p>
+            <p><strong>Reglas:</strong> DNI obligatorio y único, número automático, token UUID único, usuario opcional, curso actual opcional para adherentes y recomendado para asociados alumnos.</p>
+          </article>
+          <article class="entity" id="entidad-inscripcion-curso">
+            <h3>InscripciónCurso</h3>
+            <p>Historial académico del asociado.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>asociado</li>
+              <li>curso</li>
+              <li>ciclo_lectivo</li>
+              <li>activa</li>
+              <li>fecha_desde</li>
+              <li>fecha_hasta</li>
+            </ul>
+            <p><strong>Reglas:</strong> puede haber varias inscripciones históricas, solo una activa por ciclo lectivo, al cambiar de año se crea una nueva inscripción, incluso si repite curso.</p>
+            <p><strong>Ejemplo:</strong> Juan Pérez - 2026 - 3° 2° - no activa / Juan Pérez - 2027 - 4° 2° - activa.</p>
+          </article>
+          <article class="entity" id="entidad-periodo-cuota">
+            <h3>PeríodoCuota</h3>
+            <p>Representa un período mensual de cuota.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>mes</li>
+              <li>año</li>
+              <li>importe</li>
+              <li>importe_recargo_mora</li>
+              <li>fecha_vencimiento</li>
+              <li>activo</li>
+            </ul>
+            <p><strong>Reglas:</strong> define importe base y recargo fijo por mora, y ambos deben copiarse a la cuota generada para conservar historial. Cambios futuros no deben afectar cuotas ya generadas.</p>
+            <p><strong>Ejemplo:</strong> Mayo 2026 - $3000 - vence 10/05/2026.</p>
+          </article>
+          <article class="entity" id="entidad-cuota">
+            <h3>Cuota</h3>
+            <p>Representa una cuota concreta de un asociado para un período.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>asociado</li>
+              <li>período</li>
+              <li>importe</li>
+              <li>importe_recargo_mora</li>
+              <li>importe_pagado</li>
+              <li>estado</li>
+              <li>fecha_generación</li>
+            </ul>
+            <p><strong>Estados:</strong> pendiente, parcial, pagada, vencida, bonificada.</p>
+            <p><strong>Restricción:</strong> no puede existir más de una cuota para el mismo asociado y período.</p>
+            <p><strong>Reglas:</strong> si importe_pagado es 0 puede estar pendiente o vencida; si es parcial queda parcial; si alcanza el importe queda pagada; si se bonifica queda bonificada; vencida exige <code>importe + importe_recargo_mora</code>.</p>
+          </article>
+          <article class="entity" id="entidad-pago">
+            <h3>Pago</h3>
+            <p>Representa un ingreso de dinero.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>asociado</li>
+              <li>fecha</li>
+              <li>importe</li>
+              <li>método</li>
+              <li>observaciones</li>
+              <li>registrado_por</li>
+            </ul>
+            <p><strong>Métodos:</strong> efectivo, billetera_virtual.</p>
+            <p><strong>Reglas:</strong> en el MVP se usa para pagos de cuotas; en V2 podrá aplicarse también a pedidos mediante PagoPedido.</p>
+          </article>
+          <article class="entity" id="entidad-pago-cuota">
+            <h3>PagoCuota</h3>
+            <p>Aplicación de un pago a una cuota.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>pago</li>
+              <li>cuota</li>
+              <li>importe</li>
+            </ul>
+            <p><strong>Reglas:</strong> permite saber que cuotas fueron cubiertas por cada pago, soporta pagos parciales, un pago puede aplicarse a varias cuotas y una cuota puede tener varios pagos parciales.</p>
+            <p><strong>Ejemplo:</strong> pago de $6000 distribuido entre cuota marzo $3000 y cuota abril $3000.</p>
+          </article>
+          <article class="entity" id="entidad-beneficio">
+            <h3>Beneficio</h3>
+            <p>Beneficio institucional de la mutual.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>título</li>
+              <li>descripción</li>
+              <li>activo</li>
+              <li>orden</li>
+            </ul>
+          </article>
+          <article class="entity" id="entidad-servicio">
+            <h3>Servicio</h3>
+            <p>Servicio ofrecido o informado por la mutual. En el MVP es informativo y no implica venta ni stock.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>nombre</li>
+              <li>descripción</li>
+              <li>precio_referencia</li>
+              <li>activo</li>
+              <li>orden</li>
+            </ul>
+            <p><strong>Ejemplos:</strong> Remeras, Cuadernillos, Apuntes, Fotocopias.</p>
+          </article>
+          <article class="entity" id="entidad-publicidad">
+            <h3>Publicidad</h3>
+            <p>Contenido promocional o institucional.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>título</li>
+              <li>descripción</li>
+              <li>imagen</li>
+              <li>link</li>
+              <li>activo</li>
+              <li>fecha_desde</li>
+              <li>fecha_hasta</li>
+              <li>orden</li>
+            </ul>
+            <p><strong>Reglas:</strong> si tiene fecha futura no se muestra todavía; si la fecha de fin ya pasó, tampoco.</p>
+          </article>
+          <article class="entity" id="entidad-horario-atencion">
+            <h3>HorarioAtención</h3>
+            <p>Horarios de atención de la mutual.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>día_semana</li>
+              <li>hora_desde</li>
+              <li>hora_hasta</li>
+              <li>descripción</li>
+              <li>activo</li>
+            </ul>
+          </article>
+          <article class="entity" id="entidad-comercio">
+            <h3>Comercio</h3>
+            <p>Comercio adherido a la mutual.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>usuario</li>
+              <li>nombre</li>
+              <li>responsable</li>
+              <li>email</li>
+              <li>teléfono</li>
+              <li>dirección</li>
+              <li>url_presencia_web</li>
+              <li>ciudad</li>
+              <li>provincia</li>
+              <li>latitud</li>
+              <li>longitud</li>
+              <li>activo</li>
+            </ul>
+            <p><strong>Reglas:</strong> puede tener usuario de acceso, validar credenciales, tener múltiples beneficios, informar una URL pública y guardar coordenadas para mapa futuro.</p>
+          </article>
+          <article class="entity" id="entidad-beneficio-comercio">
+            <h3>BeneficioComercio</h3>
+            <p>Beneficio ofrecido por un comercio.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>comercio</li>
+              <li>título</li>
+              <li>descripción</li>
+              <li>tipo_descuento</li>
+              <li>valor_descuento</li>
+              <li>condiciones</li>
+              <li>fecha_desde</li>
+              <li>fecha_hasta</li>
+              <li>activo</li>
+            </ul>
+            <p><strong>Tipos de descuento:</strong> porcentaje, monto_fijo, promoción, otro.</p>
+            <p><strong>Ejemplos:</strong> 10% en útiles escolares, $1000 en compras mayores a $10000, 2x1 en anillados.</p>
+            <p><strong>Reglas:</strong> un comercio puede tener varios beneficios; los vencidos o futuros no se muestran.</p>
+          </article>
+          <article class="entity" id="entidad-notificacion">
+            <h3>Notificación</h3>
+            <p>Notificación interna del sistema.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>usuario</li>
+              <li>título</li>
+              <li>mensaje</li>
+              <li>leída</li>
+              <li>fecha_creación</li>
+            </ul>
+            <p><strong>Notas:</strong> en el MVP puede usarse como notificación interna; las push quedan para una versión futura.</p>
+          </article>
+          <article class="entity" id="entidad-cuenta-contable">
+            <h3>CuentaContable</h3>
+            <p>Cuenta utilizada para imputar partidas contables.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>código</li>
+              <li>nombre</li>
+              <li>tipo</li>
+              <li>activa</li>
+            </ul>
+            <p><strong>Tipos:</strong> activo, pasivo, patrimonio, ingreso, egreso.</p>
+          </article>
+          <article class="entity" id="entidad-asiento">
+            <h3>Asiento</h3>
+            <p>Cabecera de un asiento contable simple.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>fecha</li>
+              <li>descripción</li>
+              <li>tipo</li>
+              <li>importe</li>
+              <li>origen</li>
+            </ul>
+            <p><strong>Tipos:</strong> ingreso, egreso.</p>
+            <p><strong>Reglas:</strong> puede originarse en un pago de cuota y a futuro en otros pagos; debe tener 2 o más partidas; debe balancear debe y haber; el importe debe coincidir con el total balanceado; no reemplaza una contabilidad completa.</p>
+          </article>
+          <article class="entity" id="entidad-partida-asiento">
+            <h3>PartidaAsiento</h3>
+            <p>Linea contable perteneciente a un asiento.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>asiento</li>
+              <li>cuenta_contable</li>
+              <li>movimiento</li>
+              <li>importe</li>
+              <li>detalle</li>
+            </ul>
+            <p><strong>Movimientos:</strong> debe, haber.</p>
+            <p><strong>Reglas:</strong> un asiento puede tener 2 o más partidas y cada partida debe imputarse a una cuenta contable.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="relaciones" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">5</p>
+          <h2>Relaciones del MVP</h2>
+        </div>
+        <div class="panel">
+          <ul class="relationship-list">
+            <li>Colegio 1 - N Curso</li>
+            <li>Usuario 1 - 0..1 Asociado</li>
+            <li>Curso 1 - N Asociado como curso_actual</li>
+            <li>Asociado 1 - N InscripcionCurso</li>
+            <li>Curso 1 - N InscripcionCurso</li>
+            <li>PeríodoCuota 1 - N Cuota</li>
+            <li>Asociado 1 - N Cuota</li>
+            <li>Asociado 1 - N Pago</li>
+            <li>Pago 1 - N PagoCuota</li>
+            <li>Cuota 1 - N PagoCuota</li>
+            <li>Usuario 1 - N Notificación</li>
+            <li>Usuario 1 - 0..1 Comercio</li>
+            <li>Comercio 1 - N BeneficioComercio</li>
+            <li>CuentaContable 1 - N PartidaAsiento</li>
+            <li>Asiento 1 - N PartidaAsiento</li>
+            <li>Pago 1 - 0..N Asiento como origen posible</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="reglas" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">6</p>
+          <h2>Reglas de negocio</h2>
+        </div>
+        <div class="rule-group">
+          <h3>Asociados</h3>
+          <ul class="rule-list">
+            <li id="ASOCIADO-001"><strong><a href="#ASOCIADO-001">ASOCIADO-001</a></strong> Un asociado puede ser de tipo asociado o adherente.</li>
+            <li id="ASOCIADO-002"><strong><a href="#ASOCIADO-002">ASOCIADO-002</a></strong> Los asociados participan de asambleas; los adherentes no.</li>
+            <li id="ASOCIADO-003"><strong><a href="#ASOCIADO-003">ASOCIADO-003</a></strong> Los asociados inactivos o egresados conservan su historial.</li>
+            <li id="ASOCIADO-004"><strong><a href="#ASOCIADO-004">ASOCIADO-004</a></strong> Solo los asociados activos generan nuevas cuotas.</li>
+            <li id="ASOCIADO-005"><strong><a href="#ASOCIADO-005">ASOCIADO-005</a></strong> Todo asociado debe tener DNI.</li>
+            <li id="ASOCIADO-006"><strong><a href="#ASOCIADO-006">ASOCIADO-006</a></strong> No puede existir más de un asociado con el mismo DNI.</li>
+            <li id="ASOCIADO-007"><strong><a href="#ASOCIADO-007">ASOCIADO-007</a></strong> El número de asociado debe generarse automáticamente.</li>
+            <li id="ASOCIADO-008"><strong><a href="#ASOCIADO-008">ASOCIADO-008</a></strong> Un asociado puede existir sin usuario de acceso.</li>
+          </ul>
+        </div>
+        <div class="rule-group">
+          <h3>Cursos</h3>
+          <ul class="rule-list">
+            <li id="CURSO-001"><strong><a href="#CURSO-001">CURSO-001</a></strong> El curso actual se guarda en Asociado para simplificar consultas.</li>
+            <li id="CURSO-002"><strong><a href="#CURSO-002">CURSO-002</a></strong> El historial de curso se guarda en InscripcionCurso.</li>
+            <li id="CURSO-003"><strong><a href="#CURSO-003">CURSO-003</a></strong> Cuando un alumno cambia de curso, se crea una nueva InscripcionCurso y se actualiza curso_actual.</li>
+            <li id="CURSO-004"><strong><a href="#CURSO-004">CURSO-004</a></strong> Si un alumno repite, igualmente se crea una nueva InscripcionCurso para el nuevo ciclo lectivo.</li>
+          </ul>
+        </div>
+        <div class="rule-group">
+          <h3>Altas de asociado</h3>
+          <ul class="rule-list">
+            <li id="ALTA-ASOCIADO-001"><strong><a href="#ALTA-ASOCIADO-001">ALTA-ASOCIADO-001</a></strong> Si el alta ocurre antes del día 15, el asociado paga el mes actual.</li>
+            <li id="ALTA-ASOCIADO-002"><strong><a href="#ALTA-ASOCIADO-002">ALTA-ASOCIADO-002</a></strong> Si el alta ocurre después del día 15, comienza a pagar desde el mes siguiente.</li>
+            <li id="ALTA-ASOCIADO-003"><strong><a href="#ALTA-ASOCIADO-003">ALTA-ASOCIADO-003</a></strong> La fecha de alta y la fecha de inicio de cobro son independientes. El sistema debe usar <code>fecha_inicio_cobro</code> para generar cuotas.</li>
+          </ul>
+        </div>
+        <div class="rule-group">
+          <h3>Cuotas</h3>
+          <ul class="rule-list">
+            <li id="CUOTA-001"><strong><a href="#CUOTA-001">CUOTA-001</a></strong> No puede existir más de una cuota por asociado y período.</li>
+            <li id="CUOTA-002"><strong><a href="#CUOTA-002">CUOTA-002</a></strong> Cada cuota almacena su propio importe.</li>
+            <li id="CUOTA-003"><strong><a href="#CUOTA-003">CUOTA-003</a></strong> Una cuota puede estar pendiente, parcial, pagada, vencida o bonificada.</li>
+            <li id="CUOTA-004"><strong><a href="#CUOTA-004">CUOTA-004</a></strong> Se generan cuotas para asociados activos cuya fecha_inicio_cobro sea menor o igual al período generado.</li>
+            <li id="CUOTA-005"><strong><a href="#CUOTA-005">CUOTA-005</a></strong> Si la cuota ya existe para el asociado y período, no debe generarse otra.</li>
+            <li id="CUOTA-006"><strong><a href="#CUOTA-006">CUOTA-006</a></strong> Si al vencimiento la cuota no esta totalmente cancelada, se aplica un recargo fijo por mora una sola vez.</li>
+            <li id="CUOTA-007"><strong><a href="#CUOTA-007">CUOTA-007</a></strong> El recargo por mora debe copiarse desde <code>PeríodoCuota</code> a <code>Cuota</code> al momento de generarla.</li>
+          </ul>
+        </div>
+        <div class="rule-group">
+          <h3>Pagos</h3>
+          <ul class="rule-list">
+            <li id="PAGO-001"><strong><a href="#PAGO-001">PAGO-001</a></strong> Los pagos se aplican a la deuda más antigua primero.</li>
+            <li id="PAGO-002"><strong><a href="#PAGO-002">PAGO-002</a></strong> Se permiten pagos parciales de cuotas.</li>
+            <li id="PAGO-003"><strong><a href="#PAGO-003">PAGO-003</a></strong> No se permite registrar un pago mayor que la deuda seleccionada.</li>
+            <li id="PAGO-004"><strong><a href="#PAGO-004">PAGO-004</a></strong> Si el pago se registra después del vencimiento y la cuota no estaba cancelada, la deuda exigible incluye el recargo fijo por mora.</li>
+            <li id="PAGO-005"><strong><a href="#PAGO-005">PAGO-005</a></strong> Un pago puede aplicarse a varias cuotas mediante PagoCuota.</li>
+            <li id="PAGO-006"><strong><a href="#PAGO-006">PAGO-006</a></strong> Los métodos permitidos en MVP son efectivo y billetera_virtual.</li>
+          </ul>
+        </div>
+        <div class="rule-group">
+          <h3>Usuarios</h3>
+          <ul class="rule-list">
+            <li id="USUARIO-001"><strong><a href="#USUARIO-001">USUARIO-001</a></strong> Crear asociado no crea automáticamente un usuario.</li>
+            <li id="USUARIO-002"><strong><a href="#USUARIO-002">USUARIO-002</a></strong> El administrador puede crear un usuario para un asociado existente.</li>
+            <li id="USUARIO-003"><strong><a href="#USUARIO-003">USUARIO-003</a></strong> No se puede crear un nuevo usuario para un asociado que ya tiene uno vinculado.</li>
+            <li id="USUARIO-004"><strong><a href="#USUARIO-004">USUARIO-004</a></strong> El username puede ser el DNI.</li>
+            <li id="USUARIO-005"><strong><a href="#USUARIO-005">USUARIO-005</a></strong> El listado de asociados debe mostrar si tiene usuario y el ultimo acceso usando <code>User.last_login</code>.</li>
+          </ul>
+        </div>
+        <div class="rule-group">
+          <h3>Comercios</h3>
+          <ul class="rule-list">
+            <li id="COMERCIO-001"><strong><a href="#COMERCIO-001">COMERCIO-001</a></strong> Un comercio puede ofrecer múltiples beneficios.</li>
+            <li id="COMERCIO-002"><strong><a href="#COMERCIO-002">COMERCIO-002</a></strong> Los beneficios pueden tener fecha de inicio y fecha de fin.</li>
+            <li id="COMERCIO-003"><strong><a href="#COMERCIO-003">COMERCIO-003</a></strong> Solo comercios activos pueden validar credenciales.</li>
+          </ul>
+        </div>
+        <div class="rule-group">
+          <h3>Credenciales</h3>
+          <ul class="rule-list">
+            <li id="CREDENCIAL-001"><strong><a href="#CREDENCIAL-001">CREDENCIAL-001</a></strong> Solo asociados activos poseen credenciales válidas.</li>
+            <li id="CREDENCIAL-002"><strong><a href="#CREDENCIAL-002">CREDENCIAL-002</a></strong> La credencial debe validarse con un token UUID aleatorio y no debe exponer IDs internos ni correlativos en URLs o QR.</li>
+            <li id="CREDENCIAL-003"><strong><a href="#CREDENCIAL-003">CREDENCIAL-003</a></strong> Si el token no existe o no es valido, debe mostrarse credencial inválida.</li>
+            <li id="CREDENCIAL-004"><strong><a href="#CREDENCIAL-004">CREDENCIAL-004</a></strong> El comercio solo debe ver válida/inválida, nombre y apellido, tipo y estado. No debe ver deuda ni datos sensibles.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="casos-uso" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">7</p>
+          <h2>Casos de uso MVP</h2>
+        </div>
+        <div class="use-case-list">
+          <article class="use-case" id="cu-consultar-sitio-publico">
+            <h3>CU-consultar-sitio-publico</h3>
+            <p><strong>Actor:</strong> Visitante</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Ingresa al sitio.</li>
+              <li>Consulta información institucional.</li>
+              <li>Revisa beneficios, servicios, horarios y comercios.</li>
+            </ol>
+            <p><strong>Modelos afectados:</strong> Beneficio, Servicio, HorarioAtencion, Comercio, BeneficioComercio.</p>
+          </article>
+          <article class="use-case" id="cu-ver-credencial">
+            <h3>CU-ver-credencial</h3>
+            <p><strong>Actor:</strong> Asociado</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Inicia sesión.</li>
+              <li>Entra a Mi Credencial.</li>
+              <li>El sistema muestra la credencial digital con QR.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#CREDENCIAL-001">CREDENCIAL-001</a>, <a href="#CREDENCIAL-002">CREDENCIAL-002</a>.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Usuario.</p>
+          </article>
+          <article class="use-case" id="cu-ver-estado-cuotas">
+            <h3>CU-ver-estado-cuotas</h3>
+            <p><strong>Actor:</strong> Asociado</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Inicia sesión.</li>
+              <li>Entra a Mis Cuotas.</li>
+              <li>Visualiza cuotas pagadas, parciales, pendientes y vencidas.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#CUOTA-001">CUOTA-001</a>, <a href="#CUOTA-002">CUOTA-002</a>, <a href="#CUOTA-003">CUOTA-003</a>.</p>
+            <p><strong>Modelos afectados:</strong> Cuota, PeríodoCuota, PagoCuota.</p>
+          </article>
+          <article class="use-case" id="cu-crear-asociado">
+            <h3>CU-crear-asociado</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Carga datos personales.</li>
+              <li>Selecciona tipo y curso si corresponde.</li>
+              <li>Define fecha de alta.</li>
+              <li>Calcula o ajusta <code>fecha_inicio_cobro</code>.</li>
+              <li>Guarda el asociado.</li>
+              <li>Crea <code>InscripcionCurso</code> si aplica.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-001">ASOCIADO-001</a>, <a href="#ASOCIADO-005">ASOCIADO-005</a>, <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#ALTA-ASOCIADO-001">ALTA-ASOCIADO-001</a>, <a href="#ALTA-ASOCIADO-002">ALTA-ASOCIADO-002</a>, <a href="#ALTA-ASOCIADO-003">ALTA-ASOCIADO-003</a>.</p>
+            <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, alta después del día 15, asociado sin usuario.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso, InscripcionCurso.</p>
+          </article>
+          <article class="use-case" id="cu-importar-asociados">
+            <h3>CU-importar-asociados</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Sube archivo Excel/CSV.</li>
+              <li>El sistema valida columnas, DNI, tipo y curso.</li>
+              <li>Informa errores y advertencias.</li>
+              <li>Se confirma la importación.</li>
+              <li>Se crean asociados e inscripciones.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-005">ASOCIADO-005</a>, <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#CURSO-001">CURSO-001</a>, <a href="#CURSO-002">CURSO-002</a>.</p>
+            <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, asociado ya existente, email faltante, teléfono faltante, tipo invalido.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso, InscripcionCurso.</p>
+          </article>
+          <article class="use-case" id="cu-crear-usuario-asociado">
+            <h3>CU-crear-usuario-asociado</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Busca asociado.</li>
+              <li>Verifica que no tenga usuario.</li>
+              <li>Crea <code>User</code>.</li>
+              <li>Lo vincula con <code>Asociado</code>.</li>
+              <li>Lo agrega al grupo Asociados.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#USUARIO-001">USUARIO-001</a>, <a href="#USUARIO-002">USUARIO-002</a>, <a href="#USUARIO-003">USUARIO-003</a>, <a href="#USUARIO-004">USUARIO-004</a>.</p>
+            <p><strong>Situaciones especiales:</strong> asociado ya posee usuario, DNI inexistente, username duplicado, email vacío.</p>
+            <p><strong>Modelos afectados:</strong> User, Asociado.</p>
+          </article>
+          <article class="use-case" id="cu-generar-periodo-cuota">
+            <h3>CU-generar-periodo-cuota</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Crea <code>PeríodoCuota</code> con mes, año, importe y vencimiento.</li>
+              <li>Ejecuta generación de cuotas.</li>
+              <li>El sistema genera para asociados activos alcanzados por <code>fecha_inicio_cobro</code>.</li>
+              <li>Evita duplicados.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-004">ASOCIADO-004</a>, <a href="#CUOTA-001">CUOTA-001</a>, <a href="#CUOTA-002">CUOTA-002</a>, <a href="#CUOTA-004">CUOTA-004</a>, <a href="#CUOTA-005">CUOTA-005</a>.</p>
+            <p><strong>Situaciones especiales:</strong> asociado inactivo, egresado, fecha_inicio_cobro posterior, cuota ya generada.</p>
+            <p><strong>Modelos afectados:</strong> PeríodoCuota, Cuota, Asociado.</p>
+          </article>
+          <article class="use-case" id="cu-registrar-pago-cuota">
+            <h3>CU-registrar-pago-cuota</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Busca asociado.</li>
+              <li>Visualiza deuda.</li>
+              <li>Ingresa importe y método.</li>
+              <li>El sistema aplica el pago a la deuda más antigua.</li>
+              <li>Actualiza la cuota.</li>
+              <li>Crea <code>PagoCuota</code>.</li>
+              <li>Puede generar <code>Asiento</code>.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#PAGO-001">PAGO-001</a>, <a href="#PAGO-002">PAGO-002</a>, <a href="#PAGO-003">PAGO-003</a>, <a href="#PAGO-005">PAGO-005</a>, <a href="#PAGO-006">PAGO-006</a>.</p>
+            <p><strong>Situaciones especiales:</strong> pago parcial, exacto, para múltiples cuotas, pago mayor a deuda, asociado sin deuda.</p>
+            <p><strong>Modelos afectados:</strong> Pago, PagoCuota, Cuota, Asiento.</p>
+          </article>
+          <article class="use-case" id="cu-dar-baja-asociado">
+            <h3>CU-dar-baja-asociado</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Busca asociado.</li>
+              <li>Selecciona baja.</li>
+              <li>Carga fecha y motivo.</li>
+              <li>El sistema cambia el estado a inactivo.</li>
+              <li>Conserva cuotas, pagos e historial.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-003">ASOCIADO-003</a>, <a href="#ASOCIADO-004">ASOCIADO-004</a>.</p>
+            <p><strong>Situaciones especiales:</strong> baja con deuda, baja sin deuda, asociado con usuario.</p>
+            <p><strong>Modelos afectados:</strong> Asociado.</p>
+          </article>
+          <article class="use-case" id="cu-marcar-asociado-egresado">
+            <h3>CU-marcar-asociado-egresado</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Busca asociado.</li>
+              <li>Cambia el estado a egresado.</li>
+              <li>El sistema conserva el historial.</li>
+              <li>Deja de generar nuevas cuotas.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-003">ASOCIADO-003</a>, <a href="#ASOCIADO-004">ASOCIADO-004</a>.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, InscripcionCurso.</p>
+          </article>
+          <article class="use-case" id="cu-cambiar-curso">
+            <h3>CU-cambiar-curso</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Busca asociado.</li>
+              <li>Selecciona nuevo curso y ciclo lectivo.</li>
+              <li>El sistema desactiva la inscripción anterior si corresponde.</li>
+              <li>Crea una nueva inscripción.</li>
+              <li>Actualiza <code>curso_actual</code>.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#CURSO-001">CURSO-001</a>, <a href="#CURSO-002">CURSO-002</a>, <a href="#CURSO-003">CURSO-003</a>, <a href="#CURSO-004">CURSO-004</a>.</p>
+            <p><strong>Situaciones especiales:</strong> promoción normal, repite curso, cambio de división.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso, InscripcionCurso.</p>
+          </article>
+          <article class="use-case" id="cu-validar-credencial">
+            <h3>CU-validar-credencial</h3>
+            <p><strong>Actor:</strong> Comercio</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Escanea el QR o ingresa el token.</li>
+              <li>El sistema busca al asociado por <code>token_credencial</code>.</li>
+              <li>Verifica el estado.</li>
+              <li>Muestra el resultado.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-003">COMERCIO-003</a>, <a href="#CREDENCIAL-001">CREDENCIAL-001</a>, <a href="#CREDENCIAL-002">CREDENCIAL-002</a>, <a href="#CREDENCIAL-003">CREDENCIAL-003</a>, <a href="#CREDENCIAL-004">CREDENCIAL-004</a>.</p>
+            <p><strong>Situaciones especiales:</strong> QR invalido, asociado inactivo, asociado egresado, comercio inactivo.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Comercio.</p>
+          </article>
+          <article class="use-case" id="cu-gestionar-comercio">
+            <h3>CU-gestionar-comercio</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Crea o edita el comercio.</li>
+              <li>Carga datos de contacto.</li>
+              <li>Carga dirección.</li>
+              <li>Carga coordenadas opcionales.</li>
+              <li>Define si queda activo o inactivo.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-003">COMERCIO-003</a>.</p>
+            <p><strong>Modelos afectados:</strong> Comercio.</p>
+          </article>
+          <article class="use-case" id="cu-gestionar-beneficio-comercio">
+            <h3>CU-gestionar-beneficio-comercio</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Selecciona el comercio.</li>
+              <li>Crea el beneficio.</li>
+              <li>Define contenido.</li>
+              <li>Define vigencia.</li>
+              <li>Lo activa.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-002">COMERCIO-002</a>.</p>
+            <p><strong>Situaciones especiales:</strong> beneficio vencido, futuro, comercio inactivo.</p>
+            <p><strong>Modelos afectados:</strong> Comercio, BeneficioComercio.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="casos-borde" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">8</p>
+          <h2>Casos borde y situaciones especiales</h2>
+        </div>
+        <div class="grid grid--2">
+          <article class="card" id="cb-alta-mitad-mes">
+            <h3>CB-alta-mitad-mes</h3>
+            <p><strong>Situación:</strong> el alta ocurre cerca del cierre del período mensual.</p>
+            <p><strong>Respuesta esperada:</strong> si ocurre antes del día 15, paga el mes actual; si ocurre después del día 15, comienza a pagar desde el mes siguiente. El administrador puede ajustar <code>fecha_inicio_cobro</code>.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-crear-asociado">CU-crear-asociado</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#ALTA-ASOCIADO-001">ALTA-ASOCIADO-001</a>, <a href="#ALTA-ASOCIADO-002">ALTA-ASOCIADO-002</a>, <a href="#ALTA-ASOCIADO-003">ALTA-ASOCIADO-003</a>.</p>
+          </article>
+          <article class="card" id="cb-asociado-sin-usuario">
+            <h3>CB-asociado-sin-usuario</h3>
+            <p><strong>Situación:</strong> el asociado existe en el padrón, pero todavía no tiene usuario vinculado.</p>
+            <p><strong>Respuesta esperada:</strong> la situación es válida. El asociado queda cargado, pero no puede iniciar sesión hasta que se cree su <code>User</code>.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-crear-asociado">CU-crear-asociado</a>, <a href="#cu-crear-usuario-asociado">CU-crear-usuario-asociado</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#ASOCIADO-008">ASOCIADO-008</a>, <a href="#USUARIO-001">USUARIO-001</a>.</p>
+          </article>
+          <article class="card" id="cb-usuario-desactivado">
+            <h3>CB-usuario-desactivado</h3>
+            <p><strong>Situación:</strong> existe un asociado activo con usuario desactivado.</p>
+            <p><strong>Respuesta esperada:</strong> se bloquea el acceso, pero no se borran ni alteran los datos del asociado.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-ver-credencial">CU-ver-credencial</a>, <a href="#cu-ver-estado-cuotas">CU-ver-estado-cuotas</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#USUARIO-005">USUARIO-005</a>.</p>
+          </article>
+          <article class="card" id="cb-cambio-curso">
+            <h3>CB-cambio-curso</h3>
+            <p><strong>Situación:</strong> un asociado cambia de curso o división.</p>
+            <p><strong>Respuesta esperada:</strong> no se pisa el historial. Se crea una nueva <code>InscripcionCurso</code> y se conserva la anterior.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-cambiar-curso">CU-cambiar-curso</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#CURSO-002">CURSO-002</a>, <a href="#CURSO-003">CURSO-003</a>.</p>
+          </article>
+          <article class="card" id="cb-repite-curso">
+            <h3>CB-repite-curso</h3>
+            <p><strong>Situación:</strong> el asociado repite curso en un nuevo ciclo lectivo.</p>
+            <p><strong>Respuesta esperada:</strong> aunque el curso sea el mismo, se crea una nueva <code>InscripcionCurso</code> para ese nuevo ciclo.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-cambiar-curso">CU-cambiar-curso</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#CURSO-004">CURSO-004</a>.</p>
+          </article>
+          <article class="card" id="cb-baja-con-deuda">
+            <h3>CB-baja-con-deuda</h3>
+            <p><strong>Situación:</strong> se da de baja a un asociado que mantiene deuda.</p>
+            <p><strong>Respuesta esperada:</strong> la baja está permitida. La deuda se conserva y no se generan nuevas cuotas.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-dar-baja-asociado">CU-dar-baja-asociado</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#ASOCIADO-003">ASOCIADO-003</a>, <a href="#ASOCIADO-004">ASOCIADO-004</a>.</p>
+          </article>
+          <article class="card" id="cb-egresado-con-deuda">
+            <h3>CB-egresado-con-deuda</h3>
+            <p><strong>Situación:</strong> un asociado pasa a estado egresado y mantiene deuda.</p>
+            <p><strong>Respuesta esperada:</strong> está permitido. La deuda se conserva y no se generan nuevas cuotas.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-marcar-asociado-egresado">CU-marcar-asociado-egresado</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#ASOCIADO-003">ASOCIADO-003</a>, <a href="#ASOCIADO-004">ASOCIADO-004</a>.</p>
+          </article>
+          <article class="card" id="cb-cuota-ya-generada">
+            <h3>CB-cuota-ya-generada</h3>
+            <p><strong>Situación:</strong> se intenta generar una cuota para un asociado y período que ya existen.</p>
+            <p><strong>Respuesta esperada:</strong> el sistema no genera duplicados.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-generar-periodo-cuota">CU-generar-periodo-cuota</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#CUOTA-001">CUOTA-001</a>, <a href="#CUOTA-005">CUOTA-005</a>.</p>
+          </article>
+          <article class="card" id="cb-pago-parcial">
+            <h3>CB-pago-parcial</h3>
+            <p><strong>Situación:</strong> el importe ingresado no alcanza para cancelar una cuota completa.</p>
+            <p><strong>Respuesta esperada:</strong> el pago parcial está permitido. Se actualiza <code>importe_pagado</code> y el estado queda parcial.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-registrar-pago-cuota">CU-registrar-pago-cuota</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#PAGO-002">PAGO-002</a>, <a href="#CUOTA-003">CUOTA-003</a>.</p>
+          </article>
+          <article class="card" id="cb-pago-mayor-a-deuda">
+            <h3>CB-pago-mayor-a-deuda</h3>
+            <p><strong>Situación:</strong> se intenta registrar un pago mayor que la deuda seleccionada.</p>
+            <p><strong>Respuesta esperada:</strong> no está permitido. El sistema rechaza la operación y no maneja saldo a favor.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-registrar-pago-cuota">CU-registrar-pago-cuota</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#PAGO-003">PAGO-003</a>.</p>
+          </article>
+          <article class="card" id="cb-asociado-sin-deuda">
+            <h3>CB-asociado-sin-deuda</h3>
+            <p><strong>Situación:</strong> se intenta registrar un pago de cuota para un asociado sin deuda.</p>
+            <p><strong>Respuesta esperada:</strong> la operación no debería permitirse.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-registrar-pago-cuota">CU-registrar-pago-cuota</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#cu-registrar-pago-cuota">CU-registrar-pago-cuota</a>.</p>
+          </article>
+          <article class="card" id="cb-qr-invalido">
+            <h3>CB-qr-invalido</h3>
+            <p><strong>Situación:</strong> el token del QR no existe o es inválido.</p>
+            <p><strong>Respuesta esperada:</strong> el sistema debe mostrar credencial inválida.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-validar-credencial">CU-validar-credencial</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#CREDENCIAL-003">CREDENCIAL-003</a>.</p>
+          </article>
+          <article class="card" id="cb-comercio-inactivo">
+            <h3>CB-comercio-inactivo</h3>
+            <p><strong>Situación:</strong> un comercio inactivo intenta validar credenciales.</p>
+            <p><strong>Respuesta esperada:</strong> no puede hacerlo.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-validar-credencial">CU-validar-credencial</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-003">COMERCIO-003</a>.</p>
+          </article>
+          <article class="card" id="cb-beneficio-vencido">
+            <h3>CB-beneficio-vencido</h3>
+            <p><strong>Situación:</strong> un beneficio ya superó su fecha de vigencia.</p>
+            <p><strong>Respuesta esperada:</strong> no se muestra públicamente.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-gestionar-beneficio-comercio">CU-gestionar-beneficio-comercio</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-002">COMERCIO-002</a>.</p>
+          </article>
+          <article class="card" id="cb-beneficio-futuro">
+            <h3>CB-beneficio-futuro</h3>
+            <p><strong>Situación:</strong> un beneficio tiene <code>fecha_desde</code> futura.</p>
+            <p><strong>Respuesta esperada:</strong> no se muestra hasta alcanzar esa fecha.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-gestionar-beneficio-comercio">CU-gestionar-beneficio-comercio</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-002">COMERCIO-002</a>.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="reportes" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">9</p>
+          <h2>Reportes MVP</h2>
+        </div>
+        <div class="panel">
+          <ul class="columns">
+            <li>Asociados activos.</li>
+            <li>Asociados inactivos.</li>
+            <li>Asociados egresados.</li>
+            <li>Asociados por curso.</li>
+            <li>Asociados por tipo.</li>
+            <li>Asociados con usuario.</li>
+            <li>Asociados sin usuario.</li>
+            <li>Ultimos accesos.</li>
+            <li>Altas por mes.</li>
+            <li>Bajas por mes.</li>
+            <li>Cuotas generadas.</li>
+            <li>Cuotas pagadas.</li>
+            <li>Cuotas parciales.</li>
+            <li>Cuotas vencidas.</li>
+            <li>Deudores.</li>
+            <li>Deudores por curso.</li>
+            <li>Recaudacion por período.</li>
+            <li>Recaudacion por método de pago.</li>
+            <li>Comercios adheridos.</li>
+            <li>Beneficios vigentes.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="pantallas" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">10</p>
+          <h2>Pantallas MVP</h2>
+        </div>
+        <div class="grid grid--2">
+          <article class="card">
+            <h3>Sitio público</h3>
+            <ul>
+              <li>Inicio.</li>
+              <li>Beneficios.</li>
+              <li>Servicios.</li>
+              <li>Horarios.</li>
+              <li>Comercios.</li>
+              <li>Login.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Asociado</h3>
+            <ul>
+              <li>Panel.</li>
+              <li>Mi credencial.</li>
+              <li>Mis cuotas.</li>
+              <li>Beneficios.</li>
+              <li>Servicios.</li>
+              <li>Comercios adheridos.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Administrador</h3>
+            <ul>
+              <li>Dashboard.</li>
+              <li>Listado de asociados.</li>
+              <li>Nuevo asociado.</li>
+              <li>Importar asociados.</li>
+              <li>Detalle de asociado.</li>
+              <li>Crear usuario para asociado.</li>
+              <li>Cursos.</li>
+              <li>Colegios.</li>
+              <li>Períodos de cuota.</li>
+              <li>Generar cuotas.</li>
+              <li>Registrar pago.</li>
+              <li>Deudores.</li>
+              <li>Beneficios.</li>
+              <li>Servicios.</li>
+              <li>Publicidades.</li>
+              <li>Horarios.</li>
+              <li>Comercios.</li>
+              <li>Beneficios de comercio.</li>
+              <li>Reportes.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Comercio</h3>
+            <ul>
+              <li>Login.</li>
+              <li>Validar credencial.</li>
+              <li>Resultado de validación.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="v2" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">11</p>
+          <h2>Diseño aprobado para Versión 2</h2>
+        </div>
+        <div class="panel">
+          <p>Este módulo queda fuera del MVP, pero el diseño queda aprobado para una segunda versión.</p>
+          <p><strong>Entidades V2:</strong> Producto, VarianteProducto, MovimientoStock, Pedido, ItemPedido, PagoPedido.</p>
+        </div>
+        <div class="entity-list">
+          <article class="entity">
+            <h3>Producto</h3>
+            <p><strong>Campos sugeridos:</strong> id, nombre, descripción, precio, activo, controla_stock.</p>
+            <p><strong>Ejemplos:</strong> Remera Uni2, Apunte Matemática, Cuadernillo Inglés.</p>
+          </article>
+          <article class="entity">
+            <h3>VarianteProducto</h3>
+            <p><strong>Campos sugeridos:</strong> id, producto, nombre, sku, activo.</p>
+            <p><strong>Ejemplos:</strong> Talle S, M, L, XL para Remera Uni2; variante unica para apuntes.</p>
+          </article>
+          <article class="entity">
+            <h3>MovimientoStock</h3>
+            <p><strong>Campos sugeridos:</strong> id, variante, tipo, cantidad, fecha, descripción.</p>
+            <p><strong>Tipos:</strong> ingreso, egreso, ajuste, devolucion.</p>
+            <p><strong>Decision:</strong> el stock se descuenta al entregar el pedido, no al crearlo ni al pagarlo.</p>
+          </article>
+          <article class="entity">
+            <h3>Pedido</h3>
+            <p><strong>Campos sugeridos:</strong> id, asociado, fecha, estado, estado_pago, total, observaciones.</p>
+            <p><strong>Estados:</strong> pendiente, en_preparacion, entregado, cancelado.</p>
+            <p><strong>Estados de pago:</strong> pendiente, pagado.</p>
+            <p><strong>Decisiones:</strong> no se permiten pagos parciales en V2 inicial, no se entregan pedidos impagos y no se cancelan pedidos entregados.</p>
+          </article>
+          <article class="entity">
+            <h3>ItemPedido</h3>
+            <p><strong>Campos sugeridos:</strong> id, pedido, variante, cantidad, precio_unitario, subtotal.</p>
+          </article>
+          <article class="entity">
+            <h3>PagoPedido</h3>
+            <p><strong>Campos sugeridos:</strong> id, pago, pedido, importe.</p>
+            <p><strong>Relación futura:</strong> Pago 1 - N PagoCuota y Pago 1 - N PagoPedido.</p>
+            <p><strong>Decision:</strong> se conserva un único modelo Pago para ingresos; PagoCuota explica cuotas y PagoPedido explica pedidos.</p>
+          </article>
+        </div>
+        <div class="grid grid--2">
+          <article class="card">
+            <h3>Reglas V2</h3>
+            <ul>
+              <li>RV2-001 No se permite crear pedido si no hay stock suficiente.</li>
+              <li>RV2-002 El stock se descuenta al entregar el pedido.</li>
+              <li>RV2-003 No se puede entregar un pedido impago.</li>
+              <li>RV2-004 No se permite pago parcial de pedidos en V2 inicial.</li>
+              <li>RV2-005 No se puede cancelar un pedido entregado.</li>
+              <li>RV2-006 Algunos productos pueden no controlar stock.</li>
+              <li>ASIENTO-001 Cada pago de cuota puede generar un asiento de ingreso.</li>
+              <li>ASIENTO-002 Todo asiento debe tener al menos dos partidas.</li>
+              <li>ASIENTO-003 La suma del debe debe ser igual a la suma del haber.</li>
+              <li>ASIENTO-004 El importe del asiento debe coincidir con el total balanceado de sus partidas.</li>
+              <li>ASIENTO-005 No se implementa contabilidad completa en esta etapa.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Casos de uso V2</h3>
+            <ul>
+              <li>CU-V2-001 Crear pedido.</li>
+              <li>CU-V2-002 Registrar pago de pedido.</li>
+              <li>CU-V2-003 Entregar pedido.</li>
+              <li>CU-V2-004 Ver estado de pedidos.</li>
+            </ul>
+            <h4>Reportes V2</h4>
+            <ul>
+              <li>Pedidos pendientes.</li>
+              <li>Pedidos pagados.</li>
+              <li>Pedidos entregados.</li>
+              <li>Ventas por producto.</li>
+              <li>Stock actual.</li>
+              <li>Movimientos de stock.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="roadmap" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">12</p>
+          <h2>Roadmap</h2>
+        </div>
+        <div class="grid grid--3">
+          <article class="card card--accent">
+            <h3>MVP</h3>
+            <ul>
+              <li>Asociados.</li>
+              <li>Colegios.</li>
+              <li>Cursos.</li>
+              <li>Inscripciones de curso.</li>
+              <li>Usuarios vinculados a asociados.</li>
+              <li>Cuotas.</li>
+              <li>Pagos de cuotas.</li>
+              <li>Credenciales digitales.</li>
+              <li>Comercios.</li>
+              <li>Beneficios de comercios.</li>
+              <li>Beneficios institucionales.</li>
+              <li>Servicios informativos.</li>
+              <li>Horarios.</li>
+              <li>Publicidades.</li>
+              <li>Reportes básicos.</li>
+              <li>Asientos simples.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Versión 2</h3>
+            <ul>
+              <li>Productos.</li>
+              <li>Variantes.</li>
+              <li>Pedidos.</li>
+              <li>Items de pedido.</li>
+              <li>PagoPedido.</li>
+              <li>MovimientoStock.</li>
+              <li>Reportes de ventas y stock.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Versión 3</h3>
+            <ul>
+              <li>PWA.</li>
+              <li>Notificaciones push.</li>
+              <li>Mapa de comercios.</li>
+              <li>Pago online.</li>
+              <li>Contabilidad completa.</li>
+              <li>Tickets de consultas.</li>
+              <li>Mensajería.</li>
+              <li>Asambleas.</li>
+              <li>Votaciones.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</body>
+</html>
