@@ -4,14 +4,21 @@ from django.urls import reverse
 
 from asociados.models import Asociado
 from asociados.services import create_asociado
-from comercios.models import Comercio
+from comercios.models import ActividadComercial, Comercio
 
 
 @pytest.mark.django_db
 def test_validacion_credencial_comercio(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="com2", password="secreto123")
-    Comercio.objects.create(nombre="Papelera Centro", direccion="San Martin 55", usuario=user)
+    actividad = ActividadComercial.objects.create(nombre="Papeleria")
+    Comercio.objects.create(
+        nombre="Papelera Centro",
+        direccion="San Martin 55",
+        usuario=user,
+        actividad_comercial=actividad,
+        estado=Comercio.ESTADO_FIRMADO,
+    )
     asociado = create_asociado(
         nombre="Eva",
         apellido="Lopez",

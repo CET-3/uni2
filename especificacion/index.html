@@ -11,19 +11,14 @@
     <div class="hero__content">
       <p class="eyebrow">Especificación funcional</p>
       <h1>Uni2</h1>
-      <p class="hero__lead">Plataforma de gestión para mutuales escolares. Esta versión HTML toma <code>UNI2_MASTER_SPEC.md</code> como fuente de verdad y organiza el contenido para lectura ejecutiva y consulta operativa.</p>
-      <div class="hero__meta">
-        <span class="pill pill--solid">MVP definido</span>
-        <span class="pill">Documento base navegable</span>
-        <span class="pill">Preparado para crecimiento multi colegio</span>
-      </div>
+      <p class="hero__lead">Esta especificación describe el alcance, las reglas de negocio, el modelo de datos y los casos de uso de Uni2.</p>
     </div>
     <aside class="hero__summary">
       <h2>Resumen rápido</h2>
       <ul>
         <li>Administra asociados, cuotas, pagos, credenciales, beneficios, comercios y reportes básicos.</li>
-        <li>Incluye contabilidad simple con asientos y partidas.</li>
-        <li>Deja aprobada una V2 para productos, pedidos y stock.</li>
+        <li>Incluye consulta pública y validación de credenciales para comercios adheridos.</li>
+        <li>Deja aprobada una V2 para productos, pedidos, stock y contabilidad.</li>
       </ul>
     </aside>
   </header>
@@ -51,13 +46,8 @@
               <li><a href="#entidad-beneficio">Beneficio</a></li>
               <li><a href="#entidad-servicio">Servicio</a></li>
               <li><a href="#entidad-publicidad">Publicidad</a></li>
-              <li><a href="#entidad-horario-atencion">HorarioAtención</a></li>
+              <li><a href="#entidad-actividad-comercial">ActividadComercial</a></li>
               <li><a href="#entidad-comercio">Comercio</a></li>
-              <li><a href="#entidad-beneficio-comercio">BeneficioComercio</a></li>
-              <li><a href="#entidad-notificacion">Notificación</a></li>
-              <li><a href="#entidad-cuenta-contable">CuentaContable</a></li>
-              <li><a href="#entidad-asiento">Asiento</a></li>
-              <li><a href="#entidad-partida-asiento">PartidaAsiento</a></li>
             </ol>
           </details>
         </li>
@@ -80,7 +70,6 @@
               <li><a href="#cu-cambiar-curso">CU-cambiar-curso</a></li>
               <li><a href="#cu-validar-credencial">CU-validar-credencial</a></li>
               <li><a href="#cu-gestionar-comercio">CU-gestionar-comercio</a></li>
-              <li><a href="#cu-gestionar-beneficio-comercio">CU-gestionar-beneficio-comercio</a></li>
             </ol>
           </details>
         </li>
@@ -100,15 +89,25 @@
               <li><a href="#cb-pago-mayor-a-deuda">CB-pago-mayor-a-deuda</a></li>
               <li><a href="#cb-asociado-sin-deuda">CB-asociado-sin-deuda</a></li>
               <li><a href="#cb-qr-invalido">CB-qr-invalido</a></li>
-              <li><a href="#cb-comercio-inactivo">CB-comercio-inactivo</a></li>
-              <li><a href="#cb-beneficio-vencido">CB-beneficio-vencido</a></li>
-              <li><a href="#cb-beneficio-futuro">CB-beneficio-futuro</a></li>
+              <li><a href="#cb-comercio-sin-convenio-firmado">CB-comercio-sin-convenio-firmado</a></li>
+              <li><a href="#cb-beneficio-no-cargado">CB-beneficio-no-cargado</a></li>
+              <li><a href="#cb-actividad-comercial-no-definida">CB-actividad-comercial-no-definida</a></li>
             </ol>
           </details>
         </li>
         <li><a href="#reportes">Reportes MVP</a></li>
         <li><a href="#pantallas">Pantallas MVP</a></li>
-        <li><a href="#v2">Diseño aprobado para Versión 2</a></li>
+        <li>
+          <details class="toc-tree">
+            <summary><a href="#v2">Diseño aprobado para Versión 2</a></summary>
+            <ol>
+              <li><a href="#v2-alcance">Alcance V2</a></li>
+              <li><a href="#v2-modelo">Modelo de datos V2</a></li>
+              <li><a href="#v2-casos-uso">Casos de uso V2</a></li>
+              <li><a href="#v2-casos-borde">Casos borde V2</a></li>
+            </ol>
+          </details>
+        </li>
         <li><a href="#roadmap">Roadmap</a></li>
       </ol>
     </nav>
@@ -134,7 +133,7 @@
               <li>Cuotas y pagos.</li>
               <li>Credenciales digitales.</li>
               <li>Beneficios institucionales.</li>
-              <li>Comercios adheridos y beneficios comerciales.</li>
+              <li>Comercios adheridos con su beneficio comercial.</li>
               <li>Reportes administrativos básicos.</li>
               <li>Contabilidad simple con asientos y partidas.</li>
             </ul>
@@ -207,7 +206,7 @@
             <ul>
               <li>Iniciar sesión.</li>
               <li>Validar credenciales.</li>
-              <li>Consultar beneficios propios.</li>
+              <li>Consultar su beneficio vigente.</li>
             </ul>
           </article>
         </div>
@@ -242,7 +241,7 @@
               <li>Publicidades.</li>
               <li>Horarios de atención.</li>
               <li>Comercios adheridos.</li>
-              <li>Beneficios de comercios.</li>
+              <li>Beneficio de cada comercio.</li>
               <li>Reportes básicos.</li>
             </ul>
           </article>
@@ -457,17 +456,13 @@
             </ul>
             <p><strong>Reglas:</strong> si tiene fecha futura no se muestra todavía; si la fecha de fin ya pasó, tampoco.</p>
           </article>
-          <article class="entity" id="entidad-horario-atencion">
-            <h3>HorarioAtención</h3>
-            <p>Horarios de atención de la mutual.</p>
+          <article class="entity" id="entidad-actividad-comercial">
+            <h3>ActividadComercial</h3>
+            <p>Clasifica el rubro o actividad principal de un comercio adherido.</p>
             <p><strong>Campos:</strong></p>
             <ul>
               <li>id</li>
-              <li>día_semana</li>
-              <li>hora_desde</li>
-              <li>hora_hasta</li>
-              <li>descripción</li>
-              <li>activo</li>
+              <li>nombre</li>
             </ul>
           </article>
           <article class="entity" id="entidad-comercio">
@@ -476,9 +471,15 @@
             <p><strong>Campos:</strong></p>
             <ul>
               <li>id</li>
+              <li>actividad_comercial</li>
               <li>usuario</li>
               <li>nombre</li>
-              <li>responsable</li>
+              <li>propietario</li>
+              <li>beneficio_texto</li>
+              <li>estado</li>
+              <li>fecha_convenio</li>
+              <li>notas</li>
+              <li>flyer_disponible</li>
               <li>email</li>
               <li>teléfono</li>
               <li>dirección</li>
@@ -487,86 +488,9 @@
               <li>provincia</li>
               <li>latitud</li>
               <li>longitud</li>
-              <li>activo</li>
             </ul>
-            <p><strong>Reglas:</strong> puede tener usuario de acceso, validar credenciales, tener múltiples beneficios, informar una URL pública y guardar coordenadas para mapa futuro.</p>
-          </article>
-          <article class="entity" id="entidad-beneficio-comercio">
-            <h3>BeneficioComercio</h3>
-            <p>Beneficio ofrecido por un comercio.</p>
-            <p><strong>Campos:</strong></p>
-            <ul>
-              <li>id</li>
-              <li>comercio</li>
-              <li>título</li>
-              <li>descripción</li>
-              <li>tipo_descuento</li>
-              <li>valor_descuento</li>
-              <li>condiciones</li>
-              <li>fecha_desde</li>
-              <li>fecha_hasta</li>
-              <li>activo</li>
-            </ul>
-            <p><strong>Tipos de descuento:</strong> porcentaje, monto_fijo, promoción, otro.</p>
-            <p><strong>Ejemplos:</strong> 10% en útiles escolares, $1000 en compras mayores a $10000, 2x1 en anillados.</p>
-            <p><strong>Reglas:</strong> un comercio puede tener varios beneficios; los vencidos o futuros no se muestran.</p>
-          </article>
-          <article class="entity" id="entidad-notificacion">
-            <h3>Notificación</h3>
-            <p>Notificación interna del sistema.</p>
-            <p><strong>Campos:</strong></p>
-            <ul>
-              <li>id</li>
-              <li>usuario</li>
-              <li>título</li>
-              <li>mensaje</li>
-              <li>leída</li>
-              <li>fecha_creación</li>
-            </ul>
-            <p><strong>Notas:</strong> en el MVP puede usarse como notificación interna; las push quedan para una versión futura.</p>
-          </article>
-          <article class="entity" id="entidad-cuenta-contable">
-            <h3>CuentaContable</h3>
-            <p>Cuenta utilizada para imputar partidas contables.</p>
-            <p><strong>Campos:</strong></p>
-            <ul>
-              <li>id</li>
-              <li>código</li>
-              <li>nombre</li>
-              <li>tipo</li>
-              <li>activa</li>
-            </ul>
-            <p><strong>Tipos:</strong> activo, pasivo, patrimonio, ingreso, egreso.</p>
-          </article>
-          <article class="entity" id="entidad-asiento">
-            <h3>Asiento</h3>
-            <p>Cabecera de un asiento contable simple.</p>
-            <p><strong>Campos:</strong></p>
-            <ul>
-              <li>id</li>
-              <li>fecha</li>
-              <li>descripción</li>
-              <li>tipo</li>
-              <li>importe</li>
-              <li>origen</li>
-            </ul>
-            <p><strong>Tipos:</strong> ingreso, egreso.</p>
-            <p><strong>Reglas:</strong> puede originarse en un pago de cuota y a futuro en otros pagos; debe tener 2 o más partidas; debe balancear debe y haber; el importe debe coincidir con el total balanceado; no reemplaza una contabilidad completa.</p>
-          </article>
-          <article class="entity" id="entidad-partida-asiento">
-            <h3>PartidaAsiento</h3>
-            <p>Linea contable perteneciente a un asiento.</p>
-            <p><strong>Campos:</strong></p>
-            <ul>
-              <li>id</li>
-              <li>asiento</li>
-              <li>cuenta_contable</li>
-              <li>movimiento</li>
-              <li>importe</li>
-              <li>detalle</li>
-            </ul>
-            <p><strong>Movimientos:</strong> debe, haber.</p>
-            <p><strong>Reglas:</strong> un asiento puede tener 2 o más partidas y cada partida debe imputarse a una cuenta contable.</p>
+            <p><strong>Estados:</strong> pendiente, firmado, vencido, baja.</p>
+            <p><strong>Reglas:</strong> puede tener usuario de acceso, validar credenciales si su estado es firmado, informar una URL pública, guardar un único beneficio como texto libre, usar una actividad comercial definida y guardar coordenadas para mapa futuro.</p>
           </article>
         </div>
       </section>
@@ -588,12 +512,8 @@
             <li>Asociado 1 - N Pago</li>
             <li>Pago 1 - N PagoCuota</li>
             <li>Cuota 1 - N PagoCuota</li>
-            <li>Usuario 1 - N Notificación</li>
+            <li>ActividadComercial 1 - N Comercio</li>
             <li>Usuario 1 - 0..1 Comercio</li>
-            <li>Comercio 1 - N BeneficioComercio</li>
-            <li>CuentaContable 1 - N PartidaAsiento</li>
-            <li>Asiento 1 - N PartidaAsiento</li>
-            <li>Pago 1 - 0..N Asiento como origen posible</li>
           </ul>
         </div>
       </section>
@@ -669,9 +589,10 @@
         <div class="rule-group">
           <h3>Comercios</h3>
           <ul class="rule-list">
-            <li id="COMERCIO-001"><strong><a href="#COMERCIO-001">COMERCIO-001</a></strong> Un comercio puede ofrecer múltiples beneficios.</li>
-            <li id="COMERCIO-002"><strong><a href="#COMERCIO-002">COMERCIO-002</a></strong> Los beneficios pueden tener fecha de inicio y fecha de fin.</li>
-            <li id="COMERCIO-003"><strong><a href="#COMERCIO-003">COMERCIO-003</a></strong> Solo comercios activos pueden validar credenciales.</li>
+            <li id="COMERCIO-001"><strong><a href="#COMERCIO-001">COMERCIO-001</a></strong> Cada comercio tiene una única actividad comercial vinculada mediante <code>ActividadComercial</code>.</li>
+            <li id="COMERCIO-002"><strong><a href="#COMERCIO-002">COMERCIO-002</a></strong> El beneficio del comercio se guarda como texto libre dentro de <code>Comercio</code>.</li>
+            <li id="COMERCIO-003"><strong><a href="#COMERCIO-003">COMERCIO-003</a></strong> El estado del comercio se selecciona desde una lista fija definida en el sistema. No se administra como entidad independiente.</li>
+            <li id="COMERCIO-004"><strong><a href="#COMERCIO-004">COMERCIO-004</a></strong> Solo comercios con estado firmado pueden validar credenciales.</li>
           </ul>
         </div>
         <div class="rule-group">
@@ -700,7 +621,7 @@
               <li>Consulta información institucional.</li>
               <li>Revisa beneficios, servicios, horarios y comercios.</li>
             </ol>
-            <p><strong>Modelos afectados:</strong> Beneficio, Servicio, HorarioAtencion, Comercio, BeneficioComercio.</p>
+            <p><strong>Modelos afectados:</strong> Beneficio, Servicio, ActividadComercial, Comercio.</p>
           </article>
           <article class="use-case" id="cu-ver-credencial">
             <h3>CU-ver-credencial</h3>
@@ -856,7 +777,7 @@
               <li>Verifica el estado.</li>
               <li>Muestra el resultado.</li>
             </ol>
-            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-003">COMERCIO-003</a>, <a href="#CREDENCIAL-001">CREDENCIAL-001</a>, <a href="#CREDENCIAL-002">CREDENCIAL-002</a>, <a href="#CREDENCIAL-003">CREDENCIAL-003</a>, <a href="#CREDENCIAL-004">CREDENCIAL-004</a>.</p>
+            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-004">COMERCIO-004</a>, <a href="#CREDENCIAL-001">CREDENCIAL-001</a>, <a href="#CREDENCIAL-002">CREDENCIAL-002</a>, <a href="#CREDENCIAL-003">CREDENCIAL-003</a>, <a href="#CREDENCIAL-004">CREDENCIAL-004</a>.</p>
             <p><strong>Situaciones especiales:</strong> QR invalido, asociado inactivo, asociado egresado, comercio inactivo.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Comercio.</p>
           </article>
@@ -866,28 +787,17 @@
             <p><strong>Flujo principal:</strong></p>
             <ol>
               <li>Crea o edita el comercio.</li>
+              <li>Selecciona la actividad comercial.</li>
+              <li>Carga el beneficio como texto libre.</li>
+              <li>Define el estado.</li>
               <li>Carga datos de contacto.</li>
               <li>Carga dirección.</li>
               <li>Carga coordenadas opcionales.</li>
-              <li>Define si queda activo o inactivo.</li>
+              <li>Define el estado del convenio.</li>
             </ol>
-            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-003">COMERCIO-003</a>.</p>
-            <p><strong>Modelos afectados:</strong> Comercio.</p>
-          </article>
-          <article class="use-case" id="cu-gestionar-beneficio-comercio">
-            <h3>CU-gestionar-beneficio-comercio</h3>
-            <p><strong>Actor:</strong> Administrador</p>
-            <p><strong>Flujo principal:</strong></p>
-            <ol>
-              <li>Selecciona el comercio.</li>
-              <li>Crea el beneficio.</li>
-              <li>Define contenido.</li>
-              <li>Define vigencia.</li>
-              <li>Lo activa.</li>
-            </ol>
-            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-002">COMERCIO-002</a>.</p>
-            <p><strong>Situaciones especiales:</strong> beneficio vencido, futuro, comercio inactivo.</p>
-            <p><strong>Modelos afectados:</strong> Comercio, BeneficioComercio.</p>
+            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-002">COMERCIO-002</a>, <a href="#COMERCIO-003">COMERCIO-003</a>, <a href="#COMERCIO-004">COMERCIO-004</a>.</p>
+            <p><strong>Situaciones especiales:</strong> comercio sin convenio firmado, beneficio no cargado, actividad comercial no definida.</p>
+            <p><strong>Modelos afectados:</strong> ActividadComercial, Comercio.</p>
           </article>
         </div>
       </section>
@@ -982,26 +892,26 @@
             <p><strong>Caso de uso relacionado:</strong> <a href="#cu-validar-credencial">CU-validar-credencial</a>.</p>
             <p><strong>Relacionado con:</strong> <a href="#CREDENCIAL-003">CREDENCIAL-003</a>.</p>
           </article>
-          <article class="card" id="cb-comercio-inactivo">
-            <h3>CB-comercio-inactivo</h3>
-            <p><strong>Situación:</strong> un comercio inactivo intenta validar credenciales.</p>
+          <article class="card" id="cb-comercio-sin-convenio-firmado">
+            <h3>CB-comercio-sin-convenio-firmado</h3>
+            <p><strong>Situación:</strong> un comercio con estado pendiente, vencido o baja intenta validar credenciales.</p>
             <p><strong>Respuesta esperada:</strong> no puede hacerlo.</p>
-            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-validar-credencial">CU-validar-credencial</a>.</p>
-            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-003">COMERCIO-003</a>.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-validar-credencial">CU-validar-credencial</a>, <a href="#cu-gestionar-comercio">CU-gestionar-comercio</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-004">COMERCIO-004</a>.</p>
           </article>
-          <article class="card" id="cb-beneficio-vencido">
-            <h3>CB-beneficio-vencido</h3>
-            <p><strong>Situación:</strong> un beneficio ya superó su fecha de vigencia.</p>
-            <p><strong>Respuesta esperada:</strong> no se muestra públicamente.</p>
-            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-gestionar-beneficio-comercio">CU-gestionar-beneficio-comercio</a>.</p>
+          <article class="card" id="cb-beneficio-no-cargado">
+            <h3>CB-beneficio-no-cargado</h3>
+            <p><strong>Situación:</strong> el comercio existe, pero todavía no tiene beneficio cargado.</p>
+            <p><strong>Respuesta esperada:</strong> puede mantenerse cargado, pero no debería mostrarse como comercio con beneficio vigente.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-gestionar-comercio">CU-gestionar-comercio</a>.</p>
             <p><strong>Relacionado con:</strong> <a href="#COMERCIO-002">COMERCIO-002</a>.</p>
           </article>
-          <article class="card" id="cb-beneficio-futuro">
-            <h3>CB-beneficio-futuro</h3>
-            <p><strong>Situación:</strong> un beneficio tiene <code>fecha_desde</code> futura.</p>
-            <p><strong>Respuesta esperada:</strong> no se muestra hasta alcanzar esa fecha.</p>
-            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-gestionar-beneficio-comercio">CU-gestionar-beneficio-comercio</a>.</p>
-            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-002">COMERCIO-002</a>.</p>
+          <article class="card" id="cb-actividad-comercial-no-definida">
+            <h3>CB-actividad-comercial-no-definida</h3>
+            <p><strong>Situación:</strong> se intenta crear o editar un comercio sin actividad comercial definida.</p>
+            <p><strong>Respuesta esperada:</strong> la operación no debería permitirse.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-gestionar-comercio">CU-gestionar-comercio</a>.</p>
+            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>.</p>
           </article>
         </div>
       </section>
@@ -1085,7 +995,6 @@
               <li>Publicidades.</li>
               <li>Horarios.</li>
               <li>Comercios.</li>
-              <li>Beneficios de comercio.</li>
               <li>Reportes.</li>
             </ul>
           </article>
@@ -1106,42 +1015,177 @@
           <h2>Diseño aprobado para Versión 2</h2>
         </div>
         <div class="panel">
-          <p>Este módulo queda fuera del MVP, pero el diseño queda aprobado para una segunda versión.</p>
-          <p><strong>Entidades V2:</strong> Producto, VarianteProducto, MovimientoStock, Pedido, ItemPedido, PagoPedido.</p>
+          <p>Esta sección reúne definiciones ya acordadas que quedan fuera del MVP, pero forman parte del diseño aprobado para una segunda versión.</p>
+        </div>
+        <div class="panel" id="v2-alcance">
+          <h3>Alcance V2</h3>
+          <ul>
+            <li>Productos.</li>
+            <li>Variantes.</li>
+            <li>Pedidos.</li>
+            <li>Items de pedido.</li>
+            <li>Pagos de pedidos.</li>
+            <li>Movimiento de stock.</li>
+            <li>Reportes de ventas y stock.</li>
+            <li>Asientos simples vinculados a pagos.</li>
+          </ul>
+        </div>
+        <div class="panel" id="v2-modelo">
+          <h3>Modelo de datos V2</h3>
+          <p><strong>Entidades V2:</strong> Producto, VarianteProducto, MovimientoStock, Pedido, ItemPedido, PagoPedido, Notificación, CuentaContable, Asiento, PartidaAsiento, BeneficioComercio.</p>
         </div>
         <div class="entity-list">
           <article class="entity">
             <h3>Producto</h3>
-            <p><strong>Campos sugeridos:</strong> id, nombre, descripción, precio, activo, controla_stock.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>nombre</li>
+              <li>descripción</li>
+              <li>precio</li>
+              <li>activo</li>
+              <li>controla_stock</li>
+            </ul>
             <p><strong>Ejemplos:</strong> Remera Uni2, Apunte Matemática, Cuadernillo Inglés.</p>
           </article>
           <article class="entity">
             <h3>VarianteProducto</h3>
-            <p><strong>Campos sugeridos:</strong> id, producto, nombre, sku, activo.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>producto</li>
+              <li>nombre</li>
+              <li>sku</li>
+              <li>activo</li>
+            </ul>
             <p><strong>Ejemplos:</strong> Talle S, M, L, XL para Remera Uni2; variante unica para apuntes.</p>
           </article>
           <article class="entity">
             <h3>MovimientoStock</h3>
-            <p><strong>Campos sugeridos:</strong> id, variante, tipo, cantidad, fecha, descripción.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>variante</li>
+              <li>tipo</li>
+              <li>cantidad</li>
+              <li>fecha</li>
+              <li>descripción</li>
+            </ul>
             <p><strong>Tipos:</strong> ingreso, egreso, ajuste, devolucion.</p>
             <p><strong>Decision:</strong> el stock se descuenta al entregar el pedido, no al crearlo ni al pagarlo.</p>
           </article>
           <article class="entity">
             <h3>Pedido</h3>
-            <p><strong>Campos sugeridos:</strong> id, asociado, fecha, estado, estado_pago, total, observaciones.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>asociado</li>
+              <li>fecha</li>
+              <li>estado</li>
+              <li>estado_pago</li>
+              <li>total</li>
+              <li>observaciones</li>
+            </ul>
             <p><strong>Estados:</strong> pendiente, en_preparacion, entregado, cancelado.</p>
             <p><strong>Estados de pago:</strong> pendiente, pagado.</p>
             <p><strong>Decisiones:</strong> no se permiten pagos parciales en V2 inicial, no se entregan pedidos impagos y no se cancelan pedidos entregados.</p>
           </article>
           <article class="entity">
             <h3>ItemPedido</h3>
-            <p><strong>Campos sugeridos:</strong> id, pedido, variante, cantidad, precio_unitario, subtotal.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>pedido</li>
+              <li>variante</li>
+              <li>cantidad</li>
+              <li>precio_unitario</li>
+              <li>subtotal</li>
+            </ul>
           </article>
           <article class="entity">
             <h3>PagoPedido</h3>
-            <p><strong>Campos sugeridos:</strong> id, pago, pedido, importe.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>pago</li>
+              <li>pedido</li>
+              <li>importe</li>
+            </ul>
             <p><strong>Relación futura:</strong> Pago 1 - N PagoCuota y Pago 1 - N PagoPedido.</p>
             <p><strong>Decision:</strong> se conserva un único modelo Pago para ingresos; PagoCuota explica cuotas y PagoPedido explica pedidos.</p>
+          </article>
+          <article class="entity">
+            <h3>BeneficioComercio</h3>
+            <p>Entidad futura para modelar múltiples beneficios por comercio o promociones con mayor complejidad.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>comercio</li>
+              <li>titulo</li>
+              <li>descripcion</li>
+              <li>tipo_descuento</li>
+              <li>valor_descuento</li>
+              <li>condiciones</li>
+              <li>fecha_desde</li>
+              <li>fecha_hasta</li>
+              <li>activo</li>
+            </ul>
+          </article>
+          <article class="entity">
+            <h3>Notificación</h3>
+            <p>Notificación interna del sistema.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>usuario</li>
+              <li>título</li>
+              <li>mensaje</li>
+              <li>leída</li>
+              <li>fecha_creación</li>
+            </ul>
+            <p><strong>Notas:</strong> puede usarse como notificación interna; las push quedan para una versión futura.</p>
+          </article>
+          <article class="entity">
+            <h3>CuentaContable</h3>
+            <p>Cuenta utilizada para imputar partidas contables.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>código</li>
+              <li>nombre</li>
+              <li>tipo</li>
+              <li>activa</li>
+            </ul>
+            <p><strong>Tipos:</strong> activo, pasivo, patrimonio, ingreso, egreso.</p>
+          </article>
+          <article class="entity">
+            <h3>Asiento</h3>
+            <p>Cabecera de un asiento contable simple.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>fecha</li>
+              <li>descripción</li>
+              <li>tipo</li>
+              <li>importe</li>
+              <li>origen</li>
+            </ul>
+            <p><strong>Tipos:</strong> ingreso, egreso.</p>
+            <p><strong>Notas:</strong> puede originarse en un pago de cuota y, a futuro, en otros tipos de pago.</p>
+          </article>
+          <article class="entity">
+            <h3>PartidaAsiento</h3>
+            <p>Línea contable perteneciente a un asiento.</p>
+            <p><strong>Campos sugeridos:</strong></p>
+            <ul>
+              <li>id</li>
+              <li>asiento</li>
+              <li>cuenta_contable</li>
+              <li>movimiento</li>
+              <li>importe</li>
+              <li>detalle</li>
+            </ul>
+            <p><strong>Movimientos:</strong> debe, haber.</p>
           </article>
         </div>
         <div class="grid grid--2">
@@ -1161,7 +1205,7 @@
               <li>ASIENTO-005 No se implementa contabilidad completa en esta etapa.</li>
             </ul>
           </article>
-          <article class="card">
+          <article class="card" id="v2-casos-uso">
             <h3>Casos de uso V2</h3>
             <ul>
               <li>CU-V2-001 Crear pedido.</li>
@@ -1169,7 +1213,20 @@
               <li>CU-V2-003 Entregar pedido.</li>
               <li>CU-V2-004 Ver estado de pedidos.</li>
             </ul>
-            <h4>Reportes V2</h4>
+          </article>
+        </div>
+        <div class="grid grid--2">
+          <article class="card" id="v2-casos-borde">
+            <h3>Casos borde V2</h3>
+            <ul>
+              <li>Pedido sin stock suficiente.</li>
+              <li>Intento de entregar pedido impago.</li>
+              <li>Intento de cancelar pedido ya entregado.</li>
+              <li>Producto que no controla stock.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Reportes V2</h3>
             <ul>
               <li>Pedidos pendientes.</li>
               <li>Pedidos pagados.</li>
@@ -1200,7 +1257,7 @@
               <li>Pagos de cuotas.</li>
               <li>Credenciales digitales.</li>
               <li>Comercios.</li>
-              <li>Beneficios de comercios.</li>
+              <li>Beneficio de cada comercio.</li>
               <li>Beneficios institucionales.</li>
               <li>Servicios informativos.</li>
               <li>Horarios.</li>
@@ -1218,6 +1275,7 @@
               <li>Items de pedido.</li>
               <li>PagoPedido.</li>
               <li>MovimientoStock.</li>
+              <li>Múltiples beneficios por comercio.</li>
               <li>Reportes de ventas y stock.</li>
             </ul>
           </article>
