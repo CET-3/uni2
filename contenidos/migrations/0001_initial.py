@@ -26,20 +26,4 @@ class Migration(migrations.Migration):
                 'ordering': ['orden', 'titulo'],
             },
         ),
-        migrations.CreateModel(
-            name='HorarioAtencion',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('dia_semana', models.PositiveSmallIntegerField(choices=[(1, 'Lunes'), (2, 'Martes'), (3, 'Miercoles'), (4, 'Jueves'), (5, 'Viernes'), (6, 'Sabado'), (7, 'Domingo')])),
-                ('hora_desde', models.TimeField()),
-                ('hora_hasta', models.TimeField()),
-                ('descripcion', models.CharField(blank=True, max_length=255)),
-                ('activo', models.BooleanField(default=True)),
-            ],
-            options={
-                'verbose_name': 'Horario de atencion',
-                'verbose_name_plural': 'Horarios de atencion',
-                'ordering': ['dia_semana', 'hora_desde'],
-            },
-        ),
     ]

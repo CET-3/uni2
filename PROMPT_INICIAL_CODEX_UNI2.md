@@ -97,7 +97,6 @@ Configurar desde el inicio:
 - Comercio
 - BeneficioComercio
 - Beneficio
-- HorarioAtencion
 - Asiento
 
 ## Reglas de negocio

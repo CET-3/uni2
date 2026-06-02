@@ -68,7 +68,7 @@ Las apps se separan por dominio o experiencia:
 - `asociados`: experiencia del asociado autenticado
 - `comercios`: experiencia del comercio autenticado
 - `cuotas`: cuotas, pagos y deuda
-- `contenidos`: beneficios y horarios que consume la web
+- `contenidos`: beneficios que consume la web
 - `contabilidad`: cuentas y asientos
 
 ## Organización del código

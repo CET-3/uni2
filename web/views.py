@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 
 from comercios.selectors import get_comercios_firmados
-from contenidos.selectors import get_beneficios_publicos, get_horarios_activos
+from contenidos.selectors import get_beneficios_publicos
 
 
 class HomeView(TemplateView):
@@ -10,7 +10,6 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["beneficios"] = get_beneficios_publicos()[:3]
-        context["horarios"] = get_horarios_activos()[:3]
         context["comercios"] = get_comercios_firmados()[:3]
         return context
 
@@ -21,14 +20,6 @@ class BeneficiosPublicosView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["beneficios"] = get_beneficios_publicos()
-        return context
-
-class HorariosPublicosView(TemplateView):
-    template_name = "web/horarios.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["horarios"] = get_horarios_activos()
         return context
 
 

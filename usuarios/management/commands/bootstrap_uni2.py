@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 
 from asociados.models import Colegio, Curso
 from comercios.models import ActividadComercial, Comercio
-from contenidos.models import Beneficio, HorarioAtencion
+from contenidos.models import Beneficio
 from contabilidad.models import CuentaContable
 from usuarios.services import ADMIN_GROUP, ensure_default_groups
 
@@ -45,19 +45,6 @@ class Command(BaseCommand):
             Beneficio.objects.get_or_create(
                 titulo=titulo,
                 defaults={"descripcion": descripcion, "activo": True, "orden": orden},
-            )
-
-        horarios = [
-            (1, "08:00", "12:00", "Atencion administrativa"),
-            (3, "14:00", "18:00", "Atencion a asociados"),
-            (5, "08:00", "12:00", "Consultas y pagos"),
-        ]
-        for dia_semana, hora_desde, hora_hasta, descripcion in horarios:
-            HorarioAtencion.objects.get_or_create(
-                dia_semana=dia_semana,
-                hora_desde=hora_desde,
-                hora_hasta=hora_hasta,
-                defaults={"descripcion": descripcion, "activo": True},
             )
 
         libreria, _ = ActividadComercial.objects.get_or_create(nombre="Libreria")

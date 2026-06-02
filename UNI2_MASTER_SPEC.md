@@ -58,7 +58,6 @@ Usuario no autenticado. Puede consultar:
 - Página de inicio.
 - Información institucional.
 - Beneficios.
-- Horarios de atención.
 - Comercios adheridos.
 - Acceso al login.
 
@@ -83,7 +82,6 @@ Usuario interno de gestión. Puede:
 - Gestionar cuotas.
 - Registrar pagos.
 - Gestionar beneficios.
-- Gestionar horarios.
 - Gestionar comercios.
 - Consultar reportes.
 - Registrar o consultar asientos simples.
@@ -118,7 +116,6 @@ Usuario vinculado a un comercio adherido. Puede:
 - Credencial digital.
 - Validación de credencial por comercio.
 - Beneficios institucionales.
-- Horarios de atención.
 - Comercios adheridos.
 - Beneficios de comercios.
 - Reportes básicos.
@@ -485,21 +482,6 @@ Campos:
 - descripcion
 - activo
 - orden
-
----
-
-## HorarioAtencion
-
-Horarios de atención de la mutual.
-
-Campos:
-
-- id
-- dia_semana
-- hora_desde
-- hora_hasta
-- descripcion
-- activo
 
 ---
 
@@ -940,13 +922,11 @@ Flujo principal:
 
 1. Ingresa al sitio.
 2. Consulta información institucional.
-3. Consulta beneficios, horarios y comercios.
+3. Consulta beneficios y comercios.
 
 Modelos afectados:
 
 - Beneficio
-- HorarioAtencion
-- HorarioAtencion
 - Comercio
 - BeneficioComercio
 
@@ -1475,7 +1455,6 @@ Reportes mínimos:
 
 - Inicio.
 - Beneficios.
-- Horarios.
 - Comercios.
 - Login.
 
@@ -1502,7 +1481,6 @@ Reportes mínimos:
 - Registrar pago.
 - Deudores.
 - Beneficios.
-- Horarios.
 - Comercios.
 - Beneficios de comercio.
 - Reportes.
@@ -1781,7 +1759,6 @@ Flujo:
 - Comercios.
 - Beneficios de comercios.
 - Beneficios institucionales.
-- Horarios.
 - Reportes básicos.
 - Asientos simples.
 
