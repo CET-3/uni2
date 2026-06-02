@@ -6,7 +6,6 @@ Uni2 es una plataforma de gestión para mutuales escolares basada en Django.
 
 La fuente funcional principal del proyecto es:
 
-- `UNI2_MASTER_SPEC.md`
 - `especificacion/index.html`
 
 Si hay diferencias entre implementación y documentación, hay que reducir esa brecha. No dejar decisiones nuevas solamente en el código o en commits.
