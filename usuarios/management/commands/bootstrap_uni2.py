@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
 from asociados.models import Colegio, Curso
-from comercios.models import BeneficioComercio, Comercio
+from comercios.models import ActividadComercial, Comercio
 from contenidos.models import Beneficio, HorarioAtencion, Publicidad, Servicio
 from contabilidad.models import CuentaContable
 from usuarios.services import ADMIN_GROUP, ensure_default_groups
@@ -94,50 +94,38 @@ class Command(BaseCommand):
                 defaults={"descripcion": descripcion, "activo": True, "orden": orden},
             )
 
-        comercio_1, _ = Comercio.objects.get_or_create(
+        libreria, _ = ActividadComercial.objects.get_or_create(nombre="Libreria")
+        papeleria, _ = ActividadComercial.objects.get_or_create(nombre="Papeleria")
+
+        Comercio.objects.get_or_create(
             nombre="Libreria Sur",
             defaults={
-                "responsable": "Marina Lopez",
+                "actividad_comercial": libreria,
+                "propietario": "Marina Lopez",
+                "beneficio_texto": "10% en utiles escolares",
+                "estado": Comercio.ESTADO_FIRMADO,
+                "fecha_convenio": date(2026, 3, 30),
+                "flyer_disponible": True,
                 "telefono": "2944-000111",
                 "direccion": "Mitre 123",
                 "ciudad": "General Roca",
                 "provincia": "Rio Negro",
                 "url_presencia_web": "https://instagram.com/libreriasur",
-                "activo": True,
             },
         )
-        comercio_2, _ = Comercio.objects.get_or_create(
+        Comercio.objects.get_or_create(
             nombre="Papelera Centro",
             defaults={
-                "responsable": "Juan Perez",
+                "actividad_comercial": papeleria,
+                "propietario": "Juan Perez",
+                "beneficio_texto": "2x1 en anillados",
+                "estado": Comercio.ESTADO_FIRMADO,
+                "flyer_disponible": True,
                 "telefono": "2944-000222",
                 "direccion": "San Martin 55",
                 "ciudad": "General Roca",
                 "provincia": "Rio Negro",
                 "url_presencia_web": "https://papeleracentro.example.com",
-                "activo": True,
-            },
-        )
-
-        BeneficioComercio.objects.get_or_create(
-            comercio=comercio_1,
-            titulo="10% en utiles escolares",
-            defaults={
-                "descripcion": "Descuento para asociados en utiles seleccionados.",
-                "tipo_descuento": BeneficioComercio.TIPO_PORCENTAJE,
-                "valor_descuento": 10,
-                "condiciones": "Presentar credencial digital vigente.",
-                "activo": True,
-            },
-        )
-        BeneficioComercio.objects.get_or_create(
-            comercio=comercio_2,
-            titulo="2x1 en anillados",
-            defaults={
-                "descripcion": "Promocion especial para asociados.",
-                "tipo_descuento": BeneficioComercio.TIPO_PROMOCION,
-                "condiciones": "Valido de lunes a viernes.",
-                "activo": True,
             },
         )
 

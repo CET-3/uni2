@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from asociados.services import create_asociado
 from contabilidad.models import CuentaContable
-from comercios.models import BeneficioComercio, Comercio
+from comercios.models import ActividadComercial, Comercio
 from cuotas.models import Pago, PeriodoCuota
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 from usuarios.services import COMERCIO_GROUP
@@ -168,14 +168,13 @@ def test_dashboard_gestion_muestra_metricas_basicas(client):
         metodo=Pago.METODO_EFECTIVO,
     )
 
-    comercio = Comercio.objects.create(nombre="Libreria Norte", direccion="Mitre 321")
-    BeneficioComercio.objects.create(
-        comercio=comercio,
-        titulo="10% en utiles",
-        descripcion="Descuento para asociados",
-        tipo_descuento=BeneficioComercio.TIPO_PORCENTAJE,
-        valor_descuento="10.00",
-        activo=True,
+    actividad = ActividadComercial.objects.create(nombre="Libreria")
+    Comercio.objects.create(
+        nombre="Libreria Norte",
+        direccion="Mitre 321",
+        actividad_comercial=actividad,
+        beneficio_texto="10% en utiles",
+        estado=Comercio.ESTADO_FIRMADO,
     )
 
     client.force_login(staff)
@@ -186,7 +185,7 @@ def test_dashboard_gestion_muestra_metricas_basicas(client):
     assert response.context["resumen"]["asociados_sin_usuario"] == 2
     assert response.context["resumen"]["deudores"] == 2
     assert response.context["resumen"]["cuotas_pagadas"] == 1
-    assert response.context["resumen"]["beneficios_vigentes"] == 1
+    assert response.context["resumen"]["comercios_con_beneficio"] == 1
     assert any(item["asociado"] == asociado_deudor for item in response.context["deudores"])
 
 

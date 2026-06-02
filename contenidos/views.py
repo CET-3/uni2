@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from comercios.selectors import get_comercios_activos
+from comercios.selectors import get_comercios_firmados
 
 from .selectors import (
     get_beneficios_publicos,
@@ -18,7 +18,7 @@ class HomeView(TemplateView):
         context["publicidades"] = get_publicidades_vigentes()
         context["beneficios"] = get_beneficios_publicos()[:3]
         context["servicios"] = get_servicios_publicos()[:3]
-        context["comercios"] = get_comercios_activos()[:3]
+        context["comercios"] = get_comercios_firmados()[:3]
         return context
 
 
@@ -54,6 +54,5 @@ class ComerciosPublicosView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["comercios"] = get_comercios_activos()
+        context["comercios"] = get_comercios_firmados()
         return context
-
