@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uni2 | Navegacion admin mobile</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: #eef4ff;
+      --text: #17324d;
+      --muted: #64748b;
+      --primary: #0d6efd;
+      --primary-strong: #0b57d0;
+      --border: rgba(23, 50, 77, 0.12);
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(13, 110, 253, 0.16), transparent 30%),
+        linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+
+    .hero {
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .example-card {
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .example-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+    }
+
+    .example-card .summary {
+      margin: 0 0 18px;
+      color: var(--muted);
+      min-height: 48px;
+      font-size: 0.95rem;
+    }
+
+    .phone {
+      background: #0f172a;
+      border-radius: 34px;
+      padding: 14px;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.2);
+    }
+
+    .screen {
+      background: var(--bg);
+      border-radius: 22px;
+      overflow: hidden;
+      min-height: 720px;
+    }
+
+    .status {
+      padding: 10px 16px 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .topbar {
+      padding: 12px 16px 16px;
+      background: linear-gradient(135deg, var(--primary) 0%, #6ea8fe 100%);
+      color: #fff;
+    }
+
+    .eyebrow {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.82;
+    }
+
+    .topbar h3 {
+      margin: 6px 0 4px;
+      font-size: 1.4rem;
+    }
+
+    .topbar p {
+      margin: 0;
+      font-size: 0.92rem;
+      opacity: 0.92;
+    }
+
+    .body {
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .metric {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 14px 12px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.1rem;
+    }
+
+    .metric span {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .panel {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h4 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .accordion-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border: 0;
+      background: var(--surface-2);
+      border-radius: 18px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .accordion-list {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .module-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 0.92rem;
+    }
+
+    .badge {
+      background: var(--surface-2);
+      color: var(--primary-strong);
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .quick-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      min-height: 94px;
+    }
+
+    .quick-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.94rem;
+    }
+
+    .quick-card span {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .more-button {
+      display: block;
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 14px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.94rem;
+      font-weight: 600;
+    }
+
+    .bottom-sheet {
+      background: #fff;
+      border-top: 1px solid var(--border);
+      border-radius: 24px 24px 0 0;
+      padding: 14px;
+      box-shadow: 0 -12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .sheet-handle {
+      width: 56px;
+      height: 5px;
+      background: #d6deea;
+      border-radius: 999px;
+      margin: 0 auto 12px;
+    }
+
+    .note {
+      margin-top: 16px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding-inline: 14px;
+      }
+
+      .examples {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1>Ejemplos de navegacion admin en mobile</h1>
+      <p>Tres patrones posibles para reemplazar la lista vertical de modulos a la derecha. Estan pensados sobre el panel de gestion de Uni2, con foco en telefono.</p>
+    </header>
+
+    <section class="examples">
+      <article class="example-card">
+        <h2>1. Tabs horizontales</h2>
+        <p class="summary">La navegacion vive arriba del contenido y se desplaza en horizontal. Sirve si las secciones forman parte del mismo flujo.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="status">
+              <span>9:41</span>
+              <span>LTE 83%</span>
+            </div>
+            <div class="topbar">
+              <div class="eyebrow">Backoffice</div>
+              <h3>Panel de gestion</h3>
+              <p>Acceso rapido a operaciones frecuentes.</p>
+            </div>
+            <div class="body">
+              <div class="tabs">
+                <div class="tab active">Resumen</div>
+                <div class="tab">Asociados</div>
+                <div class="tab">Cobros</div>
+                <div class="tab">Cuotas</div>
+                <div class="tab">Deudores</div>
+                <div class="tab">Comercios</div>
+              </div>
+
+              <div class="metric-row">
+                <div class="metric"><strong>148</strong><span>Activos</span></div>
+                <div class="metric"><strong>23</strong><span>Deudores</span></div>
+                <div class="metric"><strong>$420k</strong><span>Mes</span></div>
+              </div>
+
+              <div class="panel">
+                <h4>Resumen operativo</h4>
+                <p>La primera pantalla muestra lo esencial, y el cambio de modulo queda a un swipe de distancia.</p>
+              </div>
+
+              <div class="panel">
+                <h4>Acciones rapidas</h4>
+                <p>Cobrar cuota, buscar asociado, abrir deudores y entrar a cuotas sin bajar demasiado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="note">Se siente liviano y mantiene todo a mano, pero no conviene si cada modulo es muy distinto o tiene muchas opciones.</p>
+      </article>
+
+      <article class="example-card">
+        <h2>2. Accordion de modulos</h2>
+        <p class="summary">La portada queda limpia y los modulos aparecen solo cuando el usuario los necesita. Es la opcion mas directa para mejorar mobile.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="status">
+              <span>9:41</span>
+              <span>LTE 83%</span>
+            </div>
+            <div class="topbar">
+              <div class="eyebrow">Backoffice</div>
+              <h3>Panel de gestion</h3>
+              <p>Operacion diaria sin ruido visual.</p>
+            </div>
+            <div class="body">
+              <button class="accordion-toggle">
+                <span>Modulos del sistema</span>
+                <span>6 visibles</span>
+              </button>
+
+              <div class="accordion-list">
+                <div class="module-link"><span>Asociados</span><span class="badge">148</span></div>
+                <div class="module-link"><span>Cobros</span><span class="badge">12 hoy</span></div>
+                <div class="module-link"><span>Cuotas</span><span class="badge">8 pendientes</span></div>
+                <div class="module-link"><span>Deudores</span><span class="badge">23</span></div>
+                <div class="module-link"><span>Comercios</span><span class="badge">14</span></div>
+                <div class="module-link"><span>Admin tecnico</span><span class="badge">Django</span></div>
+              </div>
+
+              <div class="metric-row">
+                <div class="metric"><strong>19</strong><span>Vencidas</span></div>
+                <div class="metric"><strong>37</strong><span>Pagadas</span></div>
+                <div class="metric"><strong>5</strong><span>Sin usuario</span></div>
+              </div>
+
+              <div class="panel">
+                <h4>Lo primero que ve el operador</h4>
+                <p>Metricas y tareas, con el menu disponible pero sin robar altura en pantalla.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="note">Es la ruta mas simple si queres cambiar poco: se conserva la logica actual pero con mejor jerarquia visual.</p>
+      </article>
+
+      <article class="example-card">
+        <h2>3. Cards + mas modulos</h2>
+        <p class="summary">Se priorizan cuatro accesos de alto uso y el resto queda dentro de un panel secundario. Da una sensacion mas cercana a app.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="status">
+              <span>9:41</span>
+              <span>LTE 83%</span>
+            </div>
+            <div class="topbar">
+              <div class="eyebrow">Backoffice</div>
+              <h3>Panel de gestion</h3>
+              <p>Entradas claras para tareas frecuentes.</p>
+            </div>
+            <div class="body">
+              <div class="quick-grid">
+                <div class="quick-card"><strong>Cobros</strong><span>Registrar pago y revisar deuda.</span></div>
+                <div class="quick-card"><strong>Asociados</strong><span>Buscar y editar perfiles.</span></div>
+                <div class="quick-card"><strong>Cuotas</strong><span>Periodos y generacion masiva.</span></div>
+                <div class="quick-card"><strong>Deudores</strong><span>Seguimiento de mora.</span></div>
+              </div>
+
+              <button class="more-button">Ver mas modulos</button>
+
+              <div class="panel">
+                <h4>Portada orientada a tarea</h4>
+                <p>Los modulos que importan todos los dias quedan arriba. El resto se esconde hasta que haga falta.</p>
+              </div>
+
+              <div class="bottom-sheet">
+                <div class="sheet-handle"></div>
+                <div class="accordion-list">
+                  <div class="module-link"><span>Comercios</span><span class="badge">14</span></div>
+                  <div class="module-link"><span>Contenidos</span><span class="badge">CMS</span></div>
+                  <div class="module-link"><span>Usuarios</span><span class="badge">132</span></div>
+                  <div class="module-link"><span>Admin tecnico</span><span class="badge">Django</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="note">Es la opcion con mejor experiencia si queres que el panel se sienta menos como una lista y mas como una herramienta de trabajo.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

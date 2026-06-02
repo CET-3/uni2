@@ -97,6 +97,7 @@
         </li>
         <li><a href="#reportes">Reportes MVP</a></li>
         <li><a href="#pantallas">Pantallas MVP</a></li>
+        <li><a href="#arquitectura-codigo">Arquitectura actual del código</a></li>
         <li>
           <details class="toc-tree">
             <summary><a href="#v2">Diseño aprobado para Versión 2</a></summary>
@@ -1009,9 +1010,66 @@
         </div>
       </section>
 
-      <section id="v2" class="section">
+      <section id="arquitectura-codigo" class="section">
         <div class="section__heading">
           <p class="section__kicker">11</p>
+          <h2>Arquitectura actual del código</h2>
+        </div>
+        <div class="panel">
+          <p>El código está organizado por dominio de negocio y por experiencia de usuario. La separación vigente busca que la app <code>usuarios</code> se ocupe de autenticación y roles, mientras que la app <code>gestion</code> concentra el backoffice usado por personal interno.</p>
+        </div>
+        <div class="grid grid--2">
+          <article class="card">
+            <h3>Apps principales</h3>
+            <ul>
+              <li><code>usuarios</code>: login, logout, helpers de roles y navegación.</li>
+              <li><code>gestion</code>: dashboard interno, cobros, deudores, asociados y períodos de cuota.</li>
+              <li><code>asociados</code>: experiencia del asociado autenticado y su dominio.</li>
+              <li><code>comercios</code>: validación y panel del comercio adherido.</li>
+              <li><code>cuotas</code>: modelos y servicios de cuotas, deuda y pagos.</li>
+              <li><code>web</code>: home y páginas públicas del sitio.</li>
+              <li><code>contenidos</code>: beneficios, servicios, publicidades y horarios publicados por la web.</li>
+              <li><code>contabilidad</code>: cuentas y asientos simples.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Criterio de separación</h3>
+            <ul>
+              <li>Las apps representan dominios de negocio o contextos técnicos bien delimitados.</li>
+              <li>La carpeta <code>templates/gestion/</code> contiene pantallas de operación para usuarios <code>staff</code>.</li>
+              <li>La carpeta <code>templates/asociados/</code> contiene el panel y vistas del asociado.</li>
+              <li>La carpeta <code>templates/comercios/</code> contiene el flujo del comercio.</li>
+              <li>La carpeta <code>templates/web/</code> agrupa el sitio público.</li>
+              <li>El admin de Django queda como soporte técnico y no como navegación principal del backoffice.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="grid grid--2">
+          <article class="card">
+            <h3>Dashboards y entradas</h3>
+            <ul>
+              <li>Staff interno: dashboard de <code>gestion</code>.</li>
+              <li>Asociado autenticado: dashboard de <code>asociados</code>.</li>
+              <li>Comercio autenticado: dashboard de <code>comercios</code>.</li>
+              <li>Luego del login, el sistema redirige según el rol y el perfil vinculado.</li>
+              <li>La navegación para staff prioriza el acceso al backoffice propio y deja el admin de Django como herramienta técnica complementaria.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Objetivo de la app gestión</h3>
+            <ul>
+              <li>Evitar que tareas frecuentes dependan del admin genérico de Django.</li>
+              <li>Ofrecer pantallas operativas orientadas a flujo: cobrar, buscar asociado, ver deudores, administrar cuotas.</li>
+              <li>Permitir una UX propia para escritorio y mobile sin contaminar la app de autenticación.</li>
+              <li>Hacer más claro el mantenimiento: auth y roles en <code>usuarios</code>, backoffice en <code>gestion</code>.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="v2" class="section">
+        <div class="section__heading">
+          <p class="section__kicker">12</p>
           <h2>Diseño aprobado para Versión 2</h2>
         </div>
         <div class="panel">
@@ -1241,7 +1299,7 @@
 
       <section id="roadmap" class="section">
         <div class="section__heading">
-          <p class="section__kicker">12</p>
+          <p class="section__kicker">13</p>
           <h2>Roadmap</h2>
         </div>
         <div class="grid grid--3">

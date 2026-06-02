@@ -2,8 +2,7 @@ from django import forms
 from django.utils import timezone
 
 from asociados.models import Asociado
-from cuotas.models import Pago
-from cuotas.models import PeriodoCuota
+from cuotas.models import Pago, PeriodoCuota
 
 
 class CobroCuotaForm(forms.Form):
@@ -83,3 +82,4 @@ class AsociadoGestionForm(forms.ModelForm):
             cleaned_data["fecha_baja"] = None
             cleaned_data["motivo_baja"] = ""
         return cleaned_data
+

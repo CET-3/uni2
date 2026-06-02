@@ -21,7 +21,7 @@ class ComercioRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
                 self.request,
                 "Tu usuario tiene rol de comercio, pero todavia no tiene un comercio vinculado.",
             )
-            return redirect("contenidos:home")
+            return redirect("web:home")
         return super().handle_no_permission()
 
 

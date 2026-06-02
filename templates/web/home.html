@@ -9,7 +9,7 @@
             <h1 class="display-6 fw-bold">Gestión de mutual escolar para el CET 3</h1>
             <p class="lead text-secondary mb-4">Uni2 centraliza asociados, cuotas, beneficios, servicios y comercios adheridos en una sola plataforma.</p>
             <div class="d-flex flex-wrap gap-2">
-                <a class="btn btn-primary" href="{% url 'contenidos:beneficios' %}">Ver beneficios</a>
+                <a class="btn btn-primary" href="{% url 'web:beneficios' %}">Ver beneficios</a>
                 <a class="btn btn-outline-primary" href="{% url 'usuarios:login' %}">Ingresar</a>
             </div>
         </div>
@@ -46,7 +46,7 @@
                         <li>Sin beneficios cargados por ahora.</li>
                     {% endfor %}
                 </ul>
-                <a href="{% url 'contenidos:beneficios' %}">Ver todos</a>
+                <a href="{% url 'web:beneficios' %}">Ver todos</a>
             </div>
         </div>
     </div>
@@ -61,7 +61,7 @@
                         <li>Sin servicios cargados por ahora.</li>
                     {% endfor %}
                 </ul>
-                <a href="{% url 'contenidos:servicios' %}">Ver todos</a>
+                <a href="{% url 'web:servicios' %}">Ver todos</a>
             </div>
         </div>
     </div>
@@ -76,7 +76,7 @@
                         <li>Sin comercios cargados por ahora.</li>
                     {% endfor %}
                 </ul>
-                <a href="{% url 'contenidos:comercios' %}">Ver todos</a>
+                <a href="{% url 'web:comercios' %}">Ver todos</a>
             </div>
         </div>
     </div>

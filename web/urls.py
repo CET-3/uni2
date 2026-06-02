@@ -9,7 +9,7 @@ from .views import (
 )
 
 
-app_name = "contenidos"
+app_name = "web"
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),

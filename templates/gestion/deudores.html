@@ -9,8 +9,8 @@
         <p class="text-secondary mb-0">Listado de asociados con deuda vigente y acceso directo al cobro.</p>
     </div>
     <div class="page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_dashboard' %}">Volver al panel</a>
-        <a class="btn btn-primary" href="{% url 'usuarios:gestion_cobros' %}">Cobrar cuotas</a>
+        <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
+        <a class="btn btn-primary" href="{% url 'gestion:cobros' %}">Cobrar cuotas</a>
     </div>
 </div>
 
@@ -39,7 +39,7 @@
                             <td>{{ item.asociado.get_estado_display }}</td>
                             <td>${{ item.deuda }}</td>
                             <td class="text-lg-end">
-                                <a class="btn btn-outline-primary btn-sm" href="{% url 'usuarios:gestion_cobros' %}?asociado={{ item.asociado.id }}">Cobrar</a>
+                                <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:cobros' %}?asociado={{ item.asociado.id }}">Cobrar</a>
                             </td>
                         </tr>
                     {% empty %}
