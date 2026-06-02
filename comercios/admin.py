@@ -14,10 +14,13 @@ class ComercioAdmin(admin.ModelAdmin):
     list_display = (
         "nombre",
         "actividad_comercial",
-        "propietario",
         "estado",
-        "telefono",
-        "ciudad",
+        "beneficio_texto",
+        *tuple(
+            field.name
+            for field in Comercio._meta.fields
+            if field.name not in {"nombre", "actividad_comercial", "estado", "beneficio_texto"}
+        ),
     )
     list_filter = ("estado", "provincia", "actividad_comercial")
     search_fields = ("nombre", "propietario", "beneficio_texto", "url_presencia_web")
