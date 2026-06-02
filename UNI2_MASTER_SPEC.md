@@ -44,7 +44,7 @@ El MVP debe permitir que la mutual funcione operativamente:
 - Registrar pagos.
 - Consultar deudas.
 - Validar credenciales.
-- Administrar beneficios, servicios y comercios.
+- Administrar beneficios y comercios.
 - Obtener reportes básicos.
 
 ---
@@ -58,7 +58,6 @@ Usuario no autenticado. Puede consultar:
 - Página de inicio.
 - Información institucional.
 - Beneficios.
-- Servicios.
 - Horarios de atención.
 - Comercios adheridos.
 - Acceso al login.
@@ -71,7 +70,6 @@ Usuario autenticado vinculado a un asociado o adherente. Puede:
 - Ver su credencial digital.
 - Ver estado de cuotas.
 - Consultar beneficios.
-- Consultar servicios.
 - Consultar comercios adheridos.
 
 ## Administrador
@@ -85,8 +83,6 @@ Usuario interno de gestión. Puede:
 - Gestionar cuotas.
 - Registrar pagos.
 - Gestionar beneficios.
-- Gestionar servicios.
-- Gestionar publicidades.
 - Gestionar horarios.
 - Gestionar comercios.
 - Consultar reportes.
@@ -122,8 +118,6 @@ Usuario vinculado a un comercio adherido. Puede:
 - Credencial digital.
 - Validación de credencial por comercio.
 - Beneficios institucionales.
-- Servicios informativos.
-- Publicidades.
 - Horarios de atención.
 - Comercios adheridos.
 - Beneficios de comercios.
@@ -491,53 +485,6 @@ Campos:
 - descripcion
 - activo
 - orden
-
----
-
-## Servicio
-
-Servicio ofrecido o informado por la mutual.
-
-En el MVP es informativo. No implica venta ni stock.
-
-Campos:
-
-- id
-- nombre
-- descripcion
-- precio_referencia
-- activo
-- orden
-
-Ejemplos:
-
-- Remeras.
-- Cuadernillos.
-- Apuntes.
-- Fotocopias.
-
----
-
-## Publicidad
-
-Contenido promocional o institucional.
-
-Campos:
-
-- id
-- titulo
-- descripcion
-- imagen
-- link
-- activo
-- fecha_desde
-- fecha_hasta
-- orden
-
-Reglas:
-
-- Si tiene fecha de inicio futura, no se muestra todavía.
-- Si tiene fecha de fin pasada, no se muestra.
 
 ---
 
@@ -993,12 +940,12 @@ Flujo principal:
 
 1. Ingresa al sitio.
 2. Consulta información institucional.
-3. Consulta beneficios, servicios, horarios y comercios.
+3. Consulta beneficios, horarios y comercios.
 
 Modelos afectados:
 
 - Beneficio
-- Servicio
+- HorarioAtencion
 - HorarioAtencion
 - Comercio
 - BeneficioComercio
@@ -1528,7 +1475,6 @@ Reportes mínimos:
 
 - Inicio.
 - Beneficios.
-- Servicios.
 - Horarios.
 - Comercios.
 - Login.
@@ -1539,7 +1485,6 @@ Reportes mínimos:
 - Mi credencial.
 - Mis cuotas.
 - Beneficios.
-- Servicios.
 - Comercios adheridos.
 
 ## Administrador
@@ -1557,8 +1502,6 @@ Reportes mínimos:
 - Registrar pago.
 - Deudores.
 - Beneficios.
-- Servicios.
-- Publicidades.
 - Horarios.
 - Comercios.
 - Beneficios de comercio.
@@ -1838,9 +1781,7 @@ Flujo:
 - Comercios.
 - Beneficios de comercios.
 - Beneficios institucionales.
-- Servicios informativos.
 - Horarios.
-- Publicidades.
 - Reportes básicos.
 - Asientos simples.
 

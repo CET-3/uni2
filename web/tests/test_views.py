@@ -8,7 +8,6 @@ from django.urls import reverse
     [
         "web:home",
         "web:beneficios",
-        "web:servicios",
         "web:horarios",
         "web:comercios",
     ],
@@ -16,4 +15,3 @@ from django.urls import reverse
 def test_paginas_publicas_responden(client, url_name):
     response = client.get(reverse(url_name))
     assert response.status_code == 200
-
