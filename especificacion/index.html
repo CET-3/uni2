@@ -44,8 +44,6 @@
               <li><a href="#entidad-pago">Pago</a></li>
               <li><a href="#entidad-pago-cuota">PagoCuota</a></li>
               <li><a href="#entidad-beneficio">Beneficio</a></li>
-              <li><a href="#entidad-servicio">Servicio</a></li>
-              <li><a href="#entidad-publicidad">Publicidad</a></li>
               <li><a href="#entidad-actividad-comercial">ActividadComercial</a></li>
               <li><a href="#entidad-comercio">Comercio</a></li>
             </ol>
@@ -169,7 +167,6 @@
               <li>Página de inicio.</li>
               <li>Información institucional.</li>
               <li>Beneficios.</li>
-              <li>Servicios.</li>
               <li>Horarios de atención.</li>
               <li>Comercios adheridos.</li>
               <li>Acceso al login.</li>
@@ -183,7 +180,6 @@
               <li>Ver su credencial digital.</li>
               <li>Ver estado de cuotas.</li>
               <li>Consultar beneficios.</li>
-              <li>Consultar servicios.</li>
               <li>Consultar comercios adheridos.</li>
             </ul>
           </article>
@@ -195,7 +191,7 @@
               <li>Crear usuarios para asociados.</li>
               <li>Gestionar colegios y cursos.</li>
               <li>Gestionar cuotas y registrar pagos.</li>
-              <li>Gestionar beneficios, servicios, publicidades y horarios.</li>
+              <li>Gestionar beneficios y horarios.</li>
               <li>Gestionar comercios.</li>
               <li>Consultar reportes.</li>
               <li>Registrar o consultar asientos simples.</li>
@@ -238,8 +234,6 @@
               <li>Credencial digital.</li>
               <li>Validación de credencial por comercio.</li>
               <li>Beneficios institucionales.</li>
-              <li>Servicios informativos.</li>
-              <li>Publicidades.</li>
               <li>Horarios de atención.</li>
               <li>Comercios adheridos.</li>
               <li>Beneficio de cada comercio.</li>
@@ -426,37 +420,6 @@
               <li>orden</li>
             </ul>
           </article>
-          <article class="entity" id="entidad-servicio">
-            <h3>Servicio</h3>
-            <p>Servicio ofrecido o informado por la mutual. En el MVP es informativo y no implica venta ni stock.</p>
-            <p><strong>Campos:</strong></p>
-            <ul>
-              <li>id</li>
-              <li>nombre</li>
-              <li>descripción</li>
-              <li>precio_referencia</li>
-              <li>activo</li>
-              <li>orden</li>
-            </ul>
-            <p><strong>Ejemplos:</strong> Remeras, Cuadernillos, Apuntes, Fotocopias.</p>
-          </article>
-          <article class="entity" id="entidad-publicidad">
-            <h3>Publicidad</h3>
-            <p>Contenido promocional o institucional.</p>
-            <p><strong>Campos:</strong></p>
-            <ul>
-              <li>id</li>
-              <li>título</li>
-              <li>descripción</li>
-              <li>imagen</li>
-              <li>link</li>
-              <li>activo</li>
-              <li>fecha_desde</li>
-              <li>fecha_hasta</li>
-              <li>orden</li>
-            </ul>
-            <p><strong>Reglas:</strong> si tiene fecha futura no se muestra todavía; si la fecha de fin ya pasó, tampoco.</p>
-          </article>
           <article class="entity" id="entidad-actividad-comercial">
             <h3>ActividadComercial</h3>
             <p>Clasifica el rubro o actividad principal de un comercio adherido.</p>
@@ -620,9 +583,9 @@
             <ol>
               <li>Ingresa al sitio.</li>
               <li>Consulta información institucional.</li>
-              <li>Revisa beneficios, servicios, horarios y comercios.</li>
+              <li>Revisa beneficios, horarios y comercios.</li>
             </ol>
-            <p><strong>Modelos afectados:</strong> Beneficio, Servicio, ActividadComercial, Comercio.</p>
+            <p><strong>Modelos afectados:</strong> Beneficio, HorarioAtencion, ActividadComercial, Comercio.</p>
           </article>
           <article class="use-case" id="cu-ver-credencial">
             <h3>CU-ver-credencial</h3>
@@ -959,7 +922,6 @@
             <ul>
               <li>Inicio.</li>
               <li>Beneficios.</li>
-              <li>Servicios.</li>
               <li>Horarios.</li>
               <li>Comercios.</li>
               <li>Login.</li>
@@ -972,7 +934,6 @@
               <li>Mi credencial.</li>
               <li>Mis cuotas.</li>
               <li>Beneficios.</li>
-              <li>Servicios.</li>
               <li>Comercios adheridos.</li>
             </ul>
           </article>
@@ -992,8 +953,6 @@
               <li>Registrar pago.</li>
               <li>Deudores.</li>
               <li>Beneficios.</li>
-              <li>Servicios.</li>
-              <li>Publicidades.</li>
               <li>Horarios.</li>
               <li>Comercios.</li>
               <li>Reportes.</li>
@@ -1028,7 +987,7 @@
               <li><code>comercios</code>: validación y panel del comercio adherido.</li>
               <li><code>cuotas</code>: modelos y servicios de cuotas, deuda y pagos.</li>
               <li><code>web</code>: home y páginas públicas del sitio.</li>
-              <li><code>contenidos</code>: beneficios, servicios, publicidades y horarios publicados por la web.</li>
+              <li><code>contenidos</code>: beneficios y horarios publicados por la web.</li>
               <li><code>contabilidad</code>: cuentas y asientos simples.</li>
             </ul>
           </article>
@@ -1317,9 +1276,7 @@
               <li>Comercios.</li>
               <li>Beneficio de cada comercio.</li>
               <li>Beneficios institucionales.</li>
-              <li>Servicios informativos.</li>
               <li>Horarios.</li>
-              <li>Publicidades.</li>
               <li>Reportes básicos.</li>
               <li>Asientos simples.</li>
             </ul>

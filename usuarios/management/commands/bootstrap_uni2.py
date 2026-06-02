@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 
 from asociados.models import Colegio, Curso
 from comercios.models import ActividadComercial, Comercio
-from contenidos.models import Beneficio, HorarioAtencion, Publicidad, Servicio
+from contenidos.models import Beneficio, HorarioAtencion
 from contabilidad.models import CuentaContable
 from usuarios.services import ADMIN_GROUP, ensure_default_groups
 
@@ -39,28 +39,12 @@ class Command(BaseCommand):
         beneficios = [
             ("Descuento en fotocopias", "Acceso a descuentos para estudiantes y familias."),
             ("Acompanamiento escolar", "Beneficios y apoyo en materiales para el cursado."),
-            ("Promociones con comercios", "Acuerdos con librerias y servicios de la comunidad."),
+            ("Promociones con comercios", "Acuerdos con librerias y comercios de la comunidad."),
         ]
         for orden, (titulo, descripcion) in enumerate(beneficios, start=1):
             Beneficio.objects.get_or_create(
                 titulo=titulo,
                 defaults={"descripcion": descripcion, "activo": True, "orden": orden},
-            )
-
-        servicios = [
-            ("Cuadernillos", "Materiales de apoyo y cuadernillos de trabajo.", 3500),
-            ("Apuntes", "Apuntes y resumentes para materias troncales.", 2500),
-            ("Fotocopias", "Servicio de impresion y fotocopias para estudiantes.", 1000),
-        ]
-        for orden, (nombre, descripcion, precio) in enumerate(servicios, start=1):
-            Servicio.objects.get_or_create(
-                nombre=nombre,
-                defaults={
-                    "descripcion": descripcion,
-                    "precio_referencia": precio,
-                    "activo": True,
-                    "orden": orden,
-                },
             )
 
         horarios = [
@@ -74,24 +58,6 @@ class Command(BaseCommand):
                 hora_desde=hora_desde,
                 hora_hasta=hora_hasta,
                 defaults={"descripcion": descripcion, "activo": True},
-            )
-
-        publicidades = [
-            (
-                "Bienvenidos a Uni2",
-                "La mutual escolar ya cuenta con una plataforma para asociados y comercios.",
-                1,
-            ),
-            (
-                "Beneficios activos",
-                "Consulta descuentos y servicios disponibles para la comunidad educativa.",
-                2,
-            ),
-        ]
-        for titulo, descripcion, orden in publicidades:
-            Publicidad.objects.get_or_create(
-                titulo=titulo,
-                defaults={"descripcion": descripcion, "activo": True, "orden": orden},
             )
 
         libreria, _ = ActividadComercial.objects.get_or_create(nombre="Libreria")

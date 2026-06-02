@@ -7,7 +7,7 @@
     <div class="row align-items-center">
         <div class="col-lg-8">
             <h1 class="display-6 fw-bold">Gestión de mutual escolar para el CET 3</h1>
-            <p class="lead text-secondary mb-4">Uni2 centraliza asociados, cuotas, beneficios, servicios y comercios adheridos en una sola plataforma.</p>
+            <p class="lead text-secondary mb-4">Uni2 centraliza asociados, cuotas, beneficios, horarios y comercios adheridos en una sola plataforma.</p>
             <div class="d-flex flex-wrap gap-2">
                 <a class="btn btn-primary" href="{% url 'web:beneficios' %}">Ver beneficios</a>
                 <a class="btn btn-outline-primary" href="{% url 'usuarios:login' %}">Ingresar</a>
@@ -15,24 +15,6 @@
         </div>
     </div>
 </div>
-
-{% if publicidades %}
-<section class="mb-4">
-    <h2 class="h4 mb-3">Novedades</h2>
-    <div class="row g-3">
-        {% for publicidad in publicidades %}
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h3 class="h5">{{ publicidad.titulo }}</h3>
-                        <p class="text-secondary mb-0">{{ publicidad.descripcion|default:"Comunicado institucional." }}</p>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-</section>
-{% endif %}
 
 <div class="row g-4">
     <div class="col-lg-4">
@@ -53,15 +35,15 @@
     <div class="col-lg-4">
         <div class="card h-100">
             <div class="card-body">
-                <h2 class="h5">Servicios</h2>
+                <h2 class="h5">Horarios</h2>
                 <ul class="mb-3">
-                    {% for servicio in servicios %}
-                        <li>{{ servicio.nombre }}</li>
+                    {% for horario in horarios %}
+                        <li>{{ horario.get_dia_semana_display }} {{ horario.hora_desde|time:"H:i" }} a {{ horario.hora_hasta|time:"H:i" }}</li>
                     {% empty %}
-                        <li>Sin servicios cargados por ahora.</li>
+                        <li>Sin horarios cargados por ahora.</li>
                     {% endfor %}
                 </ul>
-                <a href="{% url 'web:servicios' %}">Ver todos</a>
+                <a href="{% url 'web:horarios' %}">Ver todos</a>
             </div>
         </div>
     </div>
