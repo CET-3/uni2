@@ -8,7 +8,6 @@ from django.urls import reverse
     [
         "web:home",
         "web:beneficios",
-        "web:horarios",
         "web:comercios",
     ],
 )
