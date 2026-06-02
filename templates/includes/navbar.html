@@ -11,12 +11,7 @@
             </ul>
             <div class="d-flex gap-2">
                 {% if user.is_authenticated %}
-                    {% if user.is_staff %}
-                        {% if request.resolver_match.namespace != "gestion" or request.resolver_match.url_name != "dashboard" %}
-                            <a class="btn btn-light btn-sm" href="{% url 'gestion:dashboard' %}">Gestión</a>
-                            <a class="btn btn-outline-light btn-sm" href="{% url 'admin:index' %}">Admin</a>
-                        {% endif %}
-                    {% elif es_asociado %}
+                    {% if es_asociado %}
                         <a class="btn btn-outline-light btn-sm" href="{% url 'asociados:dashboard' %}">Mi panel</a>
                     {% elif es_comercio %}
                         <a class="btn btn-outline-light btn-sm" href="{% url 'comercios:dashboard' %}">Mi comercio</a>
