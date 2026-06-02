@@ -8,13 +8,13 @@
         <h1 class="h2 mb-1">Gestión de asociados</h1>
         <p class="text-secondary mb-0">Busca asociados por DNI, número, apellido o nombre.</p>
     </div>
-    <div class="d-flex gap-2">
+    <div class="page-header-actions">
         <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_dashboard' %}">Volver al panel</a>
         <a class="btn btn-primary" href="{% url 'admin:asociados_asociado_add' %}">Nuevo asociado</a>
     </div>
 </div>
 
-<div class="card mb-4">
+<div class="card surface-card mb-4">
     <div class="card-body">
         <form method="get" class="row g-3 align-items-end">
             <div class="col-lg-9">
@@ -29,10 +29,10 @@
 </div>
 
 {% if asociados %}
-    <div class="card">
+    <div class="card surface-card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table align-middle mb-0">
+                <table class="table table-soft align-middle mb-0">
                     <thead>
                         <tr>
                             <th>Asociado</th>
@@ -53,7 +53,7 @@
                                 <td>{{ asociado.curso_actual|default:"-" }}</td>
                                 <td>{{ asociado.get_estado_display }}</td>
                                 <td>{% if asociado.usuario %}{{ asociado.usuario.username }}{% else %}-{% endif %}</td>
-                                <td class="text-end">
+                                <td class="text-lg-end">
                                     <a class="btn btn-outline-primary btn-sm" href="{% url 'usuarios:gestion_asociado_detalle' asociado.id %}">Ver detalle</a>
                                 </td>
                             </tr>
