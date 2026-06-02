@@ -19,7 +19,7 @@ class AsociadoRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
                 self.request,
                 "Tu usuario tiene rol de asociado, pero todavia no tiene un asociado vinculado.",
             )
-            return redirect("contenidos:home")
+            return redirect("web:home")
         return super().handle_no_permission()
 
 

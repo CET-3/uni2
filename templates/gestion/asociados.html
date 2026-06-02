@@ -9,7 +9,7 @@
         <p class="text-secondary mb-0">Busca asociados por DNI, número, apellido o nombre.</p>
     </div>
     <div class="page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_dashboard' %}">Volver al panel</a>
+        <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
         <a class="btn btn-primary" href="{% url 'admin:asociados_asociado_add' %}">Nuevo asociado</a>
     </div>
 </div>
@@ -54,7 +54,7 @@
                                 <td>{{ asociado.get_estado_display }}</td>
                                 <td>{% if asociado.usuario %}{{ asociado.usuario.username }}{% else %}-{% endif %}</td>
                                 <td class="text-lg-end">
-                                    <a class="btn btn-outline-primary btn-sm" href="{% url 'usuarios:gestion_asociado_detalle' asociado.id %}">Ver detalle</a>
+                                    <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:asociado_detalle' asociado.id %}">Ver detalle</a>
                                 </td>
                             </tr>
                         {% endfor %}

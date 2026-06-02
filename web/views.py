@@ -1,8 +1,7 @@
 from django.views.generic import TemplateView
 
 from comercios.selectors import get_comercios_firmados
-
-from .selectors import (
+from contenidos.selectors import (
     get_beneficios_publicos,
     get_horarios_activos,
     get_publicidades_vigentes,
@@ -56,3 +55,4 @@ class ComerciosPublicosView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["comercios"] = get_comercios_firmados()
         return context
+

@@ -4,55 +4,7 @@
 
 {% block content %}
 <div class="admin-layout">
-    <aside>
-        <div class="sidebar-card card">
-            <div class="card-body pb-2">
-                <div class="muted-kicker">Backoffice</div>
-                <h2 class="h5 mb-1">Panel de gestión</h2>
-                <p class="text-secondary small mb-0">Accesos por módulo para operar la mutual sin depender de una fila de botones.</p>
-            </div>
-            <div class="list-group list-group-flush">
-                <a class="list-group-item active" href="#resumen">
-                    <span>Resumen operativo</span>
-                    <span class="badge text-bg-primary rounded-pill">{{ resumen.deudores }}</span>
-                </a>
-                <a class="list-group-item" href="{% url 'usuarios:gestion_asociados' %}">
-                    <span>Asociados</span>
-                    <span class="badge text-bg-light rounded-pill">{{ resumen.asociados_activos }}</span>
-                </a>
-                <a class="list-group-item" href="{% url 'usuarios:gestion_cobros' %}">
-                    <span>Cobros</span>
-                    <span class="badge text-bg-light rounded-pill">{{ resumen.cuotas_vencidas }}</span>
-                </a>
-                <a class="list-group-item" href="{% url 'usuarios:gestion_periodos_cuota' %}">
-                    <span>Cuotas</span>
-                    <span class="badge text-bg-light rounded-pill">{{ resumen.cuotas_pendientes }}</span>
-                </a>
-                <a class="list-group-item" href="{% url 'usuarios:gestion_deudores' %}">
-                    <span>Deudores</span>
-                    <span class="badge text-bg-light rounded-pill">{{ resumen.deudores }}</span>
-                </a>
-                <a class="list-group-item" href="{% url 'admin:comercios_comercio_changelist' %}">
-                    <span>Comercios</span>
-                    <span class="badge text-bg-light rounded-pill">{{ resumen.comercios_con_beneficio }}</span>
-                </a>
-                <a class="list-group-item" href="{% url 'admin:contenidos_beneficio_changelist' %}">
-                    <span>Contenidos</span>
-                    <span class="badge text-bg-light rounded-pill">CMS</span>
-                </a>
-                <a class="list-group-item" href="{% url 'admin:auth_user_changelist' %}">
-                    <span>Usuarios</span>
-                    <span class="badge text-bg-light rounded-pill">{{ resumen.asociados_con_usuario }}</span>
-                </a>
-                <a class="list-group-item" href="{% url 'admin:index' %}">
-                    <span>Admin técnico</span>
-                    <span class="badge text-bg-light rounded-pill">Django</span>
-                </a>
-            </div>
-        </div>
-    </aside>
-
-    <div class="app-panel-shell">
+    <div class="admin-main-column">
         <section id="resumen" class="dashboard-hero card">
             <div class="card-body">
                 <div class="dashboard-eyebrow">Administración interna</div>
@@ -68,15 +20,15 @@
                     </div>
                     <div class="col-xl-4 p-0">
                         <div class="dashboard-actions-grid">
-                            <a class="btn btn-light btn-lg" href="{% url 'usuarios:gestion_cobros' %}">Cobrar cuota</a>
-                            <a class="btn btn-outline-light btn-lg" href="{% url 'usuarios:gestion_asociados' %}">Buscar asociado</a>
+                            <a class="btn btn-light btn-lg" href="{% url 'gestion:cobros' %}">Cobrar cuota</a>
+                            <a class="btn btn-outline-light btn-lg" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section>
+        <section class="app-panel-shell">
             <div class="row g-3">
                 <div class="col-6 col-xl-2">
                     <div class="metric-card card h-100">
@@ -134,7 +86,7 @@
                 <div class="section-title-row">
                     <div>
                         <div class="muted-kicker">Acciones frecuentes</div>
-                        <h2 class="h4 mb-0">Lo que más vas a usar</h2>
+                        <h2 class="h4 mb-0">Accesos rápidos</h2>
                     </div>
                 </div>
                 <div class="dashboard-actions-grid">
@@ -142,80 +94,44 @@
                         <div class="card-body">
                             <h3 class="h5">Cobros</h3>
                             <p class="text-secondary">Buscar un asociado, revisar deuda y registrar un pago.</p>
-                            <a class="btn btn-primary" href="{% url 'usuarios:gestion_cobros' %}">Abrir cobros</a>
+                            <div class="quick-action-meta">
+                                <span>Operación principal del día a día.</span>
+                                <span class="status-badge-soft">{{ resumen.cuotas_vencidas }} vencidas</span>
+                            </div>
+                            <a class="btn btn-primary" href="{% url 'gestion:cobros' %}">Abrir cobros</a>
                         </div>
                     </div>
                     <div class="quick-action-card card h-100">
                         <div class="card-body">
                             <h3 class="h5">Asociados</h3>
                             <p class="text-secondary">Buscar, revisar detalle, editar estado y seguir historial.</p>
-                            <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_asociados' %}">Abrir asociados</a>
+                            <div class="quick-action-meta">
+                                <span>Padrón y seguimiento individual.</span>
+                                <span class="status-badge-soft">{{ resumen.asociados_activos }} activos</span>
+                            </div>
+                            <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Abrir asociados</a>
                         </div>
                     </div>
                     <div class="quick-action-card card h-100">
                         <div class="card-body">
                             <h3 class="h5">Cuotas</h3>
                             <p class="text-secondary">Crear períodos y generar cuotas sin duplicar movimientos.</p>
-                            <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_periodos_cuota' %}">Abrir cuotas</a>
+                            <div class="quick-action-meta">
+                                <span>Configuración mensual y generación.</span>
+                                <span class="status-badge-soft">{{ resumen.cuotas_pendientes }} pendientes</span>
+                            </div>
+                            <a class="btn btn-outline-primary" href="{% url 'gestion:periodos_cuota' %}">Abrir cuotas</a>
                         </div>
                     </div>
                     <div class="quick-action-card card h-100">
                         <div class="card-body">
                             <h3 class="h5">Deudores</h3>
                             <p class="text-secondary">Ver prioridades de cobro y entrar rápido a la caja.</p>
-                            <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_deudores' %}">Abrir deudores</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section-card card">
-            <div class="card-body">
-                <div class="section-title-row">
-                    <div>
-                        <div class="muted-kicker">Módulos</div>
-                        <h2 class="h4 mb-0">Entradas por dominio</h2>
-                    </div>
-                </div>
-                <div class="module-card-grid">
-                    <div class="module-card card h-100">
-                        <div class="card-body">
-                            <h3 class="h5">Mutual y padrón</h3>
-                            <p class="text-secondary mb-3">Asociados, detalle individual, usuarios vinculados y estado de cada perfil.</p>
-                            <div class="d-grid gap-2">
-                                <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_asociados' %}">Gestionar asociados</a>
-                                <a class="btn btn-outline-primary" href="{% url 'admin:auth_user_changelist' %}">Gestionar usuarios</a>
+                            <div class="quick-action-meta">
+                                <span>Seguimiento de mora y priorización.</span>
+                                <span class="status-badge-soft">{{ resumen.deudores }} casos</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="module-card card h-100">
-                        <div class="card-body">
-                            <h3 class="h5">Cobranza</h3>
-                            <p class="text-secondary mb-3">Cobros, deuda, cuotas pendientes y seguimiento de mora.</p>
-                            <div class="d-grid gap-2">
-                                <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_cobros' %}">Ir a cobros</a>
-                                <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_deudores' %}">Ver deudores</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="module-card card h-100">
-                        <div class="card-body">
-                            <h3 class="h5">Cuotas y períodos</h3>
-                            <p class="text-secondary mb-3">Períodos mensuales, importes, recargo por mora y generación masiva.</p>
-                            <div class="d-grid gap-2">
-                                <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_periodos_cuota' %}">Administrar períodos</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="module-card card h-100">
-                        <div class="card-body">
-                            <h3 class="h5">Comercios y contenidos</h3>
-                            <p class="text-secondary mb-3">Comercios adheridos, beneficios públicos, servicios y piezas del sitio.</p>
-                            <div class="d-grid gap-2">
-                                <a class="btn btn-outline-primary" href="{% url 'admin:comercios_comercio_changelist' %}">Gestionar comercios</a>
-                                <a class="btn btn-outline-primary" href="{% url 'admin:contenidos_beneficio_changelist' %}">Gestionar contenidos</a>
-                            </div>
+                            <a class="btn btn-outline-primary" href="{% url 'gestion:deudores' %}">Abrir deudores</a>
                         </div>
                     </div>
                 </div>
@@ -231,7 +147,7 @@
                                 <div class="muted-kicker">Pendientes</div>
                                 <h2 class="h4 mb-0">Deudores prioritarios</h2>
                             </div>
-                            <a class="btn btn-outline-primary btn-sm" href="{% url 'usuarios:gestion_deudores' %}">Abrir listado completo</a>
+                            <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:deudores' %}">Abrir listado completo</a>
                         </div>
                         <div class="table-responsive">
                             <table class="table align-middle mb-0">
@@ -354,5 +270,114 @@
             </div>
         </div>
     </div>
+
+    <aside class="admin-side-column">
+        <section class="section-card card">
+            <div class="card-body">
+                <div class="section-title-row mb-3">
+                    <div>
+                        <div class="muted-kicker">Backoffice</div>
+                        <h2 class="h4 mb-0">Más módulos</h2>
+                    </div>
+                    <a class="btn btn-outline-primary btn-sm d-none d-lg-inline-flex" href="{% url 'admin:index' %}">Ver todos</a>
+                </div>
+
+                <button
+                    class="module-toggle d-lg-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#dashboard-more-modules"
+                    aria-expanded="false"
+                    aria-controls="dashboard-more-modules"
+                >
+                    <span class="module-toggle-label">Ver módulos secundarios</span>
+                    <span class="badge text-bg-light rounded-pill">4</span>
+                </button>
+
+                <div class="collapse d-lg-block" id="dashboard-more-modules">
+                    <div class="module-link-list">
+                        <a class="module-link-item" href="{% url 'admin:comercios_comercio_changelist' %}">
+                            <div class="module-link-copy">
+                                <strong>Comercios</strong>
+                                <span>Adheridos, beneficios y seguimiento comercial.</span>
+                            </div>
+                            <span class="status-badge-soft">{{ resumen.comercios_con_beneficio }}</span>
+                        </a>
+                        <a class="module-link-item" href="{% url 'admin:contenidos_beneficio_changelist' %}">
+                            <div class="module-link-copy">
+                                <strong>Contenidos</strong>
+                                <span>Beneficios, servicios y piezas públicas del sitio.</span>
+                            </div>
+                            <span class="status-badge-soft">CMS</span>
+                        </a>
+                        <a class="module-link-item" href="{% url 'admin:auth_user_changelist' %}">
+                            <div class="module-link-copy">
+                                <strong>Usuarios</strong>
+                                <span>Cuentas internas, accesos y vinculaciones.</span>
+                            </div>
+                            <span class="status-badge-soft">{{ resumen.asociados_con_usuario }}</span>
+                        </a>
+                        <a class="module-link-item" href="{% url 'admin:index' %}">
+                            <div class="module-link-copy">
+                                <strong>Admin técnico</strong>
+                                <span>Modelos y operaciones excepcionales de Django.</span>
+                            </div>
+                            <span class="status-badge-soft">Django</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card card">
+            <div class="card-body">
+                <div class="muted-kicker">Alertas rápidas</div>
+                <h2 class="h4 mb-3">Qué conviene mirar hoy</h2>
+                <ul class="list-group list-group-flush compact-list">
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span>Asociados sin usuario</span>
+                        <strong>{{ resumen.asociados_sin_usuario }}</strong>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span>Cuotas vencidas</span>
+                        <strong>{{ resumen.cuotas_vencidas }}</strong>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span>Comercios con beneficio cargado</span>
+                        <strong>{{ resumen.comercios_con_beneficio }}</strong>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span>Asociados inactivos</span>
+                        <strong>{{ resumen.asociados_inactivos }}</strong>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span>Asociados egresados</span>
+                        <strong>{{ resumen.asociados_egresados }}</strong>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section-card card">
+            <div class="card-body">
+                <div class="muted-kicker">Soporte</div>
+                <h2 class="h4 mb-3">Atajos complementarios</h2>
+                <div class="support-link-list">
+                    <a class="support-link-item" href="{% url 'admin:auth_group_changelist' %}">
+                        <div class="support-link-copy">
+                            <strong>Permisos y grupos</strong>
+                            <span>Revisar accesos internos por rol.</span>
+                        </div>
+                    </a>
+                    <a class="support-link-item" href="{% url 'admin:index' %}">
+                        <div class="support-link-copy">
+                            <strong>Ver admin completo</strong>
+                            <span>Acceder al índice técnico cuando haga falta.</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </aside>
 </div>
 {% endblock %}

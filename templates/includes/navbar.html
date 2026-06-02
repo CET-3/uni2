@@ -1,21 +1,23 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand fw-semibold" href="{% url 'contenidos:home' %}">Uni2</a>
+        <a class="navbar-brand fw-semibold" href="{% url 'web:home' %}">Uni2</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUni2">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarUni2">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{% url 'contenidos:beneficios' %}">Beneficios</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'contenidos:servicios' %}">Servicios</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'contenidos:horarios' %}">Horarios</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'contenidos:comercios' %}">Comercios</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'web:beneficios' %}">Beneficios</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'web:servicios' %}">Servicios</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'web:horarios' %}">Horarios</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'web:comercios' %}">Comercios</a></li>
             </ul>
             <div class="d-flex gap-2">
                 {% if user.is_authenticated %}
                     {% if user.is_staff %}
-                        <a class="btn btn-light btn-sm" href="{% url 'usuarios:gestion_dashboard' %}">Gestión</a>
-                        <a class="btn btn-outline-light btn-sm" href="{% url 'admin:index' %}">Admin</a>
+                        {% if request.resolver_match.namespace != "gestion" or request.resolver_match.url_name != "dashboard" %}
+                            <a class="btn btn-light btn-sm" href="{% url 'gestion:dashboard' %}">Gestión</a>
+                            <a class="btn btn-outline-light btn-sm" href="{% url 'admin:index' %}">Admin</a>
+                        {% endif %}
                     {% elif es_asociado %}
                         <a class="btn btn-outline-light btn-sm" href="{% url 'asociados:dashboard' %}">Mi panel</a>
                     {% elif es_comercio %}

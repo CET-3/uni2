@@ -1,7 +1,6 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 from django.db.models import Count, Sum
 from django.utils import timezone
 
@@ -9,14 +8,6 @@ from asociados.models import Asociado
 from comercios.selectors import get_comercios_con_beneficio
 from cuotas.models import Cuota, Pago
 from cuotas.selectors import get_total_deuda
-
-
-def get_user_groups():
-    return Group.objects.order_by("name")
-
-
-def get_asociados_with_user_status():
-    return Asociado.objects.select_related("usuario", "curso_actual").order_by("apellido", "nombre")
 
 
 def get_last_login_users():
@@ -27,7 +18,7 @@ def get_last_login_users():
 def get_asociados_deudores():
     today = timezone.localdate()
     deudores = []
-    for asociado in get_asociados_with_user_status():
+    for asociado in Asociado.objects.select_related("usuario", "curso_actual").order_by("apellido", "nombre"):
         deuda = get_total_deuda(asociado, today)
         if deuda > 0:
             deudores.append({"asociado": asociado, "deuda": deuda})
@@ -37,15 +28,12 @@ def get_asociados_deudores():
 
 def get_admin_dashboard_stats():
     today = timezone.localdate()
-    asociados = get_asociados_with_user_status()
+    asociados = Asociado.objects.select_related("usuario", "curso_actual").order_by("apellido", "nombre")
     cuotas = Cuota.objects.all()
     pagos_del_mes = Pago.objects.filter(fecha__year=today.year, fecha__month=today.month)
     deudores = get_asociados_deudores()
 
-    cuotas_por_estado = {
-        item["estado"]: item["total"]
-        for item in cuotas.values("estado").annotate(total=Count("id"))
-    }
+    cuotas_por_estado = {item["estado"]: item["total"] for item in cuotas.values("estado").annotate(total=Count("id"))}
 
     return {
         "resumen": {
@@ -63,12 +51,11 @@ def get_admin_dashboard_stats():
             "comercios_con_beneficio": get_comercios_con_beneficio().count(),
         },
         "deudores": deudores[:5],
-        "ultimos_accesos": asociados.filter(usuario__last_login__isnull=False).order_by("-usuario__last_login")[
-            :5
-        ],
+        "ultimos_accesos": asociados.filter(usuario__last_login__isnull=False).order_by("-usuario__last_login")[:5],
         "asociados_por_curso": asociados.exclude(curso_actual__isnull=True)
         .values("curso_actual__nombre")
         .annotate(total=Count("id"))
         .order_by("curso_actual__nombre"),
         "pagos_por_metodo": pagos_del_mes.values("metodo").annotate(total=Sum("importe")).order_by("metodo"),
     }
+

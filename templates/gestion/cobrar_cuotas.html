@@ -8,7 +8,7 @@
         <h1 class="h2 mb-1">Cobro de cuotas</h1>
         <p class="text-secondary mb-0">Busca un asociado, revisa su deuda y registra el pago.</p>
     </div>
-    <a class="btn btn-outline-primary" href="{% url 'usuarios:gestion_dashboard' %}">Volver al panel</a>
+    <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
 </div>
 
 <div class="card surface-card mb-4">
@@ -48,7 +48,7 @@
                                 <td>{{ asociado.curso_actual|default:"-" }}</td>
                                 <td>{{ asociado.get_estado_display }}</td>
                                 <td class="text-lg-end">
-                                    <a class="btn btn-outline-primary btn-sm" href="{% url 'usuarios:gestion_cobros' %}?asociado={{ asociado.id }}">Seleccionar</a>
+                                    <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:cobros' %}?asociado={{ asociado.id }}">Seleccionar</a>
                                 </td>
                             </tr>
                         {% endfor %}
