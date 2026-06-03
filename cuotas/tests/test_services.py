@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import pytest
 
-from asociados.models import Asociado, Colegio, Curso
+from asociados.models import Asociado, CicloLectivo, Colegio, Curso
 from asociados.services import create_asociado
 from contabilidad.models import CuentaContable
 from cuotas.models import Cuota, Pago, PeriodoCuota
@@ -26,16 +26,17 @@ def asociado_activo():
 
 @pytest.fixture
 def periodos():
+    ciclo, _ = CicloLectivo.objects.get_or_create(anio=2026)
     marzo = PeriodoCuota.objects.create(
         mes=3,
-        anio=2026,
+        ciclo_lectivo=ciclo,
         importe=Decimal("3000"),
         importe_recargo_mora=Decimal("500"),
         fecha_vencimiento=date(2026, 3, 10),
     )
     abril = PeriodoCuota.objects.create(
         mes=4,
-        anio=2026,
+        ciclo_lectivo=ciclo,
         importe=Decimal("3000"),
         importe_recargo_mora=Decimal("500"),
         fecha_vencimiento=date(2026, 4, 10),

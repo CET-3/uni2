@@ -6,7 +6,7 @@ from datetime import date
 
 from django.db import transaction
 
-from .models import Asociado, Curso, InscripcionCurso
+from .models import Asociado, CicloLectivo, Curso, InscripcionCurso
 
 
 def calculate_fecha_inicio_cobro(fecha_alta: date) -> date:
@@ -55,10 +55,11 @@ def create_asociado(
     )
 
     if curso_actual:
+        ciclo, _ = CicloLectivo.objects.get_or_create(anio=fecha_alta.year)
         InscripcionCurso.objects.create(
             asociado=asociado,
             curso=curso_actual,
-            ciclo_lectivo=fecha_alta.year,
+            ciclo_lectivo=ciclo,
             activa=True,
             fecha_desde=fecha_alta,
         )
@@ -82,7 +83,7 @@ def marcar_asociado_como_egresado(asociado: Asociado):
 
 
 @transaction.atomic
-def cambiar_curso(asociado: Asociado, nuevo_curso: Curso, ciclo_lectivo: int, fecha_desde: date):
+def cambiar_curso(asociado: Asociado, nuevo_curso: Curso, ciclo_lectivo: CicloLectivo, fecha_desde: date):
     asociado.inscripciones.filter(activa=True).update(activa=False, fecha_hasta=fecha_desde)
     inscripcion = InscripcionCurso.objects.create(
         asociado=asociado,

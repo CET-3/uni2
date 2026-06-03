@@ -35,8 +35,9 @@
             <summary><a href="#modelo">Modelo de datos MVP</a></summary>
             <ol>
               <li><a href="#entidad-usuario">Usuario</a></li>
-              <li><a href="#entidad-colegio">Colegio</a></li>
-              <li><a href="#entidad-curso">Curso</a></li>
+              <li><a href="#entidad-ciclo-lectivo">CicloLectivo</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
+              <li><a href="#entidad-colegio">Colegio</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
+              <li><a href="#entidad-curso">Curso</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
               <li><a href="#entidad-asociado">Asociado</a></li>
               <li><a href="#entidad-inscripcion-curso">InscripciónCurso</a></li>
               <li><a href="#entidad-periodo-cuota">PeríodoCuota</a></li>
@@ -275,32 +276,43 @@
             <p><strong>Grupos sugeridos:</strong> Administradores, Asociados, Comercios.</p>
             <p><strong>Campos relevantes:</strong> username, email, password, first_name, last_name, is_active, is_staff, last_login, date_joined.</p>
           </article>
+          <article class="entity" id="entidad-ciclo-lectivo">
+            <h3>CicloLectivo <span class="status-done" aria-label="Listo">✓ Listo</span></h3>
+            <p>Representa un año lectivo. Se usa como referencia en inscripciones y períodos de cuota.</p>
+            <p><strong>Campos:</strong></p>
+            <ul>
+              <li>id*: identificador interno del ciclo lectivo.</li>
+              <li>año*: año del ciclo lectivo. Único en el sistema.</li>
+            </ul>
+            <p><strong>Reglas:</strong> se carga desde el admin técnico de Django. También puede crearse automáticamente al dar de alta un asociado con curso si no existe el ciclo correspondiente a la fecha de alta. La pantalla de períodos de cuota usa ciclos lectivos ya existentes.</p>
+          </article>
           <article class="entity" id="entidad-colegio">
-            <h3>Colegio</h3>
+            <h3>Colegio <span class="status-done" aria-label="Listo">✓ Listo</span></h3>
             <p>Representa una institución educativa.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id*</li>
-              <li>nombre*</li>
-              <li>direccion</li>
-              <li>teléfono</li>
-              <li>email</li>
-              <li>activo*</li>
+              <li>id*: identificador interno del colegio.</li>
+              <li>nombre*: nombre de la institución educativa. Único en el sistema.</li>
+              <li>dirección: dirección física del colegio.</li>
+              <li>teléfono: teléfono de contacto del colegio.</li>
+              <li>email: correo de contacto del colegio.</li>
+              <li>activo*: indica si el colegio participa activamente en el sistema.</li>
             </ul>
-            <p><strong>Notas:</strong> inicialmente existirá CET 3 y se incluye desde el inicio para dejar preparado el sistema para otros colegios.</p>
+            <p><strong>Notas:</strong> inicialmente existirá CET 3 y se incluye desde el inicio para dejar preparado el sistema para otros colegios. En el MVP, los colegios se administran desde el admin técnico de Django.</p>
           </article>
           <article class="entity" id="entidad-curso">
-            <h3>Curso</h3>
+            <h3>Curso <span class="status-done" aria-label="Listo">✓ Listo</span></h3>
             <p>Representa un curso de un colegio.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id*</li>
-              <li>colegio*</li>
-              <li>nombre*</li>
-              <li>activo*</li>
+              <li>id*: identificador interno del curso.</li>
+              <li>colegio*: colegio al que pertenece el curso.</li>
+              <li>nombre*: nombre del curso, por ejemplo: 1° 1°.</li>
+              <li>activo*: indica si el curso está activo en el sistema.</li>
             </ul>
             <p><strong>Ejemplos:</strong> 1° 1°, 1° 2°, 3° 2°, 5° 1°.</p>
             <p><strong>Relación:</strong> Colegio 1 a N Curso.</p>
+            <p><strong>Notas:</strong> en el MVP, los cursos se administran desde el admin técnico de Django.</p>
           </article>
           <article class="entity" id="entidad-asociado">
             <h3>Asociado</h3>
@@ -334,13 +346,13 @@
             <p>Historial académico del asociado.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id*</li>
-              <li>asociado*</li>
-              <li>curso*</li>
-              <li>ciclo_lectivo*</li>
-              <li>activa*</li>
-              <li>fecha_desde*</li>
-              <li>fecha_hasta</li>
+              <li>id*: identificador interno de la inscripción.</li>
+              <li>asociado*: asociado inscripto en el curso.</li>
+              <li>curso*: curso en el que está inscripto el asociado.</li>
+              <li>ciclo_lectivo*: año lectivo de esta inscripción. FK a CicloLectivo.</li>
+              <li>activa*: indica si esta es la inscripción vigente del asociado.</li>
+              <li>fecha_desde*: fecha de inicio de esta inscripción.</li>
+              <li>fecha_hasta: fecha de fin de esta inscripción. Vacío si sigue activa.</li>
             </ul>
             <p><strong>Reglas:</strong> puede haber varias inscripciones históricas, solo una activa por ciclo lectivo, al cambiar de año se crea una nueva inscripción, incluso si repite curso.</p>
             <p><strong>Ejemplo:</strong> Juan Pérez - 2026 - 3° 2° - no activa / Juan Pérez - 2027 - 4° 2° - activa.</p>
@@ -350,13 +362,13 @@
             <p>Representa un período mensual de cuota.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id*</li>
-              <li>mes*</li>
-              <li>año*</li>
-              <li>importe*</li>
-              <li>importe_recargo_mora*</li>
-              <li>fecha_vencimiento*</li>
-              <li>activo*</li>
+              <li>id*: identificador interno del período.</li>
+              <li>mes*: mes del período (1 a 12).</li>
+              <li>ciclo_lectivo*: año lectivo al que corresponde este período. FK a CicloLectivo.</li>
+              <li>importe*: importe base de la cuota para este período.</li>
+              <li>importe_recargo_mora*: monto fijo que se suma si la cuota no se paga antes del vencimiento.</li>
+              <li>fecha_vencimiento*: fecha límite para pagar sin recargo.</li>
+              <li>activo*: indica si este período está activo para generar cuotas.</li>
             </ul>
             <p><strong>Reglas:</strong> define importe base y recargo fijo por mora, y ambos deben copiarse a la cuota generada para conservar historial. Cambios futuros no deben afectar cuotas ya generadas.</p>
             <p><strong>Ejemplo:</strong> Mayo 2026 - $3000 - vence 10/05/2026.</p>
@@ -476,6 +488,8 @@
             <li>Asociado 1 - N Pago</li>
             <li>Pago 1 - N PagoCuota</li>
             <li>Cuota 1 - N PagoCuota</li>
+            <li>CicloLectivo 1 - N InscripciónCurso</li>
+            <li>CicloLectivo 1 - N PeríodoCuota</li>
             <li>ActividadComercial 1 - N Comercio</li>
             <li>Usuario 1 - 0..1 Comercio</li>
           </ul>
@@ -660,7 +674,7 @@
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-001">ASOCIADO-001</a>, <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#ALTA-ASOCIADO-001">ALTA-ASOCIADO-001</a>, <a href="#ALTA-ASOCIADO-002">ALTA-ASOCIADO-002</a>, <a href="#ALTA-ASOCIADO-003">ALTA-ASOCIADO-003</a>.</p>
             <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, alta después del día 15, asociado sin usuario.</p>
-            <p><strong>Modelos afectados:</strong> Asociado, Curso, InscripcionCurso.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso, CicloLectivo, InscripcionCurso.</p>
           </article>
           <article class="use-case" id="cu-importar-asociados">
             <h3>CU-importar-asociados</h3>
@@ -675,7 +689,7 @@
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#CURSO-001">CURSO-001</a>, <a href="#CURSO-002">CURSO-002</a>.</p>
             <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, asociado ya existente, email faltante, teléfono faltante, tipo invalido.</p>
-            <p><strong>Modelos afectados:</strong> Asociado, Curso, InscripcionCurso.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso, CicloLectivo, InscripcionCurso.</p>
           </article>
           <article class="use-case" id="cu-crear-usuario-asociado">
             <h3>CU-crear-usuario-asociado</h3>
@@ -697,14 +711,14 @@
             <p><strong>Actor:</strong> Administrador</p>
             <p><strong>Flujo principal:</strong></p>
             <ol>
-              <li>Crea <code>PeríodoCuota</code> con mes, año, importe y vencimiento.</li>
+              <li>Crea <code>PeríodoCuota</code> con mes, ciclo lectivo, importe y vencimiento.</li>
               <li>Ejecuta generación de cuotas.</li>
               <li>El sistema genera para asociados activos alcanzados por <code>fecha_inicio_cobro</code>.</li>
               <li>Evita duplicados.</li>
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-004">ASOCIADO-004</a>, <a href="#CUOTA-001">CUOTA-001</a>, <a href="#CUOTA-002">CUOTA-002</a>, <a href="#CUOTA-004">CUOTA-004</a>, <a href="#CUOTA-005">CUOTA-005</a>.</p>
-            <p><strong>Situaciones especiales:</strong> asociado inactivo, egresado, fecha_inicio_cobro posterior, cuota ya generada.</p>
-            <p><strong>Modelos afectados:</strong> PeríodoCuota, Cuota, Asociado.</p>
+            <p><strong>Situaciones especiales:</strong> ciclo lectivo inexistente, asociado inactivo, egresado, fecha_inicio_cobro posterior, cuota ya generada.</p>
+            <p><strong>Modelos afectados:</strong> CicloLectivo, PeríodoCuota, Cuota, Asociado.</p>
           </article>
           <article class="use-case" id="cu-registrar-pago-cuota">
             <h3>CU-registrar-pago-cuota</h3>
@@ -763,7 +777,7 @@
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#CURSO-001">CURSO-001</a>, <a href="#CURSO-002">CURSO-002</a>, <a href="#CURSO-003">CURSO-003</a>, <a href="#CURSO-004">CURSO-004</a>.</p>
             <p><strong>Situaciones especiales:</strong> promoción normal, repite curso, cambio de división.</p>
-            <p><strong>Modelos afectados:</strong> Asociado, Curso, InscripcionCurso.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso, CicloLectivo, InscripcionCurso.</p>
           </article>
           <article class="use-case" id="cu-validar-credencial">
             <h3>CU-validar-credencial</h3>

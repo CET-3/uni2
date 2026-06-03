@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.test import RequestFactory
 
 from asociados.admin import AsociadoAdmin, AsociadoAdminForm
-from asociados.models import Asociado, Colegio, Curso
+from asociados.models import Asociado, CicloLectivo, Colegio, Curso
 
 
 @pytest.fixture
@@ -94,4 +94,5 @@ def test_admin_save_model_crea_inscripcion_inicial(curso, admin_user):
     assert asociado.inscripciones.count() == 1
     inscripcion = asociado.inscripciones.get()
     assert inscripcion.curso == curso
-    assert inscripcion.ciclo_lectivo == 2026
+    assert inscripcion.ciclo_lectivo == CicloLectivo.objects.get(anio=2026)
+    assert inscripcion.ciclo_lectivo.anio == 2026

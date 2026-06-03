@@ -2,7 +2,13 @@ from django import forms
 from django.contrib import admin
 
 from .services import calculate_fecha_inicio_cobro
-from .models import Asociado, Colegio, Curso, InscripcionCurso
+from .models import Asociado, CicloLectivo, Colegio, Curso, InscripcionCurso
+
+
+@admin.register(CicloLectivo)
+class CicloLectivoAdmin(admin.ModelAdmin):
+    list_display = ("anio",)
+    search_fields = ("anio",)
 
 
 @admin.register(Colegio)
@@ -100,10 +106,11 @@ class AsociadoAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         if obj.curso_actual and not obj.inscripciones.exists():
+            ciclo, _ = CicloLectivo.objects.get_or_create(anio=obj.fecha_alta.year)
             InscripcionCurso.objects.create(
                 asociado=obj,
                 curso=obj.curso_actual,
-                ciclo_lectivo=obj.fecha_alta.year,
+                ciclo_lectivo=ciclo,
                 activa=True,
                 fecha_desde=obj.fecha_alta,
             )

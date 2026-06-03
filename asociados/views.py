@@ -52,7 +52,7 @@ class AsociadoCuotasView(AsociadoRequiredMixin, TemplateView):
         asociado = self.request.user.asociado
         context["asociado"] = asociado
         context["cuotas"] = asociado.cuotas.select_related("periodo").order_by(
-            "-periodo__anio",
+            "-periodo__ciclo_lectivo__anio",
             "-periodo__mes",
         )
         context["total_deuda"] = get_total_deuda(asociado)

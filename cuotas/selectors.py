@@ -8,7 +8,7 @@ from .models import Cuota
 def get_cuotas_deudoras(asociado: Asociado):
     return Cuota.objects.filter(asociado=asociado).exclude(
         estado__in=[Cuota.ESTADO_PAGADA, Cuota.ESTADO_BONIFICADA]
-    ).select_related("periodo")
+    ).select_related("periodo", "periodo__ciclo_lectivo")
 
 
 def get_total_deuda(asociado: Asociado, fecha_referencia=None):

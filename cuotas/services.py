@@ -12,7 +12,7 @@ from .selectors import get_cuotas_deudoras, get_total_deuda
 
 
 def _periodo_key(periodo: PeriodoCuota) -> tuple[int, int]:
-    return periodo.anio, periodo.mes
+    return periodo.ciclo_lectivo.anio, periodo.mes
 
 
 def _recompute_estado(cuota: Cuota):
@@ -74,7 +74,7 @@ def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por
     )
 
     restante = importe
-    cuotas = get_cuotas_deudoras(asociado).order_by("periodo__anio", "periodo__mes", "id")
+    cuotas = get_cuotas_deudoras(asociado).order_by("periodo__ciclo_lectivo__anio", "periodo__mes", "id")
     for cuota in cuotas:
         if restante <= 0:
             break

@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.urls import reverse
 
+from asociados.models import CicloLectivo
 from asociados.services import create_asociado
 from contabilidad.models import CuentaContable
 from comercios.models import ActividadComercial, Comercio
@@ -51,7 +52,7 @@ def test_dashboard_gestion_muestra_metricas_basicas(client):
 
     periodo = PeriodoCuota.objects.create(
         mes=timezone.localdate().month,
-        anio=timezone.localdate().year,
+        ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
         importe="3000.00",
         importe_recargo_mora="500.00",
         fecha_vencimiento=timezone.localdate(),
@@ -139,7 +140,7 @@ def test_cobros_gestion_busca_asociado_y_registra_pago(client):
     crear_cuentas_contables_basicas()
     periodo = PeriodoCuota.objects.create(
         mes=timezone.localdate().month,
-        anio=timezone.localdate().year,
+        ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
         importe="3000.00",
         importe_recargo_mora="0.00",
         fecha_vencimiento=timezone.localdate(),
@@ -181,7 +182,7 @@ def test_cobros_gestion_muestra_error_si_supera_deuda(client):
     crear_cuentas_contables_basicas()
     periodo = PeriodoCuota.objects.create(
         mes=timezone.localdate().month,
-        anio=timezone.localdate().year,
+        ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
         importe="3000.00",
         importe_recargo_mora="0.00",
         fecha_vencimiento=timezone.localdate(),
@@ -215,7 +216,7 @@ def test_deudores_gestion_lista_asociados_y_linkea_a_cobro(client):
     crear_cuentas_contables_basicas()
     periodo = PeriodoCuota.objects.create(
         mes=timezone.localdate().month,
-        anio=timezone.localdate().year,
+        ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
         importe="3000.00",
         importe_recargo_mora="0.00",
         fecha_vencimiento=timezone.localdate(),
@@ -237,12 +238,13 @@ def test_periodos_cuota_gestion_crea_periodo(client):
     staff = user_model.objects.create_user(username="staff_periodo", password="secreto123", is_staff=True)
     client.force_login(staff)
 
+    ciclo, _ = CicloLectivo.objects.get_or_create(anio=2026)
     response = client.post(
         reverse("gestion:periodos_cuota"),
         {
             "action": "crear_periodo",
             "mes": 6,
-            "anio": 2026,
+            "ciclo_lectivo": ciclo.id,
             "importe": "3200.00",
             "importe_recargo_mora": "500.00",
             "fecha_vencimiento": "2026-06-10",
@@ -252,7 +254,7 @@ def test_periodos_cuota_gestion_crea_periodo(client):
     )
 
     assert response.status_code == 200
-    assert PeriodoCuota.objects.filter(mes=6, anio=2026, importe="3200.00").exists()
+    assert PeriodoCuota.objects.filter(mes=6, ciclo_lectivo__anio=2026, importe="3200.00").exists()
     assert "Periodo 06/2026 creado correctamente" in response.content.decode()
 
 
@@ -264,7 +266,7 @@ def test_periodos_cuota_gestion_genera_cuotas_sin_duplicar(client):
     create_asociado(nombre="Nico", apellido="Ferreyra", dni="49999111", tipo="asociado", fecha_alta="2026-05-20")
     periodo = PeriodoCuota.objects.create(
         mes=6,
-        anio=2026,
+        ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=2026)[0],
         importe="3200.00",
         importe_recargo_mora="500.00",
         fecha_vencimiento="2026-06-10",

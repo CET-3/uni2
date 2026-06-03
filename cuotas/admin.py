@@ -5,14 +5,14 @@ from .models import Cuota, Pago, PagoCuota, PeriodoCuota
 
 @admin.register(PeriodoCuota)
 class PeriodoCuotaAdmin(admin.ModelAdmin):
-    list_display = ("mes", "anio", "importe", "fecha_vencimiento", "activo")
-    list_filter = ("anio", "activo")
+    list_display = ("mes", "ciclo_lectivo", "importe", "fecha_vencimiento", "activo")
+    list_filter = ("ciclo_lectivo", "activo")
 
 
 @admin.register(Cuota)
 class CuotaAdmin(admin.ModelAdmin):
     list_display = ("asociado", "periodo", "importe", "importe_pagado", "estado", "fecha_generacion")
-    list_filter = ("estado", "periodo__anio")
+    list_filter = ("estado", "periodo__ciclo_lectivo")
     search_fields = ("asociado__apellido", "asociado__dni")
 
 
