@@ -37,16 +37,31 @@ def test_beneficios_publicos_muestran_activos_ordenados(client):
 def test_comercios_publicos_muestran_actividad_comercial(client):
     actividad = ActividadComercial.objects.create(nombre="Librería")
     Comercio.objects.create(
-        nombre="Librería Sur",
+        nombre="Librería Zeta",
         direccion="Mitre 123",
         actividad_comercial=actividad,
         beneficio_texto="10% en útiles",
         estado=Comercio.ESTADO_FIRMADO,
     )
+    Comercio.objects.create(
+        nombre="Librería Alfa",
+        direccion="San Martín 55",
+        actividad_comercial=actividad,
+        beneficio_texto="2x1 en anillados",
+        estado=Comercio.ESTADO_FIRMADO,
+    )
+    Comercio.objects.create(
+        nombre="Librería Pendiente",
+        direccion="Roca 100",
+        actividad_comercial=actividad,
+        beneficio_texto="No publicado",
+        estado=Comercio.ESTADO_PENDIENTE,
+    )
 
     response = client.get(reverse("web:comercios"))
 
     contenido = response.content.decode()
-    assert "Librería Sur" in contenido
+    assert contenido.index("Librería Alfa") < contenido.index("Librería Zeta")
     assert "Actividad:" in contenido
     assert "Librería" in contenido
+    assert "Librería Pendiente" not in contenido

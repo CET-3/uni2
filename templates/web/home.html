@@ -34,7 +34,7 @@
                 <h2 class="h5">Comercios adheridos</h2>
                 <ul class="mb-3">
                     {% for comercio in comercios %}
-                        <li>{{ comercio.nombre }}</li>
+                        <li><strong>{{ comercio.nombre }}</strong> — {{ comercio.beneficio_texto }}</li>
                     {% empty %}
                         <li>Sin comercios cargados por ahora.</li>
                     {% endfor %}
