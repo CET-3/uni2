@@ -2,4 +2,4 @@ from .models import Beneficio
 
 
 def get_beneficios_publicos():
-    return Beneficio.objects.filter(activo=True)
+    return Beneficio.objects.filter(activo=True).order_by("orden")
