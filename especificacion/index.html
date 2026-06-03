@@ -902,28 +902,8 @@
           <h2>Reportes MVP</h2>
         </div>
         <div class="panel">
-          <ul class="columns">
-            <li>Asociados activos.</li>
-            <li>Asociados inactivos.</li>
-            <li>Asociados egresados.</li>
-            <li>Asociados por curso.</li>
-            <li>Asociados por tipo.</li>
-            <li>Asociados con usuario.</li>
-            <li>Asociados sin usuario.</li>
-            <li>Ultimos accesos.</li>
-            <li>Altas por mes.</li>
-            <li>Bajas por mes.</li>
-            <li>Cuotas generadas.</li>
-            <li>Cuotas pagadas.</li>
-            <li>Cuotas parciales.</li>
-            <li>Cuotas vencidas.</li>
-            <li>Deudores.</li>
-            <li>Deudores por curso.</li>
-            <li>Recaudacion por período.</li>
-            <li>Recaudacion por método de pago.</li>
-            <li>Comercios adheridos.</li>
-            <li>Beneficios vigentes.</li>
-          </ul>
+          <p>En el MVP no se implementan dashboards analíticos ni reportes agregados. Las pantallas internas priorizan acceder a las tareas operativas: buscar asociados, cobrar cuotas, ver deudores y administrar períodos de cuota.</p>
+          <p>Los listados simples de deudores y cuotas se mantienen como pantallas operativas, no como tablero de métricas.</p>
         </div>
       </section>
 
@@ -945,7 +925,7 @@
           <article class="card">
             <h3>Asociado</h3>
             <ul>
-              <li>Panel.</li>
+              <li>Panel simple con accesos a credencial, cuotas, beneficios y comercios.</li>
               <li>Mi credencial.</li>
               <li>Mis cuotas.</li>
               <li>Beneficios.</li>
@@ -955,7 +935,7 @@
           <article class="card">
             <h3>Administrador</h3>
             <ul>
-              <li>Dashboard.</li>
+              <li>Dashboard simple con accesos a tareas del MVP.</li>
               <li>Listado de asociados.</li>
               <li>Nuevo asociado.</li>
               <li>Importar asociados.</li>
@@ -967,13 +947,12 @@
               <li>Generar cuotas.</li>
               <li>Registrar pago.</li>
               <li>Deudores.</li>
-              <li>Reportes.</li>
             </ul>
           </article>
           <article class="card">
             <h3>Comercio</h3>
             <ul>
-              <li>Login.</li>
+              <li>Panel simple con acceso a validar credencial.</li>
               <li>Validar credencial.</li>
               <li>Resultado de validación.</li>
             </ul>
@@ -994,7 +973,7 @@
             <h3>Apps principales</h3>
             <ul>
               <li><code>usuarios</code>: login, logout, helpers de roles y navegación.</li>
-              <li><code>gestion</code>: dashboard interno, cobros, deudores, asociados y períodos de cuota.</li>
+              <li><code>gestion</code>: dashboard simple de accesos, cobros, deudores, asociados y períodos de cuota.</li>
               <li><code>asociados</code>: experiencia del asociado autenticado y su dominio.</li>
               <li><code>comercios</code>: validación y panel del comercio adherido.</li>
               <li><code>cuotas</code>: modelos y servicios de cuotas, deuda y pagos.</li>
@@ -1019,9 +998,9 @@
           <article class="card">
             <h3>Dashboards y entradas</h3>
             <ul>
-              <li>Staff interno: dashboard de <code>gestion</code>.</li>
-              <li>Asociado autenticado: dashboard de <code>asociados</code>.</li>
-              <li>Comercio autenticado: dashboard de <code>comercios</code>.</li>
+              <li>Staff interno: dashboard simple de <code>gestion</code> con accesos a tareas del MVP.</li>
+              <li>Asociado autenticado: panel simple de <code>asociados</code> con accesos a credencial, cuotas, beneficios y comercios.</li>
+              <li>Comercio autenticado: panel simple de <code>comercios</code> con acceso a validar credenciales.</li>
               <li>Luego del login, el sistema redirige según el rol y el perfil vinculado.</li>
               <li>La navegación para staff prioriza el acceso al backoffice propio y deja el admin de Django como herramienta técnica complementaria.</li>
             </ul>
@@ -1032,6 +1011,7 @@
               <li>Evitar que tareas frecuentes dependan del admin genérico de Django.</li>
               <li>En el MVP, la gestión de beneficios, comercios y actividades comerciales queda como excepción documentada y se resuelve desde el admin técnico de Django.</li>
               <li>Ofrecer pantallas operativas orientadas a flujo: cobrar, buscar asociado, ver deudores, administrar cuotas.</li>
+              <li>No cargar el dashboard del MVP con métricas, rankings o reportes avanzados.</li>
               <li>Permitir una UX propia para escritorio y mobile sin contaminar la app de autenticación.</li>
               <li>Hacer más claro el mantenimiento: auth y roles en <code>usuarios</code>, backoffice en <code>gestion</code>.</li>
             </ul>
@@ -1061,12 +1041,29 @@
             <li>Pantalla propia de gestión de actividades comerciales en backoffice.</li>
             <li>Reportes de ventas y stock.</li>
             <li>Asientos simples vinculados a pagos.</li>
+            <li>Dashboards con métricas, alertas y reportes agregados.</li>
           </ul>
         </div>
         <div class="panel" id="v2-modelo">
           <h3>Modelo de datos V2</h3>
           <p><strong>Entidades V2:</strong> Producto, VarianteProducto, MovimientoStock, Pedido, ItemPedido, PagoPedido, Notificación, CuentaContable, Asiento, PartidaAsiento, BeneficioComercio.</p>
           <p>Los atributos marcados con <strong>*</strong> son obligatorios: deben tener valor, ya sea cargado por una persona o definido automáticamente por el sistema.</p>
+        </div>
+        <div class="panel" id="v2-dashboards">
+          <h3>Dashboards e ideas futuras</h3>
+          <p>Las métricas y tableros agregados se guardan como idea futura para no complejizar el MVP.</p>
+          <ul class="columns">
+            <li>Resumen de asociados activos, inactivos y egresados.</li>
+            <li>Asociados por curso y por tipo.</li>
+            <li>Asociados con usuario y sin usuario.</li>
+            <li>Ultimos accesos.</li>
+            <li>Altas y bajas por mes.</li>
+            <li>Cuotas generadas, pagadas, parciales y vencidas.</li>
+            <li>Deudores prioritarios y deudores por curso.</li>
+            <li>Recaudacion por período y por método de pago.</li>
+            <li>Comercios adheridos y beneficios vigentes.</li>
+            <li>Alertas rápidas para tareas pendientes.</li>
+          </ul>
         </div>
         <div class="entity-list">
           <article class="entity">

@@ -7,17 +7,15 @@
     <section class="dashboard-hero card">
         <div class="card-body">
             <div class="dashboard-eyebrow">Mi comercio</div>
-            <div class="d-flex flex-column flex-xl-row justify-content-between gap-4">
-                <div class="col-xl-7 p-0">
+            <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
+                <div class="col-lg-7 p-0">
                     <h1 class="display-6 fw-semibold mb-2">{{ comercio.nombre }}</h1>
-                    <p class="mb-4 fs-5">Este panel está pensado para una tarea principal: validar credenciales de asociados de forma rápida y clara.</p>
+                    <p class="mb-3 fs-5">Pantalla simple para validar credenciales de asociados.</p>
                     <div class="pill-row">
-                        <span class="dashboard-pill">{{ comercio.actividad_comercial }}</span>
                         <span class="dashboard-pill">Convenio {{ comercio.get_estado_display }}</span>
-                        <span class="dashboard-pill">{% if comercio.flyer_disponible %}Flyer disponible{% else %}Sin flyer cargado{% endif %}</span>
                     </div>
                 </div>
-                <div class="col-xl-4 p-0">
+                <div class="col-lg-4 p-0">
                     <div class="dashboard-actions-grid">
                         <a class="btn btn-light btn-lg" href="{% url 'comercios:validar_credencial' %}">Validar credencial</a>
                     </div>
@@ -26,88 +24,13 @@
         </div>
     </section>
 
-    <section>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <div class="metric-card card h-100">
-                    <div class="card-body">
-                        <div class="metric-label">Convenio</div>
-                        <div class="metric-value fs-4">{{ comercio.get_estado_display }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="metric-card card h-100">
-                    <div class="card-body">
-                        <div class="metric-label">Actividad</div>
-                        <div class="metric-value fs-4">{{ comercio.actividad_comercial }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="metric-card card h-100">
-                    <div class="card-body">
-                        <div class="metric-label">Fecha de convenio</div>
-                        <div class="metric-value fs-4">{{ comercio.fecha_convenio|default:"-" }}</div>
-                    </div>
-                </div>
-            </div>
+    <section class="section-card card">
+        <div class="card-body">
+            <div class="muted-kicker">Beneficio vigente</div>
+            <h2 class="h4 mb-3">Información para atención</h2>
+            <p class="mb-4 fs-5">{{ comercio.beneficio_texto|default:"No hay beneficio cargado." }}</p>
+            <a class="btn btn-primary" href="{% url 'comercios:validar_credencial' %}">Abrir validación</a>
         </div>
     </section>
-
-    <div class="row g-4">
-        <div class="col-xl-5">
-            <section class="section-card card h-100">
-                <div class="card-body">
-                    <div class="muted-kicker">Datos del comercio</div>
-                    <h2 class="h4 mb-3">Información básica</h2>
-                    <p class="mb-2"><strong>Propietario:</strong> {{ comercio.propietario|default:"-" }}</p>
-                    <p class="mb-2"><strong>Dirección:</strong> {{ comercio.direccion }}</p>
-                    <p class="mb-2"><strong>Teléfono:</strong> {{ comercio.telefono|default:"-" }}</p>
-                    <p class="mb-0"><strong>Web:</strong> {% if comercio.url_presencia_web %}<a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Abrir enlace</a>{% else %}-{% endif %}</p>
-                </div>
-            </section>
-        </div>
-        <div class="col-xl-7">
-            <section class="section-card card h-100">
-                <div class="card-body">
-                    <div class="section-title-row">
-                        <div>
-                            <div class="muted-kicker">Beneficio</div>
-                            <h2 class="h4 mb-0">Beneficio del convenio</h2>
-                        </div>
-                        <a class="btn btn-outline-primary btn-sm" href="{% url 'comercios:validar_credencial' %}">Ir a validar</a>
-                    </div>
-                    <p class="mb-3 fs-5">{{ comercio.beneficio_texto|default:"No hay beneficio cargado." }}</p>
-                    <div class="small text-secondary">Flyer disponible: <strong>{% if comercio.flyer_disponible %}Sí{% else %}No{% endif %}</strong></div>
-                </div>
-            </section>
-        </div>
-        <div class="col-xl-6">
-            <section class="section-card card h-100">
-                <div class="card-body">
-                    <div class="muted-kicker">Operación</div>
-                    <h2 class="h4 mb-3">Qué podés hacer desde acá</h2>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item px-0">Validar si una credencial pertenece a un asociado activo.</li>
-                        <li class="list-group-item px-0">Confirmar rápidamente el beneficio vigente de tu convenio.</li>
-                        <li class="list-group-item px-0">Tener a mano los datos de contacto y referencia del comercio.</li>
-                    </ul>
-                </div>
-            </section>
-        </div>
-        <div class="col-xl-6">
-            <section class="section-card card h-100">
-                <div class="card-body">
-                    <div class="muted-kicker">Siguiente paso</div>
-                    <h2 class="h4 mb-3">Acción principal</h2>
-                    <p class="text-secondary">La pantalla está centrada en una sola operación para que el flujo sea claro y rápido en atención.</p>
-                    <div class="d-grid">
-                        <a class="btn btn-primary btn-lg" href="{% url 'comercios:validar_credencial' %}">Abrir validación de credenciales</a>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
 </div>
 {% endblock %}

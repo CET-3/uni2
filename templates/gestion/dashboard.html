@@ -3,381 +3,75 @@
 {% block title %}Gestión mutual | Uni2{% endblock %}
 
 {% block content %}
-<div class="admin-layout">
-    <div class="admin-main-column">
-        <section id="resumen" class="dashboard-hero card">
-            <div class="card-body">
-                <div class="dashboard-eyebrow">Administración interna</div>
-                <div class="d-flex flex-column flex-xl-row justify-content-between gap-4">
-                    <div class="col-xl-7 p-0">
-                        <h1 class="display-6 fw-semibold mb-3">Un panel pensado para operar, no solo para mirar métricas.</h1>
-                        <p class="mb-4 fs-5">Desde acá podés entrar rápido a cobros, asociados, cuotas, deudores y módulos de soporte, sin depender de una botonera que después quede corta.</p>
-                        <div class="pill-row">
-                            <span class="dashboard-pill">{{ resumen.asociados_activos }} asociados activos</span>
-                            <span class="dashboard-pill">{{ resumen.deudores }} deudores</span>
-                            <span class="dashboard-pill">${{ resumen.recaudacion_mes }} recaudados este mes</span>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 p-0">
-                        <div class="dashboard-actions-grid">
-                            <a class="btn btn-light btn-lg" href="{% url 'gestion:cobros' %}">Cobrar cuota</a>
-                            <a class="btn btn-outline-light btn-lg" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
-                        </div>
+<div class="app-panel-shell">
+    <section class="dashboard-hero card">
+        <div class="card-body">
+            <div class="dashboard-eyebrow">Administración interna</div>
+            <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
+                <div class="col-lg-7 p-0">
+                    <h1 class="display-6 fw-semibold mb-3">Panel de gestión</h1>
+                    <p class="mb-0 fs-5">Accesos directos a las tareas principales del MVP.</p>
+                </div>
+                <div class="col-lg-4 p-0">
+                    <div class="dashboard-actions-grid">
+                        <a class="btn btn-light btn-lg" href="{% url 'gestion:cobros' %}">Cobrar cuota</a>
+                        <a class="btn btn-outline-light btn-lg" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section class="app-panel-shell">
-            <div class="row g-3">
-                <div class="col-6 col-xl-2">
-                    <div class="metric-card card h-100">
-                        <div class="card-body">
-                            <div class="metric-label">Activos</div>
-                            <div class="metric-value">{{ resumen.asociados_activos }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-xl-2">
-                    <div class="metric-card card h-100">
-                        <div class="card-body">
-                            <div class="metric-label">Sin usuario</div>
-                            <div class="metric-value">{{ resumen.asociados_sin_usuario }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-xl-2">
-                    <div class="metric-card card h-100">
-                        <div class="card-body">
-                            <div class="metric-label">Deudores</div>
-                            <div class="metric-value">{{ resumen.deudores }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-xl-2">
-                    <div class="metric-card card h-100">
-                        <div class="card-body">
-                            <div class="metric-label">Vencidas</div>
-                            <div class="metric-value">{{ resumen.cuotas_vencidas }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-xl-2">
-                    <div class="metric-card card h-100">
-                        <div class="card-body">
-                            <div class="metric-label">Pagadas</div>
-                            <div class="metric-value">{{ resumen.cuotas_pagadas }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-xl-2">
-                    <div class="metric-card card h-100">
-                        <div class="card-body">
-                            <div class="metric-label">Recaudación</div>
-                            <div class="metric-value fs-4">${{ resumen.recaudacion_mes }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section-card card">
-            <div class="card-body">
-                <div class="section-title-row">
-                    <div>
-                        <div class="muted-kicker">Acciones frecuentes</div>
-                        <h2 class="h4 mb-0">Accesos rápidos</h2>
-                    </div>
-                </div>
-                <div class="dashboard-actions-grid">
-                    <div class="quick-action-card card h-100">
-                        <div class="card-body">
-                            <h3 class="h5">Cobros</h3>
-                            <p class="text-secondary">Buscar un asociado, revisar deuda y registrar un pago.</p>
-                            <div class="quick-action-meta">
-                                <span>Operación principal del día a día.</span>
-                                <span class="status-badge-soft">{{ resumen.cuotas_vencidas }} vencidas</span>
-                            </div>
-                            <a class="btn btn-primary" href="{% url 'gestion:cobros' %}">Abrir cobros</a>
-                        </div>
-                    </div>
-                    <div class="quick-action-card card h-100">
-                        <div class="card-body">
-                            <h3 class="h5">Asociados</h3>
-                            <p class="text-secondary">Buscar, revisar detalle, editar estado y seguir historial.</p>
-                            <div class="quick-action-meta">
-                                <span>Padrón y seguimiento individual.</span>
-                                <span class="status-badge-soft">{{ resumen.asociados_activos }} activos</span>
-                            </div>
-                            <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Abrir asociados</a>
-                        </div>
-                    </div>
-                    <div class="quick-action-card card h-100">
-                        <div class="card-body">
-                            <h3 class="h5">Cuotas</h3>
-                            <p class="text-secondary">Crear períodos y generar cuotas sin duplicar movimientos.</p>
-                            <div class="quick-action-meta">
-                                <span>Configuración mensual y generación.</span>
-                                <span class="status-badge-soft">{{ resumen.cuotas_pendientes }} pendientes</span>
-                            </div>
-                            <a class="btn btn-outline-primary" href="{% url 'gestion:periodos_cuota' %}">Abrir cuotas</a>
-                        </div>
-                    </div>
-                    <div class="quick-action-card card h-100">
-                        <div class="card-body">
-                            <h3 class="h5">Deudores</h3>
-                            <p class="text-secondary">Ver prioridades de cobro y entrar rápido a la caja.</p>
-                            <div class="quick-action-meta">
-                                <span>Seguimiento de mora y priorización.</span>
-                                <span class="status-badge-soft">{{ resumen.deudores }} casos</span>
-                            </div>
-                            <a class="btn btn-outline-primary" href="{% url 'gestion:deudores' %}">Abrir deudores</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="row g-4">
-            <div class="col-xl-7">
-                <section class="section-card card h-100">
-                    <div class="card-body">
-                        <div class="section-title-row">
-                            <div>
-                                <div class="muted-kicker">Pendientes</div>
-                                <h2 class="h4 mb-0">Deudores prioritarios</h2>
-                            </div>
-                            <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:deudores' %}">Abrir listado completo</a>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table align-middle mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Asociado</th>
-                                        <th>Curso</th>
-                                        <th>Estado</th>
-                                        <th>Deuda</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in deudores %}
-                                        <tr>
-                                            <td>{{ item.asociado.apellido }}, {{ item.asociado.nombre }}</td>
-                                            <td>{{ item.asociado.curso_actual|default:"-" }}</td>
-                                            <td>{{ item.asociado.get_estado_display }}</td>
-                                            <td>${{ item.deuda }}</td>
-                                        </tr>
-                                    {% empty %}
-                                        <tr><td colspan="4">No hay asociados con deuda.</td></tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="col-xl-5">
-                <section class="section-card card h-100">
-                    <div class="card-body">
-                        <div class="muted-kicker">Alertas rápidas</div>
-                        <h2 class="h4 mb-3">Qué conviene mirar hoy</h2>
-                        <ul class="list-group list-group-flush compact-list">
-                            <li class="list-group-item px-0 d-flex justify-content-between">
-                                <span>Asociados sin usuario</span>
-                                <strong>{{ resumen.asociados_sin_usuario }}</strong>
-                            </li>
-                            <li class="list-group-item px-0 d-flex justify-content-between">
-                                <span>Cuotas vencidas</span>
-                                <strong>{{ resumen.cuotas_vencidas }}</strong>
-                            </li>
-                            <li class="list-group-item px-0 d-flex justify-content-between">
-                                <span>Comercios con beneficio cargado</span>
-                                <strong>{{ resumen.comercios_con_beneficio }}</strong>
-                            </li>
-                            <li class="list-group-item px-0 d-flex justify-content-between">
-                                <span>Asociados inactivos</span>
-                                <strong>{{ resumen.asociados_inactivos }}</strong>
-                            </li>
-                            <li class="list-group-item px-0 d-flex justify-content-between">
-                                <span>Asociados egresados</span>
-                                <strong>{{ resumen.asociados_egresados }}</strong>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
-            </div>
-
-            <div class="col-xl-4">
-                <section class="section-card card h-100">
-                    <div class="card-body">
-                        <div class="muted-kicker">Cursos</div>
-                        <h2 class="h4 mb-3">Asociados por curso</h2>
-                        <ul class="list-group list-group-flush">
-                            {% for item in asociados_por_curso %}
-                                <li class="list-group-item px-0 d-flex justify-content-between">
-                                    <span>{{ item.curso_actual__nombre }}</span>
-                                    <strong>{{ item.total }}</strong>
-                                </li>
-                            {% empty %}
-                                <li class="list-group-item px-0">No hay cursos asignados.</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </section>
-            </div>
-            <div class="col-xl-4">
-                <section class="section-card card h-100">
-                    <div class="card-body">
-                        <div class="muted-kicker">Estado de cuotas</div>
-                        <h2 class="h4 mb-3">Distribución actual</h2>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item px-0 d-flex justify-content-between"><span>Pendientes</span><strong>{{ resumen.cuotas_pendientes }}</strong></li>
-                            <li class="list-group-item px-0 d-flex justify-content-between"><span>Parciales</span><strong>{{ resumen.cuotas_parciales }}</strong></li>
-                            <li class="list-group-item px-0 d-flex justify-content-between"><span>Vencidas</span><strong>{{ resumen.cuotas_vencidas }}</strong></li>
-                            <li class="list-group-item px-0 d-flex justify-content-between"><span>Pagadas</span><strong>{{ resumen.cuotas_pagadas }}</strong></li>
-                        </ul>
-                    </div>
-                </section>
-            </div>
-            <div class="col-xl-4">
-                <section class="section-card card h-100">
-                    <div class="card-body">
-                        <div class="muted-kicker">Actividad</div>
-                        <h2 class="h4 mb-3">Últimos accesos y pagos</h2>
-                        <ul class="list-group list-group-flush mb-3">
-                            {% for asociado in ultimos_accesos %}
-                                <li class="list-group-item px-0">
-                                    <div class="fw-semibold">{{ asociado.apellido }}, {{ asociado.nombre }}</div>
-                                    <div class="small text-secondary">{{ asociado.usuario.username }} · {{ asociado.usuario.last_login|date:"d/m/Y H:i" }}</div>
-                                </li>
-                            {% empty %}
-                                <li class="list-group-item px-0">Todavía no hay accesos registrados.</li>
-                            {% endfor %}
-                        </ul>
-                        <hr>
-                        <ul class="list-group list-group-flush">
-                            {% for item in pagos_por_metodo %}
-                                <li class="list-group-item px-0 d-flex justify-content-between">
-                                    <span>{{ item.metodo }}</span>
-                                    <strong>${{ item.total }}</strong>
-                                </li>
-                            {% empty %}
-                                <li class="list-group-item px-0">No hay pagos registrados este mes.</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </section>
             </div>
         </div>
-    </div>
+    </section>
 
-    <aside class="admin-side-column">
-        <section class="section-card card">
-            <div class="card-body">
-                <div class="section-title-row mb-3">
-                    <div>
-                        <div class="muted-kicker">Backoffice</div>
-                        <h2 class="h4 mb-0">Más módulos</h2>
+    <section class="section-card card">
+        <div class="card-body">
+            <div class="section-title-row">
+                <div>
+                    <div class="muted-kicker">Operación diaria</div>
+                    <h2 class="h4 mb-0">Tareas del MVP</h2>
+                </div>
+            </div>
+            <div class="module-card-grid">
+                <a class="module-link-item" href="{% url 'gestion:asociados' %}">
+                    <div class="module-link-copy">
+                        <strong>Asociados</strong>
+                        <span>Buscar asociados y revisar su detalle.</span>
                     </div>
-                    <a class="btn btn-outline-primary btn-sm d-none d-lg-inline-flex" href="{% url 'admin:index' %}">Ver todos</a>
-                </div>
-
-                <button
-                    class="module-toggle d-lg-none"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#dashboard-more-modules"
-                    aria-expanded="false"
-                    aria-controls="dashboard-more-modules"
-                >
-                    <span class="module-toggle-label">Ver módulos secundarios</span>
-                    <span class="badge text-bg-light rounded-pill">4</span>
-                </button>
-
-                <div class="collapse d-lg-block" id="dashboard-more-modules">
-                    <div class="module-link-list">
-                        <a class="module-link-item" href="{% url 'admin:comercios_comercio_changelist' %}">
-                            <div class="module-link-copy">
-                                <strong>Comercios</strong>
-                                <span>Adheridos, beneficios y seguimiento comercial.</span>
-                            </div>
-                            <span class="status-badge-soft">{{ resumen.comercios_con_beneficio }}</span>
-                        </a>
-                        <a class="module-link-item" href="{% url 'admin:contenidos_beneficio_changelist' %}">
-                            <div class="module-link-copy">
-                                <strong>Contenidos</strong>
-                                <span>Beneficios públicos del sitio.</span>
-                            </div>
-                            <span class="status-badge-soft">CMS</span>
-                        </a>
-                        <a class="module-link-item" href="{% url 'admin:auth_user_changelist' %}">
-                            <div class="module-link-copy">
-                                <strong>Usuarios</strong>
-                                <span>Cuentas internas, accesos y vinculaciones.</span>
-                            </div>
-                            <span class="status-badge-soft">{{ resumen.asociados_con_usuario }}</span>
-                        </a>
-                        <a class="module-link-item" href="{% url 'admin:index' %}">
-                            <div class="module-link-copy">
-                                <strong>Admin técnico</strong>
-                                <span>Modelos y operaciones excepcionales de Django.</span>
-                            </div>
-                            <span class="status-badge-soft">Django</span>
-                        </a>
+                </a>
+                <a class="module-link-item" href="{% url 'gestion:cobros' %}">
+                    <div class="module-link-copy">
+                        <strong>Cobros</strong>
+                        <span>Registrar pagos de cuotas.</span>
                     </div>
-                </div>
+                </a>
+                <a class="module-link-item" href="{% url 'gestion:deudores' %}">
+                    <div class="module-link-copy">
+                        <strong>Deudores</strong>
+                        <span>Ver asociados con saldo pendiente.</span>
+                    </div>
+                </a>
+                <a class="module-link-item" href="{% url 'gestion:periodos_cuota' %}">
+                    <div class="module-link-copy">
+                        <strong>Períodos de cuota</strong>
+                        <span>Crear períodos y generar cuotas.</span>
+                    </div>
+                </a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="section-card card">
-            <div class="card-body">
-                <div class="muted-kicker">Alertas rápidas</div>
-                <h2 class="h4 mb-3">Qué conviene mirar hoy</h2>
-                <ul class="list-group list-group-flush compact-list">
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <span>Asociados sin usuario</span>
-                        <strong>{{ resumen.asociados_sin_usuario }}</strong>
-                    </li>
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <span>Cuotas vencidas</span>
-                        <strong>{{ resumen.cuotas_vencidas }}</strong>
-                    </li>
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <span>Comercios con beneficio cargado</span>
-                        <strong>{{ resumen.comercios_con_beneficio }}</strong>
-                    </li>
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <span>Asociados inactivos</span>
-                        <strong>{{ resumen.asociados_inactivos }}</strong>
-                    </li>
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <span>Asociados egresados</span>
-                        <strong>{{ resumen.asociados_egresados }}</strong>
-                    </li>
-                </ul>
+    <section class="section-card card">
+        <div class="card-body">
+            <div class="muted-kicker">Soporte técnico</div>
+            <h2 class="h4 mb-3">Admin de Django</h2>
+            <p class="text-secondary">Usar para tareas técnicas o excepciones del MVP, como colegios, cursos, beneficios y comercios.</p>
+            <div class="dashboard-actions-grid">
+                <a class="btn btn-outline-primary" href="{% url 'admin:asociados_colegio_changelist' %}">Colegios</a>
+                <a class="btn btn-outline-primary" href="{% url 'admin:asociados_curso_changelist' %}">Cursos</a>
+                <a class="btn btn-outline-primary" href="{% url 'admin:contenidos_beneficio_changelist' %}">Beneficios</a>
+                <a class="btn btn-outline-primary" href="{% url 'admin:comercios_comercio_changelist' %}">Comercios</a>
+                <a class="btn btn-outline-primary" href="{% url 'admin:index' %}">Admin completo</a>
             </div>
-        </section>
-
-        <section class="section-card card">
-            <div class="card-body">
-                <div class="muted-kicker">Soporte</div>
-                <h2 class="h4 mb-3">Atajos complementarios</h2>
-                <div class="support-link-list">
-                    <a class="support-link-item" href="{% url 'admin:auth_group_changelist' %}">
-                        <div class="support-link-copy">
-                            <strong>Permisos y grupos</strong>
-                            <span>Revisar accesos internos por rol.</span>
-                        </div>
-                    </a>
-                    <a class="support-link-item" href="{% url 'admin:index' %}">
-                        <div class="support-link-copy">
-                            <strong>Ver admin completo</strong>
-                            <span>Acceder al índice técnico cuando haga falta.</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-    </aside>
+        </div>
+    </section>
 </div>
 {% endblock %}

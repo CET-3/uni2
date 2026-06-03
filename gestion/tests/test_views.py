@@ -6,7 +6,6 @@ from django.urls import reverse
 from asociados.models import CicloLectivo
 from asociados.services import create_asociado
 from contabilidad.models import CuentaContable
-from comercios.models import ActividadComercial, Comercio
 from cuotas.models import Pago, PeriodoCuota
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 
@@ -29,61 +28,21 @@ def test_dashboard_gestion_requiere_staff(client):
 
 
 @pytest.mark.django_db
-def test_dashboard_gestion_muestra_metricas_basicas(client):
+def test_dashboard_gestion_muestra_accesos_basicos(client):
     user_model = get_user_model()
     staff = user_model.objects.create_user(username="staff1", password="secreto123", is_staff=True)
-    user_con_acceso = user_model.objects.create_user(username="aso_login", password="secreto123")
-    user_con_acceso.last_login = timezone.now()
-    user_con_acceso.save(update_fields=["last_login"])
-
-    asociado_con_usuario = create_asociado(
-        nombre="Laura", apellido="Mendez", dni="41111999", tipo="asociado", fecha_alta="2026-05-10"
-    )
-    asociado_con_usuario.usuario = user_con_acceso
-    asociado_con_usuario.save(update_fields=["usuario"])
-
-    create_asociado(nombre="Mario", apellido="Sosa", dni="42222999", tipo="asociado", fecha_alta="2026-05-10")
-
-    asociado_deudor = create_asociado(
-        nombre="Nina", apellido="Ruiz", dni="43333999", tipo="asociado", fecha_alta="2026-05-10"
-    )
-
-    crear_cuentas_contables_basicas()
-
-    periodo = PeriodoCuota.objects.create(
-        mes=timezone.localdate().month,
-        ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
-        importe="3000.00",
-        importe_recargo_mora="500.00",
-        fecha_vencimiento=timezone.localdate(),
-    )
-    generar_cuotas_para_periodo(periodo)
-    registrar_pago(
-        asociado=asociado_con_usuario,
-        fecha=timezone.localdate(),
-        importe="3000.00",
-        metodo=Pago.METODO_EFECTIVO,
-    )
-
-    actividad = ActividadComercial.objects.create(nombre="Libreria")
-    Comercio.objects.create(
-        nombre="Libreria Norte",
-        direccion="Mitre 321",
-        actividad_comercial=actividad,
-        beneficio_texto="10% en utiles",
-        estado=Comercio.ESTADO_FIRMADO,
-    )
 
     client.force_login(staff)
     response = client.get(reverse("gestion:dashboard"))
 
     assert response.status_code == 200
-    assert response.context["resumen"]["asociados_activos"] == 3
-    assert response.context["resumen"]["asociados_sin_usuario"] == 2
-    assert response.context["resumen"]["deudores"] == 2
-    assert response.context["resumen"]["cuotas_pagadas"] == 1
-    assert response.context["resumen"]["comercios_con_beneficio"] == 1
-    assert any(item["asociado"] == asociado_deudor for item in response.context["deudores"])
+    content = response.content.decode()
+    assert "Panel de gestión" in content
+    assert "Asociados" in content
+    assert "Cobros" in content
+    assert "Deudores" in content
+    assert "Períodos de cuota" in content
+    assert "asociados activos" not in content.lower()
 
 
 @pytest.mark.django_db
