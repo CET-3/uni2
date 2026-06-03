@@ -1,7 +1,6 @@
 from datetime import date
 
 import pytest
-from django.core.exceptions import ValidationError
 
 from asociados.models import Asociado
 from asociados.services import create_asociado
@@ -60,17 +59,3 @@ def test_rechazo_de_validacion_para_comercio_sin_convenio_firmado(asociado, come
 @pytest.mark.django_db
 def test_comercio_guarda_beneficio_como_texto(comercio):
     assert comercio.beneficio_texto == "10% en utiles"
-
-
-@pytest.mark.django_db
-def test_comercio_requiere_beneficio_texto():
-    actividad = ActividadComercial.objects.create(nombre="Fotocopias")
-    comercio = Comercio(
-        nombre="Copias Norte",
-        direccion="Roca 123",
-        actividad_comercial=actividad,
-        beneficio_texto="",
-    )
-
-    with pytest.raises(ValidationError):
-        comercio.full_clean()

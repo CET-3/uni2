@@ -45,7 +45,7 @@
               <li><a href="#entidad-pago-cuota">PagoCuota</a></li>
               <li><a href="#entidad-beneficio">Beneficio</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
               <li><a href="#entidad-actividad-comercial">ActividadComercial</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
-              <li><a href="#entidad-comercio">Comercio</a></li>
+              <li><a href="#entidad-comercio">Comercio</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
             </ol>
           </details>
         </li>
@@ -57,7 +57,7 @@
             <ol>
               <li><a href="#cu-consultar-sitio-publico">CU-consultar-sitio-publico</a></li>
               <li><a href="#cu-listar-beneficios-publicos">CU-listar-beneficios-publicos</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
-              <li><a href="#cu-listar-comercios-publicos">CU-listar-comercios-publicos</a></li>
+              <li><a href="#cu-listar-comercios-publicos">CU-listar-comercios-publicos</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
               <li><a href="#cu-ver-credencial">CU-ver-credencial</a></li>
               <li><a href="#cu-ver-estado-cuotas">CU-ver-estado-cuotas</a></li>
               <li><a href="#cu-crear-asociado">CU-crear-asociado</a></li>
@@ -430,28 +430,28 @@
             </ul>
           </article>
           <article class="entity" id="entidad-comercio">
-            <h3>Comercio</h3>
+            <h3>Comercio <span class="status-done" aria-label="Listo">✓ Listo</span></h3>
             <p>Comercio adherido a la mutual.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id*</li>
-              <li>actividad_comercial*</li>
-              <li>usuario</li>
-              <li>nombre*</li>
-              <li>propietario</li>
-              <li>beneficio_texto*</li>
-              <li>estado*</li>
-              <li>fecha_convenio</li>
-              <li>notas</li>
-              <li>flyer_disponible*</li>
-              <li>email</li>
-              <li>teléfono</li>
-              <li>dirección*</li>
-              <li>url_presencia_web</li>
-              <li>ciudad</li>
-              <li>provincia</li>
-              <li>latitud</li>
-              <li>longitud</li>
+              <li>id*: identificador interno del comercio.</li>
+              <li>actividad_comercial*: rubro o actividad principal del comercio.</li>
+              <li>nombre*: nombre público del comercio adherido.</li>
+              <li>beneficio_texto*: texto público que describe el beneficio vigente del comercio.</li>
+              <li>estado*: estado del convenio con el comercio.</li>
+              <li>flyer_disponible*: indica si existe un flyer o pieza de difusión disponible.</li>
+              <li>dirección*: dirección física del comercio.</li>
+              <li>usuario: usuario que puede iniciar sesión como este comercio.</li>
+              <li>propietario: nombre de la persona propietaria o referente del comercio.</li>
+              <li>fecha_convenio: fecha en que se firmó o registró el convenio.</li>
+              <li>notas: notas internas para seguimiento administrativo.</li>
+              <li>email: correo público o de contacto del comercio.</li>
+              <li>teléfono: teléfono público o de contacto del comercio.</li>
+              <li>url_presencia_web: URL pública del sitio, red social o presencia web del comercio.</li>
+              <li>ciudad: ciudad donde se encuentra el comercio.</li>
+              <li>provincia: provincia donde se encuentra el comercio.</li>
+              <li>latitud: coordenada de latitud para uso futuro en mapa.</li>
+              <li>longitud: coordenada de longitud para uso futuro en mapa.</li>
             </ul>
             <p><strong>Estados:</strong> pendiente, firmado, vencido, baja.</p>
             <p><strong>Reglas:</strong> puede tener usuario de acceso, validar credenciales si su estado es firmado, informar una URL pública, guardar un único beneficio como texto libre, usar una actividad comercial definida y guardar coordenadas para mapa futuro.</p>
@@ -557,6 +557,7 @@
             <li id="COMERCIO-004"><strong><a href="#COMERCIO-004">COMERCIO-004</a></strong> Solo comercios con estado firmado pueden validar credenciales.</li>
             <li id="COMERCIO-005"><strong><a href="#COMERCIO-005">COMERCIO-005</a></strong> En el MVP, la carga y edición de comercios se realiza desde el admin técnico de Django. No se implementa una pantalla propia de gestión de comercios en el backoffice <code>gestion</code>.</li>
             <li id="COMERCIO-006"><strong><a href="#COMERCIO-006">COMERCIO-006</a></strong> En el MVP, la carga y edición de actividades comerciales se realiza desde el admin técnico de Django. No se implementa una pantalla propia de gestión de <code>ActividadComercial</code> en el backoffice <code>gestion</code>.</li>
+            <li id="COMERCIO-007"><strong><a href="#COMERCIO-007">COMERCIO-007</a></strong> En el admin técnico, la selección de <code>usuario</code> para <code>Comercio</code> debe usar búsqueda/autocompletado para soportar muchos usuarios. El listado de comercios debe mostrar todos los atributos, empezando por los obligatorios.</li>
           </ul>
         </div>
         <div class="rule-group">
@@ -609,7 +610,7 @@
             <p><strong>Modelos afectados:</strong> Beneficio.</p>
           </article>
           <article class="use-case" id="cu-listar-comercios-publicos">
-            <h3>CU-listar-comercios-publicos</h3>
+            <h3>CU-listar-comercios-publicos <span class="status-done" aria-label="Listo">✓ Listo</span></h3>
             <p><strong>Actor:</strong> Visitante</p>
             <p><strong>Flujo principal:</strong></p>
             <ol>

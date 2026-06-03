@@ -5,7 +5,7 @@ from django.db.models import Count, Sum
 from django.utils import timezone
 
 from asociados.models import Asociado
-from comercios.selectors import get_comercios_con_beneficio
+from comercios.selectors import get_comercios_firmados
 from cuotas.models import Cuota, Pago
 from cuotas.selectors import get_total_deuda
 
@@ -48,7 +48,7 @@ def get_admin_dashboard_stats():
             "cuotas_parciales": cuotas_por_estado.get(Cuota.ESTADO_PARCIAL, 0),
             "cuotas_pagadas": cuotas_por_estado.get(Cuota.ESTADO_PAGADA, 0),
             "recaudacion_mes": pagos_del_mes.aggregate(total=Sum("importe"))["total"] or Decimal("0"),
-            "comercios_con_beneficio": get_comercios_con_beneficio().count(),
+            "comercios_con_beneficio": get_comercios_firmados().count(),
         },
         "deudores": deudores[:5],
         "ultimos_accesos": asociados.filter(usuario__last_login__isnull=False).order_by("-usuario__last_login")[:5],
@@ -58,4 +58,3 @@ def get_admin_dashboard_stats():
         .order_by("curso_actual__nombre"),
         "pagos_por_metodo": pagos_del_mes.values("metodo").annotate(total=Sum("importe")).order_by("metodo"),
     }
-
