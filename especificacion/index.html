@@ -16,7 +16,7 @@
     <aside class="hero__summary">
       <h2>Resumen rápido</h2>
       <ul>
-        <li>Administra asociados, cuotas, pagos, credenciales, beneficios, comercios y reportes básicos.</li>
+        <li>Administra asociados, cuotas, pagos, credenciales y reportes básicos.</li>
         <li>Incluye consulta pública y validación de credenciales para comercios adheridos.</li>
         <li>Deja aprobada una V2 para productos, pedidos, stock y contabilidad.</li>
       </ul>
@@ -67,7 +67,6 @@
               <li><a href="#cu-marcar-asociado-egresado">CU-marcar-asociado-egresado</a></li>
               <li><a href="#cu-cambiar-curso">CU-cambiar-curso</a></li>
               <li><a href="#cu-validar-credencial">CU-validar-credencial</a></li>
-              <li><a href="#cu-gestionar-comercio">CU-gestionar-comercio</a></li>
             </ol>
           </details>
         </li>
@@ -131,10 +130,9 @@
               <li>Colegios, cursos e historial escolar.</li>
               <li>Cuotas y pagos.</li>
               <li>Credenciales digitales.</li>
-              <li>Beneficios institucionales.</li>
-              <li>Comercios adheridos con su beneficio comercial.</li>
+              <li>Consulta pública de beneficios institucionales, cargados desde el admin técnico de Django.</li>
+              <li>Comercios adheridos con su beneficio comercial, cargados desde el admin técnico de Django.</li>
               <li>Reportes administrativos básicos.</li>
-              <li>Contabilidad simple con asientos y partidas.</li>
             </ul>
           </article>
           <article class="card">
@@ -147,7 +145,8 @@
               <li>Tickets de consultas.</li>
               <li>Notificaciones push.</li>
               <li>Pago online.</li>
-              <li>Contabilidad ampliada.</li>
+              <li>Contabilidad simple con asientos y partidas.</li>
+              <li>Pantalla propia de gestión de beneficios en el backoffice.</li>
               <li>Mapa de comercios.</li>
             </ul>
           </article>
@@ -190,10 +189,9 @@
               <li>Crear usuarios para asociados.</li>
               <li>Gestionar colegios y cursos.</li>
               <li>Gestionar cuotas y registrar pagos.</li>
-              <li>Gestionar beneficios.</li>
-              <li>Gestionar comercios.</li>
+              <li>Cargar y editar beneficios institucionales desde el admin técnico de Django.</li>
+              <li>Cargar y editar comercios desde el admin técnico de Django.</li>
               <li>Consultar reportes.</li>
-              <li>Registrar o consultar asientos simples.</li>
             </ul>
           </article>
           <article class="card">
@@ -232,9 +230,9 @@
               <li>Deudores.</li>
               <li>Credencial digital.</li>
               <li>Validación de credencial por comercio.</li>
-              <li>Beneficios institucionales.</li>
-              <li>Comercios adheridos.</li>
-              <li>Beneficio de cada comercio.</li>
+              <li>Consulta pública de beneficios institucionales.</li>
+              <li>Consulta pública de comercios adheridos.</li>
+              <li>Beneficio de cada comercio, cargado desde el admin técnico de Django.</li>
               <li>Reportes básicos.</li>
             </ul>
           </article>
@@ -250,9 +248,10 @@
               <li>PWA.</li>
               <li>Push notifications.</li>
               <li>Pago online.</li>
+              <li>Pantalla propia de gestión de comercios en el backoffice.</li>
               <li>Saldo a favor.</li>
               <li>Intereses por mora acumulativos.</li>
-              <li>Contabilidad completa.</li>
+              <li>Contabilidad simple con asientos y partidas.</li>
               <li>Asambleas.</li>
               <li>Votaciones.</li>
               <li>Mapa de comercios.</li>
@@ -555,12 +554,15 @@
             <li id="COMERCIO-002"><strong><a href="#COMERCIO-002">COMERCIO-002</a></strong> El beneficio del comercio se guarda como texto libre dentro de <code>Comercio</code>.</li>
             <li id="COMERCIO-003"><strong><a href="#COMERCIO-003">COMERCIO-003</a></strong> El estado del comercio se selecciona desde una lista fija definida en el sistema. No se administra como entidad independiente.</li>
             <li id="COMERCIO-004"><strong><a href="#COMERCIO-004">COMERCIO-004</a></strong> Solo comercios con estado firmado pueden validar credenciales.</li>
+            <li id="COMERCIO-005"><strong><a href="#COMERCIO-005">COMERCIO-005</a></strong> En el MVP, la carga y edición de comercios se realiza desde el admin técnico de Django. No se implementa una pantalla propia de gestión de comercios en el backoffice <code>gestion</code>.</li>
+            <li id="COMERCIO-006"><strong><a href="#COMERCIO-006">COMERCIO-006</a></strong> En el MVP, la carga y edición de actividades comerciales se realiza desde el admin técnico de Django. No se implementa una pantalla propia de gestión de <code>ActividadComercial</code> en el backoffice <code>gestion</code>.</li>
           </ul>
         </div>
         <div class="rule-group">
           <h3>Beneficios</h3>
           <ul class="rule-list">
             <li id="BENEFICIO-001"><strong><a href="#BENEFICIO-001">BENEFICIO-001</a></strong> Los beneficios activos se muestran ordenados según el campo <code>orden</code>.</li>
+            <li id="BENEFICIO-002"><strong><a href="#BENEFICIO-002">BENEFICIO-002</a></strong> En el MVP, la carga y edición de beneficios institucionales se realiza desde el admin técnico de Django. No se implementa una pantalla propia de gestión de <code>Beneficio</code> en el backoffice <code>gestion</code>.</li>
           </ul>
         </div>
         <div class="rule-group">
@@ -686,11 +688,10 @@
               <li>El sistema aplica el pago a la deuda más antigua.</li>
               <li>Actualiza la cuota.</li>
               <li>Crea <code>PagoCuota</code>.</li>
-              <li>Puede generar <code>Asiento</code>.</li>
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#PAGO-001">PAGO-001</a>, <a href="#PAGO-002">PAGO-002</a>, <a href="#PAGO-003">PAGO-003</a>, <a href="#PAGO-005">PAGO-005</a>, <a href="#PAGO-006">PAGO-006</a>.</p>
             <p><strong>Situaciones especiales:</strong> pago parcial, exacto, para múltiples cuotas, pago mayor a deuda, asociado sin deuda.</p>
-            <p><strong>Modelos afectados:</strong> Pago, PagoCuota, Cuota, Asiento.</p>
+            <p><strong>Modelos afectados:</strong> Pago, PagoCuota, Cuota.</p>
           </article>
           <article class="use-case" id="cu-dar-baja-asociado">
             <h3>CU-dar-baja-asociado</h3>
@@ -748,24 +749,6 @@
             <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-004">COMERCIO-004</a>, <a href="#CREDENCIAL-001">CREDENCIAL-001</a>, <a href="#CREDENCIAL-002">CREDENCIAL-002</a>, <a href="#CREDENCIAL-003">CREDENCIAL-003</a>, <a href="#CREDENCIAL-004">CREDENCIAL-004</a>.</p>
             <p><strong>Situaciones especiales:</strong> QR invalido, asociado inactivo, asociado egresado, comercio inactivo.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Comercio.</p>
-          </article>
-          <article class="use-case" id="cu-gestionar-comercio">
-            <h3>CU-gestionar-comercio</h3>
-            <p><strong>Actor:</strong> Administrador</p>
-            <p><strong>Flujo principal:</strong></p>
-            <ol>
-              <li>Crea o edita el comercio.</li>
-              <li>Selecciona la actividad comercial.</li>
-              <li>Carga el beneficio como texto libre.</li>
-              <li>Define el estado.</li>
-              <li>Carga datos de contacto.</li>
-              <li>Carga dirección.</li>
-              <li>Carga coordenadas opcionales.</li>
-              <li>Define el estado del convenio.</li>
-            </ol>
-            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-002">COMERCIO-002</a>, <a href="#COMERCIO-003">COMERCIO-003</a>, <a href="#COMERCIO-004">COMERCIO-004</a>.</p>
-            <p><strong>Situaciones especiales:</strong> comercio sin convenio firmado, beneficio no cargado, actividad comercial no definida.</p>
-            <p><strong>Modelos afectados:</strong> ActividadComercial, Comercio.</p>
           </article>
         </div>
       </section>
@@ -864,22 +847,22 @@
             <h3>CB-comercio-sin-convenio-firmado</h3>
             <p><strong>Situación:</strong> un comercio con estado pendiente, vencido o baja intenta validar credenciales.</p>
             <p><strong>Respuesta esperada:</strong> no puede hacerlo.</p>
-            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-validar-credencial">CU-validar-credencial</a>, <a href="#cu-gestionar-comercio">CU-gestionar-comercio</a>.</p>
+            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-validar-credencial">CU-validar-credencial</a>.</p>
             <p><strong>Relacionado con:</strong> <a href="#COMERCIO-004">COMERCIO-004</a>.</p>
           </article>
           <article class="card" id="cb-beneficio-no-cargado">
             <h3>CB-beneficio-no-cargado</h3>
             <p><strong>Situación:</strong> el comercio existe, pero todavía no tiene beneficio cargado.</p>
             <p><strong>Respuesta esperada:</strong> puede mantenerse cargado, pero no debería mostrarse como comercio con beneficio vigente.</p>
-            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-gestionar-comercio">CU-gestionar-comercio</a>.</p>
-            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-002">COMERCIO-002</a>.</p>
+            <p><strong>Caso de uso relacionado:</strong> carga técnica desde admin de Django.</p>
+            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-002">COMERCIO-002</a>, <a href="#COMERCIO-005">COMERCIO-005</a>.</p>
           </article>
           <article class="card" id="cb-actividad-comercial-no-definida">
             <h3>CB-actividad-comercial-no-definida</h3>
             <p><strong>Situación:</strong> se intenta crear o editar un comercio sin actividad comercial definida.</p>
             <p><strong>Respuesta esperada:</strong> la operación no debería permitirse.</p>
-            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-gestionar-comercio">CU-gestionar-comercio</a>.</p>
-            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>.</p>
+            <p><strong>Caso de uso relacionado:</strong> carga técnica desde admin de Django.</p>
+            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-005">COMERCIO-005</a>, <a href="#COMERCIO-006">COMERCIO-006</a>.</p>
           </article>
         </div>
       </section>
@@ -955,8 +938,6 @@
               <li>Generar cuotas.</li>
               <li>Registrar pago.</li>
               <li>Deudores.</li>
-              <li>Beneficios.</li>
-              <li>Comercios.</li>
               <li>Reportes.</li>
             </ul>
           </article>
@@ -989,8 +970,8 @@
               <li><code>comercios</code>: validación y panel del comercio adherido.</li>
               <li><code>cuotas</code>: modelos y servicios de cuotas, deuda y pagos.</li>
               <li><code>web</code>: home y páginas públicas del sitio.</li>
-              <li><code>contenidos</code>: beneficios publicados por la web.</li>
-              <li><code>contabilidad</code>: cuentas y asientos simples.</li>
+              <li><code>contenidos</code>: beneficios publicados por la web; en MVP se administran desde el admin técnico de Django.</li>
+              <li><code>contabilidad</code>: cuentas y asientos simples preparados para V2, fuera del alcance operativo del MVP.</li>
             </ul>
           </article>
           <article class="card">
@@ -1020,6 +1001,7 @@
             <h3>Objetivo de la app gestión</h3>
             <ul>
               <li>Evitar que tareas frecuentes dependan del admin genérico de Django.</li>
+              <li>En el MVP, la gestión de beneficios, comercios y actividades comerciales queda como excepción documentada y se resuelve desde el admin técnico de Django.</li>
               <li>Ofrecer pantallas operativas orientadas a flujo: cobrar, buscar asociado, ver deudores, administrar cuotas.</li>
               <li>Permitir una UX propia para escritorio y mobile sin contaminar la app de autenticación.</li>
               <li>Hacer más claro el mantenimiento: auth y roles en <code>usuarios</code>, backoffice en <code>gestion</code>.</li>
@@ -1045,6 +1027,9 @@
             <li>Items de pedido.</li>
             <li>Pagos de pedidos.</li>
             <li>Movimiento de stock.</li>
+            <li>Pantalla propia de gestión de beneficios en backoffice.</li>
+            <li>Pantalla propia de gestión de comercios en backoffice.</li>
+            <li>Pantalla propia de gestión de actividades comerciales en backoffice.</li>
             <li>Reportes de ventas y stock.</li>
             <li>Asientos simples vinculados a pagos.</li>
           </ul>
@@ -1231,6 +1216,9 @@
               <li>CU-V2-002 Registrar pago de pedido.</li>
               <li>CU-V2-003 Entregar pedido.</li>
               <li>CU-V2-004 Ver estado de pedidos.</li>
+              <li>CU-V2-005 Gestionar comercio desde pantalla propia de backoffice.</li>
+              <li>CU-V2-006 Gestionar actividad comercial desde pantalla propia de backoffice.</li>
+              <li>CU-V2-007 Gestionar beneficio desde pantalla propia de backoffice.</li>
             </ul>
           </article>
         </div>
@@ -1263,25 +1251,7 @@
           <p class="section__kicker">13</p>
           <h2>Roadmap</h2>
         </div>
-        <div class="grid grid--3">
-          <article class="card card--accent">
-            <h3>MVP</h3>
-            <ul>
-              <li>Asociados.</li>
-              <li>Colegios.</li>
-              <li>Cursos.</li>
-              <li>Inscripciones de curso.</li>
-              <li>Usuarios vinculados a asociados.</li>
-              <li>Cuotas.</li>
-              <li>Pagos de cuotas.</li>
-              <li>Credenciales digitales.</li>
-              <li>Comercios.</li>
-              <li>Beneficio de cada comercio.</li>
-              <li>Beneficios institucionales.</li>
-              <li>Reportes básicos.</li>
-              <li>Asientos simples.</li>
-            </ul>
-          </article>
+        <div class="grid grid--2">
           <article class="card">
             <h3>Versión 2</h3>
             <ul>
@@ -1291,6 +1261,7 @@
               <li>Items de pedido.</li>
               <li>PagoPedido.</li>
               <li>MovimientoStock.</li>
+              <li>Gestión de beneficios institucionales en backoffice.</li>
               <li>Múltiples beneficios por comercio.</li>
               <li>Reportes de ventas y stock.</li>
             </ul>
