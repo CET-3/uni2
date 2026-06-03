@@ -29,13 +29,14 @@ class CobroCuotaForm(forms.Form):
 class PeriodoCuotaForm(forms.ModelForm):
     class Meta:
         model = PeriodoCuota
-        fields = ["mes", "anio", "importe", "importe_recargo_mora", "fecha_vencimiento", "activo"]
+        fields = ["mes", "ciclo_lectivo", "importe", "importe_recargo_mora", "fecha_vencimiento", "activo"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field_name in ["mes", "anio", "importe", "importe_recargo_mora", "fecha_vencimiento"]:
+        for field_name in ["mes", "importe", "importe_recargo_mora", "fecha_vencimiento"]:
             self.fields[field_name].widget.attrs.update({"class": "form-control"})
         self.fields["fecha_vencimiento"].widget.attrs.update({"type": "date"})
+        self.fields["ciclo_lectivo"].widget.attrs.update({"class": "form-select"})
         self.fields["activo"].widget.attrs.update({"class": "form-check-input"})
 
 

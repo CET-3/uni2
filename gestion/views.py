@@ -187,7 +187,7 @@ class GestionPeriodosCuotaView(StaffRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["periodos"] = PeriodoCuota.objects.order_by("-anio", "-mes")
+        context["periodos"] = PeriodoCuota.objects.select_related("ciclo_lectivo").order_by("-ciclo_lectivo__anio", "-mes")
         context["periodo_form"] = getattr(self.request, "_periodo_form", PeriodoCuotaForm())
         return context
 

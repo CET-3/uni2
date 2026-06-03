@@ -3,28 +3,55 @@ from decimal import Decimal
 from django.conf import settings
 from django.db import models
 
-from asociados.models import Asociado
+from asociados.models import Asociado, CicloLectivo
 
 
 class PeriodoCuota(models.Model):
-    mes = models.PositiveSmallIntegerField()
-    anio = models.PositiveSmallIntegerField()
-    importe = models.DecimalField(max_digits=10, decimal_places=2)
-    importe_recargo_mora = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    fecha_vencimiento = models.DateField()
-    activo = models.BooleanField(default=True)
+    mes = models.PositiveSmallIntegerField(
+        "mes",
+        help_text="Mes del período (1 a 12).",
+    )
+    ciclo_lectivo = models.ForeignKey(
+        CicloLectivo,
+        on_delete=models.PROTECT,
+        related_name="periodos_cuota",
+        verbose_name="ciclo lectivo",
+        help_text="Año lectivo al que corresponde este período.",
+    )
+    importe = models.DecimalField(
+        "importe",
+        max_digits=10,
+        decimal_places=2,
+        help_text="Importe base de la cuota para este período.",
+    )
+    importe_recargo_mora = models.DecimalField(
+        "recargo por mora",
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        help_text="Monto fijo que se suma si la cuota no se paga antes del vencimiento.",
+    )
+    fecha_vencimiento = models.DateField(
+        "fecha de vencimiento",
+        help_text="Fecha límite para pagar sin recargo.",
+    )
+    activo = models.BooleanField(
+        "activo",
+        default=True,
+        help_text="Indica si este período está activo para generar cuotas.",
+    )
 
     class Meta:
-        verbose_name = "Periodo de cuota"
-        verbose_name_plural = "Periodos de cuota"
-        ordering = ["-anio", "-mes"]
+        verbose_name = "Período de cuota"
+        verbose_name_plural = "Períodos de cuota"
+        ordering = ["-ciclo_lectivo__anio", "-mes"]
         constraints = [
-            models.UniqueConstraint(fields=["mes", "anio"], name="uniq_periodo_mes_anio")
+            models.UniqueConstraint(fields=["mes", "ciclo_lectivo"], name="uniq_periodo_mes_ciclo")
         ]
-        indexes = [models.Index(fields=["anio", "mes"])]
+        indexes = [models.Index(fields=["ciclo_lectivo", "mes"])]
 
     def __str__(self):
-        return f"{self.mes:02d}/{self.anio}"
+        return f"{self.mes:02d}/{self.ciclo_lectivo}"
 
 
 class Cuota(models.Model):
@@ -52,7 +79,7 @@ class Cuota(models.Model):
     class Meta:
         verbose_name = "Cuota"
         verbose_name_plural = "Cuotas"
-        ordering = ["periodo__anio", "periodo__mes"]
+        ordering = ["periodo__ciclo_lectivo__anio", "periodo__mes"]
         constraints = [
             models.UniqueConstraint(fields=["asociado", "periodo"], name="uniq_cuota_asociado_periodo")
         ]

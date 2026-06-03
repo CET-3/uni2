@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import pytest
 
-from asociados.models import Asociado, Colegio, Curso
+from asociados.models import Asociado, CicloLectivo, Colegio, Curso
 from asociados.services import create_asociado
 from contabilidad.models import Asiento, CuentaContable, PartidaAsiento
 from contabilidad.services import validar_asiento
@@ -42,9 +42,10 @@ def asociado_con_cuota():
         fecha_alta=date(2026, 3, 10),
         curso_actual=curso,
     )
+    ciclo, _ = CicloLectivo.objects.get_or_create(anio=2026)
     periodo = PeriodoCuota.objects.create(
         mes=3,
-        anio=2026,
+        ciclo_lectivo=ciclo,
         importe=Decimal("3000"),
         fecha_vencimiento=date(2026, 3, 10),
     )

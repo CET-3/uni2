@@ -12,7 +12,10 @@ def get_asociado_by_dni(dni: str):
 
 
 def get_historial_cursos(asociado_id: int):
-    return InscripcionCurso.objects.filter(asociado_id=asociado_id).select_related("curso")
+    return InscripcionCurso.objects.filter(asociado_id=asociado_id).select_related(
+        "curso",
+        "ciclo_lectivo",
+    )
 
 
 def search_asociados(query: str):
