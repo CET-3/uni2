@@ -104,6 +104,27 @@ No colocar lógica de negocio en:
 - Agregar restricciones de unicidad e índices razonables.
 - Usar constantes para `choices`.
 
+## Controles por entidad
+
+Cuando se crea, modifica o revisa una entidad, verificar que queden alineados estos puntos:
+
+- La especificación debe incluir la entidad en el modelo de datos, con campos, asterisco en los obligatorios y descripción de cada campo.
+- Las reglas de negocio deben describir comportamiento, restricciones o decisiones funcionales; no deben repetir solamente qué campos son obligatorios.
+- El modelo Django debe usar los nombres definidos en la especificación.
+- Cada campo relevante debe tener `verbose_name` claro y, cuando ayude a operar el admin o futuros formularios, `help_text`.
+- Los campos obligatorios de la especificación deben reflejarse en Django con `blank=False`, `null=False`, valores por defecto o generación automática, según corresponda.
+- Los campos opcionales deben reflejarse explícitamente con `blank=True` y/o `null=True` cuando corresponda.
+- Los valores de estado o tipo deben usar constantes para `choices`.
+- La entidad debe tener `__str__` legible para el admin y para debugging.
+- La entidad debe tener `verbose_name`, `verbose_name_plural` y `ordering` cuando el orden natural sea importante.
+- Evitar constraints complejos si una validación simple de Django alcanza y el modelo queda más fácil de enseñar.
+- Si la entidad se administra desde el admin técnico de Django en el MVP, documentarlo en la especificación.
+- Si la entidad requiere pantalla propia de backoffice, documentar el caso de uso, la pantalla y los permisos esperados.
+- Si la entidad se muestra en la web o en pantallas internas, agregar o revisar selectors para no poner consultas de negocio en views/templates.
+- Agregar o actualizar tests de modelo, selectors, services o views según el comportamiento tocado.
+- Verificar que admin, pantallas, templates y textos visibles usen ortografía y nombres consistentes con la especificación.
+- Si el cambio afecta la base de datos, generar y revisar la migración correspondiente.
+
 ## Usuarios y permisos
 
 - Usar `User` estándar de Django.
