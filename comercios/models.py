@@ -41,7 +41,7 @@ class Comercio(models.Model):
     )
     nombre = models.CharField(max_length=150)
     propietario = models.CharField(max_length=150, blank=True)
-    beneficio_texto = models.TextField(blank=True)
+    beneficio_texto = models.TextField()
     estado = models.CharField(max_length=20, choices=ESTADOS, default=ESTADO_PENDIENTE)
     fecha_convenio = models.DateField(blank=True, null=True)
     notas = models.TextField(blank=True)
@@ -59,6 +59,12 @@ class Comercio(models.Model):
         verbose_name = "Comercio"
         verbose_name_plural = "Comercios"
         ordering = ["nombre"]
+        constraints = [
+            models.CheckConstraint(
+                check=~models.Q(beneficio_texto=""),
+                name="comercio_beneficio_texto_no_vacio",
+            )
+        ]
         indexes = [models.Index(fields=["estado", "nombre"])]
 
     def __str__(self):

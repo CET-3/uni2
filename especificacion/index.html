@@ -56,6 +56,8 @@
             <summary><a href="#casos-uso">Casos de uso MVP</a></summary>
             <ol>
               <li><a href="#cu-consultar-sitio-publico">CU-consultar-sitio-publico</a></li>
+              <li><a href="#cu-listar-beneficios-publicos">CU-listar-beneficios-publicos</a></li>
+              <li><a href="#cu-listar-comercios-publicos">CU-listar-comercios-publicos</a></li>
               <li><a href="#cu-ver-credencial">CU-ver-credencial</a></li>
               <li><a href="#cu-ver-estado-cuotas">CU-ver-estado-cuotas</a></li>
               <li><a href="#cu-crear-asociado">CU-crear-asociado</a></li>
@@ -87,8 +89,6 @@
               <li><a href="#cb-asociado-sin-deuda">CB-asociado-sin-deuda</a></li>
               <li><a href="#cb-qr-invalido">CB-qr-invalido</a></li>
               <li><a href="#cb-comercio-sin-convenio-firmado">CB-comercio-sin-convenio-firmado</a></li>
-              <li><a href="#cb-beneficio-no-cargado">CB-beneficio-no-cargado</a></li>
-              <li><a href="#cb-actividad-comercial-no-definida">CB-actividad-comercial-no-definida</a></li>
             </ol>
           </details>
         </li>
@@ -265,6 +265,9 @@
           <p class="section__kicker">4</p>
           <h2>Modelo de datos MVP</h2>
         </div>
+        <div class="panel">
+          <p>Los atributos marcados con <strong>*</strong> son obligatorios: deben tener valor, ya sea cargado por una persona o definido automáticamente por el sistema.</p>
+        </div>
         <div class="entity-list">
           <article class="entity" id="entidad-usuario">
             <h3>Usuario</h3>
@@ -277,12 +280,12 @@
             <p>Representa una institución educativa.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>nombre</li>
+              <li>id*</li>
+              <li>nombre*</li>
               <li>direccion</li>
               <li>teléfono</li>
               <li>email</li>
-              <li>activo</li>
+              <li>activo*</li>
             </ul>
             <p><strong>Notas:</strong> inicialmente existirá CET 3 y se incluye desde el inicio para dejar preparado el sistema para otros colegios.</p>
           </article>
@@ -291,10 +294,10 @@
             <p>Representa un curso de un colegio.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>colegio</li>
-              <li>nombre</li>
-              <li>activo</li>
+              <li>id*</li>
+              <li>colegio*</li>
+              <li>nombre*</li>
+              <li>activo*</li>
             </ul>
             <p><strong>Ejemplos:</strong> 1° 1°, 1° 2°, 3° 2°, 5° 1°.</p>
             <p><strong>Relación:</strong> Colegio 1 a N Curso.</p>
@@ -304,39 +307,39 @@
             <p>Representa a una persona asociada o adherente a la mutual.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
+              <li>id*</li>
               <li>usuario</li>
-              <li>nombre</li>
-              <li>apellido</li>
-              <li>dni</li>
+              <li>nombre*</li>
+              <li>apellido*</li>
+              <li>dni*</li>
               <li>email</li>
               <li>teléfono</li>
               <li>fecha_nacimiento</li>
-              <li>tipo</li>
+              <li>tipo*</li>
               <li>número_asociado</li>
-              <li>token_credencial</li>
+              <li>token_credencial*</li>
               <li>curso_actual</li>
-              <li>estado</li>
-              <li>fecha_alta</li>
-              <li>fecha_inicio_cobro</li>
+              <li>estado*</li>
+              <li>fecha_alta*</li>
+              <li>fecha_inicio_cobro*</li>
               <li>fecha_baja</li>
               <li>motivo_baja</li>
             </ul>
             <p><strong>Tipos:</strong> asociado, adherente.</p>
             <p><strong>Estados:</strong> activo, inactivo, egresado.</p>
-            <p><strong>Reglas:</strong> DNI obligatorio y único, número automático, token UUID único, usuario opcional, curso actual opcional para adherentes y recomendado para asociados alumnos.</p>
+            <p><strong>Reglas:</strong> DNI único, número automático, token UUID único, usuario opcional, curso actual opcional para adherentes y recomendado para asociados alumnos.</p>
           </article>
           <article class="entity" id="entidad-inscripcion-curso">
             <h3>InscripciónCurso</h3>
             <p>Historial académico del asociado.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>asociado</li>
-              <li>curso</li>
-              <li>ciclo_lectivo</li>
-              <li>activa</li>
-              <li>fecha_desde</li>
+              <li>id*</li>
+              <li>asociado*</li>
+              <li>curso*</li>
+              <li>ciclo_lectivo*</li>
+              <li>activa*</li>
+              <li>fecha_desde*</li>
               <li>fecha_hasta</li>
             </ul>
             <p><strong>Reglas:</strong> puede haber varias inscripciones históricas, solo una activa por ciclo lectivo, al cambiar de año se crea una nueva inscripción, incluso si repite curso.</p>
@@ -347,13 +350,13 @@
             <p>Representa un período mensual de cuota.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>mes</li>
-              <li>año</li>
-              <li>importe</li>
-              <li>importe_recargo_mora</li>
-              <li>fecha_vencimiento</li>
-              <li>activo</li>
+              <li>id*</li>
+              <li>mes*</li>
+              <li>año*</li>
+              <li>importe*</li>
+              <li>importe_recargo_mora*</li>
+              <li>fecha_vencimiento*</li>
+              <li>activo*</li>
             </ul>
             <p><strong>Reglas:</strong> define importe base y recargo fijo por mora, y ambos deben copiarse a la cuota generada para conservar historial. Cambios futuros no deben afectar cuotas ya generadas.</p>
             <p><strong>Ejemplo:</strong> Mayo 2026 - $3000 - vence 10/05/2026.</p>
@@ -363,14 +366,14 @@
             <p>Representa una cuota concreta de un asociado para un período.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>asociado</li>
-              <li>período</li>
-              <li>importe</li>
-              <li>importe_recargo_mora</li>
-              <li>importe_pagado</li>
-              <li>estado</li>
-              <li>fecha_generación</li>
+              <li>id*</li>
+              <li>asociado*</li>
+              <li>período*</li>
+              <li>importe*</li>
+              <li>importe_recargo_mora*</li>
+              <li>importe_pagado*</li>
+              <li>estado*</li>
+              <li>fecha_generación*</li>
             </ul>
             <p><strong>Estados:</strong> pendiente, parcial, pagada, vencida, bonificada.</p>
             <p><strong>Restricción:</strong> no puede existir más de una cuota para el mismo asociado y período.</p>
@@ -381,11 +384,11 @@
             <p>Representa un ingreso de dinero.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>asociado</li>
-              <li>fecha</li>
-              <li>importe</li>
-              <li>método</li>
+              <li>id*</li>
+              <li>asociado*</li>
+              <li>fecha*</li>
+              <li>importe*</li>
+              <li>método*</li>
               <li>observaciones</li>
               <li>registrado_por</li>
             </ul>
@@ -397,10 +400,10 @@
             <p>Aplicación de un pago a una cuota.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>pago</li>
-              <li>cuota</li>
-              <li>importe</li>
+              <li>id*</li>
+              <li>pago*</li>
+              <li>cuota*</li>
+              <li>importe*</li>
             </ul>
             <p><strong>Reglas:</strong> permite saber que cuotas fueron cubiertas por cada pago, soporta pagos parciales, un pago puede aplicarse a varias cuotas y una cuota puede tener varios pagos parciales.</p>
             <p><strong>Ejemplo:</strong> pago de $6000 distribuido entre cuota marzo $3000 y cuota abril $3000.</p>
@@ -410,11 +413,11 @@
             <p>Beneficio institucional de la mutual.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>título</li>
-              <li>descripción</li>
-              <li>activo</li>
-              <li>orden</li>
+              <li>id*</li>
+              <li>título*</li>
+              <li>descripción*</li>
+              <li>activo*</li>
+              <li>orden*</li>
             </ul>
           </article>
           <article class="entity" id="entidad-actividad-comercial">
@@ -422,8 +425,8 @@
             <p>Clasifica el rubro o actividad principal de un comercio adherido.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>nombre</li>
+              <li>id*</li>
+              <li>nombre*</li>
             </ul>
           </article>
           <article class="entity" id="entidad-comercio">
@@ -431,19 +434,19 @@
             <p>Comercio adherido a la mutual.</p>
             <p><strong>Campos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>actividad_comercial</li>
+              <li>id*</li>
+              <li>actividad_comercial*</li>
               <li>usuario</li>
-              <li>nombre</li>
+              <li>nombre*</li>
               <li>propietario</li>
-              <li>beneficio_texto</li>
-              <li>estado</li>
+              <li>beneficio_texto*</li>
+              <li>estado*</li>
               <li>fecha_convenio</li>
               <li>notas</li>
-              <li>flyer_disponible</li>
+              <li>flyer_disponible*</li>
               <li>email</li>
               <li>teléfono</li>
-              <li>dirección</li>
+              <li>dirección*</li>
               <li>url_presencia_web</li>
               <li>ciudad</li>
               <li>provincia</li>
@@ -491,7 +494,6 @@
             <li id="ASOCIADO-002"><strong><a href="#ASOCIADO-002">ASOCIADO-002</a></strong> Los asociados participan de asambleas; los adherentes no.</li>
             <li id="ASOCIADO-003"><strong><a href="#ASOCIADO-003">ASOCIADO-003</a></strong> Los asociados inactivos o egresados conservan su historial.</li>
             <li id="ASOCIADO-004"><strong><a href="#ASOCIADO-004">ASOCIADO-004</a></strong> Solo los asociados activos generan nuevas cuotas.</li>
-            <li id="ASOCIADO-005"><strong><a href="#ASOCIADO-005">ASOCIADO-005</a></strong> Todo asociado debe tener DNI.</li>
             <li id="ASOCIADO-006"><strong><a href="#ASOCIADO-006">ASOCIADO-006</a></strong> No puede existir más de un asociado con el mismo DNI.</li>
             <li id="ASOCIADO-007"><strong><a href="#ASOCIADO-007">ASOCIADO-007</a></strong> El número de asociado debe generarse automáticamente.</li>
             <li id="ASOCIADO-008"><strong><a href="#ASOCIADO-008">ASOCIADO-008</a></strong> Un asociado puede existir sin usuario de acceso.</li>
@@ -550,7 +552,6 @@
         <div class="rule-group">
           <h3>Comercios</h3>
           <ul class="rule-list">
-            <li id="COMERCIO-001"><strong><a href="#COMERCIO-001">COMERCIO-001</a></strong> Cada comercio tiene una única actividad comercial vinculada mediante <code>ActividadComercial</code>.</li>
             <li id="COMERCIO-002"><strong><a href="#COMERCIO-002">COMERCIO-002</a></strong> El beneficio del comercio se guarda como texto libre dentro de <code>Comercio</code>.</li>
             <li id="COMERCIO-003"><strong><a href="#COMERCIO-003">COMERCIO-003</a></strong> El estado del comercio se selecciona desde una lista fija definida en el sistema. No se administra como entidad independiente.</li>
             <li id="COMERCIO-004"><strong><a href="#COMERCIO-004">COMERCIO-004</a></strong> Solo comercios con estado firmado pueden validar credenciales.</li>
@@ -589,9 +590,36 @@
             <ol>
               <li>Ingresa al sitio.</li>
               <li>Consulta información institucional.</li>
-              <li>Revisa beneficios y comercios.</li>
+              <li>Accede desde la home a los listados públicos de beneficios y comercios.</li>
             </ol>
-            <p><strong>Modelos afectados:</strong> Beneficio, ActividadComercial, Comercio.</p>
+            <p><strong>Casos de uso relacionados:</strong> <a href="#cu-listar-beneficios-publicos">CU-listar-beneficios-publicos</a>, <a href="#cu-listar-comercios-publicos">CU-listar-comercios-publicos</a>.</p>
+            <p><strong>Modelos afectados:</strong> ninguno.</p>
+          </article>
+          <article class="use-case" id="cu-listar-beneficios-publicos">
+            <h3>CU-listar-beneficios-publicos</h3>
+            <p><strong>Actor:</strong> Visitante</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Ingresa a la home.</li>
+              <li>Selecciona el acceso a beneficios.</li>
+              <li>El sistema muestra los beneficios activos.</li>
+              <li>El listado respeta el orden definido para publicación.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#BENEFICIO-001">BENEFICIO-001</a>, <a href="#BENEFICIO-002">BENEFICIO-002</a>.</p>
+            <p><strong>Modelos afectados:</strong> Beneficio.</p>
+          </article>
+          <article class="use-case" id="cu-listar-comercios-publicos">
+            <h3>CU-listar-comercios-publicos</h3>
+            <p><strong>Actor:</strong> Visitante</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Ingresa a la home.</li>
+              <li>Selecciona el acceso a comercios adheridos.</li>
+              <li>El sistema muestra los comercios publicados con su actividad comercial y beneficio vigente.</li>
+              <li>El visitante puede consultar los datos públicos de contacto o presencia web disponibles.</li>
+            </ol>
+            <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-002">COMERCIO-002</a>, <a href="#COMERCIO-003">COMERCIO-003</a>, <a href="#COMERCIO-005">COMERCIO-005</a>, <a href="#COMERCIO-006">COMERCIO-006</a>.</p>
+            <p><strong>Modelos afectados:</strong> ActividadComercial, Comercio.</p>
           </article>
           <article class="use-case" id="cu-ver-credencial">
             <h3>CU-ver-credencial</h3>
@@ -629,7 +657,7 @@
               <li>Guarda el asociado.</li>
               <li>Crea <code>InscripcionCurso</code> si aplica.</li>
             </ol>
-            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-001">ASOCIADO-001</a>, <a href="#ASOCIADO-005">ASOCIADO-005</a>, <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#ALTA-ASOCIADO-001">ALTA-ASOCIADO-001</a>, <a href="#ALTA-ASOCIADO-002">ALTA-ASOCIADO-002</a>, <a href="#ALTA-ASOCIADO-003">ALTA-ASOCIADO-003</a>.</p>
+            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-001">ASOCIADO-001</a>, <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#ALTA-ASOCIADO-001">ALTA-ASOCIADO-001</a>, <a href="#ALTA-ASOCIADO-002">ALTA-ASOCIADO-002</a>, <a href="#ALTA-ASOCIADO-003">ALTA-ASOCIADO-003</a>.</p>
             <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, alta después del día 15, asociado sin usuario.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Curso, InscripcionCurso.</p>
           </article>
@@ -644,7 +672,7 @@
               <li>Se confirma la importación.</li>
               <li>Se crean asociados e inscripciones.</li>
             </ol>
-            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-005">ASOCIADO-005</a>, <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#CURSO-001">CURSO-001</a>, <a href="#CURSO-002">CURSO-002</a>.</p>
+            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#CURSO-001">CURSO-001</a>, <a href="#CURSO-002">CURSO-002</a>.</p>
             <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, asociado ya existente, email faltante, teléfono faltante, tipo invalido.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Curso, InscripcionCurso.</p>
           </article>
@@ -850,20 +878,6 @@
             <p><strong>Caso de uso relacionado:</strong> <a href="#cu-validar-credencial">CU-validar-credencial</a>.</p>
             <p><strong>Relacionado con:</strong> <a href="#COMERCIO-004">COMERCIO-004</a>.</p>
           </article>
-          <article class="card" id="cb-beneficio-no-cargado">
-            <h3>CB-beneficio-no-cargado</h3>
-            <p><strong>Situación:</strong> el comercio existe, pero todavía no tiene beneficio cargado.</p>
-            <p><strong>Respuesta esperada:</strong> puede mantenerse cargado, pero no debería mostrarse como comercio con beneficio vigente.</p>
-            <p><strong>Caso de uso relacionado:</strong> carga técnica desde admin de Django.</p>
-            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-002">COMERCIO-002</a>, <a href="#COMERCIO-005">COMERCIO-005</a>.</p>
-          </article>
-          <article class="card" id="cb-actividad-comercial-no-definida">
-            <h3>CB-actividad-comercial-no-definida</h3>
-            <p><strong>Situación:</strong> se intenta crear o editar un comercio sin actividad comercial definida.</p>
-            <p><strong>Respuesta esperada:</strong> la operación no debería permitirse.</p>
-            <p><strong>Caso de uso relacionado:</strong> carga técnica desde admin de Django.</p>
-            <p><strong>Relacionado con:</strong> <a href="#COMERCIO-001">COMERCIO-001</a>, <a href="#COMERCIO-005">COMERCIO-005</a>, <a href="#COMERCIO-006">COMERCIO-006</a>.</p>
-          </article>
         </div>
       </section>
 
@@ -1037,16 +1051,17 @@
         <div class="panel" id="v2-modelo">
           <h3>Modelo de datos V2</h3>
           <p><strong>Entidades V2:</strong> Producto, VarianteProducto, MovimientoStock, Pedido, ItemPedido, PagoPedido, Notificación, CuentaContable, Asiento, PartidaAsiento, BeneficioComercio.</p>
+          <p>Los atributos marcados con <strong>*</strong> son obligatorios: deben tener valor, ya sea cargado por una persona o definido automáticamente por el sistema.</p>
         </div>
         <div class="entity-list">
           <article class="entity">
             <h3>Producto</h3>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>nombre</li>
+              <li>id*</li>
+              <li>nombre*</li>
               <li>descripción</li>
-              <li>precio</li>
+              <li>precio*</li>
               <li>activo</li>
               <li>controla_stock</li>
             </ul>
@@ -1056,9 +1071,9 @@
             <h3>VarianteProducto</h3>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>producto</li>
-              <li>nombre</li>
+              <li>id*</li>
+              <li>producto*</li>
+              <li>nombre*</li>
               <li>sku</li>
               <li>activo</li>
             </ul>
@@ -1068,11 +1083,11 @@
             <h3>MovimientoStock</h3>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>variante</li>
-              <li>tipo</li>
-              <li>cantidad</li>
-              <li>fecha</li>
+              <li>id*</li>
+              <li>variante*</li>
+              <li>tipo*</li>
+              <li>cantidad*</li>
+              <li>fecha*</li>
               <li>descripción</li>
             </ul>
             <p><strong>Tipos:</strong> ingreso, egreso, ajuste, devolucion.</p>
@@ -1082,12 +1097,12 @@
             <h3>Pedido</h3>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>asociado</li>
-              <li>fecha</li>
-              <li>estado</li>
-              <li>estado_pago</li>
-              <li>total</li>
+              <li>id*</li>
+              <li>asociado*</li>
+              <li>fecha*</li>
+              <li>estado*</li>
+              <li>estado_pago*</li>
+              <li>total*</li>
               <li>observaciones</li>
             </ul>
             <p><strong>Estados:</strong> pendiente, en_preparacion, entregado, cancelado.</p>
@@ -1098,22 +1113,22 @@
             <h3>ItemPedido</h3>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>pedido</li>
-              <li>variante</li>
-              <li>cantidad</li>
-              <li>precio_unitario</li>
-              <li>subtotal</li>
+              <li>id*</li>
+              <li>pedido*</li>
+              <li>variante*</li>
+              <li>cantidad*</li>
+              <li>precio_unitario*</li>
+              <li>subtotal*</li>
             </ul>
           </article>
           <article class="entity">
             <h3>PagoPedido</h3>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>pago</li>
-              <li>pedido</li>
-              <li>importe</li>
+              <li>id*</li>
+              <li>pago*</li>
+              <li>pedido*</li>
+              <li>importe*</li>
             </ul>
             <p><strong>Relación futura:</strong> Pago 1 - N PagoCuota y Pago 1 - N PagoPedido.</p>
             <p><strong>Decision:</strong> se conserva un único modelo Pago para ingresos; PagoCuota explica cuotas y PagoPedido explica pedidos.</p>
@@ -1123,14 +1138,14 @@
             <p>Entidad futura para modelar múltiples beneficios por comercio o promociones con mayor complejidad.</p>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>comercio</li>
-              <li>titulo</li>
-              <li>descripcion</li>
-              <li>tipo_descuento</li>
-              <li>valor_descuento</li>
+              <li>id*</li>
+              <li>comercio*</li>
+              <li>titulo*</li>
+              <li>descripcion*</li>
+              <li>tipo_descuento*</li>
+              <li>valor_descuento*</li>
               <li>condiciones</li>
-              <li>fecha_desde</li>
+              <li>fecha_desde*</li>
               <li>fecha_hasta</li>
               <li>activo</li>
             </ul>
@@ -1140,10 +1155,10 @@
             <p>Notificación interna del sistema.</p>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>usuario</li>
-              <li>título</li>
-              <li>mensaje</li>
+              <li>id*</li>
+              <li>usuario*</li>
+              <li>título*</li>
+              <li>mensaje*</li>
               <li>leída</li>
               <li>fecha_creación</li>
             </ul>
@@ -1154,10 +1169,10 @@
             <p>Cuenta utilizada para imputar partidas contables.</p>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>código</li>
-              <li>nombre</li>
-              <li>tipo</li>
+              <li>id*</li>
+              <li>código*</li>
+              <li>nombre*</li>
+              <li>tipo*</li>
               <li>activa</li>
             </ul>
             <p><strong>Tipos:</strong> activo, pasivo, patrimonio, ingreso, egreso.</p>
@@ -1167,11 +1182,11 @@
             <p>Cabecera de un asiento contable simple.</p>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>fecha</li>
-              <li>descripción</li>
-              <li>tipo</li>
-              <li>importe</li>
+              <li>id*</li>
+              <li>fecha*</li>
+              <li>descripción*</li>
+              <li>tipo*</li>
+              <li>importe*</li>
               <li>origen</li>
             </ul>
             <p><strong>Tipos:</strong> ingreso, egreso.</p>
@@ -1182,11 +1197,11 @@
             <p>Línea contable perteneciente a un asiento.</p>
             <p><strong>Campos sugeridos:</strong></p>
             <ul>
-              <li>id</li>
-              <li>asiento</li>
-              <li>cuenta_contable</li>
-              <li>movimiento</li>
-              <li>importe</li>
+              <li>id*</li>
+              <li>asiento*</li>
+              <li>cuenta_contable*</li>
+              <li>movimiento*</li>
+              <li>importe*</li>
               <li>detalle</li>
             </ul>
             <p><strong>Movimientos:</strong> debe, haber.</p>
