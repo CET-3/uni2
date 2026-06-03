@@ -7,141 +7,58 @@
     <section class="dashboard-hero card">
         <div class="card-body">
             <div class="dashboard-eyebrow">Mi panel</div>
-            <div class="d-flex flex-column flex-xl-row justify-content-between gap-4">
-                <div class="col-xl-7 p-0">
+            <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
+                <div class="col-lg-7 p-0">
                     <h1 class="display-6 fw-semibold mb-2">Hola, {{ asociado.nombre }}.</h1>
-                    <p class="mb-4 fs-5">Acá tenés tu resumen como asociado: credencial, cuotas y acceso rápido a la información que más necesitás.</p>
+                    <p class="mb-3 fs-5">Desde acá podés entrar a las pantallas principales de asociado.</p>
                     <div class="pill-row">
                         <span class="dashboard-pill">N° {{ asociado.numero_asociado }}</span>
                         <span class="dashboard-pill">{{ asociado.get_estado_display }}</span>
-                        <span class="dashboard-pill">{{ asociado.curso_actual|default:"Sin curso asignado" }}</span>
                     </div>
                 </div>
-                <div class="col-xl-4 p-0">
+                <div class="col-lg-4 p-0">
                     <div class="dashboard-actions-grid">
-                        <a class="btn btn-light btn-lg" href="{% url 'asociados:credencial' %}">Ver credencial</a>
-                        <a class="btn btn-outline-light btn-lg" href="{% url 'asociados:cuotas' %}">Ver mis cuotas</a>
+                        <a class="btn btn-light btn-lg" href="{% url 'asociados:credencial' %}">Mi credencial</a>
+                        <a class="btn btn-outline-light btn-lg" href="{% url 'asociados:cuotas' %}">Mis cuotas</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <section>
-        <div class="row g-3">
-            <div class="col-md-3">
-                <div class="metric-card card h-100">
-                    <div class="card-body">
-                        <div class="metric-label">Estado</div>
-                        <div class="metric-value fs-4">{{ asociado.get_estado_display }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="metric-card card h-100">
-                    <div class="card-body">
-                        <div class="metric-label">Tipo</div>
-                        <div class="metric-value fs-4">{{ asociado.get_tipo_display }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="metric-card card h-100">
-                    <div class="card-body">
-                        <div class="metric-label">Curso</div>
-                        <div class="metric-value fs-4">{{ asociado.curso_actual|default:"-" }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="metric-card card h-100">
-                    <div class="card-body">
-                        <div class="metric-label">Deuda actual</div>
-                        <div class="metric-value fs-4">${{ total_deuda }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="row g-4">
-        <div class="col-xl-4">
-            <section class="section-card card h-100">
-                <div class="card-body">
-                    <div class="muted-kicker">Acciones</div>
-                    <h2 class="h4 mb-3">Autogestión rápida</h2>
-                    <div class="d-grid gap-2">
-                        <a class="btn btn-primary" href="{% url 'asociados:credencial' %}">Mi credencial</a>
-                        <a class="btn btn-outline-primary" href="{% url 'asociados:cuotas' %}">Ver mis cuotas</a>
-                        <a class="btn btn-outline-primary" href="{% url 'web:comercios' %}">Comercios adheridos</a>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="col-xl-4">
-            <section class="section-card card h-100">
-                <div class="card-body">
-                    <div class="muted-kicker">Situación</div>
-                    <h2 class="h4 mb-3">Tu estado actual</h2>
-                    {% if total_deuda > 0 %}
-                        <span class="status-badge-soft mb-3">Tenés saldo pendiente</span>
-                        <p class="mb-0 text-secondary">Podés revisar tus cuotas y acercarte a la mutual para regularizar el pago.</p>
-                    {% else %}
-                        <span class="status-badge-soft mb-3">Estás al día</span>
-                        <p class="mb-0 text-secondary">No registrás deuda pendiente en este momento.</p>
-                    {% endif %}
-                </div>
-            </section>
-        </div>
-        <div class="col-xl-4">
-            <section class="section-card card h-100">
-                <div class="card-body">
-                    <div class="muted-kicker">Comunidad</div>
-                    <h2 class="h4 mb-3">Atajos útiles</h2>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item px-0">Consultá los beneficios públicos disponibles.</li>
-                        <li class="list-group-item px-0">Revisá comercios adheridos antes de comprar.</li>
-                        <li class="list-group-item px-0">Tené tu credencial lista para validarla en un comercio.</li>
-                    </ul>
-                </div>
-            </section>
-        </div>
-    </div>
 
     <section class="section-card card">
         <div class="card-body">
             <div class="section-title-row">
                 <div>
-                    <div class="muted-kicker">Cuotas</div>
-                    <h2 class="h4 mb-0">Cuotas con deuda</h2>
+                    <div class="muted-kicker">Accesos</div>
+                    <h2 class="h4 mb-0">Qué podés consultar</h2>
                 </div>
-                <a class="btn btn-outline-primary btn-sm" href="{% url 'asociados:cuotas' %}">Abrir detalle completo</a>
             </div>
-            <div class="table-responsive">
-                <table class="table mb-0">
-                    <thead>
-                        <tr>
-                            <th>Periodo</th>
-                            <th>Importe</th>
-                            <th>Pagado</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cuota in cuotas_deudoras %}
-                            <tr>
-                                <td>{{ cuota.periodo }}</td>
-                                <td>${{ cuota.importe }}</td>
-                                <td>${{ cuota.importe_pagado }}</td>
-                                <td>{{ cuota.get_estado_display }}</td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="4">No tenés cuotas pendientes.</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="module-card-grid">
+                <a class="module-link-item" href="{% url 'asociados:credencial' %}">
+                    <div class="module-link-copy">
+                        <strong>Mi credencial</strong>
+                        <span>Ver la credencial digital para validar beneficios.</span>
+                    </div>
+                </a>
+                <a class="module-link-item" href="{% url 'asociados:cuotas' %}">
+                    <div class="module-link-copy">
+                        <strong>Mis cuotas</strong>
+                        <span>Consultar cuotas, estados y pagos registrados.</span>
+                    </div>
+                </a>
+                <a class="module-link-item" href="{% url 'web:beneficios' %}">
+                    <div class="module-link-copy">
+                        <strong>Beneficios</strong>
+                        <span>Ver beneficios institucionales publicados.</span>
+                    </div>
+                </a>
+                <a class="module-link-item" href="{% url 'web:comercios' %}">
+                    <div class="module-link-copy">
+                        <strong>Comercios adheridos</strong>
+                        <span>Consultar comercios con convenio vigente.</span>
+                    </div>
+                </a>
             </div>
         </div>
     </section>

@@ -12,7 +12,7 @@ from cuotas.selectors import get_cuotas_deudoras, get_total_deuda
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 
 from .forms import AsociadoGestionForm, CobroCuotaForm, PeriodoCuotaForm
-from .selectors import get_admin_dashboard_stats, get_asociados_deudores
+from .selectors import get_asociados_deudores
 
 
 class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -24,11 +24,6 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class GestionDashboardView(StaffRequiredMixin, TemplateView):
     template_name = "gestion/dashboard.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(get_admin_dashboard_stats())
-        return context
 
 
 class GestionDeudoresView(StaffRequiredMixin, TemplateView):
@@ -190,4 +185,3 @@ class GestionPeriodosCuotaView(StaffRequiredMixin, TemplateView):
         context["periodos"] = PeriodoCuota.objects.select_related("ciclo_lectivo").order_by("-ciclo_lectivo__anio", "-mes")
         context["periodo_form"] = getattr(self.request, "_periodo_form", PeriodoCuotaForm())
         return context
-
