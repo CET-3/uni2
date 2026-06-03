@@ -10,9 +10,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     <h2 class="h5">{{ comercio.nombre }}</h2>
-                    {% if comercio.actividad_comercial %}
-                        <p class="mb-1"><strong>Actividad:</strong> {{ comercio.actividad_comercial.nombre }}</p>
-                    {% endif %}
+                    <p class="mb-1"><strong>Actividad:</strong> {{ comercio.actividad_comercial.nombre }}</p>
                     <p class="mb-1 text-secondary">{{ comercio.direccion }}</p>
                     {% if comercio.ciudad or comercio.provincia %}
                         <p class="mb-1 text-secondary">{{ comercio.ciudad }} {{ comercio.provincia }}</p>

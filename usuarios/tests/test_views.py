@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.urls import reverse
 
 from asociados.services import create_asociado
-from comercios.models import Comercio
+from comercios.models import ActividadComercial, Comercio
 from usuarios.services import COMERCIO_GROUP
 
 
@@ -35,9 +35,11 @@ def test_login_redirige_a_panel_asociado(client):
 def test_login_redirige_a_panel_comercio(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="com", password="secreto123")
+    actividad = ActividadComercial.objects.create(nombre="Libreria")
     Comercio.objects.create(
         nombre="Libreria Sur",
         direccion="Mitre 123",
+        actividad_comercial=actividad,
         beneficio_texto="10% en utiles",
         usuario=user,
     )

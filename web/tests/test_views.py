@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 
+from comercios.models import ActividadComercial, Comercio
 from contenidos.models import Beneficio
 
 
@@ -30,3 +31,22 @@ def test_beneficios_publicos_muestran_activos_ordenados(client):
     contenido = response.content.decode()
     assert contenido.index("Primero") < contenido.index("Segundo") < contenido.index("Tercero")
     assert "Inactivo" not in contenido
+
+
+@pytest.mark.django_db
+def test_comercios_publicos_muestran_actividad_comercial(client):
+    actividad = ActividadComercial.objects.create(nombre="Librería")
+    Comercio.objects.create(
+        nombre="Librería Sur",
+        direccion="Mitre 123",
+        actividad_comercial=actividad,
+        beneficio_texto="10% en útiles",
+        estado=Comercio.ESTADO_FIRMADO,
+    )
+
+    response = client.get(reverse("web:comercios"))
+
+    contenido = response.content.decode()
+    assert "Librería Sur" in contenido
+    assert "Actividad:" in contenido
+    assert "Librería" in contenido
