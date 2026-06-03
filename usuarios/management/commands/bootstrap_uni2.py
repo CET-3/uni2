@@ -38,8 +38,8 @@ class Command(BaseCommand):
 
         beneficios = [
             ("Descuento en fotocopias", "Acceso a descuentos para estudiantes y familias."),
-            ("Acompanamiento escolar", "Beneficios y apoyo en materiales para el cursado."),
-            ("Promociones con comercios", "Acuerdos con librerias y comercios de la comunidad."),
+            ("Acompañamiento escolar", "Beneficios y apoyo en materiales para el cursado."),
+            ("Promociones con comercios", "Acuerdos con librerías y comercios de la comunidad."),
         ]
         for orden, (titulo, descripcion) in enumerate(beneficios, start=1):
             Beneficio.objects.get_or_create(
@@ -47,22 +47,22 @@ class Command(BaseCommand):
                 defaults={"descripcion": descripcion, "activo": True, "orden": orden},
             )
 
-        libreria, _ = ActividadComercial.objects.get_or_create(nombre="Libreria")
-        papeleria, _ = ActividadComercial.objects.get_or_create(nombre="Papeleria")
+        libreria, _ = ActividadComercial.objects.get_or_create(nombre="Librería")
+        papeleria, _ = ActividadComercial.objects.get_or_create(nombre="Papelería")
 
         Comercio.objects.get_or_create(
-            nombre="Libreria Sur",
+            nombre="Librería Sur",
             defaults={
                 "actividad_comercial": libreria,
-                "propietario": "Marina Lopez",
-                "beneficio_texto": "10% en utiles escolares",
+                "propietario": "Marina López",
+                "beneficio_texto": "10% en útiles escolares",
                 "estado": Comercio.ESTADO_FIRMADO,
                 "fecha_convenio": date(2026, 3, 30),
                 "flyer_disponible": True,
                 "telefono": "2944-000111",
                 "direccion": "Mitre 123",
                 "ciudad": "General Roca",
-                "provincia": "Rio Negro",
+                "provincia": "Río Negro",
                 "url_presencia_web": "https://instagram.com/libreriasur",
             },
         )
@@ -70,14 +70,14 @@ class Command(BaseCommand):
             nombre="Papelera Centro",
             defaults={
                 "actividad_comercial": papeleria,
-                "propietario": "Juan Perez",
+                "propietario": "Juan Pérez",
                 "beneficio_texto": "2x1 en anillados",
                 "estado": Comercio.ESTADO_FIRMADO,
                 "flyer_disponible": True,
                 "telefono": "2944-000222",
-                "direccion": "San Martin 55",
+                "direccion": "San Martín 55",
                 "ciudad": "General Roca",
-                "provincia": "Rio Negro",
+                "provincia": "Río Negro",
                 "url_presencia_web": "https://papeleracentro.example.com",
             },
         )

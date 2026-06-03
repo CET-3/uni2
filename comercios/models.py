@@ -3,7 +3,12 @@ from django.db import models
 
 
 class ActividadComercial(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
+    nombre = models.CharField(
+        "nombre",
+        max_length=100,
+        unique=True,
+        help_text="Nombre del rubro o actividad principal del comercio.",
+    )
 
     class Meta:
         verbose_name = "Actividad comercial"
@@ -30,7 +35,8 @@ class Comercio(models.Model):
         ActividadComercial,
         on_delete=models.PROTECT,
         related_name="comercios",
-        null=True,
+        verbose_name="actividad comercial",
+        help_text="Rubro o actividad principal del comercio.",
     )
     usuario = models.OneToOneField(
         settings.AUTH_USER_MODEL,
