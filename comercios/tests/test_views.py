@@ -17,6 +17,7 @@ def test_validacion_credencial_comercio(client):
         direccion="San Martin 55",
         usuario=user,
         actividad_comercial=actividad,
+        beneficio_texto="15% en fotocopias",
         estado=Comercio.ESTADO_FIRMADO,
     )
     asociado = create_asociado(

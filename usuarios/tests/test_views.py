@@ -35,7 +35,12 @@ def test_login_redirige_a_panel_asociado(client):
 def test_login_redirige_a_panel_comercio(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="com", password="secreto123")
-    Comercio.objects.create(nombre="Libreria Sur", direccion="Mitre 123", usuario=user)
+    Comercio.objects.create(
+        nombre="Libreria Sur",
+        direccion="Mitre 123",
+        beneficio_texto="10% en utiles",
+        usuario=user,
+    )
 
     response = client.post(
         reverse("usuarios:login"),
