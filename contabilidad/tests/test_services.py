@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import pytest
 
-from asociados.models import Asociado, CicloLectivo, Colegio, Curso
+from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
 from contabilidad.models import Asiento, CuentaContable, PartidaAsiento
 from contabilidad.services import validar_asiento
@@ -32,8 +32,7 @@ def cuentas_contables():
 
 @pytest.fixture
 def asociado_con_cuota():
-    colegio = Colegio.objects.create(nombre="CET 3")
-    curso = Curso.objects.create(colegio=colegio, nombre="4° 1°")
+    curso = Curso.objects.create(anio="4to", curso="1ra", division=Curso.DIVISION_CS, turno=Curso.TURNO_TM)
     asociado = create_asociado(
         nombre="Nora",
         apellido="Vega",

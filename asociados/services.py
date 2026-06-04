@@ -6,7 +6,7 @@ from datetime import date
 
 from django.db import transaction
 
-from .models import Asociado, CicloLectivo, Curso, InscripcionCurso
+from .models import Asociado, Curso
 
 
 def calculate_fecha_inicio_cobro(fecha_alta: date) -> date:
@@ -54,15 +54,6 @@ def create_asociado(
         fecha_nacimiento=fecha_nacimiento,
     )
 
-    if curso_actual:
-        ciclo, _ = CicloLectivo.objects.get_or_create(anio=fecha_alta.year)
-        InscripcionCurso.objects.create(
-            asociado=asociado,
-            curso=curso_actual,
-            ciclo_lectivo=ciclo,
-            activa=True,
-            fecha_desde=fecha_alta,
-        )
     return asociado
 
 
@@ -82,21 +73,6 @@ def marcar_asociado_como_egresado(asociado: Asociado):
     return asociado
 
 
-@transaction.atomic
-def cambiar_curso(asociado: Asociado, nuevo_curso: Curso, ciclo_lectivo: CicloLectivo, fecha_desde: date):
-    asociado.inscripciones.filter(activa=True).update(activa=False, fecha_hasta=fecha_desde)
-    inscripcion = InscripcionCurso.objects.create(
-        asociado=asociado,
-        curso=nuevo_curso,
-        ciclo_lectivo=ciclo_lectivo,
-        activa=True,
-        fecha_desde=fecha_desde,
-    )
-    asociado.curso_actual = nuevo_curso
-    asociado.save(update_fields=["curso_actual"])
-    return inscripcion
-
-
 @dataclass
 class ImportResult:
     created: int = 0
@@ -112,11 +88,21 @@ def import_asociados_from_csv(csv_file) -> ImportResult:
     for index, row in enumerate(reader, start=2):
         try:
             curso = None
-            curso_nombre = (row.get("curso") or "").strip()
-            if curso_nombre:
-                curso = Curso.objects.filter(nombre=curso_nombre).first()
+            curso_str = (row.get("curso") or "").strip()
+            if curso_str:
+                partes = curso_str.split()
+                filtro = {}
+                if len(partes) >= 1:
+                    filtro["anio"] = partes[0]
+                if len(partes) >= 2:
+                    filtro["curso"] = partes[1]
+                if len(partes) >= 3:
+                    filtro["division"] = partes[2]
+                if len(partes) >= 4:
+                    filtro["turno"] = partes[3]
+                curso = Curso.objects.filter(**filtro).first()
                 if curso is None:
-                    raise ValueError(f"Curso inexistente: {curso_nombre}")
+                    raise ValueError(f"Curso inexistente: {curso_str}")
 
             create_asociado(
                 nombre=row["nombre"].strip(),

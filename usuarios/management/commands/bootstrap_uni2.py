@@ -3,7 +3,7 @@ from datetime import date
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from asociados.models import Colegio, Curso
+from asociados.models import Curso
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import Beneficio
 from contabilidad.models import CuentaContable
@@ -16,14 +16,28 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         ensure_default_groups()
 
-        colegio, _ = Colegio.objects.get_or_create(
-            nombre="CET 3",
-            defaults={"direccion": "", "telefono": "", "email": "", "activo": True},
-        )
-
-        cursos = ["1° 1°", "1° 2°", "2° 1°", "2° 2°", "3° 1°", "3° 2°"]
-        for nombre in cursos:
-            Curso.objects.get_or_create(colegio=colegio, nombre=nombre, defaults={"activo": True})
+        cursos_data = [
+            ("1ro", "1ra", Curso.DIVISION_CB, Curso.TURNO_TM),
+            ("1ro", "2da", Curso.DIVISION_CB, Curso.TURNO_TM),
+            ("2do", "1ra", Curso.DIVISION_CB, Curso.TURNO_TM),
+            ("2do", "2da", Curso.DIVISION_CB, Curso.TURNO_TM),
+            ("3ro", "1ra", Curso.DIVISION_CB, Curso.TURNO_TM),
+            ("3ro", "2da", Curso.DIVISION_CB, Curso.TURNO_TM),
+            ("4to", "1ra", Curso.DIVISION_CS, Curso.TURNO_TM),
+            ("4to", "2da", Curso.DIVISION_CS, Curso.TURNO_TM),
+            ("5to", "1ra", Curso.DIVISION_CS, Curso.TURNO_TM),
+            ("5to", "2da", Curso.DIVISION_CS, Curso.TURNO_TM),
+            ("6to", "1ra", Curso.DIVISION_CS, Curso.TURNO_TM),
+            ("6to", "2da", Curso.DIVISION_CS, Curso.TURNO_TM),
+        ]
+        for anio, curso, division, turno in cursos_data:
+            Curso.objects.get_or_create(
+                anio=anio,
+                curso=curso,
+                division=division,
+                turno=turno,
+                defaults={"activo": True},
+            )
 
         cuentas = [
             ("1.1.01", "Caja", CuentaContable.TIPO_ACTIVO),

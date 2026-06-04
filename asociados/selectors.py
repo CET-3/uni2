@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from .models import Asociado, InscripcionCurso
+from .models import Asociado
 
 
 def get_asociados_activos():
@@ -9,13 +9,6 @@ def get_asociados_activos():
 
 def get_asociado_by_dni(dni: str):
     return Asociado.objects.filter(dni=dni).select_related("curso_actual", "usuario").first()
-
-
-def get_historial_cursos(asociado_id: int):
-    return InscripcionCurso.objects.filter(asociado_id=asociado_id).select_related(
-        "curso",
-        "ciclo_lectivo",
-    )
 
 
 def search_asociados(query: str):

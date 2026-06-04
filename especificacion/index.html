@@ -36,10 +36,8 @@
             <ol>
               <li><a href="#entidad-usuario">Usuario</a></li>
               <li><a href="#entidad-ciclo-lectivo">CicloLectivo</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
-              <li><a href="#entidad-colegio">Colegio</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
               <li><a href="#entidad-curso">Curso</a> <span class="status-done status-done--toc" aria-label="Listo">✓</span></li>
               <li><a href="#entidad-asociado">Asociado</a></li>
-              <li><a href="#entidad-inscripcion-curso">InscripciónCurso</a></li>
               <li><a href="#entidad-periodo-cuota">PeríodoCuota</a></li>
               <li><a href="#entidad-cuota">Cuota</a></li>
               <li><a href="#entidad-pago">Pago</a></li>
@@ -68,7 +66,6 @@
               <li><a href="#cu-registrar-pago-cuota">CU-registrar-pago-cuota</a></li>
               <li><a href="#cu-dar-baja-asociado">CU-dar-baja-asociado</a></li>
               <li><a href="#cu-marcar-asociado-egresado">CU-marcar-asociado-egresado</a></li>
-              <li><a href="#cu-cambiar-curso">CU-cambiar-curso</a></li>
               <li><a href="#cu-validar-credencial">CU-validar-credencial</a></li>
             </ol>
           </details>
@@ -80,8 +77,6 @@
               <li><a href="#cb-alta-mitad-mes">CB-alta-mitad-mes</a></li>
               <li><a href="#cb-asociado-sin-usuario">CB-asociado-sin-usuario</a></li>
               <li><a href="#cb-usuario-desactivado">CB-usuario-desactivado</a></li>
-              <li><a href="#cb-cambio-curso">CB-cambio-curso</a></li>
-              <li><a href="#cb-repite-curso">CB-repite-curso</a></li>
               <li><a href="#cb-baja-con-deuda">CB-baja-con-deuda</a></li>
               <li><a href="#cb-egresado-con-deuda">CB-egresado-con-deuda</a></li>
               <li><a href="#cb-cuota-ya-generada">CB-cuota-ya-generada</a></li>
@@ -128,7 +123,7 @@
             <h3>El sistema permitirá administrar</h3>
             <ul>
               <li>Asociados y adherentes.</li>
-              <li>Colegios, cursos e historial escolar.</li>
+              <li>Colegios, cursos y curso actual.</li>
               <li>Cuotas y pagos.</li>
               <li>Credenciales digitales.</li>
               <li>Consulta pública de beneficios institucionales, cargados desde el admin técnico de Django.</li>
@@ -222,7 +217,7 @@
               <li>Gestión de colegios.</li>
               <li>Gestión de cursos.</li>
               <li>Gestión de asociados y adherentes.</li>
-              <li>Curso actual e historial de curso.</li>
+              <li>Curso actual.</li>
               <li>Importación inicial desde Excel/CSV.</li>
               <li>Creación manual de usuarios para asociados.</li>
               <li>Generación de cuotas.</li>
@@ -286,32 +281,20 @@
             </ul>
             <p><strong>Reglas:</strong> se carga desde el admin técnico de Django. También puede crearse automáticamente al dar de alta un asociado con curso si no existe el ciclo correspondiente a la fecha de alta. La pantalla de períodos de cuota usa ciclos lectivos ya existentes.</p>
           </article>
-          <article class="entity" id="entidad-colegio">
-            <h3>Colegio <span class="status-done" aria-label="Listo">✓ Listo</span></h3>
-            <p>Representa una institución educativa.</p>
-            <p><strong>Campos:</strong></p>
-            <ul>
-              <li>id*: identificador interno del colegio.</li>
-              <li>nombre*: nombre de la institución educativa. Único en el sistema.</li>
-              <li>dirección: dirección física del colegio.</li>
-              <li>teléfono: teléfono de contacto del colegio.</li>
-              <li>email: correo de contacto del colegio.</li>
-              <li>activo*: indica si el colegio participa activamente en el sistema.</li>
-            </ul>
-            <p><strong>Notas:</strong> inicialmente existirá CET 3 y se incluye desde el inicio para dejar preparado el sistema para otros colegios. En el MVP, los colegios se administran desde el admin técnico de Django.</p>
-          </article>
           <article class="entity" id="entidad-curso">
             <h3>Curso <span class="status-done" aria-label="Listo">✓ Listo</span></h3>
-            <p>Representa un curso de un colegio.</p>
+            <p>Representa un curso comisión de la escuela.</p>
             <p><strong>Campos:</strong></p>
             <ul>
               <li>id*: identificador interno del curso.</li>
-              <li>colegio*: colegio al que pertenece el curso.</li>
-              <li>nombre*: nombre del curso, por ejemplo: 1° 1°.</li>
+              <li>año*: año del curso, ej: 1ro, 2do, 3ro. Texto ingresable.</li>
+              <li>curso*: división o comisión del año, ej: 1ra, 2da, 3ra. Texto ingresable.</li>
+              <li>división*: ciclo al que pertenece: CB (Ciclo Básico) o CS (Ciclo Superior).</li>
+              <li>turno*: turno: TM (Turno Mañana) o TT (Turno Tarde).</li>
               <li>activo*: indica si el curso está activo en el sistema.</li>
             </ul>
-            <p><strong>Ejemplos:</strong> 1° 1°, 1° 2°, 3° 2°, 5° 1°.</p>
-            <p><strong>Relación:</strong> Colegio 1 a N Curso.</p>
+            <p><strong>Unicidad:</strong> un solo curso por combinación de año, curso, división y turno.</p>
+            <p><strong>Ejemplo:</strong> 2do 1ra CB TT = segundo año, primera división, Ciclo Básico, Turno Tarde.</p>
             <p><strong>Notas:</strong> en el MVP, los cursos se administran desde el admin técnico de Django.</p>
           </article>
           <article class="entity" id="entidad-asociado">
@@ -340,22 +323,6 @@
             <p><strong>Tipos:</strong> asociado, adherente.</p>
             <p><strong>Estados:</strong> activo, inactivo, egresado.</p>
             <p><strong>Reglas:</strong> DNI único, número automático, token UUID único, usuario opcional, curso actual opcional para adherentes y recomendado para asociados alumnos.</p>
-          </article>
-          <article class="entity" id="entidad-inscripcion-curso">
-            <h3>InscripciónCurso</h3>
-            <p>Historial académico del asociado.</p>
-            <p><strong>Campos:</strong></p>
-            <ul>
-              <li>id*: identificador interno de la inscripción.</li>
-              <li>asociado*: asociado inscripto en el curso.</li>
-              <li>curso*: curso en el que está inscripto el asociado.</li>
-              <li>ciclo_lectivo*: año lectivo de esta inscripción. FK a CicloLectivo.</li>
-              <li>activa*: indica si esta es la inscripción vigente del asociado.</li>
-              <li>fecha_desde*: fecha de inicio de esta inscripción.</li>
-              <li>fecha_hasta: fecha de fin de esta inscripción. Vacío si sigue activa.</li>
-            </ul>
-            <p><strong>Reglas:</strong> puede haber varias inscripciones históricas, solo una activa por ciclo lectivo, al cambiar de año se crea una nueva inscripción, incluso si repite curso.</p>
-            <p><strong>Ejemplo:</strong> Juan Pérez - 2026 - 3° 2° - no activa / Juan Pérez - 2027 - 4° 2° - activa.</p>
           </article>
           <article class="entity" id="entidad-periodo-cuota">
             <h3>PeríodoCuota</h3>
@@ -478,17 +445,13 @@
         </div>
         <div class="panel">
           <ul class="relationship-list">
-            <li>Colegio 1 - N Curso</li>
             <li>Usuario 1 - 0..1 Asociado</li>
             <li>Curso 1 - N Asociado como curso_actual</li>
-            <li>Asociado 1 - N InscripcionCurso</li>
-            <li>Curso 1 - N InscripcionCurso</li>
             <li>PeríodoCuota 1 - N Cuota</li>
             <li>Asociado 1 - N Cuota</li>
             <li>Asociado 1 - N Pago</li>
             <li>Pago 1 - N PagoCuota</li>
             <li>Cuota 1 - N PagoCuota</li>
-            <li>CicloLectivo 1 - N InscripciónCurso</li>
             <li>CicloLectivo 1 - N PeríodoCuota</li>
             <li>ActividadComercial 1 - N Comercio</li>
             <li>Usuario 1 - 0..1 Comercio</li>
@@ -506,7 +469,7 @@
           <ul class="rule-list">
             <li id="ASOCIADO-001"><strong><a href="#ASOCIADO-001">ASOCIADO-001</a></strong> Un asociado puede ser de tipo asociado o adherente.</li>
             <li id="ASOCIADO-002"><strong><a href="#ASOCIADO-002">ASOCIADO-002</a></strong> Los asociados participan de asambleas; los adherentes no.</li>
-            <li id="ASOCIADO-003"><strong><a href="#ASOCIADO-003">ASOCIADO-003</a></strong> Los asociados inactivos o egresados conservan su historial.</li>
+            <li id="ASOCIADO-003"><strong><a href="#ASOCIADO-003">ASOCIADO-003</a></strong> Los asociados inactivos o egresados conservan sus datos, cuotas y pagos.</li>
             <li id="ASOCIADO-004"><strong><a href="#ASOCIADO-004">ASOCIADO-004</a></strong> Solo los asociados activos generan nuevas cuotas.</li>
             <li id="ASOCIADO-006"><strong><a href="#ASOCIADO-006">ASOCIADO-006</a></strong> No puede existir más de un asociado con el mismo DNI.</li>
             <li id="ASOCIADO-007"><strong><a href="#ASOCIADO-007">ASOCIADO-007</a></strong> El número de asociado debe generarse automáticamente.</li>
@@ -516,10 +479,7 @@
         <div class="rule-group">
           <h3>Cursos</h3>
           <ul class="rule-list">
-            <li id="CURSO-001"><strong><a href="#CURSO-001">CURSO-001</a></strong> El curso actual se guarda en Asociado para simplificar consultas.</li>
-            <li id="CURSO-002"><strong><a href="#CURSO-002">CURSO-002</a></strong> El historial de curso se guarda en InscripcionCurso.</li>
-            <li id="CURSO-003"><strong><a href="#CURSO-003">CURSO-003</a></strong> Cuando un alumno cambia de curso, se crea una nueva InscripcionCurso y se actualiza curso_actual.</li>
-            <li id="CURSO-004"><strong><a href="#CURSO-004">CURSO-004</a></strong> Si un alumno repite, igualmente se crea una nueva InscripcionCurso para el nuevo ciclo lectivo.</li>
+            <li id="CURSO-001"><strong><a href="#CURSO-001">CURSO-001</a></strong> El curso actual se guarda en Asociado para simplificar consultas. No se lleva historial de cambios de curso.</li>
           </ul>
         </div>
         <div class="rule-group">
@@ -670,11 +630,10 @@
               <li>Define fecha de alta.</li>
               <li>Calcula o ajusta <code>fecha_inicio_cobro</code>.</li>
               <li>Guarda el asociado.</li>
-              <li>Crea <code>InscripcionCurso</code> si aplica.</li>
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-001">ASOCIADO-001</a>, <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#ALTA-ASOCIADO-001">ALTA-ASOCIADO-001</a>, <a href="#ALTA-ASOCIADO-002">ALTA-ASOCIADO-002</a>, <a href="#ALTA-ASOCIADO-003">ALTA-ASOCIADO-003</a>.</p>
             <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, alta después del día 15, asociado sin usuario.</p>
-            <p><strong>Modelos afectados:</strong> Asociado, Curso, CicloLectivo, InscripcionCurso.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso.</p>
           </article>
           <article class="use-case" id="cu-importar-asociados">
             <h3>CU-importar-asociados</h3>
@@ -685,11 +644,11 @@
               <li>El sistema valida columnas, DNI, tipo y curso.</li>
               <li>Informa errores y advertencias.</li>
               <li>Se confirma la importación.</li>
-              <li>Se crean asociados e inscripciones.</li>
+              <li>Se crean asociados.</li>
             </ol>
-            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#CURSO-001">CURSO-001</a>, <a href="#CURSO-002">CURSO-002</a>.</p>
+            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#CURSO-001">CURSO-001</a>.</p>
             <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, asociado ya existente, email faltante, teléfono faltante, tipo invalido.</p>
-            <p><strong>Modelos afectados:</strong> Asociado, Curso, CicloLectivo, InscripcionCurso.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso.</p>
           </article>
           <article class="use-case" id="cu-crear-usuario-asociado">
             <h3>CU-crear-usuario-asociado</h3>
@@ -745,7 +704,7 @@
               <li>Selecciona baja.</li>
               <li>Carga fecha y motivo.</li>
               <li>El sistema cambia el estado a inactivo.</li>
-              <li>Conserva cuotas, pagos e historial.</li>
+              <li>Conserva cuotas y pagos.</li>
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-003">ASOCIADO-003</a>, <a href="#ASOCIADO-004">ASOCIADO-004</a>.</p>
             <p><strong>Situaciones especiales:</strong> baja con deuda, baja sin deuda, asociado con usuario.</p>
@@ -758,27 +717,12 @@
             <ol>
               <li>Busca asociado.</li>
               <li>Cambia el estado a egresado.</li>
-              <li>El sistema conserva el historial.</li>
               <li>Deja de generar nuevas cuotas.</li>
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-003">ASOCIADO-003</a>, <a href="#ASOCIADO-004">ASOCIADO-004</a>.</p>
-            <p><strong>Modelos afectados:</strong> Asociado, InscripcionCurso.</p>
+            <p><strong>Modelos afectados:</strong> Asociado.</p>
           </article>
-          <article class="use-case" id="cu-cambiar-curso">
-            <h3>CU-cambiar-curso</h3>
-            <p><strong>Actor:</strong> Administrador</p>
-            <p><strong>Flujo principal:</strong></p>
-            <ol>
-              <li>Busca asociado.</li>
-              <li>Selecciona nuevo curso y ciclo lectivo.</li>
-              <li>El sistema desactiva la inscripción anterior si corresponde.</li>
-              <li>Crea una nueva inscripción.</li>
-              <li>Actualiza <code>curso_actual</code>.</li>
-            </ol>
-            <p><strong>Reglas relacionadas:</strong> <a href="#CURSO-001">CURSO-001</a>, <a href="#CURSO-002">CURSO-002</a>, <a href="#CURSO-003">CURSO-003</a>, <a href="#CURSO-004">CURSO-004</a>.</p>
-            <p><strong>Situaciones especiales:</strong> promoción normal, repite curso, cambio de división.</p>
-            <p><strong>Modelos afectados:</strong> Asociado, Curso, CicloLectivo, InscripcionCurso.</p>
-          </article>
+
           <article class="use-case" id="cu-validar-credencial">
             <h3>CU-validar-credencial</h3>
             <p><strong>Actor:</strong> Comercio</p>
@@ -822,20 +766,6 @@
             <p><strong>Respuesta esperada:</strong> se bloquea el acceso, pero no se borran ni alteran los datos del asociado.</p>
             <p><strong>Caso de uso relacionado:</strong> <a href="#cu-ver-credencial">CU-ver-credencial</a>, <a href="#cu-ver-estado-cuotas">CU-ver-estado-cuotas</a>.</p>
             <p><strong>Relacionado con:</strong> <a href="#USUARIO-005">USUARIO-005</a>.</p>
-          </article>
-          <article class="card" id="cb-cambio-curso">
-            <h3>CB-cambio-curso</h3>
-            <p><strong>Situación:</strong> un asociado cambia de curso o división.</p>
-            <p><strong>Respuesta esperada:</strong> no se pisa el historial. Se crea una nueva <code>InscripcionCurso</code> y se conserva la anterior.</p>
-            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-cambiar-curso">CU-cambiar-curso</a>.</p>
-            <p><strong>Relacionado con:</strong> <a href="#CURSO-002">CURSO-002</a>, <a href="#CURSO-003">CURSO-003</a>.</p>
-          </article>
-          <article class="card" id="cb-repite-curso">
-            <h3>CB-repite-curso</h3>
-            <p><strong>Situación:</strong> el asociado repite curso en un nuevo ciclo lectivo.</p>
-            <p><strong>Respuesta esperada:</strong> aunque el curso sea el mismo, se crea una nueva <code>InscripcionCurso</code> para ese nuevo ciclo.</p>
-            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-cambiar-curso">CU-cambiar-curso</a>.</p>
-            <p><strong>Relacionado con:</strong> <a href="#CURSO-004">CURSO-004</a>.</p>
           </article>
           <article class="card" id="cb-baja-con-deuda">
             <h3>CB-baja-con-deuda</h3>
@@ -942,7 +872,6 @@
               <li>Detalle de asociado.</li>
               <li>Crear usuario para asociado.</li>
               <li>Cursos.</li>
-              <li>Colegios.</li>
               <li>Períodos de cuota.</li>
               <li>Generar cuotas.</li>
               <li>Registrar pago.</li>
