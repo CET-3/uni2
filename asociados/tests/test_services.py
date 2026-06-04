@@ -2,10 +2,9 @@ from datetime import date
 
 import pytest
 
-from asociados.models import Asociado, CicloLectivo, Colegio, Curso
+from asociados.models import Asociado, Curso
 from asociados.services import (
     calculate_fecha_inicio_cobro,
-    cambiar_curso,
     create_asociado,
     dar_baja_asociado,
     marcar_asociado_como_egresado,
@@ -14,8 +13,7 @@ from asociados.services import (
 
 @pytest.fixture
 def curso():
-    colegio = Colegio.objects.create(nombre="CET 3")
-    return Curso.objects.create(colegio=colegio, nombre="1° 1°")
+    return Curso.objects.create(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
 
 
 @pytest.mark.django_db
@@ -82,27 +80,6 @@ def test_cambio_a_egresado(curso):
     asociado.refresh_from_db()
 
     assert asociado.estado == Asociado.ESTADO_EGRESADO
-
-
-@pytest.mark.django_db
-def test_cambio_de_curso_crea_historial(curso):
-    asociado = create_asociado(
-        nombre="Luca",
-        apellido="Sosa",
-        dni="35123456",
-        tipo=Asociado.TIPO_ASOCIADO,
-        fecha_alta=date(2026, 3, 10),
-        curso_actual=curso,
-    )
-    nuevo_curso = Curso.objects.create(colegio=curso.colegio, nombre="2° 1°")
-
-    ciclo_2027, _ = CicloLectivo.objects.get_or_create(anio=2027)
-    inscripcion = cambiar_curso(asociado, nuevo_curso, ciclo_2027, date(2027, 3, 1))
-    asociado.refresh_from_db()
-
-    assert asociado.curso_actual == nuevo_curso
-    assert inscripcion.activa is True
-    assert asociado.inscripciones.count() == 2
 
 
 @pytest.mark.django_db

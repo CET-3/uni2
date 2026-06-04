@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 
 from .services import calculate_fecha_inicio_cobro
-from .models import Asociado, CicloLectivo, Colegio, Curso, InscripcionCurso
+from .models import Asociado, CicloLectivo, Curso
 
 
 @admin.register(CicloLectivo)
@@ -11,23 +11,11 @@ class CicloLectivoAdmin(admin.ModelAdmin):
     search_fields = ("anio",)
 
 
-@admin.register(Colegio)
-class ColegioAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "telefono", "email", "activo")
-    list_filter = ("activo",)
-    search_fields = ("nombre",)
-
-
 @admin.register(Curso)
 class CursoAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "colegio", "activo")
-    list_filter = ("colegio", "activo")
-    search_fields = ("nombre", "colegio__nombre")
-
-
-class InscripcionCursoInline(admin.TabularInline):
-    model = InscripcionCurso
-    extra = 0
+    list_display = ("anio", "curso", "division", "turno", "activo")
+    list_filter = ("division", "turno", "activo")
+    search_fields = ("anio", "curso")
 
 
 class AsociadoAdminForm(forms.ModelForm):
@@ -68,7 +56,6 @@ class AsociadoAdmin(admin.ModelAdmin):
     )
     list_filter = ("estado", "tipo", "curso_actual")
     search_fields = ("apellido", "nombre", "dni", "numero_asociado")
-    inlines = [InscripcionCursoInline]
     readonly_fields = ("numero_asociado", "token_credencial")
     fieldsets = (
         (
@@ -103,25 +90,6 @@ class AsociadoAdmin(admin.ModelAdmin):
         ),
     )
 
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        if obj.curso_actual and not obj.inscripciones.exists():
-            ciclo, _ = CicloLectivo.objects.get_or_create(anio=obj.fecha_alta.year)
-            InscripcionCurso.objects.create(
-                asociado=obj,
-                curso=obj.curso_actual,
-                ciclo_lectivo=ciclo,
-                activa=True,
-                fecha_desde=obj.fecha_alta,
-            )
-
     @admin.display(description="Ultimo acceso")
     def last_login_display(self, obj):
         return obj.usuario.last_login if obj.usuario else None
-
-
-@admin.register(InscripcionCurso)
-class InscripcionCursoAdmin(admin.ModelAdmin):
-    list_display = ("asociado", "curso", "ciclo_lectivo", "activa", "fecha_desde", "fecha_hasta")
-    list_filter = ("activa", "ciclo_lectivo")
-    search_fields = ("asociado__apellido", "curso__nombre")

@@ -136,16 +136,6 @@
         </div></div>
     </div>
     <div class="col-lg-5">
-        <div class="card surface-card mb-4"><div class="card-body">
-            <h2 class="h5 mb-3">Historial de cursos</h2>
-            <ul class="list-group list-group-flush">
-                {% for inscripcion in historial_cursos %}
-                    <li class="list-group-item px-0">{{ inscripcion.curso }} · {{ inscripcion.ciclo_lectivo }}</li>
-                {% empty %}
-                    <li class="list-group-item px-0">Sin historial cargado.</li>
-                {% endfor %}
-            </ul>
-        </div></div>
         <div class="card surface-card"><div class="card-body">
             <h2 class="h5 mb-3">Pagos recientes</h2>
             <ul class="list-group list-group-flush">

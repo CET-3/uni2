@@ -21,60 +21,43 @@ class CicloLectivo(models.Model):
         return str(self.anio)
 
 
-class Colegio(models.Model):
-    nombre = models.CharField(
-        "nombre",
-        max_length=150,
-        unique=True,
-        help_text="Nombre de la institución educativa.",
-    )
-    direccion = models.CharField(
-        "dirección",
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Dirección física del colegio.",
-    )
-    telefono = models.CharField(
-        "teléfono",
-        max_length=50,
-        blank=True,
-        null=True,
-        help_text="Teléfono de contacto del colegio.",
-    )
-    email = models.EmailField(
-        "email",
-        blank=True,
-        null=True,
-        help_text="Correo de contacto del colegio.",
-    )
-    activo = models.BooleanField(
-        "activo",
-        default=True,
-        help_text="Indica si el colegio participa activamente en el sistema.",
-    )
-
-    class Meta:
-        verbose_name = "Colegio"
-        verbose_name_plural = "Colegios"
-        ordering = ["nombre"]
-
-    def __str__(self):
-        return self.nombre
-
-
 class Curso(models.Model):
-    colegio = models.ForeignKey(
-        Colegio,
-        on_delete=models.PROTECT,
-        related_name="cursos",
-        verbose_name="colegio",
-        help_text="Colegio al que pertenece el curso.",
+    DIVISION_CB = "CB"
+    DIVISION_CS = "CS"
+    DIVISIONES = [
+        (DIVISION_CB, "Ciclo Básico"),
+        (DIVISION_CS, "Ciclo Superior"),
+    ]
+
+    TURNO_TM = "TM"
+    TURNO_TT = "TT"
+    TURNOS = [
+        (TURNO_TM, "Turno Mañana"),
+        (TURNO_TT, "Turno Tarde"),
+    ]
+    anio = models.CharField(
+        "año",
+        max_length=10,
+        help_text="Año que cursa, ej: 1ro, 2do, 3ro.",
     )
-    nombre = models.CharField(
-        "nombre",
-        max_length=50,
-        help_text="Nombre del curso, por ejemplo: 1° 1°.",
+    curso = models.CharField(
+        "curso",
+        max_length=10,
+        help_text="División o número de curso, ej: 1ra, 2da, única.",
+    )
+    division = models.CharField(
+        "división",
+        max_length=2,
+        choices=DIVISIONES,
+        default=DIVISION_CB,
+        help_text="Ciclo al que pertenece: CB (Ciclo Básico) o CS (Ciclo Superior).",
+    )
+    turno = models.CharField(
+        "turno",
+        max_length=2,
+        choices=TURNOS,
+        default=TURNO_TM,
+        help_text="Turno: TM (Turno Mañana) o TT (Turno Tarde).",
     )
     activo = models.BooleanField(
         "activo",
@@ -85,14 +68,14 @@ class Curso(models.Model):
     class Meta:
         verbose_name = "Curso"
         verbose_name_plural = "Cursos"
-        ordering = ["colegio__nombre", "nombre"]
+        ordering = ["division", "anio", "curso", "turno"]
         constraints = [
-            models.UniqueConstraint(fields=["colegio", "nombre"], name="uniq_curso_por_colegio")
+            models.UniqueConstraint(fields=["anio", "curso", "division", "turno"], name="uniq_curso")
         ]
-        indexes = [models.Index(fields=["colegio", "activo"])]
+        indexes = []
 
     def __str__(self):
-        return f"{self.colegio} - {self.nombre}"
+        return f"{self.anio} {self.curso} {self.get_division_display()} {self.get_turno_display()}"
 
 
 class Asociado(models.Model):
@@ -163,60 +146,3 @@ class Asociado(models.Model):
         if self.numero_asociado is None:
             self.numero_asociado = self.next_numero_asociado()
         super().save(*args, **kwargs)
-
-
-class InscripcionCurso(models.Model):
-    asociado = models.ForeignKey(
-        Asociado,
-        on_delete=models.CASCADE,
-        related_name="inscripciones",
-        verbose_name="asociado",
-        help_text="Asociado inscripto en el curso.",
-    )
-    curso = models.ForeignKey(
-        Curso,
-        on_delete=models.PROTECT,
-        related_name="inscripciones",
-        verbose_name="curso",
-        help_text="Curso en el que está inscripto el asociado.",
-    )
-    ciclo_lectivo = models.ForeignKey(
-        CicloLectivo,
-        on_delete=models.PROTECT,
-        related_name="inscripciones",
-        verbose_name="ciclo lectivo",
-        help_text="Año lectivo de esta inscripción.",
-    )
-    activa = models.BooleanField(
-        "activa",
-        default=True,
-        help_text="Indica si esta es la inscripción vigente del asociado.",
-    )
-    fecha_desde = models.DateField(
-        "fecha desde",
-        help_text="Fecha de inicio de esta inscripción.",
-    )
-    fecha_hasta = models.DateField(
-        "fecha hasta",
-        blank=True,
-        null=True,
-        help_text="Fecha de fin de esta inscripción. Vacío si sigue activa.",
-    )
-
-    class Meta:
-        verbose_name = "Inscripción a curso"
-        verbose_name_plural = "Inscripciones a curso"
-        ordering = ["-ciclo_lectivo__anio", "-fecha_desde"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["asociado", "curso", "ciclo_lectivo", "fecha_desde"],
-                name="uniq_inscripcion_historial",
-            )
-        ]
-        indexes = [
-            models.Index(fields=["asociado", "activa"]),
-            models.Index(fields=["ciclo_lectivo"]),
-        ]
-
-    def __str__(self):
-        return f"{self.asociado} - {self.curso} ({self.ciclo_lectivo})"

@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import pytest
 
-from asociados.models import Asociado, CicloLectivo, Colegio, Curso
+from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
 from contabilidad.models import CuentaContable
 from cuotas.models import Cuota, Pago, PeriodoCuota
@@ -12,8 +12,7 @@ from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 
 @pytest.fixture
 def asociado_activo():
-    colegio = Colegio.objects.create(nombre="CET 3")
-    curso = Curso.objects.create(colegio=colegio, nombre="3° 1°")
+    curso = Curso.objects.create(anio="3ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
     return create_asociado(
         nombre="Mia",
         apellido="Acosta",

@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.views.generic import TemplateView
 
 from asociados.models import Asociado
-from asociados.selectors import get_historial_cursos, search_asociados
+from asociados.selectors import search_asociados
 from cuotas.models import Pago, PeriodoCuota
 from cuotas.selectors import get_cuotas_deudoras, get_total_deuda
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
@@ -75,7 +75,6 @@ class GestionAsociadoDetalleView(StaffRequiredMixin, TemplateView):
         context["fecha_referencia"] = fecha_referencia
         context["total_deuda"] = get_total_deuda(asociado, fecha_referencia)
         context["cuotas_deudoras"] = cuotas_deudoras
-        context["historial_cursos"] = get_historial_cursos(asociado.id)[:10]
         context["pagos_recientes"] = Pago.objects.filter(asociado=asociado).order_by("-fecha", "-id")[:10]
         context["admin_change_url"] = reverse("admin:asociados_asociado_change", args=[asociado.id])
         context["cobro_url"] = f"{reverse('gestion:cobros')}?asociado={asociado.id}"
