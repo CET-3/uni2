@@ -66,9 +66,9 @@ class AsociadoAdmin(admin.ModelAdmin):
                     "apellido",
                     "dni",
                     "tipo",
-                    "fecha_nacimiento",
                     "email",
                     "telefono",
+                    "direccion",
                     "usuario",
                 )
             },

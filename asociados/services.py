@@ -30,7 +30,7 @@ def create_asociado(
     fecha_inicio_cobro: date | str | None = None,
     email: str = "",
     telefono: str = "",
-    fecha_nacimiento: date | None = None,
+    direccion: str = "",
 ):
     if isinstance(fecha_alta, str):
         fecha_alta = date.fromisoformat(fecha_alta)
@@ -51,7 +51,7 @@ def create_asociado(
         fecha_inicio_cobro=fecha_inicio,
         email=email,
         telefono=telefono,
-        fecha_nacimiento=fecha_nacimiento,
+        direccion=direccion,
     )
 
     return asociado

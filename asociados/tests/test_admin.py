@@ -21,7 +21,7 @@ def test_admin_form_calcula_fecha_inicio_cobro(curso):
             "dni": "40111222",
             "email": "",
             "telefono": "",
-            "fecha_nacimiento": "",
+            "direccion": "",
             "tipo": Asociado.TIPO_ASOCIADO,
             "curso_actual": curso.pk,
             "estado": Asociado.ESTADO_ACTIVO,

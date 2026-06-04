@@ -49,6 +49,7 @@ class AsociadoGestionForm(forms.ModelForm):
             "dni",
             "email",
             "telefono",
+            "direccion",
             "tipo",
             "curso_actual",
             "estado",

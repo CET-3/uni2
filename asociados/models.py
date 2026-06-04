@@ -107,7 +107,12 @@ class Asociado(models.Model):
     dni = models.CharField(max_length=20, unique=True)
     email = models.EmailField(blank=True)
     telefono = models.CharField(max_length=50, blank=True)
-    fecha_nacimiento = models.DateField(blank=True, null=True)
+    direccion = models.CharField(
+        "dirección",
+        max_length=255,
+        blank=True,
+        help_text="Domicilio del asociado.",
+    )
     tipo = models.CharField(max_length=20, choices=TIPOS)
     numero_asociado = models.PositiveIntegerField(unique=True, blank=True, null=True)
     token_credencial = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
