@@ -16,11 +16,24 @@ from asociados.importers import (
 )
 from asociados.models import Asociado
 from asociados.selectors import get_asociados_for_export, search_asociados
+from cuotas.importers import (
+    CUOTAS_HISTORICAS_SESSION_KEY,
+    CuotasHistoricasPreview,
+    analyze_cuotas_historicas_xlsx,
+    build_revisar_cuotas_historicas_xlsx,
+    import_cuotas_historicas_preview,
+)
 from cuotas.models import Pago, PeriodoCuota
 from cuotas.selectors import get_cuotas_deudoras, get_total_deuda
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 
-from .forms import AsociadoGestionForm, CobroCuotaForm, ImportarPadronAsociadosForm, PeriodoCuotaForm
+from .forms import (
+    AsociadoGestionForm,
+    CobroCuotaForm,
+    ImportarCuotasHistoricasForm,
+    ImportarPadronAsociadosForm,
+    PeriodoCuotaForm,
+)
 from .selectors import get_asociados_deudores
 
 
@@ -148,6 +161,85 @@ class GestionDescargarAsociadosRevisarView(StaffRequiredMixin, TemplateView):
             content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
         response["Content-Disposition"] = 'attachment; filename="padron_asociados_a_revisar.xlsx"'
+        return response
+
+
+class GestionImportarCuotasHistoricasView(StaffRequiredMixin, TemplateView):
+    template_name = "gestion/importar_cuotas_historicas.html"
+
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get("action")
+        if action == "preview":
+            form = ImportarCuotasHistoricasForm(request.POST, request.FILES)
+            if form.is_valid():
+                try:
+                    preview = analyze_cuotas_historicas_xlsx(form.cleaned_data["archivo"], timezone.localdate())
+                except (RuntimeError, ValueError) as exc:
+                    messages.error(request, str(exc))
+                    request._import_form = form
+                else:
+                    request.session[CUOTAS_HISTORICAS_SESSION_KEY] = preview.as_session_data()
+                    request.session.modified = True
+                    messages.success(request, "Previsualización generada. Revisá las cuotas a importar antes de confirmar.")
+                    return redirect("gestion:importar_cuotas_historicas")
+            else:
+                request._import_form = form
+        elif action == "confirm":
+            preview_data = request.session.get(CUOTAS_HISTORICAS_SESSION_KEY)
+            if not preview_data:
+                messages.error(request, "No hay una previsualización pendiente para importar.")
+                return redirect("gestion:importar_cuotas_historicas")
+
+            preview = CuotasHistoricasPreview.from_session_data(preview_data)
+            result = import_cuotas_historicas_preview(preview, request.user)
+            request.session.pop(CUOTAS_HISTORICAS_SESSION_KEY, None)
+            messages.success(
+                request,
+                (
+                    f"Importación completada: {result.cuotas_creadas} cuotas creadas, "
+                    f"{result.pagos_creados} pagos históricos creados, "
+                    f"{result.periodos_creados} períodos creados."
+                ),
+            )
+            if result.errores:
+                messages.warning(request, f"Se registraron {len(result.errores)} errores durante la importación.")
+                request._import_result = result
+                return self.render_to_response(self.get_context_data(**kwargs))
+            return redirect("gestion:periodos_cuota")
+
+        return self.render_to_response(self.get_context_data(**kwargs))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = getattr(self.request, "_import_form", ImportarCuotasHistoricasForm())
+        context["preview"] = self.request.session.get(CUOTAS_HISTORICAS_SESSION_KEY)
+        context["result"] = getattr(self.request, "_import_result", None)
+        return context
+
+
+class GestionDescargarCuotasHistoricasRevisarView(StaffRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        preview_data = request.session.get(CUOTAS_HISTORICAS_SESSION_KEY)
+        if not preview_data:
+            messages.error(request, "No hay una previsualización pendiente para descargar.")
+            return redirect("gestion:importar_cuotas_historicas")
+
+        preview = CuotasHistoricasPreview.from_session_data(preview_data)
+        if not preview.revisar:
+            messages.error(request, "No hay cuotas a revisar para descargar.")
+            return redirect("gestion:importar_cuotas_historicas")
+
+        try:
+            content = build_revisar_cuotas_historicas_xlsx(preview)
+        except RuntimeError as exc:
+            messages.error(request, str(exc))
+            return redirect("gestion:importar_cuotas_historicas")
+
+        response = HttpResponse(
+            content,
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+        response["Content-Disposition"] = 'attachment; filename="cuotas_historicas_a_revisar.xlsx"'
         return response
 
 

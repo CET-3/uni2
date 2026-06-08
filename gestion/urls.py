@@ -7,8 +7,10 @@ from .views import (
     GestionDashboardView,
     GestionDeudoresView,
     GestionDescargarAsociadosRevisarView,
+    GestionDescargarCuotasHistoricasRevisarView,
     GestionExportarAsociadosView,
     GestionImportarAsociadosView,
+    GestionImportarCuotasHistoricasView,
     GestionPeriodosCuotaView,
 )
 
@@ -28,5 +30,11 @@ urlpatterns = [
     path("gestion/asociados/<int:asociado_id>/", GestionAsociadoDetalleView.as_view(), name="asociado_detalle"),
     path("gestion/deudores/", GestionDeudoresView.as_view(), name="deudores"),
     path("gestion/cobros/", GestionCobrosView.as_view(), name="cobros"),
+    path("gestion/cuotas/importar-historicas/", GestionImportarCuotasHistoricasView.as_view(), name="importar_cuotas_historicas"),
+    path(
+        "gestion/cuotas/importar-historicas/revisar.xlsx",
+        GestionDescargarCuotasHistoricasRevisarView.as_view(),
+        name="descargar_cuotas_historicas_revisar",
+    ),
     path("gestion/cuotas/periodos/", GestionPeriodosCuotaView.as_view(), name="periodos_cuota"),
 ]

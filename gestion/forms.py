@@ -101,3 +101,20 @@ class ImportarPadronAsociadosForm(forms.Form):
         if not archivo.name.lower().endswith(".xlsx"):
             raise forms.ValidationError("La planilla debe ser un archivo .xlsx.")
         return archivo
+
+
+class ImportarCuotasHistoricasForm(forms.Form):
+    archivo = forms.FileField(
+        label="Planilla heredada de cuotas",
+        help_text='Debe ser un archivo .xlsx con la hoja "COBRO CUOTAS SOCIALES".',
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["archivo"].widget.attrs.update({"class": "form-control", "accept": ".xlsx"})
+
+    def clean_archivo(self):
+        archivo = self.cleaned_data["archivo"]
+        if not archivo.name.lower().endswith(".xlsx"):
+            raise forms.ValidationError("La planilla debe ser un archivo .xlsx.")
+        return archivo

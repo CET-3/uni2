@@ -62,6 +62,7 @@
               <li><a href="#cu-crear-asociado">CU-crear-asociado</a></li>
               <li><a href="#cu-importar-padron-inicial">CU-importar-padron-inicial</a></li>
               <li><a href="#cu-exportar-asociados-formato-uni2">CU-exportar-asociados-formato-uni2</a></li>
+              <li><a href="#cu-importar-cuotas-historicas">CU-importar-cuotas-historicas</a></li>
               <li><a href="#cu-crear-usuario-asociado">CU-crear-usuario-asociado</a></li>
               <li><a href="#cu-generar-periodo-cuota">CU-generar-periodo-cuota</a></li>
               <li><a href="#cu-registrar-pago-cuota">CU-registrar-pago-cuota</a></li>
@@ -220,6 +221,7 @@
               <li>Gestión de asociados y adherentes.</li>
               <li>Curso actual.</li>
               <li>Importación inicial desde Excel/CSV.</li>
+              <li>Importación inicial de cuotas históricas desde planilla heredada.</li>
               <li>Creación manual de usuarios para asociados.</li>
               <li>Generación de cuotas.</li>
               <li>Registro de pagos de cuotas.</li>
@@ -677,6 +679,26 @@
             <p><strong>Restricción técnica:</strong> la generación de planillas <code>.xlsx</code> usa la dependencia Python <code>openpyxl</code>, declarada en los archivos de dependencias del proyecto.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Curso.</p>
           </article>
+          <article class="use-case" id="cu-importar-cuotas-historicas">
+            <h3>CU-importar-cuotas-historicas</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Alcance:</strong> importación inicial para la puesta en marcha desde la hoja <code>COBRO CUOTAS SOCIALES</code> de la planilla heredada. No reemplaza el flujo normal de cobros.</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>Sube la planilla heredada en formato <code>.xlsx</code>.</li>
+              <li>El sistema lee las filas desde la fila de encabezados de cuotas sociales.</li>
+              <li>El sistema identifica al asociado por <code>Socio N°</code>, usando <code>numero_asociado</code>.</li>
+              <li>El sistema toma los meses desde marzo hasta el mes en curso de la fecha de operación, para no crear deuda futura por columnas todavía no vencidas.</li>
+              <li>El sistema previsualiza cuotas a crear, pagos históricos a crear, cuotas impagas y cuotas a revisar.</li>
+              <li>Si hay cuotas a revisar, el administrador puede descargar una planilla <code>.xlsx</code> agrupada en una fila por asociado/fila original, con columnas por mes para pago, forma y motivo de revisión.</li>
+              <li>El administrador confirma la importación.</li>
+              <li>El sistema crea períodos de cuota faltantes, cuotas, pagos históricos y aplicaciones <code>PagoCuota</code>.</li>
+            </ol>
+            <p><strong>Reglas de importación:</strong> cada período histórico se crea con importe <code>500</code>, recargo <code>100</code> y vencimiento el día 10 del mes. Una celda mensual verdadera genera una cuota pagada y un pago histórico. Una celda falsa genera una cuota impaga. La forma de pago <code>efectivo</code> se mapea a efectivo y <code>MP</code> a billetera virtual.</p>
+            <p><strong>Reglas de revisión:</strong> quedan fuera de la importación automática los asociados no encontrados por número, los pagos marcados sin forma de pago válida, las cuotas impagas con forma de pago cargada, los valores de pago dudosos, las formas de pago dudosas y las cuotas ya existentes. Las filas sin <code>Apellido/Nombre</code> se descartan como filas auxiliares o incompletas para evitar falsos errores.</p>
+            <p><strong>Decisión contable:</strong> los pagos históricos importados no generan asientos contables. La contabilidad queda fuera del alcance operativo del MVP.</p>
+            <p><strong>Modelos afectados:</strong> CicloLectivo, PeríodoCuota, Cuota, Pago, PagoCuota.</p>
+          </article>
           <article class="use-case" id="cu-crear-usuario-asociado">
             <h3>CU-crear-usuario-asociado</h3>
             <p><strong>Actor:</strong> Administrador</p>
@@ -896,6 +918,7 @@
               <li>Listado de asociados.</li>
               <li>Nuevo asociado.</li>
               <li>Importar padrón inicial desde planilla heredada con previsualización.</li>
+              <li>Importar cuotas históricas desde planilla heredada con previsualización.</li>
               <li>Exportar asociados en formato Uni2 desde la consulta de asociados.</li>
               <li>Detalle de asociado.</li>
               <li>Crear usuario para asociado.</li>
@@ -971,6 +994,7 @@
               <li>No cargar el dashboard del MVP con métricas, rankings o reportes avanzados.</li>
               <li>Permitir una UX propia para escritorio y mobile sin contaminar la app de autenticación.</li>
               <li>Hacer más claro el mantenimiento: auth y roles en <code>usuarios</code>, backoffice en <code>gestion</code>.</li>
+              <li>El límite técnico <code>DATA_UPLOAD_MAX_NUMBER_FIELDS</code> se eleva a <code>10000</code> para permitir acciones masivas razonables en el admin técnico luego de importaciones iniciales con muchas cuotas.</li>
             </ul>
           </article>
         </div>
