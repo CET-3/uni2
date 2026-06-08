@@ -273,6 +273,7 @@
             <p>Usuario de autenticación de Django. Se recomienda usar el sistema estandar inicialmente.</p>
             <p><strong>Grupos sugeridos:</strong> Administradores, Asociados, Comercios.</p>
             <p><strong>Campos relevantes:</strong> username, email, password, first_name, last_name, is_active, is_staff, last_login, date_joined.</p>
+            <p><strong>Admin técnico:</strong> el listado de usuarios muestra una columna de grupos para facilitar la revisión de roles sin abrir cada usuario.</p>
           </article>
           <article class="entity" id="entidad-ciclo-lectivo">
             <h3>CicloLectivo <span class="status-done" aria-label="Listo">✓ Listo</span></h3>
@@ -524,6 +525,7 @@
             <li id="USUARIO-003"><strong><a href="#USUARIO-003">USUARIO-003</a></strong> No se puede crear un nuevo usuario para un asociado que ya tiene uno vinculado.</li>
             <li id="USUARIO-004"><strong><a href="#USUARIO-004">USUARIO-004</a></strong> El username puede ser el DNI.</li>
             <li id="USUARIO-005"><strong><a href="#USUARIO-005">USUARIO-005</a></strong> El listado de asociados debe mostrar si tiene usuario y el ultimo acceso usando <code>User.last_login</code>.</li>
+            <li id="USUARIO-006"><strong><a href="#USUARIO-006">USUARIO-006</a></strong> En el admin técnico de Django, el listado de usuarios debe mostrar los grupos asignados para facilitar la operación de roles.</li>
           </ul>
         </div>
         <div class="rule-group">
