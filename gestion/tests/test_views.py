@@ -348,7 +348,7 @@ def test_importar_cuotas_historicas_previsualiza_desde_planilla(client):
     content = response.content.decode()
     assert "Cuotas importables" in content
     assert "No se encontró asociado por número" in content
-    assert "No crea asientos contables" in content
+    assert "crea cuotas, pagos y aplicaciones a cuota" in content
 
 
 @pytest.mark.django_db

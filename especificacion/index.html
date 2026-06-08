@@ -698,7 +698,7 @@
             </ol>
             <p><strong>Reglas de importación:</strong> cada período histórico se crea con importe <code>500</code>, recargo <code>100</code> y vencimiento el día 10 del mes. Una celda mensual verdadera genera una cuota pagada y un pago histórico. Una celda falsa genera una cuota impaga. La forma de pago <code>efectivo</code> se mapea a efectivo y <code>MP</code> a billetera virtual.</p>
             <p><strong>Reglas de revisión:</strong> quedan fuera de la importación automática los asociados no encontrados por número, los pagos marcados sin forma de pago válida, las cuotas impagas con forma de pago cargada, los valores de pago dudosos, las formas de pago dudosas y las cuotas ya existentes. Las filas sin <code>Apellido/Nombre</code> se descartan como filas auxiliares o incompletas para evitar falsos errores.</p>
-            <p><strong>Decisión contable:</strong> los pagos históricos importados no generan asientos contables. La contabilidad queda fuera del alcance operativo del MVP.</p>
+            <p><strong>Decisión funcional:</strong> los pagos históricos importados solo crean cuotas, pagos y aplicaciones <code>PagoCuota</code>.</p>
             <p><strong>Modelos afectados:</strong> CicloLectivo, PeríodoCuota, Cuota, Pago, PagoCuota.</p>
           </article>
           <article class="use-case" id="cu-crear-usuario-asociado">
