@@ -8,15 +8,8 @@ from openpyxl import Workbook, load_workbook
 from asociados.importers import PADRON_IMPORT_SESSION_KEY
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
-from contabilidad.models import Asiento, CuentaContable
 from cuotas.models import Cuota, Pago, PagoCuota, PeriodoCuota
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
-
-
-def crear_cuentas_contables_basicas():
-    CuentaContable.objects.create(codigo="1.1.01", nombre="Caja", tipo=CuentaContable.TIPO_ACTIVO)
-    CuentaContable.objects.create(codigo="1.1.02", nombre="Billetera virtual", tipo=CuentaContable.TIPO_ACTIVO)
-    CuentaContable.objects.create(codigo="4.1.01", nombre="Ingresos por cuotas", tipo=CuentaContable.TIPO_INGRESO)
 
 
 def crear_planilla_padron(rows):
@@ -399,7 +392,7 @@ def test_importar_cuotas_historicas_descarga_planilla_con_cuotas_a_revisar(clien
 
 
 @pytest.mark.django_db
-def test_importar_cuotas_historicas_confirma_sin_crear_asientos(client):
+def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client):
     user_model = get_user_model()
     staff = user_model.objects.create_user(username="staff_cuotas_confirma", password="secreto123", is_staff=True)
     asociado = create_asociado(
@@ -432,7 +425,6 @@ def test_importar_cuotas_historicas_confirma_sin_crear_asientos(client):
     assert Cuota.objects.filter(asociado=asociado).count() == 4
     assert Pago.objects.filter(asociado=asociado).count() == 2
     assert PagoCuota.objects.filter(pago__asociado=asociado).count() == 2
-    assert Asiento.objects.count() == 0
     marzo = Cuota.objects.get(asociado=asociado, periodo__mes=3)
     abril = Cuota.objects.get(asociado=asociado, periodo__mes=4)
     assert marzo.estado == Cuota.ESTADO_PAGADA
@@ -449,7 +441,6 @@ def test_cobros_gestion_busca_asociado_y_registra_pago(client):
     asociado = create_asociado(
         nombre="Paula", apellido="Gimenez", dni="45555111", tipo="asociado", fecha_alta="2026-05-10"
     )
-    crear_cuentas_contables_basicas()
     periodo = PeriodoCuota.objects.create(
         mes=timezone.localdate().month,
         ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
@@ -491,7 +482,6 @@ def test_cobros_gestion_muestra_error_si_supera_deuda(client):
     asociado = create_asociado(
         nombre="Ivan", apellido="Molina", dni="46666111", tipo="asociado", fecha_alta="2026-05-10"
     )
-    crear_cuentas_contables_basicas()
     periodo = PeriodoCuota.objects.create(
         mes=timezone.localdate().month,
         ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
@@ -525,7 +515,6 @@ def test_deudores_gestion_lista_asociados_y_linkea_a_cobro(client):
     asociado = create_asociado(
         nombre="Lucia", apellido="Ramos", dni="47777111", tipo="asociado", fecha_alta="2026-05-10"
     )
-    crear_cuentas_contables_basicas()
     periodo = PeriodoCuota.objects.create(
         mes=timezone.localdate().month,
         ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],

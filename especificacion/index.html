@@ -18,7 +18,7 @@
       <ul>
         <li>Administra asociados, cuotas, pagos, credenciales y reportes básicos.</li>
         <li>Incluye consulta pública y validación de credenciales para comercios adheridos.</li>
-        <li>Deja aprobada una V2 para productos, pedidos, stock y contabilidad.</li>
+        <li>Deja aprobada una V2 para productos, pedidos y stock.</li>
       </ul>
     </aside>
   </header>
@@ -143,7 +143,6 @@
               <li>Tickets de consultas.</li>
               <li>Notificaciones push.</li>
               <li>Pago online.</li>
-              <li>Contabilidad simple con asientos y partidas.</li>
               <li>Pantalla propia de gestión de beneficios en el backoffice.</li>
               <li>Mapa de comercios.</li>
             </ul>
@@ -250,7 +249,6 @@
               <li>Pantalla propia de gestión de comercios en el backoffice.</li>
               <li>Saldo a favor.</li>
               <li>Intereses por mora acumulativos.</li>
-              <li>Contabilidad simple con asientos y partidas.</li>
               <li>Asambleas.</li>
               <li>Votaciones.</li>
               <li>Mapa de comercios.</li>
@@ -961,7 +959,6 @@
               <li><code>cuotas</code>: modelos y servicios de cuotas, deuda y pagos.</li>
               <li><code>web</code>: home y páginas públicas del sitio.</li>
               <li><code>contenidos</code>: beneficios publicados por la web; en MVP se administran desde el admin técnico de Django.</li>
-              <li><code>contabilidad</code>: cuentas y asientos simples preparados para V2, fuera del alcance operativo del MVP.</li>
             </ul>
           </article>
           <article class="card">
@@ -1023,14 +1020,13 @@
             <li>Pantalla propia de gestión de comercios en backoffice.</li>
             <li>Pantalla propia de gestión de actividades comerciales en backoffice.</li>
             <li>Reportes de ventas y stock.</li>
-            <li>Asientos simples vinculados a pagos.</li>
             <li>Dashboards con métricas, alertas y reportes agregados.</li>
             <li>Importación regular de asociados en formato Uni2 normalizado.</li>
           </ul>
         </div>
         <div class="panel" id="v2-modelo">
           <h3>Modelo de datos V2</h3>
-          <p><strong>Entidades V2:</strong> Producto, VarianteProducto, MovimientoStock, Pedido, ItemPedido, PagoPedido, Notificación, CuentaContable, Asiento, PartidaAsiento, BeneficioComercio.</p>
+          <p><strong>Entidades V2:</strong> Producto, VarianteProducto, MovimientoStock, Pedido, ItemPedido, PagoPedido, Notificación, BeneficioComercio.</p>
           <p>Los atributos marcados con <strong>*</strong> son obligatorios: deben tener valor, ya sea cargado por una persona o definido automáticamente por el sistema.</p>
         </div>
         <div class="panel" id="v2-dashboards">
@@ -1160,48 +1156,6 @@
             </ul>
             <p><strong>Notas:</strong> puede usarse como notificación interna; las push quedan para una versión futura.</p>
           </article>
-          <article class="entity">
-            <h3>CuentaContable</h3>
-            <p>Cuenta utilizada para imputar partidas contables.</p>
-            <p><strong>Campos sugeridos:</strong></p>
-            <ul>
-              <li>id*</li>
-              <li>código*</li>
-              <li>nombre*</li>
-              <li>tipo*</li>
-              <li>activa</li>
-            </ul>
-            <p><strong>Tipos:</strong> activo, pasivo, patrimonio, ingreso, egreso.</p>
-          </article>
-          <article class="entity">
-            <h3>Asiento</h3>
-            <p>Cabecera de un asiento contable simple.</p>
-            <p><strong>Campos sugeridos:</strong></p>
-            <ul>
-              <li>id*</li>
-              <li>fecha*</li>
-              <li>descripción*</li>
-              <li>tipo*</li>
-              <li>importe*</li>
-              <li>origen</li>
-            </ul>
-            <p><strong>Tipos:</strong> ingreso, egreso.</p>
-            <p><strong>Notas:</strong> puede originarse en un pago de cuota y, a futuro, en otros tipos de pago.</p>
-          </article>
-          <article class="entity">
-            <h3>PartidaAsiento</h3>
-            <p>Línea contable perteneciente a un asiento.</p>
-            <p><strong>Campos sugeridos:</strong></p>
-            <ul>
-              <li>id*</li>
-              <li>asiento*</li>
-              <li>cuenta_contable*</li>
-              <li>movimiento*</li>
-              <li>importe*</li>
-              <li>detalle</li>
-            </ul>
-            <p><strong>Movimientos:</strong> debe, haber.</p>
-          </article>
         </div>
         <div class="grid grid--2">
           <article class="card">
@@ -1213,11 +1167,6 @@
               <li>RV2-004 No se permite pago parcial de pedidos en V2 inicial.</li>
               <li>RV2-005 No se puede cancelar un pedido entregado.</li>
               <li>RV2-006 Algunos productos pueden no controlar stock.</li>
-              <li>ASIENTO-001 Cada pago de cuota puede generar un asiento de ingreso.</li>
-              <li>ASIENTO-002 Todo asiento debe tener al menos dos partidas.</li>
-              <li>ASIENTO-003 La suma del debe debe ser igual a la suma del haber.</li>
-              <li>ASIENTO-004 El importe del asiento debe coincidir con el total balanceado de sus partidas.</li>
-              <li>ASIENTO-005 No se implementa contabilidad completa en esta etapa.</li>
             </ul>
           </article>
           <article class="card" id="v2-casos-uso">

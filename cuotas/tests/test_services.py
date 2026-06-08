@@ -5,7 +5,6 @@ import pytest
 
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
-from contabilidad.models import CuentaContable
 from cuotas.models import Cuota, Pago, PeriodoCuota
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 
@@ -41,25 +40,6 @@ def periodos():
         fecha_vencimiento=date(2026, 4, 10),
     )
     return marzo, abril
-
-
-@pytest.fixture
-def cuentas_contables():
-    CuentaContable.objects.create(
-        codigo="1.1.01",
-        nombre="Caja",
-        tipo=CuentaContable.TIPO_ACTIVO,
-    )
-    CuentaContable.objects.create(
-        codigo="1.1.02",
-        nombre="Billetera virtual",
-        tipo=CuentaContable.TIPO_ACTIVO,
-    )
-    CuentaContable.objects.create(
-        codigo="4.1.01",
-        nombre="Ingresos por cuotas",
-        tipo=CuentaContable.TIPO_INGRESO,
-    )
 
 
 @pytest.mark.django_db
@@ -101,7 +81,7 @@ def test_respeta_fecha_inicio_cobro(periodos):
 
 
 @pytest.mark.django_db
-def test_pago_completo(asociado_activo, periodos, cuentas_contables):
+def test_pago_completo(asociado_activo, periodos):
     generar_cuotas_para_periodo(periodos[0])
     pago = registrar_pago(
         asociado=asociado_activo,
@@ -116,7 +96,7 @@ def test_pago_completo(asociado_activo, periodos, cuentas_contables):
 
 
 @pytest.mark.django_db
-def test_pago_parcial(asociado_activo, periodos, cuentas_contables):
+def test_pago_parcial(asociado_activo, periodos):
     generar_cuotas_para_periodo(periodos[0])
     registrar_pago(
         asociado=asociado_activo,
@@ -130,7 +110,7 @@ def test_pago_parcial(asociado_activo, periodos, cuentas_contables):
 
 
 @pytest.mark.django_db
-def test_aplicacion_a_deuda_mas_antigua(asociado_activo, periodos, cuentas_contables):
+def test_aplicacion_a_deuda_mas_antigua(asociado_activo, periodos):
     generar_cuotas_para_periodo(periodos[0])
     generar_cuotas_para_periodo(periodos[1])
     pago = registrar_pago(
@@ -160,7 +140,7 @@ def test_rechazo_pagos_superiores_a_deuda(asociado_activo, periodos):
 
 
 @pytest.mark.django_db
-def test_pago_fuera_de_termino_aplica_recargo_fijo(asociado_activo, periodos, cuentas_contables):
+def test_pago_fuera_de_termino_aplica_recargo_fijo(asociado_activo, periodos):
     generar_cuotas_para_periodo(periodos[0])
 
     pago = registrar_pago(
@@ -180,7 +160,6 @@ def test_pago_fuera_de_termino_aplica_recargo_fijo(asociado_activo, periodos, cu
 def test_pago_fuera_de_termino_rechaza_importe_superior_a_deuda_con_mora(
     asociado_activo,
     periodos,
-    cuentas_contables,
 ):
     generar_cuotas_para_periodo(periodos[0])
 
@@ -197,7 +176,6 @@ def test_pago_fuera_de_termino_rechaza_importe_superior_a_deuda_con_mora(
 def test_pago_parcial_antes_del_vencimiento_y_completa_con_mora_despues(
     asociado_activo,
     periodos,
-    cuentas_contables,
 ):
     generar_cuotas_para_periodo(periodos[0])
 
