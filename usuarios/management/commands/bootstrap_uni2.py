@@ -6,7 +6,6 @@ from django.core.management.base import BaseCommand
 from asociados.models import Curso
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import Beneficio
-from contabilidad.models import CuentaContable
 from usuarios.services import ADMIN_GROUP, ensure_default_groups
 
 
@@ -37,17 +36,6 @@ class Command(BaseCommand):
                 division=division,
                 turno=turno,
                 defaults={"activo": True},
-            )
-
-        cuentas = [
-            ("1.1.01", "Caja", CuentaContable.TIPO_ACTIVO),
-            ("1.1.02", "Billetera virtual", CuentaContable.TIPO_ACTIVO),
-            ("4.1.01", "Ingresos por cuotas", CuentaContable.TIPO_INGRESO),
-        ]
-        for codigo, nombre, tipo in cuentas:
-            CuentaContable.objects.get_or_create(
-                codigo=codigo,
-                defaults={"nombre": nombre, "tipo": tipo, "activa": True},
             )
 
         beneficios = [

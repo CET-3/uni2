@@ -5,7 +5,6 @@ from decimal import Decimal
 from django.db import transaction
 
 from asociados.models import Asociado
-from contabilidad.services import registrar_asiento_pago_cuota
 
 from .models import Cuota, Pago, PagoCuota, PeriodoCuota
 from .selectors import get_cuotas_deudoras, get_total_deuda
@@ -88,8 +87,4 @@ def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por
         _recompute_estado(cuota)
         restante -= aplicado
 
-    registrar_asiento_pago_cuota(
-        pago=pago,
-        descripcion=f"Pago de cuotas asociado {asociado.numero_asociado}",
-    )
     return pago
