@@ -66,13 +66,6 @@ def dar_baja_asociado(asociado: Asociado, fecha_baja: date, motivo_baja: str):
     return asociado
 
 
-@transaction.atomic
-def marcar_asociado_como_egresado(asociado: Asociado):
-    asociado.estado = Asociado.ESTADO_EGRESADO
-    asociado.save(update_fields=["estado"])
-    return asociado
-
-
 @dataclass
 class ImportResult:
     created: int = 0
