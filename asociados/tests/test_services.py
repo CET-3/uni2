@@ -17,6 +17,11 @@ def curso():
 
 
 @pytest.mark.django_db
+def test_curso_se_muestra_con_constantes_cortas(curso):
+    assert str(curso) == "1ro 1ra CB TM"
+
+
+@pytest.mark.django_db
 def test_alta_antes_del_dia_15(curso):
     asociado = create_asociado(
         nombre="Juan",

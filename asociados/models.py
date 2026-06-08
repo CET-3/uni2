@@ -75,7 +75,7 @@ class Curso(models.Model):
         indexes = []
 
     def __str__(self):
-        return f"{self.anio} {self.curso} {self.get_division_display()} {self.get_turno_display()}"
+        return f"{self.anio} {self.curso} {self.division} {self.turno}"
 
 
 class Asociado(models.Model):
