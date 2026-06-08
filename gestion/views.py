@@ -1,17 +1,26 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import TemplateView
 
+from asociados.exporters import build_asociados_formato_uni2_xlsx
+from asociados.importers import (
+    PADRON_IMPORT_SESSION_KEY,
+    PadronPreview,
+    analyze_padron_xlsx,
+    build_revisar_padron_xlsx,
+    import_padron_preview,
+)
 from asociados.models import Asociado
-from asociados.selectors import search_asociados
+from asociados.selectors import get_asociados_for_export, search_asociados
 from cuotas.models import Pago, PeriodoCuota
 from cuotas.selectors import get_cuotas_deudoras, get_total_deuda
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 
-from .forms import AsociadoGestionForm, CobroCuotaForm, PeriodoCuotaForm
+from .forms import AsociadoGestionForm, CobroCuotaForm, ImportarPadronAsociadosForm, PeriodoCuotaForm
 from .selectors import get_asociados_deudores
 
 
@@ -44,6 +53,102 @@ class GestionAsociadosView(StaffRequiredMixin, TemplateView):
         context["query"] = query
         context["asociados"] = search_asociados(query) if query else []
         return context
+
+
+class GestionExportarAsociadosView(StaffRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get("q", "").strip()
+        try:
+            content = build_asociados_formato_uni2_xlsx(get_asociados_for_export(query))
+        except RuntimeError as exc:
+            messages.error(request, str(exc))
+            return redirect("gestion:asociados")
+
+        response = HttpResponse(
+            content,
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+        response["Content-Disposition"] = 'attachment; filename="asociados_formato_uni2.xlsx"'
+        return response
+
+
+class GestionImportarAsociadosView(StaffRequiredMixin, TemplateView):
+    template_name = "gestion/importar_asociados.html"
+
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get("action")
+        if action == "preview":
+            form = ImportarPadronAsociadosForm(request.POST, request.FILES)
+            if form.is_valid():
+                try:
+                    preview = analyze_padron_xlsx(form.cleaned_data["archivo"])
+                except (RuntimeError, ValueError) as exc:
+                    messages.error(request, str(exc))
+                    request._import_form = form
+                else:
+                    request.session[PADRON_IMPORT_SESSION_KEY] = preview.as_session_data()
+                    request.session.modified = True
+                    messages.success(request, "Previsualización generada. Revisá los cursos a crear antes de confirmar.")
+                    return redirect("gestion:importar_asociados")
+            else:
+                request._import_form = form
+        elif action == "confirm":
+            preview_data = request.session.get(PADRON_IMPORT_SESSION_KEY)
+            if not preview_data:
+                messages.error(request, "No hay una previsualización pendiente para importar.")
+                return redirect("gestion:importar_asociados")
+
+            preview = PadronPreview.from_session_data(preview_data)
+            result = import_padron_preview(preview, timezone.localdate())
+            request.session.pop(PADRON_IMPORT_SESSION_KEY, None)
+
+            messages.success(
+                request,
+                (
+                    f"Importación completada: {result.creados} creados, "
+                    f"{result.actualizados} actualizados, {result.cursos_creados} cursos creados."
+                ),
+            )
+            if result.errores:
+                messages.warning(request, f"Se registraron {len(result.errores)} errores durante la importación.")
+                request._import_result = result
+                return self.render_to_response(self.get_context_data(**kwargs))
+            return redirect("gestion:asociados")
+
+        return self.render_to_response(self.get_context_data(**kwargs))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = getattr(self.request, "_import_form", ImportarPadronAsociadosForm())
+        context["preview"] = self.request.session.get(PADRON_IMPORT_SESSION_KEY)
+        context["result"] = getattr(self.request, "_import_result", None)
+        return context
+
+
+class GestionDescargarAsociadosRevisarView(StaffRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        preview_data = request.session.get(PADRON_IMPORT_SESSION_KEY)
+        if not preview_data:
+            messages.error(request, "No hay una previsualización pendiente para descargar.")
+            return redirect("gestion:importar_asociados")
+
+        preview = PadronPreview.from_session_data(preview_data)
+        if not preview.revisar:
+            messages.error(request, "No hay filas a revisar para descargar.")
+            return redirect("gestion:importar_asociados")
+
+        try:
+            content = build_revisar_padron_xlsx(preview)
+        except RuntimeError as exc:
+            messages.error(request, str(exc))
+            return redirect("gestion:importar_asociados")
+
+        response = HttpResponse(
+            content,
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+        response["Content-Disposition"] = 'attachment; filename="padron_asociados_a_revisar.xlsx"'
+        return response
 
 
 class GestionAsociadoDetalleView(StaffRequiredMixin, TemplateView):

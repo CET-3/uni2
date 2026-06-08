@@ -85,3 +85,19 @@ class AsociadoGestionForm(forms.ModelForm):
             cleaned_data["motivo_baja"] = ""
         return cleaned_data
 
+
+class ImportarPadronAsociadosForm(forms.Form):
+    archivo = forms.FileField(
+        label="Planilla heredada de padrón",
+        help_text='Debe ser un archivo .xlsx con la hoja "PADRÓN GENERAL". Este formato se usa para la puesta en marcha.',
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["archivo"].widget.attrs.update({"class": "form-control", "accept": ".xlsx"})
+
+    def clean_archivo(self):
+        archivo = self.cleaned_data["archivo"]
+        if not archivo.name.lower().endswith(".xlsx"):
+            raise forms.ValidationError("La planilla debe ser un archivo .xlsx.")
+        return archivo

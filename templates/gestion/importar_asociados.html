@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}Importar padrón inicial | Uni2{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Importar padrón inicial</h1>
+        <p class="text-secondary mb-0">Subí la planilla heredada de puesta en marcha para previsualizar antes de guardar.</p>
+    </div>
+    <div class="page-header-actions">
+        <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Volver a asociados</a>
+    </div>
+</div>
+
+<div class="card surface-card mb-4">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" class="row g-3 align-items-end">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="preview">
+            <div class="col-lg-9">
+                <label class="form-label" for="{{ form.archivo.id_for_label }}">Planilla heredada</label>
+                {{ form.archivo }}
+                {% if form.archivo.help_text %}
+                    <div class="form-text">{{ form.archivo.help_text }}</div>
+                {% endif %}
+                {% for error in form.archivo.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-lg-3">
+                <button class="btn btn-primary w-100" type="submit">Analizar planilla</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if preview %}
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="metric-card card h-100">
+                <div class="card-body">
+                    <div class="metric-label">Importar</div>
+                    <div class="metric-value">{{ preview.summary.importar }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="metric-card card h-100">
+                <div class="card-body">
+                    <div class="metric-label">Revisar</div>
+                    <div class="metric-value">{{ preview.summary.revisar }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="metric-card card h-100">
+                <div class="card-body">
+                    <div class="metric-label">No importar</div>
+                    <div class="metric-value">{{ preview.summary.no_importar }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="metric-card card h-100">
+                <div class="card-body">
+                    <div class="metric-label">Cursos nuevos</div>
+                    <div class="metric-value">{{ preview.summary.cursos_a_crear }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info mb-4">
+        <p class="mb-2"><strong>Cómo leer la previsualización:</strong></p>
+        <p class="mb-2"><strong>Importar</strong> son filas completas que se guardarán cuando confirmes.</p>
+        <p class="mb-2"><strong>Revisar</strong> son filas con datos de persona, pero con algún dato bloqueante: por ejemplo DNI faltante o dudoso, número duplicado, tipo inválido o curso incompleto para asociados.</p>
+        <p class="mb-0"><strong>No importar</strong> son filas que no parecen ser personas para cargar, como renglones vacíos o con datos auxiliares de la planilla.</p>
+        <hr>
+        <p class="mb-0">Este importador es para la carga inicial. Para el mantenimiento futuro, Uni2 usará una planilla propia exportable e importable con columnas normalizadas.</p>
+    </div>
+
+    {% if preview.cursos_a_crear %}
+        <section class="card surface-card mb-4">
+            <div class="card-body">
+                <div class="section-title-row">
+                    <div>
+                        <div class="muted-kicker">Revisión obligatoria</div>
+                        <h2 class="h4 mb-0">Cursos que se crearían</h2>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-soft align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Curso</th>
+                                <th>Año</th>
+                                <th>División</th>
+                                <th>Ciclo</th>
+                                <th>Turno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for curso in preview.cursos_a_crear %}
+                                <tr>
+                                    <td>{{ curso.curso }}</td>
+                                    <td>{{ curso.curso_anio }}</td>
+                                    <td>{{ curso.curso_division }}</td>
+                                    <td>{{ curso.division }}</td>
+                                    <td>{{ curso.turno }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="card surface-card mb-4">
+        <div class="card-body">
+            <div class="section-title-row">
+                <div>
+                    <div class="muted-kicker">Muestra</div>
+                    <h2 class="h4 mb-0">Filas importables</h2>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-soft align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Fila</th>
+                            <th>Asociado</th>
+                            <th>DNI</th>
+                            <th>Tipo</th>
+                            <th>Curso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in preview.importables|slice:":20" %}
+                            <tr>
+                                <td>{{ row.fila_origen }}</td>
+                                <td>{{ row.apellido }}, {{ row.nombre }}</td>
+                                <td>{{ row.dni }}</td>
+                                <td>{{ row.tipo }}</td>
+                                <td>{{ row.curso|default:"-" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="5">No hay filas importables.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if preview.summary.importar > 20 %}
+                <p class="text-secondary small mb-0 mt-3">Se muestran las primeras 20 filas importables.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    {% if preview.revisar %}
+        <section class="card surface-card mb-4">
+            <div class="card-body">
+                <div class="section-title-row">
+                    <div>
+                        <div class="muted-kicker">No se importan</div>
+                        <h2 class="h4 mb-0">Filas a revisar</h2>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-soft align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Fila</th>
+                                <th>Original</th>
+                                <th>DNI</th>
+                                <th>Curso original</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in preview.revisar|slice:":30" %}
+                                <tr>
+                                    <td>{{ row.fila_origen }}</td>
+                                    <td>{{ row.apellido_nombre_original }}</td>
+                                    <td>{{ row.dni|default:"-" }}</td>
+                                    <td>{{ row.curso_original|default:"-" }}</td>
+                                    <td>{{ row.observaciones }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if preview.summary.revisar > 30 %}
+                    <p class="text-secondary small mb-0 mt-3">Se muestran las primeras 30 filas a revisar.</p>
+                {% endif %}
+                <div class="mt-3">
+                    <a class="btn btn-outline-primary" href="{% url 'gestion:descargar_asociados_revisar' %}">
+                        Descargar planilla para revisar
+                    </a>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <form method="post" class="card surface-card">
+        <div class="card-body d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="confirm">
+            <div>
+                <h2 class="h5 mb-1">Confirmar importación</h2>
+                <p class="text-secondary mb-0">Solo se importan las filas marcadas como importables. Las filas a revisar quedan afuera.</p>
+            </div>
+            <button class="btn btn-success btn-lg" type="submit" {% if preview.summary.importar == 0 %}disabled{% endif %}>Importar filas importables</button>
+        </div>
+    </form>
+{% endif %}
+
+{% if result and result.errores %}
+    <section class="card surface-card mt-4">
+        <div class="card-body">
+            <h2 class="h5">Errores de importación</h2>
+            <ul class="mb-0">
+                {% for error in result.errores %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endif %}
+{% endblock %}
