@@ -60,7 +60,8 @@
               <li><a href="#cu-ver-credencial">CU-ver-credencial</a></li>
               <li><a href="#cu-ver-estado-cuotas">CU-ver-estado-cuotas</a></li>
               <li><a href="#cu-crear-asociado">CU-crear-asociado</a></li>
-              <li><a href="#cu-importar-asociados">CU-importar-asociados</a></li>
+              <li><a href="#cu-importar-padron-inicial">CU-importar-padron-inicial</a></li>
+              <li><a href="#cu-exportar-asociados-formato-uni2">CU-exportar-asociados-formato-uni2</a></li>
               <li><a href="#cu-crear-usuario-asociado">CU-crear-usuario-asociado</a></li>
               <li><a href="#cu-generar-periodo-cuota">CU-generar-periodo-cuota</a></li>
               <li><a href="#cu-registrar-pago-cuota">CU-registrar-pago-cuota</a></li>
@@ -635,19 +636,45 @@
             <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, alta después del día 15, asociado sin usuario.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Curso.</p>
           </article>
-          <article class="use-case" id="cu-importar-asociados">
-            <h3>CU-importar-asociados</h3>
+          <article class="use-case" id="cu-importar-padron-inicial">
+            <h3>CU-importar-padron-inicial</h3>
             <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Alcance:</strong> importación inicial para la puesta en marcha desde la planilla heredada. No define el formato regular futuro de intercambio de datos.</p>
             <p><strong>Flujo principal:</strong></p>
             <ol>
-              <li>Sube archivo Excel/CSV.</li>
-              <li>El sistema valida columnas, DNI, tipo y curso.</li>
-              <li>Informa errores y advertencias.</li>
-              <li>Se confirma la importación.</li>
-              <li>Se crean asociados.</li>
+              <li>Sube la planilla heredada en formato <code>.xlsx</code> con la hoja <code>PADRÓN GENERAL</code>.</li>
+              <li>El sistema analiza la planilla sin guardar datos.</li>
+              <li>El sistema clasifica filas como <code>IMPORTAR</code>, <code>REVISAR</code> o <code>NO IMPORTAR</code>.</li>
+              <li>El sistema muestra resumen, filas a revisar y cursos nuevos que se crearían.</li>
+              <li>El sistema explica el criterio de cada estado para que el administrador entienda por qué algunas filas no se importan.</li>
+              <li>La previsualización queda guardada temporalmente en la sesión del usuario.</li>
+              <li>Si hay filas a revisar, el administrador puede descargar una planilla <code>.xlsx</code> con la hoja <code>PADRÓN GENERAL</code>, solo con esas filas, una primera columna <code>Fila original</code>, la columna <code>Número de asociado</code> y una columna final con el motivo de revisión.</li>
+              <li>El administrador confirma la importación.</li>
+              <li>El sistema importa solo las filas <code>IMPORTAR</code>, crea cursos faltantes y omite las filas a revisar.</li>
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#CURSO-001">CURSO-001</a>.</p>
-            <p><strong>Situaciones especiales:</strong> DNI duplicado, curso inexistente, asociado ya existente, email faltante, teléfono faltante, tipo invalido.</p>
+            <p><strong>Reglas de importación:</strong> la primera palabra de <code>Apellido/nombre</code> se toma como apellido y el resto como nombre. Si falta nombre se completa con <code>[completar]</code>. Si no se pueden deducir año, división, ciclo y turno del curso, la fila queda para revisar. Los cargos como docente, preceptora o director no se toman como curso. Si la planilla no indica turno y el curso es completo, se usa <code>TM</code> como valor provisorio y se lista el curso antes de confirmar.</p>
+            <p><strong>Orden de cursos:</strong> los cursos nuevos se muestran ordenados por ciclo, año, división y turno para facilitar la revisión antes de confirmar.</p>
+            <p><strong>Restricción técnica:</strong> la lectura de planillas <code>.xlsx</code> usa la dependencia Python <code>openpyxl</code>, declarada en los archivos de dependencias del proyecto.</p>
+            <p><strong>Fechas:</strong> en esta primera versión, <code>fecha_alta</code> y <code>fecha_inicio_cobro</code> se cargan automáticamente con la fecha del día de la importación.</p>
+            <p><strong>Situaciones especiales:</strong> DNI duplicado, número de asociado duplicado, curso incompleto, asociado ya existente, email faltante, teléfono faltante, tipo inválido.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso.</p>
+          </article>
+          <article class="use-case" id="cu-exportar-asociados-formato-uni2">
+            <h3>CU-exportar-asociados-formato-uni2</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Alcance:</strong> exportación disponible desde la consulta de asociados del backoffice. Permite descargar el padrón completo o los resultados de la búsqueda activa.</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>El administrador entra a la consulta de asociados.</li>
+              <li>Opcionalmente busca por DNI, número, apellido o nombre.</li>
+              <li>El administrador elige exportar asociados.</li>
+              <li>El sistema descarga una planilla <code>.xlsx</code> con la hoja <code>ASOCIADOS</code>.</li>
+              <li>Si había búsqueda activa, la planilla incluye solo esos resultados; si no había búsqueda, incluye el padrón completo.</li>
+            </ol>
+            <p><strong>Columnas:</strong> <code>numero_asociado</code>, <code>apellido</code>, <code>nombre</code>, <code>dni</code>, <code>tipo</code>, <code>email</code>, <code>telefono</code>, <code>direccion</code>, <code>curso_anio</code>, <code>curso_division</code>, <code>division</code>, <code>turno</code>, <code>curso_nombre</code>, <code>fecha_alta</code>, <code>fecha_inicio_cobro</code>, <code>estado</code>, <code>motivo_baja</code>.</p>
+            <p><strong>Decisión funcional:</strong> <code>curso_nombre</code> es una ayuda visual para personas. El formato regular futuro de importación no debe depender de ese texto y debe usar los campos normalizados de curso.</p>
+            <p><strong>Restricción técnica:</strong> la generación de planillas <code>.xlsx</code> usa la dependencia Python <code>openpyxl</code>, declarada en los archivos de dependencias del proyecto.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Curso.</p>
           </article>
           <article class="use-case" id="cu-crear-usuario-asociado">
@@ -868,7 +895,8 @@
               <li>Dashboard simple con accesos a tareas del MVP.</li>
               <li>Listado de asociados.</li>
               <li>Nuevo asociado.</li>
-              <li>Importar asociados.</li>
+              <li>Importar padrón inicial desde planilla heredada con previsualización.</li>
+              <li>Exportar asociados en formato Uni2 desde la consulta de asociados.</li>
               <li>Detalle de asociado.</li>
               <li>Crear usuario para asociado.</li>
               <li>Cursos.</li>
@@ -971,6 +999,7 @@
             <li>Reportes de ventas y stock.</li>
             <li>Asientos simples vinculados a pagos.</li>
             <li>Dashboards con métricas, alertas y reportes agregados.</li>
+            <li>Importación regular de asociados en formato Uni2 normalizado.</li>
           </ul>
         </div>
         <div class="panel" id="v2-modelo">
@@ -1175,7 +1204,24 @@
               <li>CU-V2-005 Gestionar comercio desde pantalla propia de backoffice.</li>
               <li>CU-V2-006 Gestionar actividad comercial desde pantalla propia de backoffice.</li>
               <li>CU-V2-007 Gestionar beneficio desde pantalla propia de backoffice.</li>
+              <li>CU-importar-asociados-formato-uni2.</li>
             </ul>
+          </article>
+          <article class="use-case" id="cu-importar-asociados-formato-uni2">
+            <h3>CU-importar-asociados-formato-uni2</h3>
+            <p><strong>Actor:</strong> Administrador</p>
+            <p><strong>Alcance:</strong> caso de uso futuro para mantenimiento regular del padrón después de la puesta en marcha. No forma parte del MVP.</p>
+            <p><strong>Flujo esperado:</strong></p>
+            <ol>
+              <li>El administrador sube una planilla <code>.xlsx</code> con el formato Uni2 normalizado.</li>
+              <li>El sistema valida columnas, tipos, DNI, número de asociado, fechas, estado y curso.</li>
+              <li>El sistema previsualiza altas, actualizaciones, filas a revisar y cursos nuevos que se crearían.</li>
+              <li>El administrador confirma la importación.</li>
+              <li>El sistema guarda solo las filas válidas o confirmadas, según las reglas definidas para esa versión.</li>
+            </ol>
+            <p><strong>Decisión funcional:</strong> este importador no debe deducir apellido, nombre, ciclo, año, división o turno desde textos libres. Si esos datos faltan o no coinciden con los valores esperados, la fila debe quedar para revisar.</p>
+            <p><strong>Relación con la exportación:</strong> debe aceptar el mismo formato generado por <a href="#cu-exportar-asociados-formato-uni2">CU-exportar-asociados-formato-uni2</a>, que ya está definido para el MVP.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso.</p>
           </article>
         </div>
         <div class="grid grid--2">
@@ -1219,6 +1265,7 @@
               <li>MovimientoStock.</li>
               <li>Gestión de beneficios institucionales en backoffice.</li>
               <li>Múltiples beneficios por comercio.</li>
+              <li>Importación regular de asociados en formato Uni2.</li>
               <li>Reportes de ventas y stock.</li>
             </ul>
           </article>

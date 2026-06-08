@@ -27,5 +27,12 @@ def search_asociados(query: str):
     )
 
 
+def get_asociados_for_export(query: str = ""):
+    query = query.strip()
+    if query:
+        return search_asociados(query)
+    return Asociado.objects.select_related("curso_actual", "usuario").order_by("apellido", "nombre")
+
+
 def get_asociado_by_id(asociado_id: int):
     return Asociado.objects.select_related("curso_actual", "usuario").filter(id=asociado_id).first()

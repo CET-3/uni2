@@ -1,9 +1,12 @@
 import pytest
+from io import BytesIO
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.urls import reverse
+from openpyxl import Workbook, load_workbook
 
-from asociados.models import CicloLectivo
+from asociados.importers import PADRON_IMPORT_SESSION_KEY
+from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
 from contabilidad.models import CuentaContable
 from cuotas.models import Pago, PeriodoCuota
@@ -14,6 +17,34 @@ def crear_cuentas_contables_basicas():
     CuentaContable.objects.create(codigo="1.1.01", nombre="Caja", tipo=CuentaContable.TIPO_ACTIVO)
     CuentaContable.objects.create(codigo="1.1.02", nombre="Billetera virtual", tipo=CuentaContable.TIPO_ACTIVO)
     CuentaContable.objects.create(codigo="4.1.01", nombre="Ingresos por cuotas", tipo=CuentaContable.TIPO_INGRESO)
+
+
+def crear_planilla_padron(rows):
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = "PADRÓN GENERAL"
+    worksheet.append(
+        [
+            None,
+            "Apellido/nombre",
+            "Curso/división/Ciclo/turno",
+            "CICLO",
+            "Categoria (act./adh.)",
+            "DNI",
+            "Celular",
+            "Mail",
+            "Dirección",
+        ]
+    )
+    for row in rows:
+        worksheet.append(row)
+    from io import BytesIO
+
+    buffer = BytesIO()
+    workbook.save(buffer)
+    buffer.seek(0)
+    buffer.name = "padron.xlsx"
+    return buffer
 
 
 @pytest.mark.django_db
@@ -87,6 +118,155 @@ def test_asociados_gestion_requiere_staff(client):
     response = client.get(reverse("gestion:asociados"))
 
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_exportar_asociados_requiere_staff(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="no_staff_exporta", password="secreto123")
+    client.force_login(user)
+
+    response = client.get(reverse("gestion:exportar_asociados"))
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_importar_asociados_previsualiza_y_guarda_en_sesion(client):
+    user_model = get_user_model()
+    staff = user_model.objects.create_user(username="staff_importa", password="secreto123", is_staff=True)
+    archivo = crear_planilla_padron(
+        [
+            [1, "Leyes Lena Muriel", "1°2°", "CB", "Activo", "52328996", "2984 111111", "lena@example.com", "Calle 1"],
+            [2, "Joaquin Darosa", "1ro C.B", "CB", "Activo", "52536191", "2984 222222", "joaquin@example.com", "Calle 2"],
+            [3, "", "", "", "", "", "", "", ""],
+        ]
+    )
+
+    client.force_login(staff)
+    response = client.post(
+        reverse("gestion:importar_asociados"),
+        {"action": "preview", "archivo": archivo},
+        follow=True,
+    )
+
+    assert response.status_code == 200
+    preview = client.session[PADRON_IMPORT_SESSION_KEY]
+    assert preview["summary"]["importar"] == 1
+    assert preview["summary"]["revisar"] == 1
+    assert preview["summary"]["cursos_a_crear"] == 1
+    assert preview["cursos_a_crear"][0]["curso"] == "1ro 2da CB TM"
+    content = response.content.decode()
+    assert "Cursos que se crearían" in content
+    assert "Falta división/comisión del curso" in content
+    assert "Cómo leer la previsualización" in content
+    assert "Descargar planilla para revisar" in content
+
+
+@pytest.mark.django_db
+def test_importar_asociados_ordena_cursos_por_ciclo_anio_division_y_turno(client):
+    user_model = get_user_model()
+    staff = user_model.objects.create_user(username="staff_orden_cursos", password="secreto123", is_staff=True)
+    archivo = crear_planilla_padron(
+        [
+            [1, "Perez Ana", "4°2°", "CS", "Activo", "42328996", "2984 111111", "ana@example.com", "Calle 1"],
+            [2, "Lopez Beto", "1°2°", "CB", "Activo", "42536191", "2984 222222", "beto@example.com", "Calle 2"],
+            [3, "Garcia Carla", "4°1°", "CS", "Activo", "43328996", "2984 333333", "carla@example.com", "Calle 3"],
+            [4, "Sosa Diego", "1°1°", "CB", "Activo", "43536191", "2984 444444", "diego@example.com", "Calle 4"],
+        ]
+    )
+
+    client.force_login(staff)
+    response = client.post(reverse("gestion:importar_asociados"), {"action": "preview", "archivo": archivo})
+
+    assert response.status_code == 302
+    preview = client.session[PADRON_IMPORT_SESSION_KEY]
+    assert [curso["curso"] for curso in preview["cursos_a_crear"]] == [
+        "1ro 1ra CB TM",
+        "1ro 2da CB TM",
+        "4to 1ra CS TM",
+        "4to 2da CS TM",
+    ]
+
+
+@pytest.mark.django_db
+def test_importar_asociados_descarga_planilla_con_filas_a_revisar(client):
+    user_model = get_user_model()
+    staff = user_model.objects.create_user(username="staff_descarga_revisar", password="secreto123", is_staff=True)
+    archivo = crear_planilla_padron(
+        [
+            [1, "Leyes Lena Muriel", "1°2°", "CB", "Activo", "52328996", "2984 111111", "lena@example.com", "Calle 1"],
+            [2, "Joaquin Darosa", "1ro C.B", "CB", "Activo", "52536191", "2984 222222", "joaquin@example.com", "Calle 2"],
+        ]
+    )
+
+    client.force_login(staff)
+    client.post(reverse("gestion:importar_asociados"), {"action": "preview", "archivo": archivo})
+    response = client.get(reverse("gestion:descargar_asociados_revisar"))
+
+    assert response.status_code == 200
+    assert response["Content-Type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    assert "padron_asociados_a_revisar.xlsx" in response["Content-Disposition"]
+
+    workbook = load_workbook(BytesIO(response.content))
+    worksheet = workbook["PADRÓN GENERAL"]
+    assert [worksheet.cell(1, column).value for column in range(1, 12)] == [
+        "Fila original",
+        "Número de asociado",
+        "Apellido/nombre",
+        "Curso/división/Ciclo/turno",
+        "CICLO",
+        "Categoria (act./adh.)",
+        "DNI",
+        "Celular",
+        "Mail",
+        "Dirección",
+        "Motivo de revisión",
+    ]
+    assert worksheet.max_row == 2
+    row_values = [worksheet.cell(2, column).value for column in range(1, 12)]
+    assert row_values[:10] == [
+        3,
+        "2",
+        "Joaquin Darosa",
+        "1ro C.B",
+        "CB",
+        "Activo",
+        "52536191",
+        "2984 222222",
+        "joaquin@example.com",
+        "Calle 2",
+    ]
+    assert "Falta división/comisión del curso" in row_values[10]
+    assert "curso incompleto o dudoso para asociado" in row_values[10]
+
+
+@pytest.mark.django_db
+def test_importar_asociados_confirma_desde_sesion(client):
+    user_model = get_user_model()
+    staff = user_model.objects.create_user(username="staff_confirma", password="secreto123", is_staff=True)
+    archivo = crear_planilla_padron(
+        [
+            [1, "Leyes Lena Muriel", "1°2°", "CB", "Activo", "52328996", "2984 111111", "lena@example.com", "Calle 1"],
+            [2, "Joaquin Darosa", "1ro C.B", "CB", "Activo", "52536191", "2984 222222", "joaquin@example.com", "Calle 2"],
+        ]
+    )
+
+    client.force_login(staff)
+    client.post(reverse("gestion:importar_asociados"), {"action": "preview", "archivo": archivo})
+    response = client.post(reverse("gestion:importar_asociados"), {"action": "confirm"}, follow=True)
+
+    assert response.status_code == 200
+    assert PADRON_IMPORT_SESSION_KEY not in client.session
+    assert Curso.objects.filter(anio="1ro", curso="2da", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM).exists()
+    asociado = Asociado.objects.get(dni="52328996")
+    assert asociado.apellido == "Leyes"
+    assert asociado.nombre == "Lena Muriel"
+    assert asociado.numero_asociado == 1
+    assert asociado.direccion == "Calle 1"
+    assert asociado.fecha_alta == timezone.localdate()
+    assert not Asociado.objects.filter(dni="52536191").exists()
+    assert "1 creados" in response.content.decode()
 
 
 @pytest.mark.django_db
@@ -264,7 +444,10 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     listado = client.get(reverse("gestion:asociados"), {"q": "Campos"})
 
     assert listado.status_code == 200
-    assert "Campos" in listado.content.decode()
+    content = listado.content.decode()
+    assert "Campos" in content
+    assert reverse("gestion:exportar_asociados") in content
+    assert "?q=Campos" in content
 
     detalle = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
 
@@ -273,6 +456,80 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert "Julia" in content
     assert "Sin usuario" in content
     assert f"?asociado={asociado.id}" in content
+
+
+@pytest.mark.django_db
+def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
+    user_model = get_user_model()
+    staff = user_model.objects.create_user(username="staff_exporta", password="secreto123", is_staff=True)
+    curso = Curso.objects.create(anio="1ro", curso="2da", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
+    create_asociado(
+        nombre="Julia",
+        apellido="Campos",
+        dni="40000111",
+        tipo="asociado",
+        fecha_alta="2026-05-10",
+        curso_actual=curso,
+        email="julia@example.com",
+        telefono="2984 123456",
+        direccion="Calle 1",
+    )
+    create_asociado(
+        nombre="Mora",
+        apellido="Rivas",
+        dni="40000222",
+        tipo="adherente",
+        fecha_alta="2026-05-11",
+    )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:exportar_asociados"), {"q": "Campos"})
+
+    assert response.status_code == 200
+    assert response["Content-Type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    assert "asociados_formato_uni2.xlsx" in response["Content-Disposition"]
+
+    workbook = load_workbook(BytesIO(response.content))
+    worksheet = workbook["ASOCIADOS"]
+    assert [worksheet.cell(1, column).value for column in range(1, 18)] == [
+        "numero_asociado",
+        "apellido",
+        "nombre",
+        "dni",
+        "tipo",
+        "email",
+        "telefono",
+        "direccion",
+        "curso_anio",
+        "curso_division",
+        "division",
+        "turno",
+        "curso_nombre",
+        "fecha_alta",
+        "fecha_inicio_cobro",
+        "estado",
+        "motivo_baja",
+    ]
+    assert worksheet.max_row == 2
+    row_values = [worksheet.cell(2, column).value for column in range(1, 18)]
+    assert row_values[1:17] == [
+        "Campos",
+        "Julia",
+        "40000111",
+        "asociado",
+        "julia@example.com",
+        "2984 123456",
+        "Calle 1",
+        "1ro",
+        "2da",
+        "CB",
+        "TM",
+        "1ro 2da CB TM",
+        "2026-05-10",
+        "2026-05-01",
+        "activo",
+        None,
+    ]
 
 
 @pytest.mark.django_db
