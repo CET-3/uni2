@@ -7,7 +7,6 @@ from asociados.services import (
     calculate_fecha_inicio_cobro,
     create_asociado,
     dar_baja_asociado,
-    marcar_asociado_como_egresado,
 )
 
 
@@ -68,23 +67,6 @@ def test_baja_de_asociado(curso):
 
     assert asociado.estado == Asociado.ESTADO_INACTIVO
     assert asociado.fecha_baja == date(2026, 6, 1)
-
-
-@pytest.mark.django_db
-def test_cambio_a_egresado(curso):
-    asociado = create_asociado(
-        nombre="Noa",
-        apellido="Gil",
-        dni="34123456",
-        tipo=Asociado.TIPO_ASOCIADO,
-        fecha_alta=date(2026, 3, 10),
-        curso_actual=curso,
-    )
-
-    marcar_asociado_como_egresado(asociado)
-    asociado.refresh_from_db()
-
-    assert asociado.estado == Asociado.ESTADO_EGRESADO
 
 
 @pytest.mark.django_db

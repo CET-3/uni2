@@ -67,7 +67,6 @@
               <li><a href="#cu-generar-periodo-cuota">CU-generar-periodo-cuota</a></li>
               <li><a href="#cu-registrar-pago-cuota">CU-registrar-pago-cuota</a></li>
               <li><a href="#cu-dar-baja-asociado">CU-dar-baja-asociado</a></li>
-              <li><a href="#cu-marcar-asociado-egresado">CU-marcar-asociado-egresado</a></li>
               <li><a href="#cu-validar-credencial">CU-validar-credencial</a></li>
             </ol>
           </details>
@@ -80,7 +79,6 @@
               <li><a href="#cb-asociado-sin-usuario">CB-asociado-sin-usuario</a></li>
               <li><a href="#cb-usuario-desactivado">CB-usuario-desactivado</a></li>
               <li><a href="#cb-baja-con-deuda">CB-baja-con-deuda</a></li>
-              <li><a href="#cb-egresado-con-deuda">CB-egresado-con-deuda</a></li>
               <li><a href="#cb-cuota-ya-generada">CB-cuota-ya-generada</a></li>
               <li><a href="#cb-pago-parcial">CB-pago-parcial</a></li>
               <li><a href="#cb-pago-mayor-a-deuda">CB-pago-mayor-a-deuda</a></li>
@@ -323,7 +321,7 @@
               <li>motivo_baja</li>
             </ul>
             <p><strong>Tipos:</strong> asociado, adherente.</p>
-            <p><strong>Estados:</strong> activo, inactivo, egresado.</p>
+            <p><strong>Estados:</strong> activo, inactivo.</p>
             <p><strong>Reglas:</strong> DNI único, número automático, token UUID único, usuario opcional, curso actual opcional para adherentes y recomendado para asociados alumnos.</p>
           </article>
           <article class="entity" id="entidad-periodo-cuota">
@@ -471,7 +469,7 @@
           <ul class="rule-list">
             <li id="ASOCIADO-001"><strong><a href="#ASOCIADO-001">ASOCIADO-001</a></strong> Un asociado puede ser de tipo asociado o adherente.</li>
             <li id="ASOCIADO-002"><strong><a href="#ASOCIADO-002">ASOCIADO-002</a></strong> Los asociados participan de asambleas; los adherentes no.</li>
-            <li id="ASOCIADO-003"><strong><a href="#ASOCIADO-003">ASOCIADO-003</a></strong> Los asociados inactivos o egresados conservan sus datos, cuotas y pagos.</li>
+            <li id="ASOCIADO-003"><strong><a href="#ASOCIADO-003">ASOCIADO-003</a></strong> Los asociados inactivos conservan sus datos, cuotas y pagos.</li>
             <li id="ASOCIADO-004"><strong><a href="#ASOCIADO-004">ASOCIADO-004</a></strong> Solo los asociados activos generan nuevas cuotas.</li>
             <li id="ASOCIADO-006"><strong><a href="#ASOCIADO-006">ASOCIADO-006</a></strong> No puede existir más de un asociado con el mismo DNI.</li>
             <li id="ASOCIADO-007"><strong><a href="#ASOCIADO-007">ASOCIADO-007</a></strong> El número de asociado debe generarse automáticamente.</li>
@@ -725,7 +723,7 @@
               <li>Evita duplicados.</li>
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-004">ASOCIADO-004</a>, <a href="#CUOTA-001">CUOTA-001</a>, <a href="#CUOTA-002">CUOTA-002</a>, <a href="#CUOTA-004">CUOTA-004</a>, <a href="#CUOTA-005">CUOTA-005</a>.</p>
-            <p><strong>Situaciones especiales:</strong> ciclo lectivo inexistente, asociado inactivo, egresado, fecha_inicio_cobro posterior, cuota ya generada.</p>
+            <p><strong>Situaciones especiales:</strong> ciclo lectivo inexistente, asociado inactivo, fecha_inicio_cobro posterior, cuota ya generada.</p>
             <p><strong>Modelos afectados:</strong> CicloLectivo, PeríodoCuota, Cuota, Asociado.</p>
           </article>
           <article class="use-case" id="cu-registrar-pago-cuota">
@@ -759,19 +757,6 @@
             <p><strong>Situaciones especiales:</strong> baja con deuda, baja sin deuda, asociado con usuario.</p>
             <p><strong>Modelos afectados:</strong> Asociado.</p>
           </article>
-          <article class="use-case" id="cu-marcar-asociado-egresado">
-            <h3>CU-marcar-asociado-egresado</h3>
-            <p><strong>Actor:</strong> Administrador</p>
-            <p><strong>Flujo principal:</strong></p>
-            <ol>
-              <li>Busca asociado.</li>
-              <li>Cambia el estado a egresado.</li>
-              <li>Deja de generar nuevas cuotas.</li>
-            </ol>
-            <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-003">ASOCIADO-003</a>, <a href="#ASOCIADO-004">ASOCIADO-004</a>.</p>
-            <p><strong>Modelos afectados:</strong> Asociado.</p>
-          </article>
-
           <article class="use-case" id="cu-validar-credencial">
             <h3>CU-validar-credencial</h3>
             <p><strong>Actor:</strong> Comercio</p>
@@ -783,7 +768,7 @@
               <li>Muestra el resultado.</li>
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#COMERCIO-004">COMERCIO-004</a>, <a href="#CREDENCIAL-001">CREDENCIAL-001</a>, <a href="#CREDENCIAL-002">CREDENCIAL-002</a>, <a href="#CREDENCIAL-003">CREDENCIAL-003</a>, <a href="#CREDENCIAL-004">CREDENCIAL-004</a>.</p>
-            <p><strong>Situaciones especiales:</strong> QR invalido, asociado inactivo, asociado egresado, comercio inactivo.</p>
+            <p><strong>Situaciones especiales:</strong> QR invalido, asociado inactivo, comercio inactivo.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Comercio.</p>
           </article>
         </div>
@@ -821,13 +806,6 @@
             <p><strong>Situación:</strong> se da de baja a un asociado que mantiene deuda.</p>
             <p><strong>Respuesta esperada:</strong> la baja está permitida. La deuda se conserva y no se generan nuevas cuotas.</p>
             <p><strong>Caso de uso relacionado:</strong> <a href="#cu-dar-baja-asociado">CU-dar-baja-asociado</a>.</p>
-            <p><strong>Relacionado con:</strong> <a href="#ASOCIADO-003">ASOCIADO-003</a>, <a href="#ASOCIADO-004">ASOCIADO-004</a>.</p>
-          </article>
-          <article class="card" id="cb-egresado-con-deuda">
-            <h3>CB-egresado-con-deuda</h3>
-            <p><strong>Situación:</strong> un asociado pasa a estado egresado y mantiene deuda.</p>
-            <p><strong>Respuesta esperada:</strong> está permitido. La deuda se conserva y no se generan nuevas cuotas.</p>
-            <p><strong>Caso de uso relacionado:</strong> <a href="#cu-marcar-asociado-egresado">CU-marcar-asociado-egresado</a>.</p>
             <p><strong>Relacionado con:</strong> <a href="#ASOCIADO-003">ASOCIADO-003</a>, <a href="#ASOCIADO-004">ASOCIADO-004</a>.</p>
           </article>
           <article class="card" id="cb-cuota-ya-generada">
@@ -1033,7 +1011,7 @@
           <h3>Dashboards e ideas futuras</h3>
           <p>Las métricas y tableros agregados se guardan como idea futura para no complejizar el MVP.</p>
           <ul class="columns">
-            <li>Resumen de asociados activos, inactivos y egresados.</li>
+            <li>Resumen de asociados activos e inactivos.</li>
             <li>Asociados por curso y por tipo.</li>
             <li>Asociados con usuario y sin usuario.</li>
             <li>Ultimos accesos.</li>

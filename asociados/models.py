@@ -88,11 +88,9 @@ class Asociado(models.Model):
 
     ESTADO_ACTIVO = "activo"
     ESTADO_INACTIVO = "inactivo"
-    ESTADO_EGRESADO = "egresado"
     ESTADOS = [
         (ESTADO_ACTIVO, "Activo"),
         (ESTADO_INACTIVO, "Inactivo"),
-        (ESTADO_EGRESADO, "Egresado"),
     ]
 
     usuario = models.OneToOneField(
