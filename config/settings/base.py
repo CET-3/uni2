@@ -104,3 +104,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# El admin técnico puede recibir acciones masivas sobre muchas cuotas luego de
+# importaciones iniciales. El valor por defecto de Django queda corto para ese uso.
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000

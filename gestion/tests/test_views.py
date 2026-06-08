@@ -8,8 +8,8 @@ from openpyxl import Workbook, load_workbook
 from asociados.importers import PADRON_IMPORT_SESSION_KEY
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
-from contabilidad.models import CuentaContable
-from cuotas.models import Pago, PeriodoCuota
+from contabilidad.models import Asiento, CuentaContable
+from cuotas.models import Cuota, Pago, PagoCuota, PeriodoCuota
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 
 
@@ -44,6 +44,41 @@ def crear_planilla_padron(rows):
     workbook.save(buffer)
     buffer.seek(0)
     buffer.name = "padron.xlsx"
+    return buffer
+
+
+def crear_planilla_cuotas(rows):
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = "COBRO CUOTAS SOCIALES"
+    worksheet.append([None, None, None, None, None, "PAGO DE CUOTAS SOCIALES 2026"])
+    worksheet.append([])
+    worksheet.append([None, "ACTIVOS", None, "A/T: pago a término del 1 al 10 de cada mes"])
+    worksheet.append([None, "ADHERENTES", None, "C/I: pago con interés después del 10"])
+    worksheet.append([None, None, None, "AFT: asociado fuera de término (no se asoció en marzo)"])
+    worksheet.append([])
+    worksheet.append(
+        [
+            "Socio N°",
+            "Apellido/Nombre",
+            "curso/división",
+            "Mar",
+            "forma pago",
+            "Abr",
+            "forma pago",
+            "May",
+            "forma pago",
+            "Jun",
+            "froma pago",
+        ]
+    )
+    for row in rows:
+        worksheet.append(row)
+
+    buffer = BytesIO()
+    workbook.save(buffer)
+    buffer.seek(0)
+    buffer.name = "cuotas.xlsx"
     return buffer
 
 
@@ -267,6 +302,144 @@ def test_importar_asociados_confirma_desde_sesion(client):
     assert asociado.fecha_alta == timezone.localdate()
     assert not Asociado.objects.filter(dni="52536191").exists()
     assert "1 creados" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_importar_cuotas_historicas_previsualiza_desde_planilla(client):
+    user_model = get_user_model()
+    staff = user_model.objects.create_user(username="staff_cuotas_preview", password="secreto123", is_staff=True)
+    asociado = create_asociado(
+        nombre="Lena", apellido="Leyes", dni="52328996", tipo="asociado", fecha_alta="2026-03-01"
+    )
+    archivo = crear_planilla_cuotas(
+        [
+            [
+                asociado.numero_asociado,
+                "Leyes Lena Muriel",
+                "1°2°",
+                True,
+                "efectivo",
+                False,
+                None,
+                True,
+                "MP",
+                False,
+                None,
+            ],
+            [999, "Persona Inexistente", "1°1°", True, "efectivo", False, None, False, None, False, None],
+            [1000, None, "1°1°", True, "efectivo", False, None, False, None, False, None],
+        ]
+    )
+
+    client.force_login(staff)
+    response = client.post(
+        reverse("gestion:importar_cuotas_historicas"),
+        {"action": "preview", "archivo": archivo},
+        follow=True,
+    )
+
+    assert response.status_code == 200
+    preview = client.session["cuotas_historicas_preview"]
+    assert preview["summary"]["cuotas_a_crear"] == 4
+    assert preview["summary"]["pagos_a_crear"] == 2
+    assert preview["summary"]["cuotas_impagas"] == 2
+    assert preview["summary"]["revisar"] == 4
+    assert preview["summary"]["omitidas"] == 1
+    content = response.content.decode()
+    assert "Cuotas importables" in content
+    assert "No se encontró asociado por número" in content
+    assert "No crea asientos contables" in content
+
+
+@pytest.mark.django_db
+def test_importar_cuotas_historicas_descarga_planilla_con_cuotas_a_revisar(client):
+    user_model = get_user_model()
+    staff = user_model.objects.create_user(username="staff_cuotas_revisar", password="secreto123", is_staff=True)
+    archivo = crear_planilla_cuotas(
+        [
+            [999, "Persona Inexistente", "1°1°", True, "efectivo", False, None, False, "MP", False, None],
+        ]
+    )
+
+    client.force_login(staff)
+    client.post(reverse("gestion:importar_cuotas_historicas"), {"action": "preview", "archivo": archivo})
+    response = client.get(reverse("gestion:descargar_cuotas_historicas_revisar"))
+
+    assert response.status_code == 200
+    assert response["Content-Type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    assert "cuotas_historicas_a_revisar.xlsx" in response["Content-Disposition"]
+
+    workbook = load_workbook(BytesIO(response.content))
+    worksheet = workbook["COBRO CUOTAS SOCIALES"]
+    assert [worksheet.cell(1, column).value for column in range(1, 17)] == [
+        "Fila original",
+        "Número de asociado",
+        "Apellido/Nombre",
+        "curso/división",
+        "Mar pago",
+        "Mar forma",
+        "Mar motivo",
+        "Abr pago",
+        "Abr forma",
+        "Abr motivo",
+        "May pago",
+        "May forma",
+        "May motivo",
+        "Jun pago",
+        "Jun forma",
+        "Jun motivo",
+    ]
+    assert worksheet.max_row == 2
+    row_values = [worksheet.cell(2, column).value for column in range(1, 17)]
+    assert row_values[:6] == [8, 999, "Persona Inexistente", "1°1°", "Sí", "efectivo"]
+    assert "No se encontró asociado por número" in row_values[6]
+    assert row_values[10:12] == ["No", "MP"]
+    assert "No se encontró asociado por número" in row_values[12]
+    assert "Cuota impaga con forma de pago cargada" in row_values[12]
+
+
+@pytest.mark.django_db
+def test_importar_cuotas_historicas_confirma_sin_crear_asientos(client):
+    user_model = get_user_model()
+    staff = user_model.objects.create_user(username="staff_cuotas_confirma", password="secreto123", is_staff=True)
+    asociado = create_asociado(
+        nombre="Lena", apellido="Leyes", dni="52328996", tipo="asociado", fecha_alta="2026-03-01"
+    )
+    archivo = crear_planilla_cuotas(
+        [
+            [
+                asociado.numero_asociado,
+                "Leyes Lena Muriel",
+                "1°2°",
+                True,
+                "efectivo",
+                False,
+                None,
+                True,
+                "MP",
+                False,
+                None,
+            ],
+        ]
+    )
+
+    client.force_login(staff)
+    client.post(reverse("gestion:importar_cuotas_historicas"), {"action": "preview", "archivo": archivo})
+    response = client.post(reverse("gestion:importar_cuotas_historicas"), {"action": "confirm"}, follow=True)
+
+    assert response.status_code == 200
+    assert PeriodoCuota.objects.filter(ciclo_lectivo__anio=2026, mes__in=[3, 4, 5, 6]).count() == 4
+    assert Cuota.objects.filter(asociado=asociado).count() == 4
+    assert Pago.objects.filter(asociado=asociado).count() == 2
+    assert PagoCuota.objects.filter(pago__asociado=asociado).count() == 2
+    assert Asiento.objects.count() == 0
+    marzo = Cuota.objects.get(asociado=asociado, periodo__mes=3)
+    abril = Cuota.objects.get(asociado=asociado, periodo__mes=4)
+    assert marzo.estado == Cuota.ESTADO_PAGADA
+    assert marzo.importe == 500
+    assert marzo.importe_recargo_mora == 100
+    assert abril.estado == Cuota.ESTADO_VENCIDA
+    assert "4 cuotas creadas" in response.content.decode()
 
 
 @pytest.mark.django_db
