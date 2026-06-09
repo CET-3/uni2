@@ -1,6 +1,7 @@
 import pytest
 from io import BytesIO
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 from django.utils import timezone
 from django.urls import reverse
 from openpyxl import Workbook, load_workbook
@@ -10,6 +11,15 @@ from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
 from cuotas.models import Cuota, Pago, PagoCuota, PeriodoCuota
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
+from gestion.permissions import GESTION_PERMISSIONS
+
+
+def crear_usuario_gestion(username="usuario_gestion", permisos=None):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username=username, password="secreto123")
+    codenames = [permission.split(".", 1)[1] for permission in (permisos or GESTION_PERMISSIONS)]
+    user.user_permissions.add(*Permission.objects.filter(content_type__app_label="gestion", codename__in=codenames))
+    return user
 
 
 def crear_planilla_padron(rows):
@@ -76,7 +86,7 @@ def crear_planilla_cuotas(rows):
 
 
 @pytest.mark.django_db
-def test_dashboard_gestion_requiere_staff(client):
+def test_dashboard_gestion_requiere_permiso(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="aso_sin_staff", password="secreto123")
     client.force_login(user)
@@ -88,8 +98,7 @@ def test_dashboard_gestion_requiere_staff(client):
 
 @pytest.mark.django_db
 def test_dashboard_gestion_muestra_accesos_basicos(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff1", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff1")
 
     client.force_login(staff)
     response = client.get(reverse("gestion:dashboard"))
@@ -105,7 +114,7 @@ def test_dashboard_gestion_muestra_accesos_basicos(client):
 
 
 @pytest.mark.django_db
-def test_cobros_gestion_requiere_staff(client):
+def test_cobros_gestion_requiere_permiso(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="no_staff", password="secreto123")
     client.force_login(user)
@@ -116,7 +125,7 @@ def test_cobros_gestion_requiere_staff(client):
 
 
 @pytest.mark.django_db
-def test_deudores_gestion_requiere_staff(client):
+def test_deudores_gestion_requiere_permiso(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="no_staff_deuda", password="secreto123")
     client.force_login(user)
@@ -127,7 +136,7 @@ def test_deudores_gestion_requiere_staff(client):
 
 
 @pytest.mark.django_db
-def test_periodos_cuota_gestion_requiere_staff(client):
+def test_periodos_cuota_gestion_requiere_permiso(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="no_staff_periodos", password="secreto123")
     client.force_login(user)
@@ -138,7 +147,7 @@ def test_periodos_cuota_gestion_requiere_staff(client):
 
 
 @pytest.mark.django_db
-def test_asociados_gestion_requiere_staff(client):
+def test_asociados_gestion_requiere_permiso(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="no_staff_asoc", password="secreto123")
     client.force_login(user)
@@ -149,7 +158,7 @@ def test_asociados_gestion_requiere_staff(client):
 
 
 @pytest.mark.django_db
-def test_exportar_asociados_requiere_staff(client):
+def test_exportar_asociados_requiere_permiso(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="no_staff_exporta", password="secreto123")
     client.force_login(user)
@@ -161,8 +170,7 @@ def test_exportar_asociados_requiere_staff(client):
 
 @pytest.mark.django_db
 def test_importar_asociados_previsualiza_y_guarda_en_sesion(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_importa", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_importa")
     archivo = crear_planilla_padron(
         [
             [1, "Leyes Lena Muriel", "1°2°", "CB", "Activo", "52328996", "2984 111111", "lena@example.com", "Calle 1"],
@@ -193,8 +201,7 @@ def test_importar_asociados_previsualiza_y_guarda_en_sesion(client):
 
 @pytest.mark.django_db
 def test_importar_asociados_ordena_cursos_por_ciclo_anio_division_y_turno(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_orden_cursos", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_orden_cursos")
     archivo = crear_planilla_padron(
         [
             [1, "Perez Ana", "4°2°", "CS", "Activo", "42328996", "2984 111111", "ana@example.com", "Calle 1"],
@@ -219,8 +226,7 @@ def test_importar_asociados_ordena_cursos_por_ciclo_anio_division_y_turno(client
 
 @pytest.mark.django_db
 def test_importar_asociados_descarga_planilla_con_filas_a_revisar(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_descarga_revisar", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_descarga_revisar")
     archivo = crear_planilla_padron(
         [
             [1, "Leyes Lena Muriel", "1°2°", "CB", "Activo", "52328996", "2984 111111", "lena@example.com", "Calle 1"],
@@ -271,8 +277,7 @@ def test_importar_asociados_descarga_planilla_con_filas_a_revisar(client):
 
 @pytest.mark.django_db
 def test_importar_asociados_confirma_desde_sesion(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_confirma", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_confirma")
     archivo = crear_planilla_padron(
         [
             [1, "Leyes Lena Muriel", "1°2°", "CB", "Activo", "52328996", "2984 111111", "lena@example.com", "Calle 1"],
@@ -299,8 +304,7 @@ def test_importar_asociados_confirma_desde_sesion(client):
 
 @pytest.mark.django_db
 def test_importar_cuotas_historicas_previsualiza_desde_planilla(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_cuotas_preview", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_cuotas_preview")
     asociado = create_asociado(
         nombre="Lena", apellido="Leyes", dni="52328996", tipo="asociado", fecha_alta="2026-03-01"
     )
@@ -346,8 +350,7 @@ def test_importar_cuotas_historicas_previsualiza_desde_planilla(client):
 
 @pytest.mark.django_db
 def test_importar_cuotas_historicas_descarga_planilla_con_cuotas_a_revisar(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_cuotas_revisar", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_cuotas_revisar")
     archivo = crear_planilla_cuotas(
         [
             [999, "Persona Inexistente", "1°1°", True, "efectivo", False, None, False, "MP", False, None],
@@ -393,8 +396,7 @@ def test_importar_cuotas_historicas_descarga_planilla_con_cuotas_a_revisar(clien
 
 @pytest.mark.django_db
 def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_cuotas_confirma", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_cuotas_confirma")
     asociado = create_asociado(
         nombre="Lena", apellido="Leyes", dni="52328996", tipo="asociado", fecha_alta="2026-03-01"
     )
@@ -436,8 +438,7 @@ def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client):
 
 @pytest.mark.django_db
 def test_cobros_gestion_busca_asociado_y_registra_pago(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_cobro", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_cobro")
     asociado = create_asociado(
         nombre="Paula", apellido="Gimenez", dni="45555111", tipo="asociado", fecha_alta="2026-05-10"
     )
@@ -477,8 +478,7 @@ def test_cobros_gestion_busca_asociado_y_registra_pago(client):
 
 @pytest.mark.django_db
 def test_cobros_gestion_muestra_error_si_supera_deuda(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_error", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_error")
     asociado = create_asociado(
         nombre="Ivan", apellido="Molina", dni="46666111", tipo="asociado", fecha_alta="2026-05-10"
     )
@@ -510,8 +510,7 @@ def test_cobros_gestion_muestra_error_si_supera_deuda(client):
 
 @pytest.mark.django_db
 def test_deudores_gestion_lista_asociados_y_linkea_a_cobro(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_deudores", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_deudores")
     asociado = create_asociado(
         nombre="Lucia", apellido="Ramos", dni="47777111", tipo="asociado", fecha_alta="2026-05-10"
     )
@@ -535,8 +534,7 @@ def test_deudores_gestion_lista_asociados_y_linkea_a_cobro(client):
 
 @pytest.mark.django_db
 def test_periodos_cuota_gestion_crea_periodo(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_periodo", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_periodo")
     client.force_login(staff)
 
     ciclo, _ = CicloLectivo.objects.get_or_create(anio=2026)
@@ -561,8 +559,7 @@ def test_periodos_cuota_gestion_crea_periodo(client):
 
 @pytest.mark.django_db
 def test_periodos_cuota_gestion_genera_cuotas_sin_duplicar(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_generacion", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_generacion")
     create_asociado(nombre="Lara", apellido="Suarez", dni="48888111", tipo="asociado", fecha_alta="2026-05-10")
     create_asociado(nombre="Nico", apellido="Ferreyra", dni="49999111", tipo="asociado", fecha_alta="2026-05-20")
     periodo = PeriodoCuota.objects.create(
@@ -596,8 +593,7 @@ def test_periodos_cuota_gestion_genera_cuotas_sin_duplicar(client):
 
 @pytest.mark.django_db
 def test_asociados_gestion_busca_y_muestra_detalle(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_asoc", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_asoc")
     asociado = create_asociado(
         nombre="Julia", apellido="Campos", dni="40000111", tipo="asociado", fecha_alta="2026-05-10"
     )
@@ -621,9 +617,52 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
 
 
 @pytest.mark.django_db
-def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
+def test_asociados_gestion_filtra_por_estado_tipo_usuario_y_curso(client):
+    staff = crear_usuario_gestion("staff_filtros")
+    curso = Curso.objects.create(anio="2do", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
+    asociado_con_usuario = create_asociado(
+        nombre="Julia",
+        apellido="Campos",
+        dni="40000111",
+        tipo="asociado",
+        fecha_alta="2026-05-10",
+        curso_actual=curso,
+    )
     user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_exporta", password="secreto123", is_staff=True)
+    user = user_model.objects.create_user(username="julia", password="secreto123")
+    asociado_con_usuario.usuario = user
+    asociado_con_usuario.save(update_fields=["usuario"])
+    create_asociado(
+        nombre="Mora",
+        apellido="Rivas",
+        dni="40000222",
+        tipo="adherente",
+        fecha_alta="2026-05-11",
+    )
+
+    client.force_login(staff)
+    response = client.get(
+        reverse("gestion:asociados"),
+        {
+            "tipo": "asociado",
+            "estado": "activo",
+            "curso_actual": curso.id,
+            "usuario": "con",
+        },
+    )
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Campos" in content
+    assert "Rivas" not in content
+    assert "Con usuario" in content
+    assert "Asociado" in content
+    assert "Todos los cursos" in content
+
+
+@pytest.mark.django_db
+def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
+    staff = crear_usuario_gestion("staff_exporta")
     curso = Curso.objects.create(anio="1ro", curso="2da", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
     create_asociado(
         nombre="Julia",
@@ -645,7 +684,15 @@ def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
     )
 
     client.force_login(staff)
-    response = client.get(reverse("gestion:exportar_asociados"), {"q": "Campos"})
+    response = client.get(
+        reverse("gestion:exportar_asociados"),
+        {
+            "tipo": "asociado",
+            "estado": "activo",
+            "curso_actual": curso.id,
+            "usuario": "sin",
+        },
+    )
 
     assert response.status_code == 200
     assert response["Content-Type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -696,8 +743,7 @@ def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
 
 @pytest.mark.django_db
 def test_asociado_detalle_permite_editar_fecha_inicio_cobro(client):
-    user_model = get_user_model()
-    staff = user_model.objects.create_user(username="staff_edita_asoc", password="secreto123", is_staff=True)
+    staff = crear_usuario_gestion("staff_edita_asoc")
     asociado = create_asociado(
         nombre="Milena", apellido="Armada", dni="30000111", tipo="asociado", fecha_alta="2026-05-22"
     )

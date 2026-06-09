@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -15,7 +16,7 @@ from asociados.importers import (
     import_padron_preview,
 )
 from asociados.models import Asociado
-from asociados.selectors import get_asociados_for_export, search_asociados
+from asociados.selectors import filter_asociados, get_asociados_for_export, search_asociados
 from cuotas.importers import (
     CUOTAS_HISTORICAS_SESSION_KEY,
     CuotasHistoricasPreview,
@@ -32,24 +33,40 @@ from .forms import (
     CobroCuotaForm,
     ImportarCuotasHistoricasForm,
     ImportarPadronAsociadosForm,
+    FiltroAsociadosForm,
     PeriodoCuotaForm,
+)
+from .permissions import (
+    GESTION_ADMINISTRAR_PERIODOS_CUOTA,
+    GESTION_COBRAR_CUOTAS,
+    GESTION_CONSULTAR_ASOCIADOS,
+    GESTION_EDITAR_ASOCIADOS,
+    GESTION_EXPORTAR_ASOCIADOS,
+    GESTION_IMPORTAR_ASOCIADOS,
+    GESTION_IMPORTAR_CUOTAS_HISTORICAS,
+    GESTION_VER_DEUDORES,
+    user_has_any_gestion_permission,
 )
 from .selectors import get_asociados_deudores
 
 
-class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+class GestionPermissionRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    permission_required = None
     raise_exception = True
 
     def test_func(self):
-        return self.request.user.is_staff
+        if self.permission_required is None:
+            return user_has_any_gestion_permission(self.request.user)
+        return self.request.user.has_perm(self.permission_required)
 
 
-class GestionDashboardView(StaffRequiredMixin, TemplateView):
+class GestionDashboardView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/dashboard.html"
 
 
-class GestionDeudoresView(StaffRequiredMixin, TemplateView):
+class GestionDeudoresView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/deudores.html"
+    permission_required = GESTION_VER_DEUDORES
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,22 +74,50 @@ class GestionDeudoresView(StaffRequiredMixin, TemplateView):
         return context
 
 
-class GestionAsociadosView(StaffRequiredMixin, TemplateView):
+class GestionAsociadosView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/asociados.html"
+    permission_required = GESTION_CONSULTAR_ASOCIADOS
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        query = self.request.GET.get("q", "").strip()
-        context["query"] = query
-        context["asociados"] = search_asociados(query) if query else []
+        form = FiltroAsociadosForm(self.request.GET or None)
+        if form.is_valid():
+            filters = {
+                "query": form.cleaned_data["q"],
+                "estado": form.cleaned_data["estado"],
+                "tipo": form.cleaned_data["tipo"],
+                "curso_id": form.cleaned_data["curso_actual"].id if form.cleaned_data["curso_actual"] else None,
+                "usuario": form.cleaned_data["usuario"],
+                "deuda": form.cleaned_data["deuda"],
+            }
+            asociados = filter_asociados(**filters)
+        else:
+            filters = {}
+            asociados = []
+        context["form"] = form
+        context["query"] = form.data.get("q", "") if form.is_bound else ""
+        context["asociados"] = asociados
         return context
 
 
-class GestionExportarAsociadosView(StaffRequiredMixin, TemplateView):
+class GestionExportarAsociadosView(GestionPermissionRequiredMixin, TemplateView):
+    permission_required = GESTION_EXPORTAR_ASOCIADOS
+
     def get(self, request, *args, **kwargs):
-        query = request.GET.get("q", "").strip()
+        form = FiltroAsociadosForm(request.GET or None)
+        if form.is_valid():
+            filters = {
+                "query": form.cleaned_data["q"],
+                "estado": form.cleaned_data["estado"],
+                "tipo": form.cleaned_data["tipo"],
+                "curso_id": form.cleaned_data["curso_actual"].id if form.cleaned_data["curso_actual"] else None,
+                "usuario": form.cleaned_data["usuario"],
+                "deuda": form.cleaned_data["deuda"],
+            }
+        else:
+            filters = {}
         try:
-            content = build_asociados_formato_uni2_xlsx(get_asociados_for_export(query))
+            content = build_asociados_formato_uni2_xlsx(get_asociados_for_export(filters))
         except RuntimeError as exc:
             messages.error(request, str(exc))
             return redirect("gestion:asociados")
@@ -85,8 +130,9 @@ class GestionExportarAsociadosView(StaffRequiredMixin, TemplateView):
         return response
 
 
-class GestionImportarAsociadosView(StaffRequiredMixin, TemplateView):
+class GestionImportarAsociadosView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/importar_asociados.html"
+    permission_required = GESTION_IMPORTAR_ASOCIADOS
 
     def post(self, request, *args, **kwargs):
         action = request.POST.get("action")
@@ -138,7 +184,9 @@ class GestionImportarAsociadosView(StaffRequiredMixin, TemplateView):
         return context
 
 
-class GestionDescargarAsociadosRevisarView(StaffRequiredMixin, TemplateView):
+class GestionDescargarAsociadosRevisarView(GestionPermissionRequiredMixin, TemplateView):
+    permission_required = GESTION_IMPORTAR_ASOCIADOS
+
     def get(self, request, *args, **kwargs):
         preview_data = request.session.get(PADRON_IMPORT_SESSION_KEY)
         if not preview_data:
@@ -164,8 +212,9 @@ class GestionDescargarAsociadosRevisarView(StaffRequiredMixin, TemplateView):
         return response
 
 
-class GestionImportarCuotasHistoricasView(StaffRequiredMixin, TemplateView):
+class GestionImportarCuotasHistoricasView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/importar_cuotas_historicas.html"
+    permission_required = GESTION_IMPORTAR_CUOTAS_HISTORICAS
 
     def post(self, request, *args, **kwargs):
         action = request.POST.get("action")
@@ -217,7 +266,9 @@ class GestionImportarCuotasHistoricasView(StaffRequiredMixin, TemplateView):
         return context
 
 
-class GestionDescargarCuotasHistoricasRevisarView(StaffRequiredMixin, TemplateView):
+class GestionDescargarCuotasHistoricasRevisarView(GestionPermissionRequiredMixin, TemplateView):
+    permission_required = GESTION_IMPORTAR_CUOTAS_HISTORICAS
+
     def get(self, request, *args, **kwargs):
         preview_data = request.session.get(CUOTAS_HISTORICAS_SESSION_KEY)
         if not preview_data:
@@ -243,10 +294,13 @@ class GestionDescargarCuotasHistoricasRevisarView(StaffRequiredMixin, TemplateVi
         return response
 
 
-class GestionAsociadoDetalleView(StaffRequiredMixin, TemplateView):
+class GestionAsociadoDetalleView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/asociado_detalle.html"
+    permission_required = GESTION_CONSULTAR_ASOCIADOS
 
     def dispatch(self, request, *args, **kwargs):
+        if request.method == "POST" and not request.user.has_perm(GESTION_EDITAR_ASOCIADOS):
+            raise PermissionDenied
         self.asociado = get_object_or_404(Asociado, id=kwargs["asociado_id"])
         if request.method == "POST":
             form = AsociadoGestionForm(request.POST, instance=self.asociado)
@@ -279,8 +333,9 @@ class GestionAsociadoDetalleView(StaffRequiredMixin, TemplateView):
         return context
 
 
-class GestionCobrosView(StaffRequiredMixin, TemplateView):
+class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/cobrar_cuotas.html"
+    permission_required = GESTION_COBRAR_CUOTAS
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -352,8 +407,9 @@ class GestionCobrosView(StaffRequiredMixin, TemplateView):
         return context
 
 
-class GestionPeriodosCuotaView(StaffRequiredMixin, TemplateView):
+class GestionPeriodosCuotaView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/periodos_cuota.html"
+    permission_required = GESTION_ADMINISTRAR_PERIODOS_CUOTA
 
     def dispatch(self, request, *args, **kwargs):
         if request.method == "POST":
