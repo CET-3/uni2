@@ -453,9 +453,12 @@ def test_cobros_gestion_busca_asociado_y_registra_pago(client):
 
     client.force_login(staff)
 
-    response_busqueda = client.get(reverse("gestion:cobros"), {"q": "45555111"})
+    response_busqueda = client.get(reverse("gestion:cobros"), {"q": "45555111", "estado": "activo", "usuario": "sin"})
     assert response_busqueda.status_code == 200
-    assert "Gimenez" in response_busqueda.content.decode()
+    content = response_busqueda.content.decode()
+    assert "Gimenez" in content
+    assert "Estado" in content
+    assert "Usuario vinculado" in content
 
     response_cobro = client.post(
         reverse("gestion:cobros"),

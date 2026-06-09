@@ -14,11 +14,31 @@
 <div class="card surface-card mb-4">
     <div class="card-body">
         <form method="get" class="row g-3 align-items-end">
-            <div class="col-lg-8">
-                <label class="form-label" for="id_q">Buscar asociado</label>
-                <input id="id_q" class="form-control" type="text" name="q" value="{{ query }}" placeholder="DNI, número, apellido o nombre">
-            </div>
             <div class="col-lg-4">
+                <label class="form-label" for="{{ form.q.id_for_label }}">{{ form.q.label }}</label>
+                {{ form.q }}
+            </div>
+            <div class="col-lg-2">
+                <label class="form-label" for="{{ form.estado.id_for_label }}">{{ form.estado.label }}</label>
+                {{ form.estado }}
+            </div>
+            <div class="col-lg-2">
+                <label class="form-label" for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}</label>
+                {{ form.tipo }}
+            </div>
+            <div class="col-lg-2">
+                <label class="form-label" for="{{ form.curso_actual.id_for_label }}">{{ form.curso_actual.label }}</label>
+                {{ form.curso_actual }}
+            </div>
+            <div class="col-lg-1">
+                <label class="form-label" for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
+                {{ form.usuario }}
+            </div>
+            <div class="col-lg-1">
+                <label class="form-label" for="{{ form.deuda.id_for_label }}">{{ form.deuda.label }}</label>
+                {{ form.deuda }}
+            </div>
+            <div class="col-lg-2">
                 <button class="btn btn-primary w-100" type="submit">Buscar</button>
             </div>
         </form>
@@ -48,7 +68,7 @@
                                 <td>{{ asociado.curso_actual|default:"-" }}</td>
                                 <td>{{ asociado.get_estado_display }}</td>
                                 <td class="text-lg-end">
-                                    <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:cobros' %}?asociado={{ asociado.id }}">Seleccionar</a>
+                                    <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:cobros' %}?asociado={{ asociado.id }}{% if filtros_querystring %}&{{ filtros_querystring }}{% endif %}">Seleccionar</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -57,7 +77,7 @@
             </div>
         </div>
     </div>
-{% elif query %}
+{% elif form.is_bound %}
     <div class="alert alert-warning">No se encontraron asociados para la búsqueda ingresada.</div>
 {% endif %}
 
