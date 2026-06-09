@@ -16,7 +16,7 @@ from asociados.importers import (
     import_padron_preview,
 )
 from asociados.models import Asociado
-from asociados.selectors import filter_asociados, get_asociados_for_export, search_asociados
+from asociados.selectors import filter_asociados, get_asociados_for_export
 from cuotas.importers import (
     CUOTAS_HISTORICAS_SESSION_KEY,
     CuotasHistoricasPreview,
@@ -371,15 +371,30 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        query = self.request.GET.get("q", "").strip()
+        form = FiltroAsociadosForm(self.request.GET or None)
+        if form.is_valid():
+            filters = {
+                "query": form.cleaned_data["q"],
+                "estado": form.cleaned_data["estado"],
+                "tipo": form.cleaned_data["tipo"],
+                "curso_id": form.cleaned_data["curso_actual"].id if form.cleaned_data["curso_actual"] else None,
+                "usuario": form.cleaned_data["usuario"],
+                "deuda": form.cleaned_data["deuda"],
+            }
+            search_results = filter_asociados(**filters)[:10]
+        else:
+            search_results = []
         selected_asociado = getattr(self.request, "_selected_asociado", None)
         if selected_asociado is None:
             asociado_id = self.request.GET.get("asociado")
             if asociado_id:
                 selected_asociado = Asociado.objects.filter(id=asociado_id).select_related("curso_actual", "usuario").first()
 
-        context["query"] = query
-        context["search_results"] = search_asociados(query)[:10] if query else []
+        query_params = self.request.GET.copy()
+        query_params.pop("asociado", None)
+        context["form"] = form
+        context["search_results"] = search_results
+        context["filtros_querystring"] = query_params.urlencode()
         context["selected_asociado"] = selected_asociado
         context["cobro_form"] = getattr(
             self.request,
