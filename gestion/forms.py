@@ -2,6 +2,7 @@ from django import forms
 from django.utils import timezone
 
 from asociados.models import Asociado
+from asociados.models import Curso
 from cuotas.models import Pago, PeriodoCuota
 
 
@@ -118,3 +119,42 @@ class ImportarCuotasHistoricasForm(forms.Form):
         if not archivo.name.lower().endswith(".xlsx"):
             raise forms.ValidationError("La planilla debe ser un archivo .xlsx.")
         return archivo
+
+
+class FiltroAsociadosForm(forms.Form):
+    q = forms.CharField(required=False, label="Buscar", widget=forms.TextInput())
+    estado = forms.ChoiceField(required=False, choices=[("", "Todos")] + list(Asociado.ESTADOS), label="Estado")
+    tipo = forms.ChoiceField(required=False, choices=[("", "Todos")] + list(Asociado.TIPOS), label="Tipo")
+    curso_actual = forms.ModelChoiceField(
+        required=False,
+        queryset=Curso.objects.select_related().order_by("division", "anio", "curso", "turno"),
+        empty_label="Todos los cursos",
+        label="Curso actual",
+    )
+    usuario = forms.ChoiceField(
+        required=False,
+        choices=[
+            ("", "Todos"),
+            ("con", "Con usuario"),
+            ("sin", "Sin usuario"),
+        ],
+        label="Usuario vinculado",
+    )
+    deuda = forms.ChoiceField(
+        required=False,
+        choices=[
+            ("", "Todos"),
+            ("con", "Con deuda"),
+            ("sin", "Sin deuda"),
+        ],
+        label="Deuda",
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["q"].widget.attrs.update({"class": "form-control", "placeholder": "DNI, número, apellido o nombre"})
+        self.fields["estado"].widget.attrs.update({"class": "form-select"})
+        self.fields["tipo"].widget.attrs.update({"class": "form-select"})
+        self.fields["curso_actual"].widget.attrs.update({"class": "form-select"})
+        self.fields["usuario"].widget.attrs.update({"class": "form-select"})
+        self.fields["deuda"].widget.attrs.update({"class": "form-select"})

@@ -61,6 +61,7 @@
               <li><a href="#cu-ver-estado-cuotas">CU-ver-estado-cuotas</a></li>
               <li><a href="#cu-crear-asociado">CU-crear-asociado</a></li>
               <li><a href="#cu-importar-padron-inicial">CU-importar-padron-inicial</a></li>
+              <li><a href="#cu-consultar-asociados">CU-consultar-asociados</a></li>
               <li><a href="#cu-exportar-asociados-formato-uni2">CU-exportar-asociados-formato-uni2</a></li>
               <li><a href="#cu-importar-cuotas-historicas">CU-importar-cuotas-historicas</a></li>
               <li><a href="#cu-crear-usuario-asociado">CU-crear-usuario-asociado</a></li>
@@ -177,17 +178,15 @@
             </ul>
           </article>
           <article class="card">
-            <h3>Administrador</h3>
-            <p>Usuario interno de gestión. Puede:</p>
+            <h3>Gestión</h3>
+            <p>Usuario con uno o más permisos operativos de gestión. Puede acceder solo a las tareas autorizadas:</p>
             <ul>
               <li>Gestionar asociados e importarlos.</li>
               <li>Crear usuarios para asociados.</li>
-              <li>Gestionar colegios y cursos.</li>
               <li>Gestionar cuotas y registrar pagos.</li>
-              <li>Cargar y editar beneficios institucionales desde el admin técnico de Django.</li>
-              <li>Cargar y editar comercios desde el admin técnico de Django.</li>
               <li>Consultar reportes.</li>
             </ul>
+            <p>El acceso a <code>gestion</code> no depende de <code>is_staff</code>. <code>is_staff</code> queda reservado para el admin técnico de Django.</p>
           </article>
           <article class="card">
             <h3>Comercio</h3>
@@ -522,6 +521,8 @@
             <li id="USUARIO-004"><strong><a href="#USUARIO-004">USUARIO-004</a></strong> El username puede ser el DNI.</li>
             <li id="USUARIO-005"><strong><a href="#USUARIO-005">USUARIO-005</a></strong> El listado de asociados debe mostrar si tiene usuario y el ultimo acceso usando <code>User.last_login</code>.</li>
             <li id="USUARIO-006"><strong><a href="#USUARIO-006">USUARIO-006</a></strong> En el admin técnico de Django, el listado de usuarios debe mostrar los grupos asignados para facilitar la operación de roles.</li>
+            <li id="USUARIO-007"><strong><a href="#USUARIO-007">USUARIO-007</a></strong> El panel de asociado se habilita por vínculo con <code>Asociado</code>, el panel de comercio por vínculo con <code>Comercio</code> y el panel de gestión por permisos operativos de la app <code>gestion</code>.</li>
+            <li id="USUARIO-008"><strong><a href="#USUARIO-008">USUARIO-008</a></strong> Si un usuario tiene más de una experiencia disponible, luego del login ve una pantalla para elegir entre asociado, comercio y gestión.</li>
           </ul>
         </div>
         <div class="rule-group">
@@ -660,17 +661,31 @@
             <p><strong>Situaciones especiales:</strong> DNI duplicado, número de asociado duplicado, curso incompleto, asociado ya existente, email faltante, teléfono faltante, tipo inválido.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Curso.</p>
           </article>
+          <article class="use-case" id="cu-consultar-asociados">
+            <h3>CU-consultar-asociados</h3>
+            <p><strong>Actor:</strong> Gestión</p>
+            <p><strong>Alcance:</strong> listado operativo de asociados desde el backoffice, con búsqueda textual y filtros estructurados. La consulta y la exportación usan el mismo criterio de filtrado para evitar diferencias entre pantalla y descarga.</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>El usuario entra a la consulta de asociados.</li>
+              <li>Busca por DNI, número, apellido o nombre.</li>
+              <li>Opcionalmente acota por estado, tipo, curso actual, con o sin usuario y con o sin deuda.</li>
+              <li>El sistema muestra el listado filtrado.</li>
+            </ol>
+            <p><strong>Filtros útiles:</strong> estado, tipo, curso actual, presencia de usuario y presencia de deuda.</p>
+            <p><strong>Modelos afectados:</strong> Asociado, Curso, Cuota.</p>
+          </article>
           <article class="use-case" id="cu-exportar-asociados-formato-uni2">
             <h3>CU-exportar-asociados-formato-uni2</h3>
             <p><strong>Actor:</strong> Administrador</p>
-            <p><strong>Alcance:</strong> exportación disponible desde la consulta de asociados del backoffice. Permite descargar el padrón completo o los resultados de la búsqueda activa.</p>
+            <p><strong>Alcance:</strong> exportación disponible desde la consulta de asociados del backoffice. Permite descargar el padrón completo o los resultados filtrados de la búsqueda activa.</p>
             <p><strong>Flujo principal:</strong></p>
             <ol>
               <li>El administrador entra a la consulta de asociados.</li>
-              <li>Opcionalmente busca por DNI, número, apellido o nombre.</li>
+              <li>Opcionalmente busca por DNI, número, apellido o nombre y aplica filtros estructurados.</li>
               <li>El administrador elige exportar asociados.</li>
               <li>El sistema descarga una planilla <code>.xlsx</code> con la hoja <code>ASOCIADOS</code>.</li>
-              <li>Si había búsqueda activa, la planilla incluye solo esos resultados; si no había búsqueda, incluye el padrón completo.</li>
+              <li>Si había búsqueda o filtros activos, la planilla incluye solo esos resultados; si no había filtros, incluye el padrón completo.</li>
             </ol>
             <p><strong>Columnas:</strong> <code>numero_asociado</code>, <code>apellido</code>, <code>nombre</code>, <code>dni</code>, <code>tipo</code>, <code>email</code>, <code>telefono</code>, <code>direccion</code>, <code>curso_anio</code>, <code>curso_division</code>, <code>division</code>, <code>turno</code>, <code>curso_nombre</code>, <code>fecha_alta</code>, <code>fecha_inicio_cobro</code>, <code>estado</code>, <code>motivo_baja</code>.</p>
             <p><strong>Decisión funcional:</strong> <code>curso_nombre</code> es una ayuda visual para personas. El formato regular futuro de importación no debe depender de ese texto y debe usar los campos normalizados de curso.</p>
@@ -893,7 +908,7 @@
             <h3>Administrador</h3>
             <ul>
               <li>Dashboard simple con accesos a tareas del MVP.</li>
-              <li>Listado de asociados.</li>
+              <li>Consulta de asociados con búsqueda y filtros.</li>
               <li>Nuevo asociado.</li>
               <li>Importar padrón inicial desde planilla heredada con previsualización.</li>
               <li>Importar cuotas históricas desde planilla heredada con previsualización.</li>
@@ -943,7 +958,7 @@
             <h3>Criterio de separación</h3>
             <ul>
               <li>Las apps representan dominios de negocio o contextos técnicos bien delimitados.</li>
-              <li>La carpeta <code>templates/gestion/</code> contiene pantallas de operación para usuarios <code>staff</code>.</li>
+              <li>La carpeta <code>templates/gestion/</code> contiene pantallas de operación para usuarios con permisos de gestión.</li>
               <li>La carpeta <code>templates/asociados/</code> contiene el panel y vistas del asociado.</li>
               <li>La carpeta <code>templates/comercios/</code> contiene el flujo del comercio.</li>
               <li>La carpeta <code>templates/web/</code> agrupa el sitio público.</li>
@@ -955,11 +970,11 @@
           <article class="card">
             <h3>Dashboards y entradas</h3>
             <ul>
-              <li>Staff interno: dashboard simple de <code>gestion</code> con accesos a tareas del MVP.</li>
+              <li>Gestión: dashboard simple de <code>gestion</code> con accesos a las tareas permitidas para el usuario.</li>
               <li>Asociado autenticado: panel simple de <code>asociados</code> con accesos a credencial, cuotas, beneficios y comercios.</li>
               <li>Comercio autenticado: panel simple de <code>comercios</code> con acceso a validar credenciales.</li>
-              <li>Luego del login, el sistema redirige según el rol y el perfil vinculado.</li>
-              <li>La navegación para staff prioriza el acceso al backoffice propio y deja el admin de Django como herramienta técnica complementaria.</li>
+              <li>Luego del login, el sistema redirige directo si hay una sola experiencia disponible; si hay más de una, muestra una pantalla de elección.</li>
+              <li>La navegación muestra accesos a los paneles disponibles para el usuario y deja el admin de Django como herramienta técnica complementaria para usuarios <code>is_staff</code>.</li>
             </ul>
           </article>
           <article class="card">
@@ -971,6 +986,8 @@
               <li>No cargar el dashboard del MVP con métricas, rankings o reportes avanzados.</li>
               <li>Permitir una UX propia para escritorio y mobile sin contaminar la app de autenticación.</li>
               <li>Hacer más claro el mantenimiento: auth y roles en <code>usuarios</code>, backoffice en <code>gestion</code>.</li>
+              <li>Controlar cada pantalla de gestión con permisos Django propios: consultar asociados, editar asociados, importar asociados, exportar asociados, cobrar cuotas, ver deudores, administrar períodos de cuota e importar cuotas históricas.</li>
+              <li>El comando <code>carga_inicial</code> crea datos de desarrollo: grupos, cursos, beneficios, comercios, un usuario de gestión/admin técnico, un usuario asociado vinculado a un asociado de prueba y un usuario comercio vinculado a un comercio de prueba.</li>
               <li>El límite técnico <code>DATA_UPLOAD_MAX_NUMBER_FIELDS</code> se eleva a <code>10000</code> para permitir acciones masivas razonables en el admin técnico luego de importaciones iniciales con muchas cuotas.</li>
             </ul>
           </article>

@@ -6,11 +6,11 @@
 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
     <div>
         <h1 class="h2 mb-1">Gestión de asociados</h1>
-        <p class="text-secondary mb-0">Busca asociados por DNI, número, apellido o nombre.</p>
+        <p class="text-secondary mb-0">Buscá por texto libre y acotá con filtros de estado, tipo, curso, usuario o deuda.</p>
     </div>
     <div class="page-header-actions">
         <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
-        <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if query %}?q={{ query|urlencode }}{% endif %}">Exportar asociados</a>
+        <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">Exportar asociados</a>
         <a class="btn btn-outline-primary" href="{% url 'gestion:importar_asociados' %}">Importar padrón inicial</a>
         <a class="btn btn-primary" href="{% url 'admin:asociados_asociado_add' %}">Nuevo asociado</a>
     </div>
@@ -19,14 +19,37 @@
 <div class="card surface-card mb-4">
     <div class="card-body">
         <form method="get" class="row g-3 align-items-end">
-            <div class="col-lg-9">
-                <label class="form-label" for="id_q">Buscar asociado</label>
-                <input id="id_q" class="form-control" type="text" name="q" value="{{ query }}" placeholder="DNI, número, apellido o nombre">
+            <div class="col-lg-4">
+                <label class="form-label" for="{{ form.q.id_for_label }}">{{ form.q.label }}</label>
+                {{ form.q }}
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-2">
+                <label class="form-label" for="{{ form.estado.id_for_label }}">{{ form.estado.label }}</label>
+                {{ form.estado }}
+            </div>
+            <div class="col-lg-2">
+                <label class="form-label" for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}</label>
+                {{ form.tipo }}
+            </div>
+            <div class="col-lg-2">
+                <label class="form-label" for="{{ form.curso_actual.id_for_label }}">{{ form.curso_actual.label }}</label>
+                {{ form.curso_actual }}
+            </div>
+            <div class="col-lg-2">
+                <label class="form-label" for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
+                {{ form.usuario }}
+            </div>
+            <div class="col-lg-2">
+                <label class="form-label" for="{{ form.deuda.id_for_label }}">{{ form.deuda.label }}</label>
+                {{ form.deuda }}
+            </div>
+            <div class="col-lg-2">
                 <button class="btn btn-primary w-100" type="submit">Buscar</button>
             </div>
         </form>
+        {% if form.errors %}
+            <div class="alert alert-warning mt-3 mb-0">Revisá los filtros ingresados.</div>
+        {% endif %}
     </div>
 </div>
 
@@ -65,7 +88,7 @@
             </div>
         </div>
     </div>
-{% elif query %}
+{% elif form.is_bound %}
     <div class="alert alert-warning">No se encontraron asociados para la búsqueda ingresada.</div>
 {% endif %}
 {% endblock %}
