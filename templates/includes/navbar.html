@@ -9,21 +9,42 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'web:beneficios' %}">Beneficios</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'web:comercios' %}">Comercios</a></li>
             </ul>
-            <div class="d-flex gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
                 {% if user.is_authenticated %}
-                    {% if tiene_perfil_asociado %}
-                        <a class="btn btn-outline-light btn-sm" href="{% url 'asociados:dashboard' %}">Mi panel</a>
-                    {% endif %}
-                    {% if tiene_gestion %}
-                        <a class="btn btn-outline-light btn-sm" href="{% url 'gestion:dashboard' %}">Gestión</a>
-                    {% endif %}
-                    {% if tiene_perfil_comercio %}
-                        <a class="btn btn-outline-light btn-sm" href="{% url 'comercios:dashboard' %}">Mi comercio</a>
-                    {% endif %}
-                    <form method="post" action="{% url 'usuarios:logout' %}">
-                        {% csrf_token %}
-                        <button class="btn btn-light btn-sm" type="submit">Salir</button>
-                    </form>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ nombre_usuario }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            {% if cantidad_experiencias > 1 %}
+                                {% if tiene_perfil_asociado %}
+                                    <li><a class="dropdown-item" href="{% url 'asociados:dashboard' %}">Mi panel</a></li>
+                                {% endif %}
+                                {% if tiene_gestion %}
+                                    <li><a class="dropdown-item" href="{% url 'gestion:dashboard' %}">Panel de gestión</a></li>
+                                {% endif %}
+                                {% if tiene_perfil_comercio %}
+                                    <li><a class="dropdown-item" href="{% url 'comercios:dashboard' %}">Mi comercio</a></li>
+                                {% endif %}
+                            {% elif tiene_gestion %}
+                                <li><a class="dropdown-item" href="{% url 'gestion:dashboard' %}">Panel de gestión</a></li>
+                            {% elif tiene_perfil_asociado %}
+                                <li><a class="dropdown-item" href="{% url 'asociados:dashboard' %}">Mi panel</a></li>
+                            {% elif tiene_perfil_comercio %}
+                                <li><a class="dropdown-item" href="{% url 'comercios:dashboard' %}">Mi comercio</a></li>
+                            {% endif %}
+                            {% if es_staff %}
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin técnico</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'usuarios:logout' %}">
+                                    {% csrf_token %}
+                                    <button class="dropdown-item" type="submit">Salir</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 {% else %}
                     <a class="btn btn-light btn-sm" href="{% url 'usuarios:login' %}">Ingresar</a>
                 {% endif %}
