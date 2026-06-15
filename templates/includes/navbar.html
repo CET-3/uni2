@@ -11,9 +11,13 @@
             </ul>
             <div class="d-flex gap-2">
                 {% if user.is_authenticated %}
-                    {% if es_asociado %}
+                    {% if tiene_perfil_asociado %}
                         <a class="btn btn-outline-light btn-sm" href="{% url 'asociados:dashboard' %}">Mi panel</a>
-                    {% elif es_comercio %}
+                    {% endif %}
+                    {% if tiene_gestion %}
+                        <a class="btn btn-outline-light btn-sm" href="{% url 'gestion:dashboard' %}">Gestión</a>
+                    {% endif %}
+                    {% if tiene_perfil_comercio %}
                         <a class="btn btn-outline-light btn-sm" href="{% url 'comercios:dashboard' %}">Mi comercio</a>
                     {% endif %}
                     <form method="post" action="{% url 'usuarios:logout' %}">

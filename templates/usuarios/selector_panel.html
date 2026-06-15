@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Elegir panel | Uni2{% endblock %}
+
+{% block content %}
+<div class="app-panel-shell">
+    <section class="dashboard-hero card">
+        <div class="card-body">
+            <div class="dashboard-eyebrow">Acceso</div>
+            <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
+                <div class="col-lg-7 p-0">
+                    <h1 class="display-6 fw-semibold mb-3">Elegí cómo querés entrar</h1>
+                    <p class="mb-0 fs-5">Tu usuario tiene más de una experiencia disponible.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-card card">
+        <div class="card-body">
+            <div class="module-card-grid">
+                {% if mostrar_asociado %}
+                    <a class="module-link-item" href="{% url 'asociados:dashboard' %}">
+                        <div class="module-link-copy">
+                            <strong>Mi cuenta de asociado</strong>
+                            <span>Credencial, cuotas y beneficios.</span>
+                        </div>
+                    </a>
+                {% endif %}
+                {% if mostrar_gestion %}
+                    <a class="module-link-item" href="{% url 'gestion:dashboard' %}">
+                        <div class="module-link-copy">
+                            <strong>Gestión</strong>
+                            <span>Tareas operativas de la mutual.</span>
+                        </div>
+                    </a>
+                {% endif %}
+                {% if mostrar_comercio %}
+                    <a class="module-link-item" href="{% url 'comercios:dashboard' %}">
+                        <div class="module-link-copy">
+                            <strong>Mi comercio</strong>
+                            <span>Validación de credenciales.</span>
+                        </div>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
