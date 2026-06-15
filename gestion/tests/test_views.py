@@ -697,6 +697,14 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
         fecha_vencimiento=timezone.localdate(),
         activo=True,
     )
+    periodo_actual_pagada = PeriodoCuota.objects.create(
+        mes=5,
+        ciclo_lectivo=ciclo_actual,
+        importe="12000.00",
+        importe_recargo_mora="0.00",
+        fecha_vencimiento=timezone.localdate(),
+        activo=True,
+    )
     periodo_anterior = PeriodoCuota.objects.create(
         mes=6,
         ciclo_lectivo=ciclo_anterior,
@@ -706,6 +714,14 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
         activo=True,
     )
     Cuota.objects.create(asociado=asociado, periodo=periodo_actual, importe="12000.00", importe_recargo_mora="0.00")
+    Cuota.objects.create(
+        asociado=asociado,
+        periodo=periodo_actual_pagada,
+        importe="12000.00",
+        importe_recargo_mora="0.00",
+        importe_pagado="12000.00",
+        estado=Cuota.ESTADO_PAGADA,
+    )
     Cuota.objects.create(asociado=asociado, periodo=periodo_anterior, importe="11000.00", importe_recargo_mora="0.00")
 
     client.force_login(staff)
@@ -726,8 +742,10 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert f"?asociado={asociado.id}" in content
     assert "Editar datos" in content
     assert "Guardar cambios" not in content
-    assert "Cuotas con deuda del año actual" in content
+    assert "Cuotas del año actual" in content
     assert "06/2025" not in content
+    assert "05/2026" in content
+    assert "Pagada" in content
     assert reverse("gestion:asociado_cuotas", args=[asociado.id]) in content
     assert "Ver todas las cuotas" in content
 
