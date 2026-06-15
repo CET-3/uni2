@@ -267,6 +267,7 @@
             <h3>Usuario</h3>
             <p>Usuario de autenticación de Django. Se recomienda usar el sistema estandar inicialmente.</p>
             <p><strong>Grupos sugeridos:</strong> Administradores, Asociados, Comercios.</p>
+            <p><strong>Permisos operativos de gestión:</strong> ver dashboard de gestión, consultar asociados, editar asociados, importar asociados, exportar asociados, cobrar cuotas, ver deudores, administrar períodos de cuota e importar cuotas históricas.</p>
             <p><strong>Campos relevantes:</strong> username, email, password, first_name, last_name, is_active, is_staff, last_login, date_joined.</p>
             <p><strong>Admin técnico:</strong> el listado de usuarios muestra una columna de grupos para facilitar la revisión de roles sin abrir cada usuario.</p>
           </article>
@@ -523,6 +524,7 @@
             <li id="USUARIO-006"><strong><a href="#USUARIO-006">USUARIO-006</a></strong> En el admin técnico de Django, el listado de usuarios debe mostrar los grupos asignados para facilitar la operación de roles.</li>
             <li id="USUARIO-007"><strong><a href="#USUARIO-007">USUARIO-007</a></strong> El panel de asociado se habilita por vínculo con <code>Asociado</code>, el panel de comercio por vínculo con <code>Comercio</code> y el panel de gestión por permisos operativos de la app <code>gestion</code>.</li>
             <li id="USUARIO-008"><strong><a href="#USUARIO-008">USUARIO-008</a></strong> Si un usuario tiene más de una experiencia disponible, luego del login ve una pantalla para elegir entre asociado, comercio y gestión.</li>
+            <li id="USUARIO-009"><strong><a href="#USUARIO-009">USUARIO-009</a></strong> <code>is_staff</code> habilita el admin técnico de Django, pero no define por sí solo qué tareas operativas puede usar una persona en <code>gestion</code>. Las pantallas y accesos del backoffice se controlan con permisos Django propios de la app <code>gestion</code>.</li>
           </ul>
         </div>
         <div class="rule-group">
@@ -905,9 +907,9 @@
             </ul>
           </article>
           <article class="card">
-            <h3>Administrador</h3>
+            <h3>Gestión</h3>
             <ul>
-              <li>Dashboard simple con accesos a tareas del MVP.</li>
+              <li>Dashboard simple con accesos a las tareas del MVP permitidas para el usuario.</li>
               <li>Consulta de asociados con búsqueda y filtros.</li>
               <li>Nuevo asociado.</li>
               <li>Importar padrón inicial desde planilla heredada con previsualización.</li>
@@ -920,6 +922,7 @@
               <li>Generar cuotas.</li>
               <li>Registrar pago.</li>
               <li>Deudores.</li>
+              <li>Acceso al admin técnico de Django solo para usuarios con <code>is_staff</code>.</li>
             </ul>
           </article>
           <article class="card">
@@ -986,7 +989,8 @@
               <li>No cargar el dashboard del MVP con métricas, rankings o reportes avanzados.</li>
               <li>Permitir una UX propia para escritorio y mobile sin contaminar la app de autenticación.</li>
               <li>Hacer más claro el mantenimiento: auth y roles en <code>usuarios</code>, backoffice en <code>gestion</code>.</li>
-              <li>Controlar cada pantalla de gestión con permisos Django propios: consultar asociados, editar asociados, importar asociados, exportar asociados, cobrar cuotas, ver deudores, administrar períodos de cuota e importar cuotas históricas.</li>
+              <li>Registrar los permisos propios mediante un modelo técnico no gestionado por Django llamado <code>PermisoGestion</code>. Este modelo no representa una tabla de negocio: sirve para que las migraciones creen permisos personalizados de la app <code>gestion</code>.</li>
+              <li>Controlar cada pantalla de gestión con permisos Django propios: ver dashboard de gestión, consultar asociados, editar asociados, importar asociados, exportar asociados, cobrar cuotas, ver deudores, administrar períodos de cuota e importar cuotas históricas.</li>
               <li>El comando <code>carga_inicial</code> crea datos de desarrollo: grupos, cursos, beneficios, comercios, un usuario de gestión/admin técnico, un usuario asociado vinculado a un asociado de prueba y un usuario comercio vinculado a un comercio de prueba.</li>
               <li>El límite técnico <code>DATA_UPLOAD_MAX_NUMBER_FIELDS</code> se eleva a <code>10000</code> para permitir acciones masivas razonables en el admin técnico luego de importaciones iniciales con muchas cuotas.</li>
             </ul>

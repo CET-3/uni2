@@ -1,4 +1,4 @@
-from .services import user_is_asociado, user_is_comercio
+from .services import user_has_gestion_access, user_is_asociado, user_is_comercio
 
 
 def navigation_roles(request):
@@ -10,6 +10,7 @@ def navigation_roles(request):
     return {
         "es_asociado": es_asociado,
         "es_comercio": es_comercio,
+        "tiene_gestion": user_has_gestion_access(user),
         "es_staff": bool(user.is_authenticated and user.is_staff),
         "tiene_perfil_asociado": tiene_perfil_asociado,
         "tiene_perfil_comercio": tiene_perfil_comercio,

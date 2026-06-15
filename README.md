@@ -21,13 +21,17 @@ cp .env.example .env
 uv run python manage.py migrate
 
 # Cargar datos iniciales
-uv run python manage.py bootstrap_uni2
+uv run python manage.py carga_inicial
 
 # Levantar servidor
 uv run python manage.py runserver
 ```
 
-Usuario inicial: `admin` / `admin1234`
+Usuarios iniciales:
+
+- Gestión/admin técnico: `admin` / `admin1234`
+- Asociado de prueba: `asociado` / `asociado1234`
+- Comercio de prueba: `comercio` / `comercio1234`
 
 La app corre en http://127.0.0.1:8000
 

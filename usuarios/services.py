@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.db import transaction
 
 from asociados.models import Asociado
+from gestion.permissions import user_has_any_gestion_permission
 
 
 ADMIN_GROUP = "Administradores"
@@ -26,6 +27,24 @@ def user_is_asociado(user) -> bool:
 
 def user_is_comercio(user) -> bool:
     return user_has_group(user, COMERCIO_GROUP) or hasattr(user, "comercio")
+
+
+def user_has_gestion_access(user) -> bool:
+    return user_has_any_gestion_permission(user)
+
+
+def get_available_experiences(user) -> list[str]:
+    if not user.is_authenticated:
+        return []
+
+    experiences = []
+    if hasattr(user, "asociado"):
+        experiences.append("asociado")
+    if hasattr(user, "comercio"):
+        experiences.append("comercio")
+    if user_has_gestion_access(user):
+        experiences.append("gestion")
+    return experiences
 
 
 @transaction.atomic
