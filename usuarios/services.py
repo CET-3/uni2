@@ -7,9 +7,10 @@ from gestion.permissions import user_has_any_gestion_permission
 
 
 ADMIN_GROUP = "Administradores"
+ATENCION_MUTUAL_GROUP = "Atención de mutual"
 ASOCIADO_GROUP = "Asociados"
 COMERCIO_GROUP = "Comercios"
-DEFAULT_GROUPS = (ADMIN_GROUP, ASOCIADO_GROUP, COMERCIO_GROUP)
+DEFAULT_GROUPS = (ADMIN_GROUP, ATENCION_MUTUAL_GROUP, ASOCIADO_GROUP, COMERCIO_GROUP)
 
 
 def ensure_default_groups():
