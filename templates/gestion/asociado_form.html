@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo asociado | Uni2{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Nuevo asociado</h1>
+        <p class="text-secondary mb-0">Alta manual para la atención diaria de la mutual.</p>
+    </div>
+    <div class="page-header-actions">
+        <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Volver al listado</a>
+    </div>
+</div>
+
+<form method="post" class="card surface-card" novalidate>
+    {% csrf_token %}
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="{{ form.nombre.id_for_label }}">Nombre</label>
+                {{ form.nombre }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="{{ form.apellido.id_for_label }}">Apellido</label>
+                {{ form.apellido }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="{{ form.dni.id_for_label }}">DNI</label>
+                {{ form.dni }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="{{ form.tipo.id_for_label }}">Tipo</label>
+                {{ form.tipo }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="{{ form.curso_actual.id_for_label }}">Curso actual</label>
+                {{ form.curso_actual }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="{{ form.telefono.id_for_label }}">Teléfono</label>
+                {{ form.telefono }}
+            </div>
+            <div class="col-12">
+                <label class="form-label" for="{{ form.direccion.id_for_label }}">Dirección</label>
+                {{ form.direccion }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="{{ form.fecha_alta.id_for_label }}">Fecha de alta</label>
+                {{ form.fecha_alta }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="{{ form.fecha_inicio_cobro.id_for_label }}">Inicio de cobro</label>
+                {{ form.fecha_inicio_cobro }}
+            </div>
+        </div>
+
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="text-danger small mt-2">{{ field.label }}: {{ error }}</div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="text-danger small mt-2">{{ error }}</div>
+        {% endfor %}
+
+        <div class="mt-4 d-flex flex-column flex-sm-row gap-2">
+            <button class="btn btn-primary" type="submit">Guardar asociado</button>
+            <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Cancelar</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -15,7 +15,7 @@
                 <div class="col-lg-4 p-0">
                     <div class="dashboard-actions-grid">
                         {% if perms.gestion.cobrar_cuotas %}
-                            <a class="btn btn-light btn-lg" href="{% url 'gestion:cobros' %}">Cobrar cuota</a>
+                            <a class="btn btn-light btn-lg" href="{% url 'gestion:asociados' %}">Cobrar cuota</a>
                         {% endif %}
                         {% if perms.gestion.consultar_asociados %}
                             <a class="btn btn-outline-light btn-lg" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
@@ -39,31 +39,15 @@
                     <a class="module-link-item" href="{% url 'gestion:asociados' %}">
                         <div class="module-link-copy">
                             <strong>Asociados</strong>
-                            <span>Buscar asociados y revisar su detalle.</span>
-                        </div>
-                    </a>
-                {% endif %}
-                {% if perms.gestion.importar_asociados %}
-                    <a class="module-link-item" href="{% url 'gestion:importar_asociados' %}">
-                        <div class="module-link-copy">
-                            <strong>Importar padrón inicial</strong>
-                            <span>Previsualizar e importar asociados desde la planilla heredada de puesta en marcha.</span>
+                            <span>Buscar, dar altas y revisar detalles.</span>
                         </div>
                     </a>
                 {% endif %}
                 {% if perms.gestion.cobrar_cuotas %}
-                    <a class="module-link-item" href="{% url 'gestion:cobros' %}">
+                    <a class="module-link-item" href="{% url 'gestion:asociados' %}">
                         <div class="module-link-copy">
                             <strong>Cobros</strong>
-                            <span>Registrar pagos de cuotas.</span>
-                        </div>
-                    </a>
-                {% endif %}
-                {% if perms.gestion.importar_cuotas_historicas %}
-                    <a class="module-link-item" href="{% url 'gestion:importar_cuotas_historicas' %}">
-                        <div class="module-link-copy">
-                            <strong>Importar cuotas históricas</strong>
-                            <span>Previsualizar cuotas y pagos desde la planilla heredada.</span>
+                            <span>Buscar un asociado y registrar pagos de cuotas.</span>
                         </div>
                     </a>
                 {% endif %}
@@ -86,6 +70,37 @@
             </div>
         </div>
     </section>
+
+    {% if perms.gestion.importar_asociados or perms.gestion.importar_cuotas_historicas %}
+        <section class="section-card card">
+            <div class="card-body">
+                <div class="section-title-row">
+                    <div>
+                        <div class="muted-kicker">Puesta en marcha</div>
+                        <h2 class="h4 mb-0">Importaciones iniciales</h2>
+                    </div>
+                </div>
+                <div class="module-card-grid">
+                    {% if perms.gestion.importar_asociados %}
+                        <a class="module-link-item" href="{% url 'gestion:importar_asociados' %}">
+                            <div class="module-link-copy">
+                                <strong>Importar padrón inicial</strong>
+                                <span>Previsualizar e importar asociados desde la planilla heredada.</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                    {% if perms.gestion.importar_cuotas_historicas %}
+                        <a class="module-link-item" href="{% url 'gestion:importar_cuotas_historicas' %}">
+                            <div class="module-link-copy">
+                                <strong>Importar cuotas históricas</strong>
+                                <span>Previsualizar cuotas y pagos desde la planilla heredada.</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
 
     {% if user.is_staff %}
         <section class="section-card card">
