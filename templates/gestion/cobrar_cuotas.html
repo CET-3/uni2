@@ -6,80 +6,13 @@
 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
     <div>
         <h1 class="h2 mb-1">Cobro de cuotas</h1>
-        <p class="text-secondary mb-0">Busca un asociado, revisa su deuda y registra el pago.</p>
+        <p class="text-secondary mb-0">Revisá la deuda y registrá el pago del asociado seleccionado.</p>
     </div>
-    <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
-</div>
-
-<div class="card surface-card mb-4">
-    <div class="card-body">
-        <form method="get" class="row g-3 align-items-end">
-            <div class="col-lg-4">
-                <label class="form-label" for="{{ form.q.id_for_label }}">{{ form.q.label }}</label>
-                {{ form.q }}
-            </div>
-            <div class="col-lg-2">
-                <label class="form-label" for="{{ form.estado.id_for_label }}">{{ form.estado.label }}</label>
-                {{ form.estado }}
-            </div>
-            <div class="col-lg-2">
-                <label class="form-label" for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}</label>
-                {{ form.tipo }}
-            </div>
-            <div class="col-lg-2">
-                <label class="form-label" for="{{ form.curso_actual.id_for_label }}">{{ form.curso_actual.label }}</label>
-                {{ form.curso_actual }}
-            </div>
-            <div class="col-lg-1">
-                <label class="form-label" for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
-                {{ form.usuario }}
-            </div>
-            <div class="col-lg-1">
-                <label class="form-label" for="{{ form.deuda.id_for_label }}">{{ form.deuda.label }}</label>
-                {{ form.deuda }}
-            </div>
-            <div class="col-lg-2">
-                <button class="btn btn-primary w-100" type="submit">Buscar</button>
-            </div>
-        </form>
+    <div class="page-header-actions">
+        <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
+        <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
     </div>
 </div>
-
-{% if search_results %}
-    <div class="card surface-card mb-4">
-        <div class="card-body">
-            <h2 class="h5 mb-3">Resultados</h2>
-            <div class="table-responsive">
-                <table class="table table-soft align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Asociado</th>
-                            <th>DNI</th>
-                            <th>Curso</th>
-                            <th>Estado</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for asociado in search_results %}
-                            <tr>
-                                <td>{{ asociado.apellido }}, {{ asociado.nombre }}</td>
-                                <td>{{ asociado.dni }}</td>
-                                <td>{{ asociado.curso_actual|default:"-" }}</td>
-                                <td>{{ asociado.get_estado_display }}</td>
-                                <td class="text-lg-end">
-                                    <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:cobros' %}?asociado={{ asociado.id }}{% if filtros_querystring %}&{{ filtros_querystring }}{% endif %}">Seleccionar</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-{% elif form.is_bound %}
-    <div class="alert alert-warning">No se encontraron asociados para la búsqueda ingresada.</div>
-{% endif %}
 
 {% if selected_asociado %}
     <div class="row g-4">
@@ -169,5 +102,13 @@
             </div>
         </div>
     </section>
+{% else %}
+    <div class="card surface-card">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Seleccioná un asociado</h2>
+            <p class="text-secondary">Los cobros se inician desde la consulta de asociados para mantener una única búsqueda operativa.</p>
+            <a class="btn btn-primary" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
+        </div>
+    </div>
 {% endif %}
 {% endblock %}

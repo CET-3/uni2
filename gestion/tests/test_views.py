@@ -15,6 +15,8 @@ from gestion.permissions import (
     GESTION_COBRAR_CUOTAS,
     GESTION_CONSULTAR_ASOCIADOS,
     GESTION_EDITAR_ASOCIADOS,
+    GESTION_IMPORTAR_ASOCIADOS,
+    GESTION_IMPORTAR_CUOTAS_HISTORICAS,
     GESTION_PERMISSIONS,
     GESTION_DASHBOARD,
 )
@@ -117,6 +119,52 @@ def test_dashboard_gestion_muestra_accesos_basicos(client):
     assert "Deudores" in content
     assert "Períodos de cuota" in content
     assert "asociados activos" not in content.lower()
+
+
+@pytest.mark.django_db
+def test_dashboard_atencion_muestra_solo_operacion_diaria(client):
+    atencion = crear_usuario_gestion(
+        "atencion_dashboard",
+        permisos=[
+            GESTION_DASHBOARD,
+            GESTION_CONSULTAR_ASOCIADOS,
+            GESTION_EDITAR_ASOCIADOS,
+            GESTION_COBRAR_CUOTAS,
+        ],
+    )
+
+    client.force_login(atencion)
+    response = client.get(reverse("gestion:dashboard"))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Operación diaria" in content
+    assert "Asociados" in content
+    assert "Cobros" in content
+    assert "Puesta en marcha" not in content
+    assert "Importar padrón inicial" not in content
+    assert "Importar cuotas históricas" not in content
+
+
+@pytest.mark.django_db
+def test_dashboard_separa_importaciones_iniciales(client):
+    admin_operativo = crear_usuario_gestion(
+        "admin_importaciones",
+        permisos=[
+            GESTION_DASHBOARD,
+            GESTION_IMPORTAR_ASOCIADOS,
+            GESTION_IMPORTAR_CUOTAS_HISTORICAS,
+        ],
+    )
+
+    client.force_login(admin_operativo)
+    response = client.get(reverse("gestion:dashboard"))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Puesta en marcha" in content
+    assert "Importar padrón inicial" in content
+    assert "Importar cuotas históricas" in content
 
 
 @pytest.mark.django_db
@@ -443,7 +491,7 @@ def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client):
 
 
 @pytest.mark.django_db
-def test_cobros_gestion_busca_asociado_y_registra_pago(client):
+def test_cobros_gestion_usa_consulta_de_asociados_y_registra_pago(client):
     staff = crear_usuario_gestion("staff_cobro")
     asociado = create_asociado(
         nombre="Paula", apellido="Gimenez", dni="45555111", tipo="asociado", fecha_alta="2026-05-10"
@@ -459,12 +507,13 @@ def test_cobros_gestion_busca_asociado_y_registra_pago(client):
 
     client.force_login(staff)
 
-    response_busqueda = client.get(reverse("gestion:cobros"), {"q": "45555111", "estado": "activo", "usuario": "sin"})
+    response_busqueda = client.get(reverse("gestion:asociados"), {"q": "45555111", "estado": "activo", "usuario": "sin"})
     assert response_busqueda.status_code == 200
     content = response_busqueda.content.decode()
     assert "Gimenez" in content
     assert "Estado" in content
     assert "Usuario vinculado" in content
+    assert f"{reverse('gestion:cobros')}?asociado={asociado.id}" in content
 
     response_cobro = client.post(
         reverse("gestion:cobros"),
@@ -483,6 +532,37 @@ def test_cobros_gestion_busca_asociado_y_registra_pago(client):
     cuota = asociado.cuotas.get(periodo=periodo)
     assert cuota.estado == cuota.ESTADO_PAGADA
     assert "registrado para Gimenez, Paula" in response_cobro.content.decode()
+
+
+@pytest.mark.django_db
+def test_cobros_con_asociado_preseleccionado_no_muestra_busqueda_sin_resultados(client):
+    staff = crear_usuario_gestion("staff_cobro_preseleccionado")
+    asociado = create_asociado(
+        nombre="Paula", apellido="Gimenez", dni="45555112", tipo="asociado", fecha_alta="2026-05-10"
+    )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:cobros"), {"asociado": asociado.id})
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Asociado seleccionado" in content
+    assert "Gimenez, Paula" in content
+    assert "No se encontraron asociados para la búsqueda ingresada" not in content
+
+
+@pytest.mark.django_db
+def test_cobros_sin_asociado_indica_buscar_en_consulta_de_asociados(client):
+    staff = crear_usuario_gestion("staff_cobro_sin_asociado")
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:cobros"))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Seleccioná un asociado" in content
+    assert "Los cobros se inician desde la consulta de asociados" in content
+    assert reverse("gestion:asociados") in content
 
 
 @pytest.mark.django_db
@@ -623,6 +703,74 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert "Julia" in content
     assert "Sin usuario" in content
     assert f"?asociado={asociado.id}" in content
+    assert "Editar datos" in content
+    assert "Guardar cambios" not in content
+
+
+@pytest.mark.django_db
+def test_asociados_gestion_busqueda_sin_filtros_lista_todos(client):
+    staff = crear_usuario_gestion("staff_asoc_sin_filtros")
+    create_asociado(nombre="Julia", apellido="Campos", dni="40000111", tipo="asociado", fecha_alta="2026-05-10")
+    create_asociado(nombre="Mario", apellido="Rivas", dni="40000112", tipo="adherente", fecha_alta="2026-05-10")
+
+    client.force_login(staff)
+    response = client.get(
+        reverse("gestion:asociados"),
+        {"q": "", "estado": "", "tipo": "", "curso_actual": "", "usuario": "", "deuda": ""},
+    )
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Campos" in content
+    assert "Rivas" in content
+    assert "No se encontraron asociados" not in content
+
+
+@pytest.mark.django_db
+def test_asociado_detalle_oculta_edicion_sin_permiso(client):
+    staff = crear_usuario_gestion("staff_solo_detalle", permisos=[GESTION_CONSULTAR_ASOCIADOS])
+    asociado = create_asociado(
+        nombre="Julia", apellido="Campos", dni="40000111", tipo="asociado", fecha_alta="2026-05-10"
+    )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Estado general" in content
+    assert "Editar datos" not in content
+    assert "Guardar cambios" not in content
+
+
+@pytest.mark.django_db
+def test_asociado_editar_requiere_permiso(client):
+    staff = crear_usuario_gestion("staff_solo_lectura_editar", permisos=[GESTION_CONSULTAR_ASOCIADOS])
+    asociado = create_asociado(
+        nombre="Julia", apellido="Campos", dni="40000111", tipo="asociado", fecha_alta="2026-05-10"
+    )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:asociado_editar", args=[asociado.id]))
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_asociado_editar_muestra_formulario_separado(client):
+    staff = crear_usuario_gestion("staff_edita_pantalla", permisos=[GESTION_EDITAR_ASOCIADOS])
+    asociado = create_asociado(
+        nombre="Julia", apellido="Campos", dni="40000111", tipo="asociado", fecha_alta="2026-05-10"
+    )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:asociado_editar", args=[asociado.id]))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Editar asociado" in content
+    assert "Guardar cambios" in content
+    assert reverse("gestion:asociado_detalle", args=[asociado.id]) in content
 
 
 @pytest.mark.django_db
@@ -644,6 +792,49 @@ def test_asociados_gestion_oculta_acciones_sin_permiso(client):
     content = response.content.decode()
     assert "Exportar asociados" not in content
     assert "Importar padrón inicial" not in content
+    assert "Nuevo asociado" in content
+
+
+@pytest.mark.django_db
+def test_asociado_nuevo_crea_asociado_desde_gestion(client):
+    staff = crear_usuario_gestion("staff_alta_asoc", permisos=[GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS])
+    curso = Curso.objects.create(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
+
+    client.force_login(staff)
+    response = client.post(
+        reverse("gestion:asociado_nuevo"),
+        {
+            "nombre": "Mara",
+            "apellido": "Lopez",
+            "dni": "44111222",
+            "email": "mara@example.com",
+            "telefono": "2984000111",
+            "direccion": "San Martin 100",
+            "tipo": "asociado",
+            "curso_actual": curso.id,
+            "fecha_alta": "2026-05-20",
+            "fecha_inicio_cobro": "2026-06-01",
+        },
+        follow=True,
+    )
+
+    assert response.status_code == 200
+    asociado = Asociado.objects.get(dni="44111222")
+    assert asociado.nombre == "Mara"
+    assert asociado.curso_actual == curso
+    assert str(asociado.fecha_inicio_cobro) == "2026-06-01"
+    assert response.redirect_chain[-1][0] == reverse("gestion:asociado_detalle", args=[asociado.id])
+    assert "Asociado creado correctamente" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_asociado_nuevo_requiere_permiso_editar(client):
+    staff = crear_usuario_gestion("staff_solo_consulta", permisos=[GESTION_CONSULTAR_ASOCIADOS])
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:asociado_nuevo"))
+
+    assert response.status_code == 403
 
 
 @pytest.mark.django_db
@@ -780,7 +971,7 @@ def test_asociado_detalle_permite_editar_fecha_inicio_cobro(client):
 
     client.force_login(staff)
     response = client.post(
-        reverse("gestion:asociado_detalle", args=[asociado.id]),
+        reverse("gestion:asociado_editar", args=[asociado.id]),
         {
             "nombre": "Milena",
             "apellido": "Armada",

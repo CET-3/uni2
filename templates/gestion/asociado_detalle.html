@@ -10,8 +10,12 @@
     </div>
     <div class="page-header-actions">
         <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Volver al listado</a>
-        <a class="btn btn-primary" href="{{ cobro_url }}">Cobrar</a>
-        <a class="btn btn-outline-primary" href="{{ admin_change_url }}">Editar en admin</a>
+        {% if perms.gestion.editar_asociados %}
+            <a class="btn btn-outline-primary" href="{% url 'gestion:asociado_editar' asociado.id %}">Editar datos</a>
+        {% endif %}
+        {% if perms.gestion.cobrar_cuotas %}
+            <a class="btn btn-primary" href="{{ cobro_url }}">Cobrar</a>
+        {% endif %}
     </div>
 </div>
 
@@ -46,73 +50,6 @@
 
 <div class="row g-4">
     <div class="col-lg-7">
-        <div class="card surface-card mb-4"><div class="card-body">
-            <h2 class="h5 mb-3">Editar asociado</h2>
-            <form method="post" novalidate>
-                {% csrf_token %}
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ asociado_form.nombre.id_for_label }}">Nombre</label>
-                        {{ asociado_form.nombre }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ asociado_form.apellido.id_for_label }}">Apellido</label>
-                        {{ asociado_form.apellido }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ asociado_form.dni.id_for_label }}">DNI</label>
-                        {{ asociado_form.dni }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ asociado_form.tipo.id_for_label }}">Tipo</label>
-                        {{ asociado_form.tipo }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ asociado_form.email.id_for_label }}">Email</label>
-                        {{ asociado_form.email }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ asociado_form.telefono.id_for_label }}">Telefono</label>
-                        {{ asociado_form.telefono }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ asociado_form.curso_actual.id_for_label }}">Curso actual</label>
-                        {{ asociado_form.curso_actual }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ asociado_form.estado.id_for_label }}">Estado</label>
-                        {{ asociado_form.estado }}
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label" for="{{ asociado_form.fecha_alta.id_for_label }}">Fecha alta</label>
-                        {{ asociado_form.fecha_alta }}
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label" for="{{ asociado_form.fecha_inicio_cobro.id_for_label }}">Inicio cobro</label>
-                        {{ asociado_form.fecha_inicio_cobro }}
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label" for="{{ asociado_form.fecha_baja.id_for_label }}">Fecha baja</label>
-                        {{ asociado_form.fecha_baja }}
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label" for="{{ asociado_form.motivo_baja.id_for_label }}">Motivo baja</label>
-                        {{ asociado_form.motivo_baja }}
-                    </div>
-                </div>
-                {% for field in asociado_form %}
-                    {% for error in field.errors %}
-                        <div class="text-danger small mt-2">{{ error }}</div>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in asociado_form.non_field_errors %}
-                    <div class="text-danger small mt-2">{{ error }}</div>
-                {% endfor %}
-                <div class="mt-3">
-                    <button class="btn btn-primary" type="submit">Guardar cambios</button>
-                </div>
-            </form>
-        </div></div>
         <div class="card surface-card h-100"><div class="card-body">
             <h2 class="h5 mb-3">Cuotas con deuda</h2>
             <div class="table-responsive">
