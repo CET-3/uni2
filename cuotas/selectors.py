@@ -19,6 +19,10 @@ def get_cuotas_del_asociado(asociado: Asociado):
     return asociado.cuotas.select_related("periodo", "periodo__ciclo_lectivo")
 
 
+def get_cuotas_del_anio(asociado: Asociado, anio: int):
+    return get_cuotas_del_asociado(asociado).filter(periodo__ciclo_lectivo__anio=anio)
+
+
 def get_total_deuda(asociado: Asociado, fecha_referencia=None):
     if fecha_referencia is None:
         from django.utils import timezone
