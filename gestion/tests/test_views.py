@@ -11,7 +11,13 @@ from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
 from cuotas.models import Cuota, Pago, PagoCuota, PeriodoCuota
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
-from gestion.permissions import GESTION_PERMISSIONS
+from gestion.permissions import (
+    GESTION_COBRAR_CUOTAS,
+    GESTION_CONSULTAR_ASOCIADOS,
+    GESTION_EDITAR_ASOCIADOS,
+    GESTION_PERMISSIONS,
+    GESTION_DASHBOARD,
+)
 
 
 def crear_usuario_gestion(username="usuario_gestion", permisos=None):
@@ -617,6 +623,27 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert "Julia" in content
     assert "Sin usuario" in content
     assert f"?asociado={asociado.id}" in content
+
+
+@pytest.mark.django_db
+def test_asociados_gestion_oculta_acciones_sin_permiso(client):
+    atencion = crear_usuario_gestion(
+        "atencion_mutual",
+        permisos=[
+            GESTION_DASHBOARD,
+            GESTION_CONSULTAR_ASOCIADOS,
+            GESTION_EDITAR_ASOCIADOS,
+            GESTION_COBRAR_CUOTAS,
+        ],
+    )
+
+    client.force_login(atencion)
+    response = client.get(reverse("gestion:asociados"))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Exportar asociados" not in content
+    assert "Importar padrón inicial" not in content
 
 
 @pytest.mark.django_db

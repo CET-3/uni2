@@ -10,8 +10,12 @@
     </div>
     <div class="page-header-actions">
         <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
-        <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">Exportar asociados</a>
-        <a class="btn btn-outline-primary" href="{% url 'gestion:importar_asociados' %}">Importar padrón inicial</a>
+        {% if perms.gestion.exportar_asociados %}
+            <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">Exportar asociados</a>
+        {% endif %}
+        {% if perms.gestion.importar_asociados %}
+            <a class="btn btn-outline-primary" href="{% url 'gestion:importar_asociados' %}">Importar padrón inicial</a>
+        {% endif %}
         <a class="btn btn-primary" href="{% url 'admin:asociados_asociado_add' %}">Nuevo asociado</a>
     </div>
 </div>

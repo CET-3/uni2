@@ -7,8 +7,28 @@ from django.core.management.base import BaseCommand
 from asociados.models import Asociado, Curso
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import Beneficio
-from gestion.permissions import GESTION_PERMISSIONS
-from usuarios.services import ADMIN_GROUP, ASOCIADO_GROUP, COMERCIO_GROUP, ensure_default_groups
+from gestion.permissions import (
+    GESTION_COBRAR_CUOTAS,
+    GESTION_CONSULTAR_ASOCIADOS,
+    GESTION_DASHBOARD,
+    GESTION_EDITAR_ASOCIADOS,
+    GESTION_PERMISSIONS,
+)
+from usuarios.services import (
+    ADMIN_GROUP,
+    ASOCIADO_GROUP,
+    ATENCION_MUTUAL_GROUP,
+    COMERCIO_GROUP,
+    ensure_default_groups,
+)
+
+
+ATENCION_MUTUAL_PERMISSIONS = (
+    GESTION_DASHBOARD,
+    GESTION_CONSULTAR_ASOCIADOS,
+    GESTION_EDITAR_ASOCIADOS,
+    GESTION_COBRAR_CUOTAS,
+)
 
 
 class Command(BaseCommand):
@@ -21,6 +41,11 @@ class Command(BaseCommand):
             codename__in=[permission.split(".", 1)[1] for permission in GESTION_PERMISSIONS],
         )
         Group.objects.get(name=ADMIN_GROUP).permissions.add(*permisos_gestion)
+        permisos_atencion = Permission.objects.filter(
+            content_type__app_label="gestion",
+            codename__in=[permission.split(".", 1)[1] for permission in ATENCION_MUTUAL_PERMISSIONS],
+        )
+        Group.objects.get(name=ATENCION_MUTUAL_GROUP).permissions.add(*permisos_atencion)
 
         cursos_data = [
             ("1ro", "1ra", Curso.DIVISION_CB, Curso.TURNO_TM),
@@ -100,6 +125,41 @@ class Command(BaseCommand):
             )
             admin.groups.add(admin.groups.model.objects.get(name=ADMIN_GROUP))
 
+        curso_asociado = Curso.objects.get(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
+
+        atencion_user, created = user_model.objects.get_or_create(
+            username="atencion",
+            defaults={
+                "email": "atencion@example.com",
+                "first_name": "Atención",
+                "last_name": "Mutual",
+                "is_active": True,
+            },
+        )
+        if created:
+            atencion_user.set_password("atencion1234")
+            atencion_user.save(update_fields=["password"])
+        atencion_user.groups.add(Group.objects.get(name=ATENCION_MUTUAL_GROUP))
+        atencion_user.groups.add(Group.objects.get(name=ASOCIADO_GROUP))
+
+        atencion_asociado, _ = Asociado.objects.get_or_create(
+            dni="40111223",
+            defaults={
+                "nombre": "Atención",
+                "apellido": "Mutual",
+                "tipo": Asociado.TIPO_ASOCIADO,
+                "curso_actual": curso_asociado,
+                "fecha_alta": date(2026, 3, 10),
+                "fecha_inicio_cobro": date(2026, 3, 1),
+                "email": "atencion@example.com",
+                "telefono": "2944-000334",
+                "direccion": "Mutual Escolar CET 3",
+            },
+        )
+        if atencion_asociado.usuario_id is None and not hasattr(atencion_user, "asociado"):
+            atencion_asociado.usuario = atencion_user
+            atencion_asociado.save(update_fields=["usuario"])
+
         asociado_user, created = user_model.objects.get_or_create(
             username="asociado",
             defaults={
@@ -114,7 +174,6 @@ class Command(BaseCommand):
             asociado_user.save(update_fields=["password"])
         asociado_user.groups.add(Group.objects.get(name=ASOCIADO_GROUP))
 
-        curso_asociado = Curso.objects.get(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
         asociado, _ = Asociado.objects.get_or_create(
             dni="40111222",
             defaults={

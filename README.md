@@ -30,6 +30,7 @@ uv run python manage.py runserver
 Usuarios iniciales:
 
 - Gestión/admin técnico: `admin` / `admin1234`
+- Atención de mutual y asociado de prueba: `atencion` / `atencion1234`
 - Asociado de prueba: `asociado` / `asociado1234`
 - Comercio de prueba: `comercio` / `comercio1234`
 
