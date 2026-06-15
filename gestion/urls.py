@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     GestionAsociadoDetalleView,
     GestionAsociadoEditarView,
+    GestionAsociadoCuotasView,
     GestionAsociadoNuevoView,
     GestionAsociadosView,
     GestionCobrosView,
@@ -31,6 +32,7 @@ urlpatterns = [
         name="descargar_asociados_revisar",
     ),
     path("gestion/asociados/<int:asociado_id>/", GestionAsociadoDetalleView.as_view(), name="asociado_detalle"),
+    path("gestion/asociados/<int:asociado_id>/cuotas/", GestionAsociadoCuotasView.as_view(), name="asociado_cuotas"),
     path("gestion/asociados/<int:asociado_id>/editar/", GestionAsociadoEditarView.as_view(), name="asociado_editar"),
     path("gestion/deudores/", GestionDeudoresView.as_view(), name="deudores"),
     path("gestion/cobros/", GestionCobrosView.as_view(), name="cobros"),

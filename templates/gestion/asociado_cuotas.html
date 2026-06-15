@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Cuotas del asociado | Uni2{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Cuotas de {{ asociado.apellido }}, {{ asociado.nombre }}</h1>
+        <p class="text-secondary mb-0">Número {{ asociado.numero_asociado }} · DNI {{ asociado.dni }}</p>
+    </div>
+    <div class="d-flex flex-column flex-sm-row gap-2 align-items-sm-center">
+        <a class="btn btn-outline-primary" href="{% url 'gestion:asociado_detalle' asociado.id %}">Volver al detalle</a>
+        <div class="text-sm-end">
+            <div class="small text-secondary">Deuda total</div>
+            <div class="h4 mb-0">${{ total_deuda }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card surface-card">
+    <div class="table-responsive">
+        <table class="table table-soft align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Periodo</th>
+                    <th>Importe</th>
+                    <th>Pagado</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cuota in cuotas %}
+                    <tr>
+                        <td>{{ cuota.periodo }}</td>
+                        <td>${{ cuota.importe }}</td>
+                        <td>${{ cuota.importe_pagado }}</td>
+                        <td>{{ cuota.get_estado_display }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">Todavía no hay cuotas generadas.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

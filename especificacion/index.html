@@ -63,6 +63,7 @@
               <li><a href="#cu-importar-padron-inicial">CU-importar-padron-inicial</a></li>
               <li><a href="#cu-consultar-asociados">CU-consultar-asociados</a></li>
               <li><a href="#cu-ver-detalle-asociado">CU-ver-detalle-asociado</a></li>
+              <li><a href="#cu-ver-cuotas-asociado">CU-ver-cuotas-asociado</a></li>
               <li><a href="#cu-editar-asociado">CU-editar-asociado</a></li>
               <li><a href="#cu-exportar-asociados-formato-uni2">CU-exportar-asociados-formato-uni2</a></li>
               <li><a href="#cu-importar-cuotas-historicas">CU-importar-cuotas-historicas</a></li>
@@ -697,11 +698,25 @@
             <ol>
               <li>El usuario busca un asociado desde el listado o desde cobros.</li>
               <li>Entra al detalle.</li>
-              <li>El sistema muestra datos personales, contacto, usuario vinculado, estado, curso, deuda, cuotas pendientes y pagos recientes.</li>
+              <li>El sistema muestra datos personales, contacto, usuario vinculado, estado, curso, deuda del año actual, cuotas pendientes del año actual y pagos recientes.</li>
               <li>Si tiene permiso de edición, puede ir a una pantalla separada para editar datos.</li>
               <li>Si tiene permiso de cobro, puede ir directo a registrar un pago.</li>
+              <li>Si quiere revisar todo el historial, puede abrir la pantalla de todas las cuotas del asociado.</li>
             </ol>
             <p><strong>Modelos afectados:</strong> Asociado, Cuota, Pago, PagoCuota.</p>
+          </article>
+          <article class="use-case" id="cu-ver-cuotas-asociado">
+            <h3>CU-ver-cuotas-asociado</h3>
+            <p><strong>Actor:</strong> Gestión con permiso para consultar asociados.</p>
+            <p><strong>Alcance:</strong> pantalla de lectura que muestra todas las cuotas del asociado seleccionado desde el detalle.</p>
+            <p><strong>Flujo principal:</strong></p>
+            <ol>
+              <li>El usuario entra al detalle de un asociado.</li>
+              <li>Selecciona <em>Ver todas las cuotas</em>.</li>
+              <li>El sistema muestra el historial completo de cuotas del asociado, ordenado del período más reciente al más antiguo.</li>
+              <li>La pantalla conserva el contexto del asociado y muestra la deuda total acumulada.</li>
+            </ol>
+            <p><strong>Modelos afectados:</strong> Asociado, Cuota, PeríodoCuota.</p>
           </article>
           <article class="use-case" id="cu-editar-asociado">
             <h3>CU-editar-asociado</h3>
@@ -960,6 +975,7 @@
               <li>Importar cuotas históricas desde planilla heredada con previsualización.</li>
               <li>Exportar asociados en formato Uni2 desde la consulta de asociados.</li>
               <li>Detalle de asociado.</li>
+              <li>Ver todas las cuotas de un asociado desde su detalle.</li>
               <li>Crear usuario para asociado.</li>
               <li>Cursos.</li>
               <li>Períodos de cuota.</li>
