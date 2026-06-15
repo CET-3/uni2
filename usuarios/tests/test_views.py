@@ -140,3 +140,66 @@ def test_selector_panel_muestra_experiencias_disponibles(client):
     content = response.content.decode()
     assert "Mi cuenta de asociado" in content
     assert "Gestión" in content
+
+
+@pytest.mark.django_db
+def test_navbar_muestra_nombre_y_panel_unico(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(
+        username="ana",
+        password="secreto123",
+        first_name="Ana",
+        last_name="Perez",
+    )
+    asociado = create_asociado(
+        nombre="Ana",
+        apellido="Perez",
+        dni="43111999",
+        tipo="asociado",
+        fecha_alta="2026-05-10",
+    )
+    asociado.usuario = user
+    asociado.save(update_fields=["usuario"])
+
+    client.force_login(user)
+    response = client.get(reverse("web:home"))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Ana Perez" in content
+    assert "dropdown-menu" in content
+    assert "Mi panel" in content
+    assert "Cambiar panel" not in content
+
+
+@pytest.mark.django_db
+def test_navbar_muestra_cambiar_panel_si_hay_mas_de_una_experiencia(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(
+        username="atencion_nav",
+        password="secreto123",
+        first_name="Atención",
+        last_name="Mutual",
+    )
+    asociado = create_asociado(
+        nombre="Atención",
+        apellido="Mutual",
+        dni="44111999",
+        tipo="asociado",
+        fecha_alta="2026-05-10",
+    )
+    asociado.usuario = user
+    asociado.save(update_fields=["usuario"])
+    permiso = Permission.objects.get(content_type__app_label="gestion", codename="cobrar_cuotas")
+    user.user_permissions.add(permiso)
+
+    client.force_login(user)
+    response = client.get(reverse("web:home"))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Atención Mutual" in content
+    assert "dropdown-menu" in content
+    assert "Mi panel" in content
+    assert "Panel de gestión" in content
+    assert "Cambiar panel" not in content
