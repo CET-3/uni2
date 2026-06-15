@@ -24,7 +24,7 @@ from cuotas.importers import (
     import_cuotas_historicas_preview,
 )
 from cuotas.models import Pago, PeriodoCuota
-from cuotas.selectors import get_cuotas_deudoras, get_total_deuda
+from cuotas.selectors import get_cuotas_deudoras, get_cuotas_deudoras_del_anio, get_cuotas_del_asociado, get_total_deuda
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 
 from .forms import (
@@ -333,8 +333,9 @@ class GestionAsociadoDetalleView(GestionPermissionRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         asociado = self.asociado
         fecha_referencia = timezone.localdate()
+        anio_actual = fecha_referencia.year
         cuotas_deudoras = []
-        for cuota in get_cuotas_deudoras(asociado):
+        for cuota in get_cuotas_deudoras_del_anio(asociado, anio_actual):
             cuotas_deudoras.append({"cuota": cuota, "saldo_pendiente": cuota.get_saldo_pendiente(fecha_referencia)})
         context["asociado"] = asociado
         context["fecha_referencia"] = fecha_referencia
@@ -342,6 +343,26 @@ class GestionAsociadoDetalleView(GestionPermissionRequiredMixin, TemplateView):
         context["cuotas_deudoras"] = cuotas_deudoras
         context["pagos_recientes"] = Pago.objects.filter(asociado=asociado).order_by("-fecha", "-id")[:10]
         context["cobro_url"] = f"{reverse('gestion:cobros')}?asociado={asociado.id}"
+        context["cuotas_url"] = reverse("gestion:asociado_cuotas", args=[asociado.id])
+        return context
+
+
+class GestionAsociadoCuotasView(GestionPermissionRequiredMixin, TemplateView):
+    template_name = "gestion/asociado_cuotas.html"
+    permission_required = GESTION_CONSULTAR_ASOCIADOS
+
+    def dispatch(self, request, *args, **kwargs):
+        self.asociado = get_object_or_404(Asociado, id=kwargs["asociado_id"])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        asociado = self.asociado
+        fecha_referencia = timezone.localdate()
+        context["asociado"] = asociado
+        context["fecha_referencia"] = fecha_referencia
+        context["total_deuda"] = get_total_deuda(asociado, fecha_referencia)
+        context["cuotas"] = get_cuotas_del_asociado(asociado).order_by("-periodo__ciclo_lectivo__anio", "-periodo__mes", "-id")
         return context
 
 

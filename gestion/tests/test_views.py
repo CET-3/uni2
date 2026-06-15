@@ -686,6 +686,27 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     asociado = create_asociado(
         nombre="Julia", apellido="Campos", dni="40000111", tipo="asociado", fecha_alta="2026-05-10"
     )
+    anio_actual = timezone.localdate().year
+    ciclo_actual = CicloLectivo.objects.create(anio=anio_actual)
+    ciclo_anterior = CicloLectivo.objects.create(anio=anio_actual - 1)
+    periodo_actual = PeriodoCuota.objects.create(
+        mes=6,
+        ciclo_lectivo=ciclo_actual,
+        importe="12000.00",
+        importe_recargo_mora="0.00",
+        fecha_vencimiento=timezone.localdate(),
+        activo=True,
+    )
+    periodo_anterior = PeriodoCuota.objects.create(
+        mes=6,
+        ciclo_lectivo=ciclo_anterior,
+        importe="11000.00",
+        importe_recargo_mora="0.00",
+        fecha_vencimiento=timezone.localdate(),
+        activo=True,
+    )
+    Cuota.objects.create(asociado=asociado, periodo=periodo_actual, importe="12000.00", importe_recargo_mora="0.00")
+    Cuota.objects.create(asociado=asociado, periodo=periodo_anterior, importe="11000.00", importe_recargo_mora="0.00")
 
     client.force_login(staff)
     listado = client.get(reverse("gestion:asociados"), {"q": "Campos"})
@@ -705,6 +726,49 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert f"?asociado={asociado.id}" in content
     assert "Editar datos" in content
     assert "Guardar cambios" not in content
+    assert "Cuotas con deuda del año actual" in content
+    assert "06/2025" not in content
+    assert reverse("gestion:asociado_cuotas", args=[asociado.id]) in content
+    assert "Ver todas las cuotas" in content
+
+
+@pytest.mark.django_db
+def test_asociado_cuotas_muestra_historico_completo(client):
+    staff = crear_usuario_gestion("staff_historial")
+    asociado = create_asociado(
+        nombre="Julia", apellido="Campos", dni="40000111", tipo="asociado", fecha_alta="2026-05-10"
+    )
+    anio_actual = timezone.localdate().year
+    ciclo_actual = CicloLectivo.objects.create(anio=anio_actual)
+    ciclo_anterior = CicloLectivo.objects.create(anio=anio_actual - 1)
+    periodo_actual = PeriodoCuota.objects.create(
+        mes=6,
+        ciclo_lectivo=ciclo_actual,
+        importe="12000.00",
+        importe_recargo_mora="0.00",
+        fecha_vencimiento=timezone.localdate(),
+        activo=True,
+    )
+    periodo_anterior = PeriodoCuota.objects.create(
+        mes=6,
+        ciclo_lectivo=ciclo_anterior,
+        importe="11000.00",
+        importe_recargo_mora="0.00",
+        fecha_vencimiento=timezone.localdate(),
+        activo=True,
+    )
+    Cuota.objects.create(asociado=asociado, periodo=periodo_actual, importe="12000.00", importe_recargo_mora="0.00")
+    Cuota.objects.create(asociado=asociado, periodo=periodo_anterior, importe="11000.00", importe_recargo_mora="0.00")
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:asociado_cuotas", args=[asociado.id]))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Cuotas de Campos, Julia" in content
+    assert "06/2025" in content
+    assert "06/2026" in content
+    assert "Volver al detalle" in content
 
 
 @pytest.mark.django_db
