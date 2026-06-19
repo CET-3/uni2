@@ -165,6 +165,8 @@ def _infer_cycle(raw, ciclo, first_number):
     if " cs " in f" {combined} ":
         return Curso.DIVISION_CS, ""
     if " cb " in f" {combined} ":
+        if first_number and int(first_number) >= 3:
+            return Curso.DIVISION_CS, "Ciclo corregido a CS (CB no tiene 3ro ni 4to)"
         return Curso.DIVISION_CB, ""
     if first_number:
         division = Curso.DIVISION_CB if int(first_number) <= 3 else Curso.DIVISION_CS
@@ -261,11 +263,31 @@ def analyze_padron_xlsx(file_obj) -> PadronPreview:
 
     person_rows = [row for row in raw_rows if row["tiene_datos_persona"]]
     dni_counts = Counter(row["dni"] for row in person_rows if row["dni"])
-    numero_counts = Counter(row["numero_asociado"] for row in person_rows if row["numero_asociado"])
+
+    dni_groups: dict[str, list[dict]] = {}
+    for row in person_rows:
+        if row["dni"]:
+            dni_groups.setdefault(row["dni"], []).append(row)
+
+    no_importar_filas: set[int] = set()
+    dni_conflict_filas: set[int] = set()
+    for dni, rows in dni_groups.items():
+        if len(rows) <= 1:
+            continue
+        names = set(r["apellido_nombre_original"].lower().strip() for r in rows)
+        if len(names) == 1:
+            for r in sorted(rows, key=lambda r: r["fila_origen"])[1:]:
+                no_importar_filas.add(r["fila_origen"])
+        else:
+            for r in rows:
+                dni_conflict_filas.add(r["fila_origen"])
 
     preview = PadronPreview()
     for row in raw_rows:
-        normalized = _normalize_row(row, dni_counts, numero_counts)
+        if row["fila_origen"] in no_importar_filas:
+            preview.no_importar_count += 1
+            continue
+        normalized = _normalize_row(row, dni_counts, dni_conflict_filas)
         if normalized["estado_importacion"] == "IMPORTAR":
             preview.importables.append(normalized)
         elif normalized["estado_importacion"] == "REVISAR":
@@ -277,7 +299,9 @@ def analyze_padron_xlsx(file_obj) -> PadronPreview:
     return preview
 
 
-def _normalize_row(row, dni_counts, numero_counts):
+def _normalize_row(row, dni_counts, dni_conflict_filas=None):
+    if dni_conflict_filas is None:
+        dni_conflict_filas = set()
     observaciones = []
     apellido, nombre, name_note = _split_name(row["apellido_nombre_original"])
     if name_note:
@@ -327,18 +351,16 @@ def _normalize_row(row, dni_counts, numero_counts):
         blockers.append("falta DNI")
     elif len(dni) < 7 or len(dni) > 8:
         blockers.append(f"DNI con longitud dudosa: {dni}")
-    elif dni_counts[dni] > 1:
+    elif dni and row["fila_origen"] in dni_conflict_filas:
         blockers.append("DNI duplicado")
     elif Asociado.objects.filter(dni=dni).exists():
         observaciones.append("El DNI ya existe: se actualizará el asociado")
 
     numero = row["numero_asociado"]
-    if numero and numero_counts[numero] > 1:
-        blockers.append("número de asociado duplicado")
-    elif numero:
-        existente_numero = Asociado.objects.filter(numero_asociado=numero).exclude(dni=dni).first()
-        if existente_numero:
-            blockers.append("número de asociado ya usado por otro DNI")
+    if numero and not numero.isdigit():
+        observaciones.append(f"número de asociado inválido en planilla: {numero}")
+
+    output["numero_asociado"] = numero if numero and numero.isdigit() else ""
 
     if not tipo:
         blockers.append("tipo dudoso")
@@ -468,9 +490,7 @@ def import_padron_preview(preview: PadronPreview, fecha_alta: date) -> PadronImp
 
 
 def _upsert_asociado(row, curso, fecha_alta, result):
-    numero = int(row["numero_asociado"]) if row.get("numero_asociado") else None
     defaults = {
-        "numero_asociado": numero,
         "apellido": row["apellido"],
         "nombre": row["nombre"],
         "tipo": row["tipo"],
