@@ -670,10 +670,13 @@
             </ol>
             <p><strong>Reglas relacionadas:</strong> <a href="#ASOCIADO-006">ASOCIADO-006</a>, <a href="#ASOCIADO-007">ASOCIADO-007</a>, <a href="#CURSO-001">CURSO-001</a>.</p>
             <p><strong>Reglas de importación:</strong> la primera palabra de <code>Apellido/nombre</code> se toma como apellido y el resto como nombre. Si falta nombre se completa con <code>[completar]</code>. Si no se pueden deducir año, división, ciclo y turno del curso, la fila queda para revisar. Los cargos como docente, preceptora o director no se toman como curso. Si la planilla no indica turno y el curso es completo, se usa <code>TM</code> como valor provisorio y se lista el curso antes de confirmar.</p>
+            <p><strong>Corrección de ciclo:</strong> CB no tiene 3ro ni 4to. Si la planilla indica CB para un curso de 3er o 4to año, el sistema lo corrige automáticamente a CS y lo registra como observación.</p>
             <p><strong>Orden de cursos:</strong> los cursos nuevos se muestran ordenados por ciclo, año, división y turno para facilitar la revisión antes de confirmar.</p>
             <p><strong>Restricción técnica:</strong> la lectura de planillas <code>.xlsx</code> usa la dependencia Python <code>openpyxl</code>, declarada en los archivos de dependencias del proyecto.</p>
             <p><strong>Fechas:</strong> en esta primera versión, <code>fecha_alta</code> y <code>fecha_inicio_cobro</code> se cargan automáticamente con la fecha del día de la importación.</p>
-            <p><strong>Situaciones especiales:</strong> DNI duplicado, número de asociado duplicado, curso incompleto, asociado ya existente, email faltante, teléfono faltante, tipo inválido.</p>
+            <p><strong>Duplicados de DNI:</strong> si dos filas tienen el mismo DNI y el mismo nombre completo, se considera una repetición involuntaria en la planilla: solo se importa la primera fila y las siguientes se descartan. Si tienen el mismo DNI pero distinto nombre, la fila queda para revisar por DNI duplicado real.</p>
+            <p><strong>Número de asociado:</strong> el sistema ignora la columna de número de asociado de la planilla original. Al confirmar la importación, el campo <code>numero_asociado</code> se asigna automáticamente (secuencia incremental). Si la planilla tiene un valor no numérico, se registra como observación sin bloquear la importación.</p>
+            <p><strong>Situaciones especiales:</strong> curso incompleto, asociado ya existente, email faltante, teléfono faltante, tipo inválido.</p>
             <p><strong>Modelos afectados:</strong> Asociado, Curso.</p>
           </article>
           <article class="use-case" id="cu-consultar-asociados">
@@ -759,15 +762,15 @@
             <ol>
               <li>Sube la planilla heredada en formato <code>.xlsx</code>.</li>
               <li>El sistema lee las filas desde la fila de encabezados de cuotas sociales.</li>
-              <li>El sistema identifica al asociado por <code>Socio N°</code>, usando <code>numero_asociado</code>.</li>
+              <li>El sistema identifica al asociado por <code>Apellido/Nombre</code>, usando el nombre completo normalizado (se eliminan acentos y mayúsculas). Si no encuentra coincidencia exacta, busca por apellido dentro del mismo curso (columna curso/división de la planilla).</li>
               <li>El sistema toma los meses desde marzo hasta el mes en curso de la fecha de operación, para no crear deuda futura por columnas todavía no vencidas.</li>
               <li>El sistema previsualiza cuotas a crear, pagos históricos a crear, cuotas impagas y cuotas a revisar.</li>
               <li>Si hay cuotas a revisar, el administrador puede descargar una planilla <code>.xlsx</code> agrupada en una fila por asociado/fila original, con columnas por mes para pago, forma y motivo de revisión.</li>
               <li>El administrador confirma la importación.</li>
               <li>El sistema crea períodos de cuota faltantes, cuotas, pagos históricos y aplicaciones <code>PagoCuota</code>.</li>
             </ol>
-            <p><strong>Reglas de importación:</strong> cada período histórico se crea con importe <code>500</code>, recargo <code>100</code> y vencimiento el día 10 del mes. Una celda mensual verdadera genera una cuota pagada y un pago histórico. Una celda falsa genera una cuota impaga. La forma de pago <code>efectivo</code> se mapea a efectivo y <code>MP</code> a billetera virtual.</p>
-            <p><strong>Reglas de revisión:</strong> quedan fuera de la importación automática los asociados no encontrados por número, los pagos marcados sin forma de pago válida, las cuotas impagas con forma de pago cargada, los valores de pago dudosos, las formas de pago dudosas y las cuotas ya existentes. Las filas sin <code>Apellido/Nombre</code> se descartan como filas auxiliares o incompletas para evitar falsos errores.</p>
+            <p><strong>Reglas de importación:</strong> cada período histórico se crea con importe <code>500</code>, recargo <code>100</code> y vencimiento el día 10 del mes. Una celda mensual verdadera genera una cuota pagada y un pago histórico. Una celda falsa genera una cuota impaga, salvo que tenga una forma de pago cargada en la misma columna, en cuyo caso se da por pagada. La forma de pago <code>efectivo</code> se mapea a efectivo y <code>MP</code> a billetera virtual.</p>
+            <p><strong>Reglas de revisión:</strong> quedan fuera de la importación automática los asociados no encontrados por nombre, los pagos marcados sin forma de pago válida, los valores de pago dudosos, las formas de pago dudosas y las cuotas ya existentes. Las filas sin <code>Apellido/Nombre</code> se descartan como filas auxiliares o incompletas para evitar falsos errores.</p>
             <p><strong>Decisión funcional:</strong> los pagos históricos importados solo crean cuotas, pagos y aplicaciones <code>PagoCuota</code>.</p>
             <p><strong>Modelos afectados:</strong> CicloLectivo, PeríodoCuota, Cuota, Pago, PagoCuota.</p>
           </article>

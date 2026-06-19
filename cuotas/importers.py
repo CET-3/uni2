@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+import unicodedata
 from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
@@ -84,6 +86,92 @@ class CuotasHistoricasImportResult:
     errores: list[str] = field(default_factory=list)
 
 
+def _normalize_name(value):
+    text = unicodedata.normalize("NFKD", str(value).lower().strip())
+    text = text.encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"\s+", " ", text)
+
+
+def _parse_curso_parts(curso_raw):
+    """Parse '1°1°' into (anio: '1ro', curso: '1ra') or (None, None)."""
+    if not curso_raw:
+        return None, None
+    text = curso_raw.lower().strip().replace("º", "°")
+    text = text.replace(".", " ").replace(",", " ")
+    text = re.sub(r"\s+", " ", text).strip()
+    nums = re.findall(r"\d+", text)
+    if len(nums) < 2:
+        return None, None
+    anio_map = {"1": "1ro", "2": "2do", "3": "3ro", "4": "4to"}
+    div_map = {"1": "1ra", "2": "2da", "3": "3ra", "4": "4ta"}
+    return anio_map.get(nums[0]), div_map.get(nums[1])
+
+
+def _build_asociados_lookup():
+    """Return (by_name, by_apellido_curso) lookup dicts.
+
+    by_apellido_curso keys are (apellido_normalized, anio, curso_division)
+    ignoring ciclo (CB/CS) and turno, so the cuotas import can find
+    asociados even when the planilla omits or mislabels the cycle.
+    Values are lists to detect ambiguity (same apellido in same
+    anio+curso).
+    """
+    by_name = {}
+    by_apellido_curso = {}
+    for a in Asociado.objects.select_related("curso_actual").all():
+        key = _normalize_name(f"{a.apellido} {a.nombre}")
+        by_name[key] = a
+        if a.curso_actual:
+            apellido_key = _normalize_name(a.apellido)
+            curso_key = (apellido_key, a.curso_actual.anio, a.curso_actual.curso)
+            by_apellido_curso.setdefault(curso_key, []).append(a)
+    return by_name, by_apellido_curso
+
+
+def _find_asociado(nombre_original, curso_original, by_name, by_apellido_curso):
+    """Find asociado by name, falling back to course+apellido if exact match fails.
+
+    Tries these strategies in order:
+      1. Normalized exact match (e.g. "Garcia Juan" → "garcia juan").
+      2. Reversed order (e.g. "Juan Garcia" → "garcia juan").
+      3. First word as apellido + curso.
+      4. Last  word as apellido + curso.
+
+    The curso fallback ignores ciclo (CB/CS) and turno.
+    """
+    name_key = _normalize_name(nombre_original)
+    asociado = by_name.get(name_key)
+    if asociado:
+        return asociado
+
+    parts = name_key.split()
+    if len(parts) >= 2:
+        reversed_key = " ".join([parts[-1]] + parts[:-1])
+        asociado = by_name.get(reversed_key)
+        if asociado:
+            return asociado
+
+    if not nombre_original or not curso_original:
+        return None
+
+    anio, curso_num = _parse_curso_parts(curso_original)
+    if not anio or not curso_num:
+        return None
+
+    partes = nombre_original.split()
+    candidates = set()
+    if partes:
+        candidates.add(partes[0])
+        candidates.add(partes[-1])
+    for raw in candidates:
+        apellido_key = _normalize_name(raw)
+        matches = by_apellido_curso.get((apellido_key, anio, curso_num), [])
+        if len(matches) == 1:
+            return matches[0]
+
+    return None
+
+
 def _clean_value(value):
     if value is None:
         return ""
@@ -148,6 +236,7 @@ def analyze_cuotas_historicas_xlsx(file_obj, fecha_operacion: date) -> CuotasHis
     worksheet = workbook[CUOTAS_HISTORICAS_SHEET]
     meses = [item for item in CUOTA_HISTORICA_MESES if item["mes"] <= fecha_operacion.month]
     preview = CuotasHistoricasPreview()
+    by_name, by_apellido_curso = _build_asociados_lookup()
 
     for row_number in range(CUOTAS_HISTORICAS_FIRST_DATA_ROW, worksheet.max_row + 1):
         numero = _clean_numero_asociado(worksheet.cell(row_number, 1).value)
@@ -157,12 +246,14 @@ def analyze_cuotas_historicas_xlsx(file_obj, fecha_operacion: date) -> CuotasHis
             preview.omitidas += 1
             continue
 
-        asociado = Asociado.objects.filter(numero_asociado=numero).first() if numero is not None else None
+        asociado = _find_asociado(nombre_original, curso_original, by_name, by_apellido_curso)
         for mes_data in meses:
             raw_pagada = worksheet.cell(row_number, mes_data["pago_col"]).value
             raw_forma = worksheet.cell(row_number, mes_data["forma_col"]).value
             pagada, pago_note = _normalize_bool(raw_pagada)
             metodo, metodo_note = _normalize_metodo(raw_forma)
+            if not pagada and metodo:
+                pagada = True
             observaciones = [item for item in [pago_note, metodo_note] if item]
 
             item = {
@@ -183,11 +274,9 @@ def analyze_cuotas_historicas_xlsx(file_obj, fecha_operacion: date) -> CuotasHis
             }
 
             if not asociado:
-                observaciones.append("No se encontró asociado por número")
+                observaciones.append("No se encontró asociado por nombre")
             if pagada and not metodo:
-                observaciones.append("Pago marcado sin forma de pago válida")
-            if not pagada and metodo:
-                observaciones.append("Cuota impaga con forma de pago cargada")
+                metodo = Pago.METODO_EFECTIVO
             if asociado and PeriodoCuota.objects.filter(
                 mes=mes_data["mes"], ciclo_lectivo__anio=CUOTA_HISTORICA_ANIO, cuotas__asociado=asociado
             ).exists():

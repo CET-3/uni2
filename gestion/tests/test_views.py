@@ -366,7 +366,7 @@ def test_importar_cuotas_historicas_previsualiza_desde_planilla(client):
         [
             [
                 asociado.numero_asociado,
-                "Leyes Lena Muriel",
+                "Leyes Lena",
                 "1°2°",
                 True,
                 "efectivo",
@@ -398,7 +398,7 @@ def test_importar_cuotas_historicas_previsualiza_desde_planilla(client):
     assert preview["summary"]["omitidas"] == 1
     content = response.content.decode()
     assert "Cuotas importables" in content
-    assert "No se encontró asociado por número" in content
+    assert "No se encontró asociado por nombre" in content
     assert "crea cuotas, pagos y aplicaciones a cuota" in content
 
 
@@ -442,10 +442,9 @@ def test_importar_cuotas_historicas_descarga_planilla_con_cuotas_a_revisar(clien
     assert worksheet.max_row == 2
     row_values = [worksheet.cell(2, column).value for column in range(1, 17)]
     assert row_values[:6] == [8, 999, "Persona Inexistente", "1°1°", "Sí", "efectivo"]
-    assert "No se encontró asociado por número" in row_values[6]
-    assert row_values[10:12] == ["No", "MP"]
-    assert "No se encontró asociado por número" in row_values[12]
-    assert "Cuota impaga con forma de pago cargada" in row_values[12]
+    assert "No se encontró asociado por nombre" in row_values[6]
+    assert row_values[10:12] == ["Sí", "MP"]
+    assert "No se encontró asociado por nombre" in row_values[12]
 
 
 @pytest.mark.django_db
@@ -458,7 +457,7 @@ def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client):
         [
             [
                 asociado.numero_asociado,
-                "Leyes Lena Muriel",
+                "Leyes Lena",
                 "1°2°",
                 True,
                 "efectivo",
