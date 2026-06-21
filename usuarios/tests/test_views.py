@@ -56,7 +56,7 @@ def test_login_redirige_a_panel_comercio(client):
 
 @pytest.mark.django_db
 def test_login_usuario_con_grupo_comercio_sin_perfil_redirige_a_home(client):
-    group = Group.objects.create(name=COMERCIO_GROUP)
+    group = Group.objects.get_or_create(name=COMERCIO_GROUP)[0]
     user_model = get_user_model()
     user = user_model.objects.create_user(username="com_sin_perfil", password="secreto123")
     user.groups.add(group)

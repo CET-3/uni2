@@ -184,8 +184,8 @@
             <h3>Gestión</h3>
             <p>Usuario con uno o más permisos operativos de gestión. Puede acceder solo a las tareas autorizadas:</p>
             <ul>
-              <li>Gestionar asociados e importarlos.</li>
-              <li>Crear usuarios para asociados.</li>
+                <li>Gestionar asociados e importarlos.</li>
+              <li>Crear usuarios para asociados desde el detalle del asociado.</li>
               <li>Gestionar cuotas y registrar pagos.</li>
               <li>Consultar reportes.</li>
             </ul>
@@ -529,6 +529,10 @@
             <li id="USUARIO-008"><strong><a href="#USUARIO-008">USUARIO-008</a></strong> Si un usuario tiene más de una experiencia disponible, luego del login ve una pantalla para elegir entre asociado, comercio y gestión.</li>
             <li id="USUARIO-009"><strong><a href="#USUARIO-009">USUARIO-009</a></strong> <code>is_staff</code> habilita el admin técnico de Django, pero no define por sí solo qué tareas operativas puede usar una persona en <code>gestion</code>. Las pantallas y accesos del backoffice se controlan con permisos Django propios de la app <code>gestion</code>.</li>
             <li id="USUARIO-010"><strong><a href="#USUARIO-010">USUARIO-010</a></strong> El grupo <code>Atención de mutual</code> representa a estudiantes que atienden la mutual. Tiene permisos para ver gestión, consultar y editar asociados, y cobrar cuotas. No incluye importaciones, exportaciones, deudores ni administración de períodos de cuota. En la carga inicial, el usuario <code>atencion</code> también queda vinculado a un asociado de prueba para poder probar el selector de paneles.</li>
+            <li id="USUARIO-011"><strong><a href="#USUARIO-011">USUARIO-011</a></strong> El sistema define tres grupos base: <code>asociado</code>, <code>comercio</code> y <code>gestion</code>. La data migration <code>0002_crear_grupos_y_permisos</code> los crea y asigna todos los permisos de la app <code>gestion</code> al grupo <code>gestion</code>. El comando <code>carga_inicial</code> puede asignar subconjuntos (ej. grupo <code>Atención de mutual</code>).</li>
+            <li id="USUARIO-012"><strong><a href="#USUARIO-012">USUARIO-012</a></strong> <code>create_user_for_comercio(comercio, password)</code> en <code>usuarios/services.py</code> crea un usuario Django, lo vincula al comercio y lo asigna al grupo <code>comercio</code>. El username se genera como <code>com-{id}</code>. Rechaza con <code>ValueError</code> si el comercio ya tiene usuario.</li>
+            <li id="USUARIO-013"><strong><a href="#USUARIO-013">USUARIO-013</a></strong> <code>GestionCrearUsuarioAsociadoView</code> en <code>gestion/views.py</code> permite a un usuario con permiso <code>editar_asociados</code> crear un usuario para un asociado desde la pantalla de detalle. Usa el DNI como username por defecto. Redirige al detalle con mensaje de éxito o error. GET redirige sin acción.</li>
+            <li id="USUARIO-014"><strong><a href="#USUARIO-014">USUARIO-014</a></strong> El <code>GestionPermissionRequiredMixin</code> usa <code>UserPassesTestMixin</code> con <code>raise_exception = True</code> para rechazar con 403 en lugar de redirigir al login. Las vistas deben declarar su lógica en métodos <code>get()</code>/<code>post()</code> y no en <code>dispatch()</code> para que el permiso se evalúe antes.</li>
           </ul>
         </div>
         <div class="rule-group">

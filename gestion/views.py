@@ -48,6 +48,7 @@ from .permissions import (
     user_has_any_gestion_permission,
 )
 from .selectors import get_asociados_deudores
+from usuarios.services import create_user_for_asociado
 
 
 class GestionPermissionRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -390,6 +391,25 @@ class GestionAsociadoEditarView(GestionPermissionRequiredMixin, TemplateView):
         context["asociado"] = self.asociado
         context["form"] = getattr(self.request, "_asociado_form", AsociadoGestionForm(instance=self.asociado))
         return context
+
+
+class GestionCrearUsuarioAsociadoView(GestionPermissionRequiredMixin, TemplateView):
+    permission_required = GESTION_EDITAR_ASOCIADOS
+
+    def post(self, request, *args, **kwargs):
+        asociado = get_object_or_404(Asociado, id=kwargs["asociado_id"])
+        try:
+            user = create_user_for_asociado(
+                asociado=asociado,
+                password=request.POST.get("password", str(asociado.dni)),
+            )
+            messages.success(request, f"Usuario «{user.username}» creado y vinculado a {asociado.apellido}, {asociado.nombre}.")
+        except ValueError as exc:
+            messages.error(request, str(exc))
+        return redirect("gestion:asociado_detalle", asociado_id=asociado.id)
+
+    def get(self, request, *args, **kwargs):
+        return redirect("gestion:asociado_detalle", asociado_id=kwargs["asociado_id"])
 
 
 class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):

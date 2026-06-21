@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.db import transaction
 
 from asociados.models import Asociado
+from comercios.models import Comercio
 from gestion.permissions import user_has_any_gestion_permission
 
 
@@ -69,5 +70,30 @@ def create_user_for_asociado(asociado: Asociado, password: str, email: str | Non
     asociado.usuario = user
     asociado.save(update_fields=["usuario"])
     group = Group.objects.get(name=ASOCIADO_GROUP)
+    user.groups.add(group)
+    return user
+
+
+@transaction.atomic
+def create_user_for_comercio(comercio: Comercio, password: str, email: str | None = None):
+    if comercio.usuario_id:
+        raise ValueError("El comercio ya tiene un usuario vinculado.")
+
+    user_model = get_user_model()
+    username = f"com-{comercio.id}"
+    if user_model.objects.filter(username=username).exists():
+        raise ValueError("Ya existe un usuario con ese username.")
+
+    user = user_model.objects.create_user(
+        username=username,
+        email=email or comercio.email or "",
+        password=password,
+        first_name=comercio.nombre,
+        last_name="",
+        is_active=True,
+    )
+    comercio.usuario = user
+    comercio.save(update_fields=["usuario"])
+    group = Group.objects.get(name=COMERCIO_GROUP)
     user.groups.add(group)
     return user
