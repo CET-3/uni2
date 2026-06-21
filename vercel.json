@@ -12,6 +12,5 @@
       "src": "/(.*)",
       "dest": "api/index.py"
     }
-  ],
-  "buildCommand": "DJANGO_SETTINGS_MODULE=config.settings.production python manage.py collectstatic --noinput"
+  ]
 }
