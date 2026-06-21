@@ -1075,3 +1075,93 @@ def test_asociado_detalle_permite_editar_fecha_inicio_cobro(client):
     assert str(asociado.fecha_inicio_cobro) == "2026-05-01"
     assert asociado.email == "milena@example.com"
     assert "Asociado actualizado correctamente" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_crear_usuario_asociado_requiere_permiso_editar(client):
+    user = get_user_model().objects.create_user(username="sin_permiso", password="secreto123")
+    asociado = create_asociado(
+        nombre="Juan", apellido="Perez", dni="30000222", tipo="asociado", fecha_alta="2026-05-22"
+    )
+
+    client.force_login(user)
+    response = client.post(reverse("gestion:crear_usuario_asociado", args=[asociado.id]), {"password": "test123"})
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_crear_usuario_asociado_crea_y_vincula(client):
+    staff = crear_usuario_gestion("staff_crea_user", permisos=[GESTION_EDITAR_ASOCIADOS, GESTION_CONSULTAR_ASOCIADOS])
+    asociado = create_asociado(
+        nombre="Juan", apellido="Perez", dni="30000222", tipo="asociado", fecha_alta="2026-05-22"
+    )
+
+    client.force_login(staff)
+    response = client.post(reverse("gestion:crear_usuario_asociado", args=[asociado.id]), follow=True)
+
+    assert response.status_code == 200
+    asociado.refresh_from_db()
+    assert asociado.usuario is not None
+    assert asociado.usuario.username == "30000222"
+    assert "creado y vinculado" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_crear_usuario_asociado_ya_tiene_usuario_muestra_error(client):
+    staff = crear_usuario_gestion("staff_crea_user2", permisos=[GESTION_EDITAR_ASOCIADOS, GESTION_CONSULTAR_ASOCIADOS])
+    asociado = create_asociado(
+        nombre="Juan", apellido="Perez", dni="30000222", tipo="asociado", fecha_alta="2026-05-22"
+    )
+    from usuarios.services import create_user_for_asociado
+    create_user_for_asociado(asociado=asociado, password="secreto123")
+
+    client.force_login(staff)
+    response = client.post(reverse("gestion:crear_usuario_asociado", args=[asociado.id]), follow=True)
+
+    assert response.status_code == 200
+    assert "ya tiene un usuario" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_crear_usuario_asociado_get_redirige_a_detalle(client):
+    staff = crear_usuario_gestion("staff_crea_user3", permisos=[GESTION_EDITAR_ASOCIADOS])
+    asociado = create_asociado(
+        nombre="Juan", apellido="Perez", dni="30000222", tipo="asociado", fecha_alta="2026-05-22"
+    )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:crear_usuario_asociado", args=[asociado.id]))
+
+    assert response.status_code == 302
+    assert reverse("gestion:asociado_detalle", args=[asociado.id]) in response.url
+
+
+@pytest.mark.django_db
+def test_asociado_detalle_muestra_boton_crear_usuario_si_no_tiene(client):
+    staff = crear_usuario_gestion("staff_ve_boton", permisos=[GESTION_EDITAR_ASOCIADOS, GESTION_CONSULTAR_ASOCIADOS])
+    asociado = create_asociado(
+        nombre="Juan", apellido="Perez", dni="30000222", tipo="asociado", fecha_alta="2026-05-22"
+    )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
+
+    assert response.status_code == 200
+    assert "Crear usuario" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_asociado_detalle_oculta_boton_crear_usuario_si_ya_tiene(client):
+    staff = crear_usuario_gestion("staff_no_ve_boton", permisos=[GESTION_EDITAR_ASOCIADOS, GESTION_CONSULTAR_ASOCIADOS])
+    asociado = create_asociado(
+        nombre="Juan", apellido="Perez", dni="30000222", tipo="asociado", fecha_alta="2026-05-22"
+    )
+    from usuarios.services import create_user_for_asociado
+    create_user_for_asociado(asociado=asociado, password="secreto123")
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
+
+    assert response.status_code == 200
+    assert "Crear usuario" not in response.content.decode()

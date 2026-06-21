@@ -13,6 +13,12 @@
         <a class="btn btn-outline-primary" href="{{ cuotas_url }}">Ver todas las cuotas</a>
         {% if perms.gestion.editar_asociados %}
             <a class="btn btn-outline-primary" href="{% url 'gestion:asociado_editar' asociado.id %}">Editar datos</a>
+            {% if not asociado.usuario %}
+                <form method="post" action="{% url 'gestion:crear_usuario_asociado' asociado.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success">Crear usuario</button>
+                </form>
+            {% endif %}
         {% endif %}
         {% if perms.gestion.cobrar_cuotas %}
             <a class="btn btn-primary" href="{{ cobro_url }}">Cobrar</a>
