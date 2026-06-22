@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Cuota, Pago, PagoCuota, PeriodoCuota
+from .models import Cuota, Donacion, Pago, PagoCuota, PeriodoCuota
 
 
 @admin.register(PeriodoCuota)
@@ -32,4 +32,11 @@ class PagoAdmin(admin.ModelAdmin):
 @admin.register(PagoCuota)
 class PagoCuotaAdmin(admin.ModelAdmin):
     list_display = ("pago", "cuota", "importe")
+
+
+@admin.register(Donacion)
+class DonacionAdmin(admin.ModelAdmin):
+    list_display = ("asociado", "importe", "fecha", "pago")
+    list_filter = ("fecha",)
+    search_fields = ("asociado__apellido", "asociado__dni")
 
