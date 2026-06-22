@@ -66,10 +66,10 @@
                         {% for item in cuotas_anio_actual %}
                             <tr>
                                 <td>{{ item.cuota.periodo }}</td>
-                                <td>${{ item.cuota.importe }}</td>
-                                <td>${{ item.cuota.importe_pagado }}</td>
-                                <td>${{ item.saldo_pendiente }}</td>
-                                <td>{{ item.cuota.get_estado_display }}</td>
+                                <td>${{ item.importe_original }}</td>
+                                <td>${{ item.importe_pagado }}</td>
+                                <td>${{ item.saldo }}</td>
+                                <td>{{ item.estado_display }}</td>
                             </tr>
                         {% empty %}
                             <tr><td colspan="5">No tiene cuotas en el año actual.</td></tr>
@@ -84,9 +84,16 @@
             <h2 class="h5 mb-3">Pagos recientes</h2>
             <ul class="list-group list-group-flush">
                 {% for pago in pagos_recientes %}
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <span>{{ pago.fecha|date:"d/m/Y" }} · {{ pago.get_metodo_display }}</span>
-                        <strong>${{ pago.importe }}</strong>
+                    <li class="list-group-item px-0">
+                        <div class="d-flex justify-content-between gap-3">
+                            <span>{{ pago.pago.fecha|date:"d/m/Y" }} · {{ pago.pago.get_metodo_display }}</span>
+                            <strong>${{ pago.pago.importe }}</strong>
+                        </div>
+                        <div class="small text-secondary mt-1">
+                            {% for linea in pago.lineas %}
+                                <div>{{ linea }}</div>
+                            {% endfor %}
+                        </div>
                     </li>
                 {% empty %}
                     <li class="list-group-item px-0">No hay pagos registrados.</li>

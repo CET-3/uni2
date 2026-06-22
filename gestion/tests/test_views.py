@@ -1,3 +1,5 @@
+import re
+from datetime import date
 from decimal import Decimal
 
 import pytest
@@ -516,11 +518,13 @@ def test_cobros_gestion_usa_consulta_de_asociados_y_registra_pago(client):
     assert "Estado" in content
     assert "Usuario vinculado" in content
     assert f"{reverse('gestion:cobros')}?asociado={asociado.id}" in content
+    cuota = asociado.cuotas.get(periodo=periodo)
 
     response_cobro = client.post(
         reverse("gestion:cobros"),
         {
             "asociado_id": asociado.id,
+            "cuotas_ids": [str(cuota.id)],
             "fecha": timezone.localdate().isoformat(),
             "importe": "3000.00",
             "metodo": Pago.METODO_EFECTIVO,
@@ -531,7 +535,7 @@ def test_cobros_gestion_usa_consulta_de_asociados_y_registra_pago(client):
 
     assert response_cobro.status_code == 200
     assert Pago.objects.filter(asociado=asociado, importe="3000.00").exists()
-    cuota = asociado.cuotas.get(periodo=periodo)
+    cuota.refresh_from_db()
     assert cuota.estado == cuota.ESTADO_PAGADA
     assert "registrado para Gimenez, Paula" in response_cobro.content.decode()
 
@@ -568,6 +572,33 @@ def test_cobros_sin_asociado_indica_buscar_en_consulta_de_asociados(client):
 
 
 @pytest.mark.django_db
+def test_cobros_renderiza_saldo_parseable_para_importe_sugerido(client):
+    staff = crear_usuario_gestion("staff_cobro_saldo_js")
+    asociado = create_asociado(
+        nombre="Laura", apellido="Mendez", dni="47777112", tipo="asociado", fecha_alta="2026-05-10"
+    )
+    periodo = PeriodoCuota.objects.create(
+        mes=timezone.localdate().month,
+        ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
+        importe="3000.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
+        fecha_vencimiento=timezone.localdate(),
+    )
+    generar_cuotas_para_periodo(periodo)
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:cobros"), {"asociado": asociado.id})
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    match = re.search(r'data-saldo="([^"]+)"', content)
+    assert match
+    assert "," not in match.group(1)
+    assert Decimal(match.group(1)) == Decimal("3000.00")
+
+
+@pytest.mark.django_db
 def test_cobros_gestion_permite_pago_mayor_y_genera_donacion(client):
     staff = crear_usuario_gestion("staff_donacion")
     asociado = create_asociado(
@@ -582,12 +613,14 @@ def test_cobros_gestion_permite_pago_mayor_y_genera_donacion(client):
         fecha_vencimiento=timezone.localdate(),
     )
     generar_cuotas_para_periodo(periodo)
+    cuota = asociado.cuotas.get(periodo=periodo)
 
     client.force_login(staff)
     response = client.post(
         reverse("gestion:cobros"),
         {
             "asociado_id": asociado.id,
+            "cuotas_ids": [str(cuota.id)],
             "fecha": timezone.localdate().isoformat(),
             "importe": "4000.00",
             "metodo": Pago.METODO_EFECTIVO,
@@ -598,8 +631,104 @@ def test_cobros_gestion_permite_pago_mayor_y_genera_donacion(client):
     assert response.status_code == 302
     assert Pago.objects.count() == 1
     pago = Pago.objects.first()
-    assert pago.importe == Decimal("3000")
+    assert pago.importe == Decimal("4000")
     assert Donacion.objects.filter(pago=pago, importe=Decimal("1000")).exists()
+
+
+@pytest.mark.django_db
+def test_cobros_gestion_permite_cobrar_solo_cuotas_mas_viejas_seleccionadas(client):
+    staff = crear_usuario_gestion("staff_cobro_parcial_de_lista")
+    asociado = create_asociado(
+        nombre="Noelia", apellido="Sosa", dni="48888111", tipo="asociado", fecha_alta="2026-03-10"
+    )
+    ciclo = CicloLectivo.objects.get_or_create(anio=2026)[0]
+    marzo = PeriodoCuota.objects.create(
+        mes=3,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="500.00",
+        importe_recargo_mes_siguiente="500.00",
+        fecha_vencimiento="2026-03-10",
+    )
+    abril = PeriodoCuota.objects.create(
+        mes=4,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="500.00",
+        importe_recargo_mes_siguiente="500.00",
+        fecha_vencimiento="2026-04-10",
+    )
+    generar_cuotas_para_periodo(marzo)
+    generar_cuotas_para_periodo(abril)
+    cuota_marzo, cuota_abril = asociado.cuotas.order_by("periodo__mes")
+
+    client.force_login(staff)
+    response = client.post(
+        reverse("gestion:cobros"),
+        {
+            "asociado_id": asociado.id,
+            "cuotas_ids": [str(cuota_marzo.id)],
+            "fecha": "2026-04-05",
+            "importe": "3500.00",
+            "metodo": Pago.METODO_EFECTIVO,
+            "observaciones": "",
+        },
+    )
+
+    assert response.status_code == 302
+    cuota_marzo.refresh_from_db()
+    cuota_abril.refresh_from_db()
+    assert cuota_marzo.estado == Cuota.ESTADO_PAGADA
+    assert cuota_abril.estado == Cuota.ESTADO_PENDIENTE
+
+
+@pytest.mark.django_db
+def test_cobros_gestion_rechaza_saltar_cuota_mas_vieja(client):
+    staff = crear_usuario_gestion("staff_cobro_salta_cuota")
+    asociado = create_asociado(
+        nombre="Ana", apellido="Ferreyra", dni="49999111", tipo="asociado", fecha_alta="2026-03-10"
+    )
+    ciclo = CicloLectivo.objects.get_or_create(anio=2026)[0]
+    marzo = PeriodoCuota.objects.create(
+        mes=3,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="500.00",
+        importe_recargo_mes_siguiente="500.00",
+        fecha_vencimiento="2026-03-10",
+    )
+    abril = PeriodoCuota.objects.create(
+        mes=4,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="500.00",
+        importe_recargo_mes_siguiente="500.00",
+        fecha_vencimiento="2026-04-10",
+    )
+    generar_cuotas_para_periodo(marzo)
+    generar_cuotas_para_periodo(abril)
+    cuota_marzo, cuota_abril = asociado.cuotas.order_by("periodo__mes")
+
+    client.force_login(staff)
+    response = client.post(
+        reverse("gestion:cobros"),
+        {
+            "asociado_id": asociado.id,
+            "cuotas_ids": [str(cuota_abril.id)],
+            "fecha": "2026-04-05",
+            "importe": "3000.00",
+            "metodo": Pago.METODO_EFECTIVO,
+            "observaciones": "",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "deuda más antigua" in response.content.decode()
+    assert Pago.objects.count() == 0
+    cuota_marzo.refresh_from_db()
+    cuota_abril.refresh_from_db()
+    assert cuota_marzo.estado == Cuota.ESTADO_PENDIENTE
+    assert cuota_abril.estado == Cuota.ESTADO_PENDIENTE
 
 
 @pytest.mark.django_db
@@ -817,6 +946,41 @@ def test_asociado_detalle_oculta_edicion_sin_permiso(client):
     assert "Estado general" in content
     assert "Editar datos" not in content
     assert "Guardar cambios" not in content
+
+
+@pytest.mark.django_db
+def test_asociado_detalle_muestra_a_que_corresponde_pago_reciente(client):
+    staff = crear_usuario_gestion("staff_detalle_pago")
+    asociado = create_asociado(
+        nombre="Julia", apellido="Campos", dni="40000112", tipo="asociado", fecha_alta="2026-03-10"
+    )
+    ciclo = CicloLectivo.objects.get_or_create(anio=2026)[0]
+    periodo = PeriodoCuota.objects.create(
+        mes=3,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
+        fecha_vencimiento="2026-03-10",
+    )
+    generar_cuotas_para_periodo(periodo)
+    cuota = asociado.cuotas.get(periodo=periodo)
+    registrar_pago(
+        asociado=asociado,
+        fecha=date(2026, 3, 5),
+        importe=Decimal("3500.00"),
+        metodo=Pago.METODO_EFECTIVO,
+        cuotas_ids=[cuota.id],
+    )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Pagos recientes" in content
+    assert "Cuotas: 03/2026" in content
+    assert "Donación: $500.00" in content
 
 
 @pytest.mark.django_db

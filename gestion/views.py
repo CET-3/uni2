@@ -24,7 +24,14 @@ from cuotas.importers import (
     import_cuotas_historicas_preview,
 )
 from cuotas.models import Pago, PeriodoCuota
-from cuotas.selectors import get_cuotas_deudoras, get_cuotas_del_anio, get_cuotas_del_asociado, get_total_deuda
+from cuotas.selectors import (
+    calcular_estado_cuota,
+    describir_pago,
+    get_cuotas_deudoras,
+    get_cuotas_del_anio,
+    get_cuotas_del_asociado,
+    get_total_deuda,
+)
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 
 from .forms import (
@@ -337,12 +344,13 @@ class GestionAsociadoDetalleView(GestionPermissionRequiredMixin, TemplateView):
         anio_actual = fecha_referencia.year
         cuotas_anio_actual = []
         for cuota in get_cuotas_del_anio(asociado, anio_actual).order_by("periodo__mes", "id"):
-            cuotas_anio_actual.append({"cuota": cuota, "saldo_pendiente": cuota.get_saldo_pendiente(fecha_referencia)})
+            cuotas_anio_actual.append(calcular_estado_cuota(cuota, fecha_referencia))
         context["asociado"] = asociado
         context["fecha_referencia"] = fecha_referencia
         context["total_deuda"] = get_total_deuda(asociado, fecha_referencia)
         context["cuotas_anio_actual"] = cuotas_anio_actual
-        context["pagos_recientes"] = Pago.objects.filter(asociado=asociado).order_by("-fecha", "-id")[:10]
+        pagos_recientes = Pago.objects.filter(asociado=asociado).order_by("-fecha", "-id")[:10]
+        context["pagos_recientes"] = [describir_pago(pago) for pago in pagos_recientes]
         context["cobro_url"] = f"{reverse('gestion:cobros')}?asociado={asociado.id}"
         context["cuotas_url"] = reverse("gestion:asociado_cuotas", args=[asociado.id])
         return context
@@ -363,7 +371,8 @@ class GestionAsociadoCuotasView(GestionPermissionRequiredMixin, TemplateView):
         context["asociado"] = asociado
         context["fecha_referencia"] = fecha_referencia
         context["total_deuda"] = get_total_deuda(asociado, fecha_referencia)
-        context["cuotas"] = get_cuotas_del_asociado(asociado).order_by("-periodo__ciclo_lectivo__anio", "-periodo__mes", "-id")
+        cuotas = get_cuotas_del_asociado(asociado).order_by("-periodo__ciclo_lectivo__anio", "-periodo__mes", "-id")
+        context["cuotas"] = [calcular_estado_cuota(cuota, fecha_referencia) for cuota in cuotas]
         return context
 
 
@@ -422,7 +431,12 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.method == "POST":
-            form = CobroCuotaForm(request.POST)
+            asociado = None
+            asociado_id = request.POST.get("asociado_id")
+            if asociado_id:
+                asociado = Asociado.objects.filter(id=asociado_id).first()
+            cuotas_queryset = get_cuotas_deudoras(asociado) if asociado else []
+            form = CobroCuotaForm(request.POST, cuotas_queryset=cuotas_queryset)
             if form.is_valid():
                 asociado = get_object_or_404(Asociado, id=form.cleaned_data["asociado_id"])
                 try:
@@ -433,6 +447,7 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
                         metodo=form.cleaned_data["metodo"],
                         registrado_por=request.user,
                         observaciones=form.cleaned_data["observaciones"],
+                        cuotas_ids=form.cleaned_data["cuotas_ids"],
                     )
                 except ValueError as exc:
                     messages.error(request, str(exc))
@@ -442,9 +457,7 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
                     messages.success(request, f"Pago #{pago.id} registrado para {asociado.apellido}, {asociado.nombre}.")
                     return redirect(f"{reverse_lazy('gestion:cobros')}?asociado={asociado.id}")
             else:
-                asociado_id = form.data.get("asociado_id")
-                if asociado_id:
-                    request._selected_asociado = Asociado.objects.filter(id=asociado_id).first()
+                request._selected_asociado = asociado
                 request._cobro_form = form
         return super().dispatch(request, *args, **kwargs)
 
@@ -457,22 +470,11 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
                 selected_asociado = Asociado.objects.filter(id=asociado_id).select_related("curso_actual", "usuario").first()
 
         context["selected_asociado"] = selected_asociado
-        context["cobro_form"] = getattr(
-            self.request,
-            "_cobro_form",
-            CobroCuotaForm(initial={"asociado_id": selected_asociado.id if selected_asociado else None}),
-        )
         if selected_asociado:
             fecha_referencia = timezone.localdate()
             cuotas_deudoras = []
             for cuota in get_cuotas_deudoras(selected_asociado):
-                cuotas_deudoras.append(
-                    {
-                        "cuota": cuota,
-                        "total_exigible": cuota.get_total_exigible(fecha_referencia),
-                        "saldo_pendiente": cuota.get_saldo_pendiente(fecha_referencia),
-                    }
-                )
+                cuotas_deudoras.append(calcular_estado_cuota(cuota, fecha_referencia))
             context["cuotas_deudoras"] = cuotas_deudoras
             context["total_deuda"] = get_total_deuda(selected_asociado, fecha_referencia)
             context["fecha_referencia"] = fecha_referencia
@@ -480,6 +482,15 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
             context["cuotas_deudoras"] = []
             context["total_deuda"] = 0
             context["fecha_referencia"] = timezone.localdate()
+        context["cobro_form"] = getattr(
+            self.request,
+            "_cobro_form",
+            CobroCuotaForm(
+                initial={"asociado_id": selected_asociado.id if selected_asociado else None},
+                cuotas_queryset=[item.cuota for item in context["cuotas_deudoras"]],
+            ),
+        )
+        context["selected_cuotas_ids"] = set(context["cobro_form"].data.getlist("cuotas_ids"))
         return context
 
 

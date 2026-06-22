@@ -9,13 +9,16 @@ from cuotas.models import Pago, PeriodoCuota
 
 class CobroCuotaForm(forms.Form):
     asociado_id = forms.IntegerField(widget=forms.HiddenInput)
+    cuotas_ids = forms.MultipleChoiceField(required=True, widget=forms.CheckboxSelectMultiple)
     fecha = forms.DateField(initial=timezone.localdate)
     importe = forms.DecimalField(max_digits=10, decimal_places=2, min_value=0.01)
     metodo = forms.ChoiceField(choices=Pago.METODOS)
     observaciones = forms.CharField(required=False, widget=forms.Textarea(attrs={"rows": 3}))
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, cuotas_queryset=None, **kwargs):
         super().__init__(*args, **kwargs)
+        cuotas_queryset = cuotas_queryset or []
+        self.fields["cuotas_ids"].choices = [(str(cuota.id), str(cuota.id)) for cuota in cuotas_queryset]
         self.fields["fecha"].widget.attrs.update({"class": "form-control", "type": "date"})
         self.fields["importe"].widget.attrs.update({"class": "form-control", "step": "0.01"})
         self.fields["metodo"].widget.attrs.update({"class": "form-select"})
@@ -26,6 +29,9 @@ class CobroCuotaForm(forms.Form):
         if not Asociado.objects.filter(id=asociado_id).exists():
             raise forms.ValidationError("El asociado seleccionado no existe.")
         return asociado_id
+
+    def clean_cuotas_ids(self):
+        return [int(cuota_id) for cuota_id in self.cleaned_data["cuotas_ids"]]
 
 
 class PeriodoCuotaForm(forms.ModelForm):

@@ -11,7 +11,7 @@
     <div class="d-flex flex-column flex-sm-row gap-2 align-items-sm-center">
         <a class="btn btn-outline-primary" href="{% url 'gestion:asociado_detalle' asociado.id %}">Volver al detalle</a>
         <div class="text-sm-end">
-            <div class="small text-secondary">Deuda total</div>
+            <div class="small text-secondary">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</div>
             <div class="h4 mb-0">${{ total_deuda }}</div>
         </div>
     </div>
@@ -23,22 +23,26 @@
             <thead>
                 <tr>
                     <th>Periodo</th>
-                    <th>Importe</th>
+                    <th>Original</th>
+                    <th>Recargo</th>
+                    <th>Saldo</th>
                     <th>Pagado</th>
                     <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
-                {% for cuota in cuotas %}
+                {% for item in cuotas %}
                     <tr>
-                        <td>{{ cuota.periodo }}</td>
-                        <td>${{ cuota.importe }}</td>
-                        <td>${{ cuota.importe_pagado }}</td>
-                        <td>{{ cuota.get_estado_display }}</td>
+                        <td>{{ item.cuota.periodo }}</td>
+                        <td>${{ item.importe_original }}</td>
+                        <td>${{ item.recargo }}</td>
+                        <td>${{ item.saldo }}</td>
+                        <td>${{ item.importe_pagado }}</td>
+                        <td>{{ item.estado_display }}</td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="4">Todavía no hay cuotas generadas.</td>
+                        <td colspan="6">Todavía no hay cuotas generadas.</td>
                     </tr>
                 {% endfor %}
             </tbody>
