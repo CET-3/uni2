@@ -183,11 +183,11 @@ Estados posibles:
 
 ## Cuotas y pagos
 
-- Se permiten pagos parciales de cuotas.
+- Los pagos deben cubrir la deuda exacta. No se permiten pagos por menos de la deuda total.
+- Si el pago supera la deuda, el excedente se registra como donación.
 - Los pagos se aplican a la deuda más antigua.
-- No se permite registrar un pago mayor que la deuda seleccionada.
 - Los asociados inactivos o egresados no generan nuevas cuotas, salvo decisión administrativa futura.
-- Si una cuota no queda cancelada al vencimiento, se aplica un recargo fijo por mora una sola vez.
+- Si una cuota no queda cancelada al vencimiento, se aplica un recargo escalonado: recargo menor si se paga dentro del mismo mes, recargo mayor si se paga en un mes posterior. Los recargos no se acumulan.
 
 ## Comercios
 
@@ -363,7 +363,8 @@ Campos:
 - mes
 - anio
 - importe
-- importe_recargo_mora
+- importe_recargo_mes: recargo que aplica si se paga en el mismo mes después del vencimiento
+- importe_recargo_mes_siguiente: recargo que aplica si se paga en un mes posterior al vencimiento
 - fecha_vencimiento
 - activo
 
@@ -374,86 +375,9 @@ Ejemplo:
 Reglas:
 
 - El importe del período sirve como base para generar cuotas.
-- El período define también el recargo fijo por mora a aplicar una sola vez si la cuota vence impaga.
-- La cuota generada debe copiar el importe para conservar historial.
-- La cuota generada debe copiar también el recargo por mora para conservar historial.
+- El período define dos niveles de recargo por mora (escalonados, no acumulativos): recargo por mismo mes y recargo por mes siguiente.
+- La cuota generada debe copiar el importe y ambos recargos para conservar historial.
 - El cambio de importe en un período futuro no debe modificar cuotas ya generadas.
-
----
-
-## Cuota
-
-Representa una cuota concreta de un asociado para un período.
-
-Campos:
-
-- id
-- asociado
-- periodo
-- importe
-- importe_recargo_mora
-- importe_pagado
-- estado
-- fecha_generacion
-
-Estados:
-
-- pendiente
-- parcial
-- pagada
-- vencida
-- bonificada
-
-Restricciones:
-
-- No puede existir más de una cuota para el mismo asociado y período.
-
-Reglas:
-
-- Si importe_pagado es 0, la cuota puede estar pendiente o vencida.
-- Si importe_pagado es mayor que 0 pero menor que importe, queda parcial.
-- Si importe_pagado es igual a importe, queda pagada.
-- Si se bonifica, queda bonificada.
-- Si al vencimiento no fue cancelada por completo, pasa a exigir `importe + importe_recargo_mora`.
-
----
-
-## Pago
-
-Representa un ingreso de dinero.
-
-Campos:
-
-- id
-- asociado
-- fecha
-- importe
-- metodo
-- observaciones
-- registrado_por
-
-Métodos:
-
-- efectivo
-- billetera_virtual
-
-Reglas:
-
-- En el MVP se usa para pagos de cuotas.
-- En V2 también podrá aplicarse a pedidos mediante PagoPedido.
-
----
-
-## PagoCuota
-
-Aplicación de un pago a una cuota.
-
-Campos:
-
-- id
-- pago
-- cuota
-- importe
 
 Ejemplo:
 
@@ -782,11 +706,15 @@ Si la cuota ya existe para el asociado y período, no debe generarse otra.
 
 ### RN-020 bis Recargo por mora
 
-Si al vencimiento la cuota no está totalmente cancelada, se aplica un recargo fijo por mora una sola vez.
+Si al vencimiento la cuota no está totalmente cancelada, se aplica un recargo escalonado:
+- **Mismo mes**: se aplica `importe_recargo_mes` si se paga después del vencimiento pero dentro del mismo mes calendario.
+- **Mes siguiente o posterior**: se aplica `importe_recargo_mes_siguiente` si se paga en un mes posterior al de vencimiento.
+
+Los recargos son escalonados (no acumulativos): si corresponde el de mes siguiente, no se suma el de mismo mes.
 
 ### RN-020 ter Historial de mora
 
-El recargo por mora debe copiarse desde `PeriodoCuota` a `Cuota` al momento de generar la cuota.
+Ambos recargos (`importe_recargo_mes` e `importe_recargo_mes_siguiente`) deben copiarse desde `PeriodoCuota` a `Cuota` al momento de generar la cuota.
 
 ---
 
@@ -796,17 +724,17 @@ El recargo por mora debe copiarse desde `PeriodoCuota` a `Cuota` al momento de g
 
 Los pagos se aplican a la deuda más antigua primero.
 
-### RN-022 Pago parcial
+### RN-022 Pago exacto
 
-Se permiten pagos parciales de cuotas.
+El pago debe cubrir la deuda total del asociado. No se permiten pagos por menos de la deuda exigible.
 
-### RN-023 Pago mayor a deuda
+### RN-023 Pago mayor a deuda genera donación
 
-No se permite registrar un pago mayor que la deuda seleccionada.
+Si el pago supera la deuda total, el excedente se registra como una `Donacion` asociada al mismo pago.
 
 ### RN-023 bis Pago fuera de término
 
-Si el pago se registra después del vencimiento y la cuota no había sido cancelada, la deuda exigible incluye el recargo fijo por mora.
+Si el pago se registra después del vencimiento y la cuota no había sido cancelada, la deuda exigible incluye el recargo escalonado correspondiente según la fecha de pago.
 
 ### RN-024 Pago de múltiples cuotas
 
@@ -910,6 +838,10 @@ El importe del asiento debe coincidir con el total balanceado de sus partidas.
 
 El MVP no implementa contabilidad completa.
 
+### RN-043 Cuotas iniciales al crear asociado
+
+Al crear un asociado, el sistema genera automáticamente las cuotas de los 2 meses anteriores al mes de alta más el mes corriente, cada una con sus recargos según la fecha de alta. El pago inicial debe cubrir el total de la deuda generada.
+
 ---
 
 # 8. Casos de uso MVP
@@ -969,6 +901,8 @@ Reglas relacionadas:
 - RN-016
 - RN-017
 - RN-018
+- RN-020 bis
+- RN-020 ter
 
 Modelos afectados:
 
@@ -992,6 +926,7 @@ Flujo principal:
 6. El sistema calcula o permite definir fecha_inicio_cobro.
 7. Guarda el asociado.
 8. Si tiene curso, crea InscripcionCurso.
+9. Si es tipo asociado, el sistema genera las cuotas retroactivas (2 meses anteriores + mes corriente) y registra el pago inicial con el importe ingresado.
 
 Reglas relacionadas:
 
@@ -1002,6 +937,7 @@ Reglas relacionadas:
 - RN-013
 - RN-014
 - RN-015
+- RN-039 (cuotas iniciales al crear asociado)
 
 Situaciones especiales:
 
@@ -1009,6 +945,8 @@ Situaciones especiales:
 - Curso inexistente.
 - Alta después del día 15.
 - Asociado sin usuario.
+- Cuotas iniciales generadas: se crean 3 cuotas retroactivas (últimos 2 meses + mes corriente) con sus recargos según fecha de alta.
+- Pago inicial insuficiente: si el importe no alcanza a cubrir la deuda total de las cuotas generadas, el sistema rechaza el alta.
 
 Modelos afectados:
 
@@ -1096,10 +1034,11 @@ Actor: Administrador
 
 Flujo principal:
 
-1. Crea PeriodoCuota con mes, año, importe y vencimiento.
+1. Crea PeriodoCuota con mes, año, importe, importe_recargo_mes, importe_recargo_mes_siguiente y vencimiento.
 2. Ejecuta generación de cuotas.
 3. El sistema genera cuotas para asociados activos alcanzados por fecha_inicio_cobro.
 4. El sistema evita duplicados.
+5. Cada cuota copia los dos recargos del período (importe_recargo_mes e importe_recargo_mes_siguiente).
 
 Reglas relacionadas:
 
@@ -1108,6 +1047,8 @@ Reglas relacionadas:
 - RN-017
 - RN-019
 - RN-020
+- RN-020 bis
+- RN-020 ter
 
 Situaciones especiales:
 
@@ -1115,6 +1056,7 @@ Situaciones especiales:
 - Asociado egresado.
 - Fecha de inicio de cobro posterior.
 - Cuota ya generada.
+- Recargos con valor 0 (permitido).
 
 Modelos afectados:
 
@@ -1131,35 +1073,40 @@ Actor: Administrador
 Flujo principal:
 
 1. Busca asociado.
-2. Visualiza deuda.
+2. Visualiza deuda total (incluye recargos escalonados según fecha).
 3. Ingresa importe y método.
-4. El sistema aplica pago a la deuda más antigua.
-5. El sistema actualiza importe_pagado y estado de cuotas.
-6. El sistema crea PagoCuota.
-7. El sistema puede generar Asiento.
+4. El sistema valida que el importe sea mayor o igual a la deuda total.
+5. El sistema aplica pago a la deuda más antigua, usando el recargo correspondiente según fecha de pago.
+6. El sistema actualiza importe_pagado y estado de cuotas.
+7. El sistema crea PagoCuota.
+8. Si el importe supera la deuda, el excedente se registra como Donación.
+9. El sistema puede generar Asiento.
 
 Reglas relacionadas:
 
+- RN-020 bis
+- RN-020 ter
 - RN-021
-- RN-022
-- RN-023
+- RN-022 (pago exacto)
+- RN-023 (donación por excedente)
 - RN-024
 - RN-025
 - RN-038
 
 Situaciones especiales:
 
-- Pago parcial.
 - Pago exacto.
+- Donación por excedente: si el importe supera la deuda, el sobrante se registra en Donación.
 - Pago para múltiples cuotas.
-- Pago mayor a deuda.
 - Asociado sin deuda.
+- Pago fuera de término: aplica recargo escalonado (mismo mes o mes siguiente).
 
 Modelos afectados:
 
 - Pago
 - PagoCuota
 - Cuota
+- Donación
 - Asiento
 
 ---

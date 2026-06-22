@@ -24,12 +24,19 @@ class PeriodoCuota(models.Model):
         decimal_places=2,
         help_text="Importe base de la cuota para este período.",
     )
-    importe_recargo_mora = models.DecimalField(
-        "recargo por mora",
+    importe_recargo_mes = models.DecimalField(
+        "recargo por mora (mismo mes)",
         max_digits=10,
         decimal_places=2,
-        default=0,
-        help_text="Monto fijo que se suma si la cuota no se paga antes del vencimiento.",
+        default=Decimal("100.00"),
+        help_text="Recargo fijo si se paga después del vencimiento pero dentro del mismo mes.",
+    )
+    importe_recargo_mes_siguiente = models.DecimalField(
+        "recargo por mora (mes siguiente)",
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal("200.00"),
+        help_text="Recargo fijo si se paga después de que pasó el mes de vencimiento.",
     )
     fecha_vencimiento = models.DateField(
         "fecha de vencimiento",
@@ -71,7 +78,8 @@ class Cuota(models.Model):
     asociado = models.ForeignKey(Asociado, on_delete=models.CASCADE, related_name="cuotas")
     periodo = models.ForeignKey(PeriodoCuota, on_delete=models.PROTECT, related_name="cuotas")
     importe = models.DecimalField(max_digits=10, decimal_places=2)
-    importe_recargo_mora = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    importe_recargo_mes = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    importe_recargo_mes_siguiente = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     importe_pagado = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     estado = models.CharField(max_length=20, choices=ESTADOS, default=ESTADO_PENDIENTE)
     fecha_generacion = models.DateField(auto_now_add=True)
@@ -94,9 +102,6 @@ class Cuota(models.Model):
     def get_importe_total_base(self) -> Decimal:
         return Decimal(str(self.importe))
 
-    def get_importe_total_con_mora(self) -> Decimal:
-        return self.get_importe_total_base() + Decimal(str(self.importe_recargo_mora))
-
     def paga_mora(self, fecha_referencia) -> bool:
         if fecha_referencia <= self.periodo.fecha_vencimiento:
             return False
@@ -108,10 +113,18 @@ class Cuota(models.Model):
         )
         return pagado_al_vencimiento < self.get_importe_total_base()
 
+    def get_recargo_aplicable(self, fecha_referencia) -> Decimal:
+        if not self.paga_mora(fecha_referencia):
+            return Decimal("0")
+        if fecha_referencia.year == self.periodo.ciclo_lectivo.anio and fecha_referencia.month == self.periodo.mes:
+            return Decimal(str(self.importe_recargo_mes))
+        return Decimal(str(self.importe_recargo_mes_siguiente))
+
+    def get_importe_total_con_mora(self, fecha_referencia) -> Decimal:
+        return self.get_importe_total_base() + self.get_recargo_aplicable(fecha_referencia)
+
     def get_total_exigible(self, fecha_referencia) -> Decimal:
-        if self.paga_mora(fecha_referencia):
-            return self.get_importe_total_con_mora()
-        return self.get_importe_total_base()
+        return self.get_importe_total_con_mora(fecha_referencia)
 
     def get_saldo_pendiente(self, fecha_referencia) -> Decimal:
         saldo = self.get_total_exigible(fecha_referencia) - Decimal(str(self.importe_pagado))
@@ -162,3 +175,19 @@ class PagoCuota(models.Model):
 
     def __str__(self):
         return f"{self.pago} -> {self.cuota}"
+
+
+class Donacion(models.Model):
+    asociado = models.ForeignKey(Asociado, on_delete=models.CASCADE, related_name="donaciones")
+    pago = models.ForeignKey(Pago, on_delete=models.CASCADE, related_name="donaciones")
+    importe = models.DecimalField(max_digits=10, decimal_places=2)
+    fecha = models.DateField()
+    observaciones = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Donación"
+        verbose_name_plural = "Donaciones"
+        ordering = ["-fecha", "-id"]
+
+    def __str__(self):
+        return f"Donación ${self.importe} - {self.asociado}"

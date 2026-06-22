@@ -35,8 +35,12 @@
                         {{ periodo_form.importe }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="{{ periodo_form.importe_recargo_mora.id_for_label }}">Recargo mora</label>
-                        {{ periodo_form.importe_recargo_mora }}
+                        <label class="form-label" for="{{ periodo_form.importe_recargo_mes.id_for_label }}">Recargo mismo mes</label>
+                        {{ periodo_form.importe_recargo_mes }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ periodo_form.importe_recargo_mes_siguiente.id_for_label }}">Recargo mes siguiente</label>
+                        {{ periodo_form.importe_recargo_mes_siguiente }}
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="{{ periodo_form.fecha_vencimiento.id_for_label }}">Vencimiento</label>
@@ -69,7 +73,8 @@
                             <tr>
                                 <th>Periodo</th>
                                 <th>Importe</th>
-                                <th>Mora</th>
+                                <th>Rec. mismo mes</th>
+                                <th>Rec. mes sig.</th>
                                 <th>Vencimiento</th>
                                 <th>Cuotas</th>
                                 <th>Estado</th>
@@ -81,7 +86,8 @@
                                 <tr>
                                     <td>{{ periodo }}</td>
                                     <td>${{ periodo.importe }}</td>
-                                    <td>${{ periodo.importe_recargo_mora }}</td>
+                                    <td>${{ periodo.importe_recargo_mes }}</td>
+                                    <td>${{ periodo.importe_recargo_mes_siguiente }}</td>
                                     <td>{{ periodo.fecha_vencimiento|date:"d/m/Y" }}</td>
                                     <td>{{ periodo.cuotas.count }}</td>
                                     <td>{% if periodo.activo %}Activo{% else %}Inactivo{% endif %}</td>

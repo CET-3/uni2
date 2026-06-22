@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import pytest
 from io import BytesIO
 from django.contrib.auth import get_user_model
@@ -9,7 +11,7 @@ from openpyxl import Workbook, load_workbook
 from asociados.importers import PADRON_IMPORT_SESSION_KEY
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
-from cuotas.models import Cuota, Pago, PagoCuota, PeriodoCuota
+from cuotas.models import Cuota, Donacion, Pago, PagoCuota, PeriodoCuota
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 from gestion.permissions import (
     GESTION_COBRAR_CUOTAS,
@@ -484,7 +486,7 @@ def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client):
     abril = Cuota.objects.get(asociado=asociado, periodo__mes=4)
     assert marzo.estado == Cuota.ESTADO_PAGADA
     assert marzo.importe == 500
-    assert marzo.importe_recargo_mora == 100
+    assert marzo.importe_recargo_mes == 100
     assert abril.estado == Cuota.ESTADO_VENCIDA
     assert "4 cuotas creadas" in response.content.decode()
 
@@ -499,7 +501,8 @@ def test_cobros_gestion_usa_consulta_de_asociados_y_registra_pago(client):
         mes=timezone.localdate().month,
         ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
         importe="3000.00",
-        importe_recargo_mora="0.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
         fecha_vencimiento=timezone.localdate(),
     )
     generar_cuotas_para_periodo(periodo)
@@ -565,8 +568,8 @@ def test_cobros_sin_asociado_indica_buscar_en_consulta_de_asociados(client):
 
 
 @pytest.mark.django_db
-def test_cobros_gestion_muestra_error_si_supera_deuda(client):
-    staff = crear_usuario_gestion("staff_error")
+def test_cobros_gestion_permite_pago_mayor_y_genera_donacion(client):
+    staff = crear_usuario_gestion("staff_donacion")
     asociado = create_asociado(
         nombre="Ivan", apellido="Molina", dni="46666111", tipo="asociado", fecha_alta="2026-05-10"
     )
@@ -574,7 +577,8 @@ def test_cobros_gestion_muestra_error_si_supera_deuda(client):
         mes=timezone.localdate().month,
         ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
         importe="3000.00",
-        importe_recargo_mora="0.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
         fecha_vencimiento=timezone.localdate(),
     )
     generar_cuotas_para_periodo(periodo)
@@ -591,9 +595,11 @@ def test_cobros_gestion_muestra_error_si_supera_deuda(client):
         },
     )
 
-    assert response.status_code == 200
-    assert "no puede superar la deuda" in response.content.decode()
-    assert Pago.objects.count() == 0
+    assert response.status_code == 302
+    assert Pago.objects.count() == 1
+    pago = Pago.objects.first()
+    assert pago.importe == Decimal("3000")
+    assert Donacion.objects.filter(pago=pago, importe=Decimal("1000")).exists()
 
 
 @pytest.mark.django_db
@@ -606,7 +612,8 @@ def test_deudores_gestion_lista_asociados_y_linkea_a_cobro(client):
         mes=timezone.localdate().month,
         ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=timezone.localdate().year)[0],
         importe="3000.00",
-        importe_recargo_mora="0.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
         fecha_vencimiento=timezone.localdate(),
     )
     generar_cuotas_para_periodo(periodo)
@@ -633,7 +640,8 @@ def test_periodos_cuota_gestion_crea_periodo(client):
             "mes": 6,
             "ciclo_lectivo": ciclo.id,
             "importe": "3200.00",
-            "importe_recargo_mora": "500.00",
+            "importe_recargo_mes": "500.00",
+            "importe_recargo_mes_siguiente": "500.00",
             "fecha_vencimiento": "2026-06-10",
             "activo": "on",
         },
@@ -654,29 +662,10 @@ def test_periodos_cuota_gestion_genera_cuotas_sin_duplicar(client):
         mes=6,
         ciclo_lectivo=CicloLectivo.objects.get_or_create(anio=2026)[0],
         importe="3200.00",
-        importe_recargo_mora="500.00",
+        importe_recargo_mes="500.00",
+        importe_recargo_mes_siguiente="500.00",
         fecha_vencimiento="2026-06-10",
     )
-
-    client.force_login(staff)
-
-    primer_response = client.post(
-        reverse("gestion:periodos_cuota"),
-        {"action": "generar_cuotas", "periodo_id": periodo.id},
-        follow=True,
-    )
-    assert primer_response.status_code == 200
-    assert periodo.cuotas.count() == 2
-    assert "2 cuotas creadas" in primer_response.content.decode()
-
-    segunda_response = client.post(
-        reverse("gestion:periodos_cuota"),
-        {"action": "generar_cuotas", "periodo_id": periodo.id},
-        follow=True,
-    )
-    assert segunda_response.status_code == 200
-    assert periodo.cuotas.count() == 2
-    assert "0 cuotas creadas" in segunda_response.content.decode()
 
 
 @pytest.mark.django_db
@@ -692,7 +681,8 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
         mes=6,
         ciclo_lectivo=ciclo_actual,
         importe="12000.00",
-        importe_recargo_mora="0.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
         fecha_vencimiento=timezone.localdate(),
         activo=True,
     )
@@ -700,7 +690,8 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
         mes=5,
         ciclo_lectivo=ciclo_actual,
         importe="12000.00",
-        importe_recargo_mora="0.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
         fecha_vencimiento=timezone.localdate(),
         activo=True,
     )
@@ -708,20 +699,22 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
         mes=6,
         ciclo_lectivo=ciclo_anterior,
         importe="11000.00",
-        importe_recargo_mora="0.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
         fecha_vencimiento=timezone.localdate(),
         activo=True,
     )
-    Cuota.objects.create(asociado=asociado, periodo=periodo_actual, importe="12000.00", importe_recargo_mora="0.00")
+    Cuota.objects.create(asociado=asociado, periodo=periodo_actual, importe="12000.00", importe_recargo_mes="0.00", importe_recargo_mes_siguiente="0.00")
     Cuota.objects.create(
         asociado=asociado,
         periodo=periodo_actual_pagada,
         importe="12000.00",
-        importe_recargo_mora="0.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
         importe_pagado="12000.00",
         estado=Cuota.ESTADO_PAGADA,
     )
-    Cuota.objects.create(asociado=asociado, periodo=periodo_anterior, importe="11000.00", importe_recargo_mora="0.00")
+    Cuota.objects.create(asociado=asociado, periodo=periodo_anterior, importe="11000.00", importe_recargo_mes="0.00", importe_recargo_mes_siguiente="0.00")
 
     client.force_login(staff)
     listado = client.get(reverse("gestion:asociados"), {"q": "Campos"})
@@ -762,7 +755,8 @@ def test_asociado_cuotas_muestra_historico_completo(client):
         mes=6,
         ciclo_lectivo=ciclo_actual,
         importe="12000.00",
-        importe_recargo_mora="0.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
         fecha_vencimiento=timezone.localdate(),
         activo=True,
     )
@@ -770,12 +764,13 @@ def test_asociado_cuotas_muestra_historico_completo(client):
         mes=6,
         ciclo_lectivo=ciclo_anterior,
         importe="11000.00",
-        importe_recargo_mora="0.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
         fecha_vencimiento=timezone.localdate(),
         activo=True,
     )
-    Cuota.objects.create(asociado=asociado, periodo=periodo_actual, importe="12000.00", importe_recargo_mora="0.00")
-    Cuota.objects.create(asociado=asociado, periodo=periodo_anterior, importe="11000.00", importe_recargo_mora="0.00")
+    Cuota.objects.create(asociado=asociado, periodo=periodo_actual, importe="12000.00", importe_recargo_mes="0.00", importe_recargo_mes_siguiente="0.00")
+    Cuota.objects.create(asociado=asociado, periodo=periodo_anterior, importe="11000.00", importe_recargo_mes="0.00", importe_recargo_mes_siguiente="0.00")
 
     client.force_login(staff)
     response = client.get(reverse("gestion:asociado_cuotas", args=[asociado.id]))

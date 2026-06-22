@@ -269,7 +269,8 @@ def analyze_cuotas_historicas_xlsx(file_obj, fecha_operacion: date) -> CuotasHis
                 "asociado_id": asociado.id if asociado else None,
                 "asociado_nombre": str(asociado) if asociado else "",
                 "importe": str(CUOTA_HISTORICA_IMPORTE),
-                "importe_recargo_mora": str(CUOTA_HISTORICA_RECARGO),
+                "importe_recargo_mes": str(CUOTA_HISTORICA_RECARGO),
+                "importe_recargo_mes_siguiente": str(CUOTA_HISTORICA_RECARGO),
                 "estado": Cuota.ESTADO_PAGADA if pagada else _estado_impaga(mes_data["mes"], fecha_operacion),
             }
 
@@ -358,7 +359,8 @@ def import_cuotas_historicas_preview(preview: CuotasHistoricasPreview, registrad
                     ciclo_lectivo=ciclo,
                     defaults={
                         "importe": CUOTA_HISTORICA_IMPORTE,
-                        "importe_recargo_mora": CUOTA_HISTORICA_RECARGO,
+                        "importe_recargo_mes": CUOTA_HISTORICA_RECARGO,
+                        "importe_recargo_mes_siguiente": CUOTA_HISTORICA_RECARGO,
                         "fecha_vencimiento": _periodo_fecha(mes),
                         "activo": True,
                     },
@@ -373,7 +375,8 @@ def import_cuotas_historicas_preview(preview: CuotasHistoricasPreview, registrad
                 periodo=periodo,
                 defaults={
                     "importe": CUOTA_HISTORICA_IMPORTE,
-                    "importe_recargo_mora": CUOTA_HISTORICA_RECARGO,
+                    "importe_recargo_mes": CUOTA_HISTORICA_RECARGO,
+                    "importe_recargo_mes_siguiente": CUOTA_HISTORICA_RECARGO,
                     "importe_pagado": CUOTA_HISTORICA_IMPORTE if item["pagada"] else Decimal("0.00"),
                     "estado": item["estado"],
                 },
