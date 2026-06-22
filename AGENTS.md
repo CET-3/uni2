@@ -6,7 +6,22 @@ Uni2 es una plataforma de gestión para mutuales escolares basada en Django.
 
 La fuente funcional principal del proyecto es:
 
-- `especificacion/index.html`
+- `especificacion/index.md`
+
+La especificación está organizada como un bundle OKF (Open Knowledge Format)
+en Markdown. `especificacion/index.md` es el índice principal y cada concepto
+funcional vive en archivos específicos, por ejemplo:
+
+- `especificacion/entidades/`
+- `especificacion/reglas/`
+- `especificacion/casos-de-uso/`
+- `especificacion/casos-borde/`
+- `especificacion/pantallas/`
+- `especificacion/arquitectura/`
+- `especificacion/v2/`
+
+`especificacion/index.html` queda solamente como referencia visual histórica.
+No usarlo como fuente de verdad para decisiones nuevas.
 
 Si hay diferencias entre implementación y documentación, hay que reducir esa brecha. No dejar decisiones nuevas solamente en el código o en commits.
 
@@ -41,6 +56,12 @@ Esto incluye:
 - restricciones técnicas que afecten cómo se usa o mantiene el sistema
 
 Si una tarea modifica cómo se organiza el proyecto o cómo funciona una parte del sistema, actualizar la especificación en el mismo trabajo. No dejarlo para después.
+
+Al actualizar la especificación, modificar el archivo OKF más específico para
+el cambio. Por ejemplo: una entidad en `especificacion/entidades/`, una regla
+en `especificacion/reglas/`, un flujo en `especificacion/casos-de-uso/` y una
+pantalla en `especificacion/pantallas/`. Si se agrega un archivo nuevo,
+actualizar también el `index.md` del directorio correspondiente.
 
 ## Cómo comunicar
 
