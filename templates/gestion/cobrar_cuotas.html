@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load l10n %}
 
 {% block title %}Cobrar cuotas | Uni2{% endblock %}
 
@@ -35,6 +36,49 @@
                     <form method="post" novalidate>
                         {% csrf_token %}
                         {{ cobro_form.asociado_id }}
+                        <h3 class="h6 mb-3">Cuotas a cobrar</h3>
+                        <div class="table-responsive mb-3">
+                            <table class="table table-soft align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Elegir</th>
+                                        <th>Periodo</th>
+                                        <th>Original</th>
+                                        <th>Recargo actual</th>
+                                        <th>Total actual</th>
+                                        <th>Pagado</th>
+                                        <th>Saldo</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for cuota in cuotas_deudoras %}
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    class="form-check-input cuota-cobro-check"
+                                                    type="checkbox"
+                                                    name="cuotas_ids"
+                                                    value="{{ cuota.cuota.id }}"
+                                                    data-saldo="{{ cuota.saldo|unlocalize }}"
+                                                    {% if cuota.cuota.id|stringformat:"s" in selected_cuotas_ids %}checked{% endif %}
+                                                >
+                                            </td>
+                                            <td>{{ cuota.cuota.periodo }}</td>
+                                            <td>${{ cuota.importe_original }}</td>
+                                            <td>${{ cuota.recargo }}</td>
+                                            <td>${{ cuota.total_exigible }}</td>
+                                            <td>${{ cuota.importe_pagado }}</td>
+                                            <td>${{ cuota.saldo }}</td>
+                                            <td>{{ cuota.estado_display }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr><td colspan="8">El asociado no tiene cuotas pendientes.</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% for error in cobro_form.cuotas_ids.errors %}<div class="text-danger small mb-2">{{ error }}</div>{% endfor %}
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label" for="{{ cobro_form.fecha.id_for_label }}">Fecha</label>
@@ -67,41 +111,25 @@
         </div>
     </div>
 
-    <section class="mt-4">
-        <div class="card surface-card">
-            <div class="card-body">
-                <h2 class="h5 mb-3">Cuotas con deuda</h2>
-                <div class="table-responsive">
-                    <table class="table table-soft align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th>Periodo</th>
-                                <th>Base</th>
-                                <th>Con mora</th>
-                                <th>Pagado</th>
-                                <th>Saldo</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for cuota in cuotas_deudoras %}
-                                <tr>
-                                    <td>{{ cuota.cuota.periodo }}</td>
-                                    <td>${{ cuota.cuota.importe }}</td>
-                                    <td>${{ cuota.total_exigible }}</td>
-                                    <td>${{ cuota.cuota.importe_pagado }}</td>
-                                    <td>${{ cuota.saldo_pendiente }}</td>
-                                    <td>{{ cuota.cuota.get_estado_display }}</td>
-                                </tr>
-                            {% empty %}
-                                <tr><td colspan="6">El asociado no tiene cuotas pendientes.</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const checks = Array.from(document.querySelectorAll(".cuota-cobro-check"));
+            const importe = document.getElementById("{{ cobro_form.importe.id_for_label }}");
+            const updateImporte = function () {
+                if (!importe) {
+                    return;
+                }
+                const total = checks
+                    .filter((check) => check.checked)
+                    .reduce((sum, check) => sum + Number(check.dataset.saldo || 0), 0);
+                if (total > 0) {
+                    importe.value = total.toFixed(2);
+                }
+            };
+            checks.forEach((check) => check.addEventListener("change", updateImporte));
+            updateImporte();
+        });
+    </script>
 {% else %}
     <div class="card surface-card">
         <div class="card-body">

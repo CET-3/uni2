@@ -3,7 +3,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 
-from cuotas.selectors import get_total_deuda
+from django.utils import timezone
+
+from cuotas.selectors import calcular_estado_cuota, get_total_deuda
 from usuarios.services import user_is_asociado
 
 
@@ -47,10 +49,12 @@ class AsociadoCuotasView(AsociadoRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         asociado = self.request.user.asociado
+        fecha_referencia = timezone.localdate()
         context["asociado"] = asociado
-        context["cuotas"] = asociado.cuotas.select_related("periodo", "periodo__ciclo_lectivo").order_by(
-            "-periodo__ciclo_lectivo__anio",
-            "-periodo__mes",
+        cuotas = asociado.cuotas.select_related("periodo", "periodo__ciclo_lectivo").order_by(
+            "-periodo__ciclo_lectivo__anio", "-periodo__mes"
         )
-        context["total_deuda"] = get_total_deuda(asociado)
+        context["fecha_referencia"] = fecha_referencia
+        context["cuotas"] = [calcular_estado_cuota(cuota, fecha_referencia) for cuota in cuotas]
+        context["total_deuda"] = get_total_deuda(asociado, fecha_referencia)
         return context

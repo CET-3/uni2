@@ -132,6 +132,50 @@ def test_aplicacion_a_deuda_mas_antigua(asociado_activo, periodos):
 
 
 @pytest.mark.django_db
+def test_pago_de_cuotas_seleccionadas_deja_cuotas_posteriores_pendientes(asociado_activo, periodos):
+    generar_cuotas_para_periodo(periodos[0])
+    generar_cuotas_para_periodo(periodos[1])
+    cuota_marzo, cuota_abril = Cuota.objects.filter(asociado=asociado_activo).order_by("periodo__mes")
+
+    pago = registrar_pago(
+        asociado=asociado_activo,
+        fecha=date(2026, 4, 5),
+        importe=Decimal("3500"),
+        metodo=Pago.METODO_EFECTIVO,
+        cuotas_ids=[cuota_marzo.id],
+    )
+
+    cuota_marzo.refresh_from_db()
+    cuota_abril.refresh_from_db()
+    assert pago.importe == Decimal("3500")
+    assert list(pago.aplicaciones.values_list("cuota_id", flat=True)) == [cuota_marzo.id]
+    assert cuota_marzo.estado == Cuota.ESTADO_PAGADA
+    assert cuota_abril.estado == Cuota.ESTADO_PENDIENTE
+
+
+@pytest.mark.django_db
+def test_rechaza_seleccion_que_salta_cuota_mas_vieja(asociado_activo, periodos):
+    generar_cuotas_para_periodo(periodos[0])
+    generar_cuotas_para_periodo(periodos[1])
+    cuota_marzo, cuota_abril = Cuota.objects.filter(asociado=asociado_activo).order_by("periodo__mes")
+
+    with pytest.raises(ValueError, match="deuda más antigua"):
+        registrar_pago(
+            asociado=asociado_activo,
+            fecha=date(2026, 4, 5),
+            importe=Decimal("3000"),
+            metodo=Pago.METODO_EFECTIVO,
+            cuotas_ids=[cuota_abril.id],
+        )
+
+    cuota_marzo.refresh_from_db()
+    cuota_abril.refresh_from_db()
+    assert Pago.objects.count() == 0
+    assert cuota_marzo.estado == Cuota.ESTADO_PENDIENTE
+    assert cuota_abril.estado == Cuota.ESTADO_PENDIENTE
+
+
+@pytest.mark.django_db
 def test_pago_mayor_a_deuda_genera_donacion(asociado_activo, periodos):
     generar_cuotas_para_periodo(periodos[0])
     pago = registrar_pago(
@@ -143,7 +187,7 @@ def test_pago_mayor_a_deuda_genera_donacion(asociado_activo, periodos):
     cuota = Cuota.objects.get(asociado=asociado_activo, periodo=periodos[0])
     assert cuota.importe_pagado == Decimal("3000")
     assert cuota.estado == Cuota.ESTADO_PAGADA
-    assert pago.importe == Decimal("3000")
+    assert pago.importe == Decimal("3500")
 
     donacion = Donacion.objects.get(pago=pago)
     assert donacion.importe == Decimal("500")
@@ -193,6 +237,7 @@ def test_pago_fuera_de_termino_con_donacion(asociado_activo, periodos):
     cuota = Cuota.objects.get(asociado=asociado_activo, periodo=periodos[0])
     assert cuota.importe_pagado == Decimal("3500")
     assert cuota.estado == Cuota.ESTADO_PAGADA
+    assert pago.importe == Decimal("4000")
 
     donacion = Donacion.objects.get(pago=pago)
     assert donacion.importe == Decimal("500")

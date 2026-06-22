@@ -1,14 +1,81 @@
 from decimal import Decimal
+from dataclasses import dataclass
+from datetime import date
 
 from asociados.models import Asociado
 
-from .models import Cuota
+from .models import Cuota, Pago
+
+
+@dataclass(frozen=True)
+class EstadoCuota:
+    cuota: Cuota
+    fecha: date
+    importe_original: Decimal
+    recargo: Decimal
+    total_exigible: Decimal
+    importe_pagado: Decimal
+    saldo: Decimal
+    estado: str
+    estado_display: str
+
+
+@dataclass(frozen=True)
+class ResumenPago:
+    pago: Pago
+    lineas: list[str]
+
+
+def calcular_estado_cuota(cuota: Cuota, fecha_referencia) -> EstadoCuota:
+    recargo = cuota.get_recargo_aplicable(fecha_referencia)
+    total_exigible = cuota.get_total_exigible(fecha_referencia)
+    importe_pagado = Decimal(str(cuota.importe_pagado))
+    saldo = cuota.get_saldo_pendiente(fecha_referencia)
+    if saldo <= 0:
+        estado = Cuota.ESTADO_PAGADA
+        estado_display = "Pagada"
+    elif fecha_referencia > cuota.periodo.fecha_vencimiento:
+        estado = Cuota.ESTADO_VENCIDA
+        estado_display = "Vencida"
+    else:
+        estado = Cuota.ESTADO_PENDIENTE
+        estado_display = "Pendiente"
+    return EstadoCuota(
+        cuota=cuota,
+        fecha=fecha_referencia,
+        importe_original=Decimal(str(cuota.importe)),
+        recargo=recargo,
+        total_exigible=total_exigible,
+        importe_pagado=importe_pagado,
+        saldo=saldo,
+        estado=estado,
+        estado_display=estado_display,
+    )
+
+
+def describir_pago(pago: Pago) -> ResumenPago:
+    lineas = []
+    aplicaciones = pago.aplicaciones.select_related("cuota__periodo", "cuota__periodo__ciclo_lectivo").order_by(
+        "cuota__periodo__ciclo_lectivo__anio",
+        "cuota__periodo__mes",
+        "cuota_id",
+    )
+    periodos = [str(aplicacion.cuota.periodo) for aplicacion in aplicaciones]
+    if periodos:
+        lineas.append(f"Cuotas: {', '.join(periodos)}")
+
+    for donacion in pago.donaciones.order_by("id"):
+        lineas.append(f"Donación: ${donacion.importe}")
+
+    if not lineas:
+        lineas.append("Sin aplicaciones registradas")
+    return ResumenPago(pago=pago, lineas=lineas)
 
 
 def get_cuotas_deudoras(asociado: Asociado):
-    return Cuota.objects.filter(asociado=asociado).exclude(
-        estado__in=[Cuota.ESTADO_PAGADA, Cuota.ESTADO_BONIFICADA]
-    ).select_related("periodo", "periodo__ciclo_lectivo")
+    return Cuota.objects.filter(asociado=asociado).exclude(estado=Cuota.ESTADO_PAGADA).select_related(
+        "periodo", "periodo__ciclo_lectivo"
+    )
 
 
 def get_cuotas_deudoras_del_anio(asociado: Asociado, anio: int):

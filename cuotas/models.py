@@ -63,16 +63,12 @@ class PeriodoCuota(models.Model):
 
 class Cuota(models.Model):
     ESTADO_PENDIENTE = "pendiente"
-    ESTADO_PARCIAL = "parcial"
     ESTADO_PAGADA = "pagada"
     ESTADO_VENCIDA = "vencida"
-    ESTADO_BONIFICADA = "bonificada"
     ESTADOS = [
         (ESTADO_PENDIENTE, "Pendiente"),
-        (ESTADO_PARCIAL, "Parcial"),
         (ESTADO_PAGADA, "Pagada"),
         (ESTADO_VENCIDA, "Vencida"),
-        (ESTADO_BONIFICADA, "Bonificada"),
     ]
 
     asociado = models.ForeignKey(Asociado, on_delete=models.CASCADE, related_name="cuotas")
