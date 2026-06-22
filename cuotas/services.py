@@ -70,6 +70,34 @@ def generar_cuotas_para_periodo(periodo: PeriodoCuota) -> int:
 
 
 @transaction.atomic
+def generar_cuotas_iniciales_para_asociado(*, asociado: Asociado, fecha_referencia) -> list[Cuota]:
+    inicio = asociado.fecha_inicio_cobro
+    periodos = PeriodoCuota.objects.filter(
+        ciclo_lectivo__anio__gte=inicio.year,
+        ciclo_lectivo__anio__lte=fecha_referencia.year,
+        activo=True,
+    ).select_related("ciclo_lectivo")
+    cuotas = []
+    for periodo in periodos.order_by("ciclo_lectivo__anio", "mes"):
+        periodo_key = (periodo.ciclo_lectivo.anio, periodo.mes)
+        if periodo_key < (inicio.year, inicio.month):
+            continue
+        if periodo_key > (fecha_referencia.year, fecha_referencia.month):
+            continue
+        cuota, _ = Cuota.objects.get_or_create(
+            asociado=asociado,
+            periodo=periodo,
+            defaults={
+                "importe": periodo.importe,
+                "importe_recargo_mes": periodo.importe_recargo_mes,
+                "importe_recargo_mes_siguiente": periodo.importe_recargo_mes_siguiente,
+            },
+        )
+        cuotas.append(cuota)
+    return cuotas
+
+
+@transaction.atomic
 def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por=None, observaciones="", cuotas_ids=None):
     importe = Decimal(str(importe))
     cuotas = _get_cuotas_para_cobro(asociado, cuotas_ids)

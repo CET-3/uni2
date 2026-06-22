@@ -32,7 +32,7 @@ from cuotas.selectors import (
     get_cuotas_del_asociado,
     get_total_deuda,
 )
-from cuotas.services import generar_cuotas_para_periodo, registrar_pago
+from cuotas.services import generar_cuotas_iniciales_para_asociado, generar_cuotas_para_periodo, registrar_pago
 
 from .forms import (
     AsociadoAltaForm,
@@ -120,7 +120,19 @@ class GestionAsociadoNuevoView(GestionPermissionRequiredMixin, TemplateView):
             form = AsociadoAltaForm(request.POST)
             if form.is_valid():
                 asociado = form.save()
-                messages.success(request, "Asociado creado correctamente.")
+                cuotas_generadas = generar_cuotas_iniciales_para_asociado(
+                    asociado=asociado,
+                    fecha_referencia=asociado.fecha_alta,
+                )
+                if cuotas_generadas:
+                    messages.success(
+                        request,
+                        f"Asociado creado correctamente. Se generaron {len(cuotas_generadas)} cuotas iniciales.",
+                    )
+                else:
+                    messages.success(request, "Asociado creado correctamente. No se generaron cuotas iniciales.")
+                if request.user.has_perm(GESTION_COBRAR_CUOTAS):
+                    return redirect(f"{reverse('gestion:cobros')}?asociado={asociado.id}")
                 return redirect("gestion:asociado_detalle", asociado_id=asociado.id)
             request._asociado_form = form
         return super().dispatch(request, *args, **kwargs)

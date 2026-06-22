@@ -7,6 +7,7 @@ from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
 from cuotas.models import Cuota, Donacion, Pago, PeriodoCuota
 from cuotas.services import (
+    generar_cuotas_iniciales_para_asociado,
     generar_cuotas_para_periodo,
     generar_cuotas_y_pago_inicial,
     registrar_pago,
@@ -260,6 +261,66 @@ def test_cuotas_copian_recargos_desde_periodo(asociado_activo, periodos):
     cuota = Cuota.objects.get(asociado=asociado_activo, periodo=periodos[0])
     assert cuota.importe_recargo_mes == periodos[0].importe_recargo_mes
     assert cuota.importe_recargo_mes_siguiente == periodos[0].importe_recargo_mes_siguiente
+
+
+@pytest.mark.django_db
+def test_generar_cuotas_iniciales_para_asociado_usa_periodos_existentes():
+    asociado = create_asociado(
+        nombre="Lara",
+        apellido="Diaz",
+        dni="42123456",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 5, 20),
+        fecha_inicio_cobro=date(2026, 4, 1),
+    )
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    abril = PeriodoCuota.objects.create(
+        mes=4,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3000"),
+        importe_recargo_mes=Decimal("500"),
+        importe_recargo_mes_siguiente=Decimal("500"),
+        fecha_vencimiento=date(2026, 4, 10),
+    )
+    mayo = PeriodoCuota.objects.create(
+        mes=5,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3000"),
+        importe_recargo_mes=Decimal("500"),
+        importe_recargo_mes_siguiente=Decimal("500"),
+        fecha_vencimiento=date(2026, 5, 10),
+    )
+
+    cuotas = generar_cuotas_iniciales_para_asociado(asociado=asociado, fecha_referencia=date(2026, 5, 20))
+
+    assert [cuota.periodo for cuota in cuotas] == [abril, mayo]
+    assert Cuota.objects.filter(asociado=asociado).count() == 2
+
+
+@pytest.mark.django_db
+def test_generar_cuotas_iniciales_no_crea_periodos_faltantes():
+    asociado = create_asociado(
+        nombre="Nina",
+        apellido="Moya",
+        dni="43123456",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 5, 20),
+        fecha_inicio_cobro=date(2026, 4, 1),
+    )
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    mayo = PeriodoCuota.objects.create(
+        mes=5,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3000"),
+        importe_recargo_mes=Decimal("500"),
+        importe_recargo_mes_siguiente=Decimal("500"),
+        fecha_vencimiento=date(2026, 5, 10),
+    )
+
+    cuotas = generar_cuotas_iniciales_para_asociado(asociado=asociado, fecha_referencia=date(2026, 5, 20))
+
+    assert [cuota.periodo for cuota in cuotas] == [mayo]
+    assert PeriodoCuota.objects.filter(mes=4, ciclo_lectivo__anio=2026).exists() is False
 
 
 @pytest.mark.django_db
