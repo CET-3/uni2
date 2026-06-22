@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from asociados.models import Asociado
 from asociados.models import Curso
-from asociados.services import calculate_fecha_inicio_cobro
+from asociados.services import create_asociado
 from cuotas.models import Pago, PeriodoCuota
 
 
@@ -107,31 +107,33 @@ class AsociadoAltaForm(forms.ModelForm):
             "tipo",
             "curso_actual",
             "fecha_alta",
-            "fecha_inicio_cobro",
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["fecha_inicio_cobro"].required = False
         if not self.is_bound:
-            fecha_alta = timezone.localdate()
-            self.initial.setdefault("fecha_alta", fecha_alta)
-            self.initial.setdefault("fecha_inicio_cobro", calculate_fecha_inicio_cobro(fecha_alta))
+            self.initial.setdefault("fecha_alta", timezone.localdate())
         for field_name, field in self.fields.items():
             if isinstance(field.widget, forms.Select):
                 field.widget.attrs.update({"class": "form-select"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
-            if field_name in {"fecha_alta", "fecha_inicio_cobro"}:
+            if field_name == "fecha_alta":
                 field.widget.attrs.update({"type": "date"})
 
-    def clean(self):
-        cleaned_data = super().clean()
-        fecha_alta = cleaned_data.get("fecha_alta")
-        fecha_inicio_cobro = cleaned_data.get("fecha_inicio_cobro")
-        if fecha_alta and not fecha_inicio_cobro:
-            cleaned_data["fecha_inicio_cobro"] = calculate_fecha_inicio_cobro(fecha_alta)
-        return cleaned_data
+    def save(self, commit=True):
+        data = self.cleaned_data
+        return create_asociado(
+            nombre=data["nombre"],
+            apellido=data["apellido"],
+            dni=data["dni"],
+            tipo=data["tipo"],
+            fecha_alta=data["fecha_alta"],
+            curso_actual=data["curso_actual"],
+            email=data["email"],
+            telefono=data["telefono"],
+            direccion=data["direccion"],
+        )
 
 
 class ImportarPadronAsociadosForm(forms.Form):

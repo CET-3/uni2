@@ -1053,7 +1053,6 @@ def test_asociado_nuevo_crea_asociado_desde_gestion(client):
             "tipo": "asociado",
             "curso_actual": curso.id,
             "fecha_alta": "2026-05-20",
-            "fecha_inicio_cobro": "2026-06-01",
         },
         follow=True,
     )
@@ -1065,6 +1064,57 @@ def test_asociado_nuevo_crea_asociado_desde_gestion(client):
     assert str(asociado.fecha_inicio_cobro) == "2026-06-01"
     assert response.redirect_chain[-1][0] == reverse("gestion:asociado_detalle", args=[asociado.id])
     assert "Asociado creado correctamente" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_asociado_nuevo_genera_cuotas_iniciales_y_redirige_a_cobro_si_tiene_permiso(client):
+    staff = crear_usuario_gestion(
+        "staff_alta_cobra",
+        permisos=[GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS, GESTION_COBRAR_CUOTAS],
+    )
+    curso = Curso.objects.create(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    PeriodoCuota.objects.create(
+        mes=5,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="500.00",
+        importe_recargo_mes_siguiente="500.00",
+        fecha_vencimiento="2026-05-10",
+    )
+    PeriodoCuota.objects.create(
+        mes=6,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="500.00",
+        importe_recargo_mes_siguiente="500.00",
+        fecha_vencimiento="2026-06-10",
+    )
+
+    client.force_login(staff)
+    response = client.post(
+        reverse("gestion:asociado_nuevo"),
+        {
+            "nombre": "Mara",
+            "apellido": "Lopez",
+            "dni": "44111223",
+            "email": "mara@example.com",
+            "telefono": "2984000111",
+            "direccion": "San Martin 100",
+            "tipo": "asociado",
+            "curso_actual": curso.id,
+            "fecha_alta": "2026-06-05",
+        },
+        follow=True,
+    )
+
+    asociado = Asociado.objects.get(dni="44111223")
+    assert response.status_code == 200
+    assert response.redirect_chain[-1][0] == f"{reverse('gestion:cobros')}?asociado={asociado.id}"
+    assert list(asociado.cuotas.order_by("periodo__mes").values_list("periodo__mes", flat=True)) == [6]
+    content = response.content.decode()
+    assert "Se generaron 1 cuotas iniciales" in content
+    assert "Cobro de cuotas" in content
 
 
 @pytest.mark.django_db
