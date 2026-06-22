@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi Panel | Uni2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #f0f4fe;
+            color: #1a2332;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(26, 35, 50, 0.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #fff;
+            letter-spacing: -0.03em;
+        }
+        .navbar-brand span {
+            color: #60a5fa;
+        }
+        .navbar-info {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .navbar-info .badge-pill {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.3rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .navbar-info .avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .navbar-info .logout {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .navbar-info .logout:hover {
+            color: #fff;
+        }
+
+        /* MAIN */
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* HERO */
+        .hero-card {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.2), transparent 50%);
+            pointer-events: none;
+        }
+        .hero-card>* {
+            position: relative;
+            z-index: 1;
+        }
+        .hero-card .eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.6;
+            margin-bottom: 0.3rem;
+        }
+        .hero-card h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.2rem;
+        }
+        .hero-card .sub {
+            opacity: 0.8;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .hero-card .pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .hero-card .pill {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .btn-hero {
+            padding: 0.65rem 1.5rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border: 0;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+        .btn-hero.white {
+            background: #fff;
+            color: #1a2332;
+        }
+        .btn-hero.white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .btn-hero.outline {
+            background: transparent;
+            color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+        }
+        .btn-hero.outline:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* SECTION */
+        .section {
+            background: #fff;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.5rem;
+        }
+        .section .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .section .header h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+        .section .header .kicker {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #94a3b8;
+            margin-bottom: 0.1rem;
+        }
+        .section .header a {
+            font-size: 0.82rem;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .section .header a:hover {
+            text-decoration: underline;
+        }
+
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+        .access-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.1rem;
+            background: linear-gradient(180deg, #fff 0%, #f8fbff 100%);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            border-radius: 1rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+        .access-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+            border-color: rgba(37, 99, 235, 0.2);
+        }
+        .access-item .ai-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .access-item .ai-icon.blue {
+            background: #eff6ff;
+        }
+        .access-item .ai-icon.green {
+            background: #f0fdf4;
+        }
+        .access-item .ai-icon.purple {
+            background: #f5f3ff;
+        }
+        .access-item .ai-icon.amber {
+            background: #fffbeb;
+        }
+        .access-item .ai-text strong {
+            display: block;
+            font-size: 0.9rem;
+        }
+        .access-item .ai-text span {
+            display: block;
+            font-size: 0.78rem;
+            color: #64748b;
+            margin-top: 0.1rem;
+        }
+
+        /* TABLE */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        table th {
+            text-align: left;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #94a3b8;
+            padding: 0.7rem 0.8rem;
+            border-bottom: 1px solid #f1f5f9;
+            white-space: nowrap;
+        }
+        table td {
+            padding: 0.7rem 0.8rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        table tr:last-child td {
+            border-bottom: 0;
+        }
+        .badge-cuota {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.2rem 0.7rem;
+            border-radius: 999px;
+        }
+        .badge-cuota.pagada {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge-cuota.pendiente {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .badge-cuota.vencida {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .badge-cuota.parcial {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* DEUDA CARD */
+        .deuda-card {
+            background: linear-gradient(135deg, #fef3c7, #fffbeb);
+            border: 1px solid #fde68a;
+            border-radius: 1rem;
+            padding: 1rem 1.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .deuda-card .label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #92400e;
+        }
+        .deuda-card .monto {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #92400e;
+            letter-spacing: -0.03em;
+        }
+        .deuda-card .monto small {
+            font-size: 0.8rem;
+            font-weight: 500;
+            opacity: 0.6;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #1a2332;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.82rem;
+        }
+        .footer strong {
+            color: #fff;
+        }
+
+        @media (max-width: 600px) {
+            .main {
+                padding: 1rem;
+            }
+            .hero-card h1 {
+                font-size: 1.4rem;
+            }
+            .hero-actions {
+                flex-direction: column;
+            }
+            .hero-actions .btn-hero {
+                width: 100%;
+                justify-content: center;
+            }
+            .navbar-info .badge-pill {
+                display: none;
+            }
+            .deuda-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="navbar-brand">Uni<span>2</span></a>
+            <div class="navbar-info">
+                <span class="badge-pill">N° 0421</span>
+                <span class="avatar-small">ML</span>
+                <a href="#" class="logout">Salir</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main">
+
+        <!-- Hero -->
+        <div class="hero-card">
+            <div class="eyebrow">Mi panel</div>
+            <h1>Hola, Milena López.</h1>
+            <div class="sub">Desde acá podés acceder a todas las herramientas de asociado.</div>
+            <div class="pills">
+                <span class="pill">N° 0421</span>
+                <span class="pill">Activo</span>
+                <span class="pill">2° Año</span>
+            </div>
+            <div class="hero-actions">
+                <a href="#" class="btn-hero white">🪪 Mi credencial</a>
+                <a href="#" class="btn-hero outline">💰 Mis cuotas</a>
+            </div>
+        </div>
+
+        <!-- Deuda -->
+        <div class="deuda-card">
+            <div>
+                <div class="label">Deuda total al momento</div>
+            </div>
+            <div class="monto">$3.000 <small>al 04/06/2026</small></div>
+        </div>
+
+        <!-- Cuotas -->
+        <div class="section">
+            <div class="header">
+                <div>
+                    <div class="kicker">Estado de cuentas</div>
+                    <h2>Mis cuotas</h2>
+                </div>
+                <a href="#">Ver todas</a>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Período</th><th>Importe</th><th>Pagado</th><th>Estado</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Junio 2026</td><td>$1.500</td><td>$0</td><td><span class="badge-cuota pendiente">Pendiente</span></td></tr>
+                        <tr><td>Mayo 2026</td><td>$1.500</td><td>$1.500</td><td><span class="badge-cuota pagada">Pagada</span></td></tr>
+                        <tr><td>Abril 2026</td><td>$1.500</td><td>$1.500</td><td><span class="badge-cuota pagada">Pagada</span></td></tr>
+                        <tr><td>Marzo 2026</td><td>$1.500</td><td>$1.500</td><td><span class="badge-cuota pagada">Pagada</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Accesos -->
+        <div class="section">
+            <div class="header">
+                <div>
+                    <div class="kicker">Accesos</div>
+                    <h2>Qué podés consultar</h2>
+                </div>
+            </div>
+            <div class="access-grid">
+                <a href="#" class="access-item">
+                    <div class="ai-icon blue">🪪</div>
+                    <div class="ai-text">
+                        <strong>Mi credencial</strong>
+                        <span>Ver credencial digital</span>
+                    </div>
+                </a>
+                <a href="#" class="access-item">
+                    <div class="ai-icon green">💰</div>
+                    <div class="ai-text">
+                        <strong>Mis cuotas</strong>
+                        <span>Consultar cuotas y pagos</span>
+                    </div>
+                </a>
+                <a href="#" class="access-item">
+                    <div class="ai-icon purple">🎁</div>
+                    <div class="ai-text">
+                        <strong>Beneficios</strong>
+                        <span>Beneficios institucionales</span>
+                    </div>
+                </a>
+                <a href="#" class="access-item">
+                    <div class="ai-icon amber">🏪</div>
+                    <div class="ai-text">
+                        <strong>Comercios adheridos</strong>
+                        <span>Comercios con convenio</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        Uni2 — <strong>Mutual Escolar CET 3</strong> | Unidos para crecer juntos
+    </footer>
+
+</body>
+</html>

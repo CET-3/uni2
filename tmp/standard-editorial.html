@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Standard — editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f3ee;
+      --fg: #1a1816;
+      --muted: #7a726a;
+      --accent: #c14a2a;
+      --accent-2: #d49a6a;
+      --card: #fffcf7;
+      --stroke: #d6cfc6;
+      --radius: 0px;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Source Serif 4', Georgia, serif;
+      color: var(--fg);
+      background: var(--bg);
+      min-height: 100vh;
+      line-height: 1.7;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      background-image: repeating-linear-gradient(
+        0deg, transparent, transparent 40px,
+        rgba(26, 24, 22, 0.025) 40px, rgba(26, 24, 22, 0.025) 41px
+      );
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      padding: 14px 20px;
+      background: var(--accent); color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      z-index: 999;
+    }
+    .skip-link:focus { left: 16px; top: 16px; }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--stroke);
+      background: var(--card);
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-style: italic;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+    }
+
+    nav { display: flex; gap: 24px; }
+    nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      border-bottom: 1px solid transparent;
+      padding-bottom: 4px;
+      transition: border-color 400ms var(--ease), color 400ms var(--ease);
+    }
+    nav a:hover { border-color: var(--accent); color: var(--fg); }
+
+    .cta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 12px 28px;
+      border: 1px solid var(--fg);
+      background: transparent;
+      color: var(--fg);
+      cursor: pointer;
+      transition: background 400ms var(--ease), color 400ms var(--ease);
+    }
+    .cta:hover { background: var(--fg); color: var(--bg); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 48px;
+      padding: 100px 48px 64px;
+    }
+
+    .hero-copy { padding-right: 20px; }
+
+    .hero-copy .kicker {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin: 0 0 12px;
+    }
+
+    .hero-copy h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(2.6rem, 6vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin: 12px 0;
+      color: var(--fg);
+    }
+
+    .hero-copy .lede {
+      max-width: 48ch;
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.8;
+      border-left: 2px solid var(--accent-2);
+      padding-left: 20px;
+      margin-top: 20px;
+    }
+
+    .hero-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      padding: 32px;
+      position: relative;
+      box-shadow: 8px 8px 0 rgba(26, 24, 22, 0.04);
+    }
+    .hero-card::before {
+      content: '“';
+      position: absolute;
+      top: -8px;
+      left: 16px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 6rem;
+      color: var(--accent-2);
+      line-height: 1;
+      opacity: 0.3;
+    }
+    .hero-card .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .hero-card h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+      margin: 8px 0;
+      position: relative;
+    }
+    .hero-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      position: relative;
+    }
+    .hero-card .author {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--fg);
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--stroke);
+    }
+
+    .strip {
+      border-top: 1px solid var(--stroke);
+      border-bottom: 1px solid var(--stroke);
+      overflow: hidden;
+      padding: 10px 0;
+      background: var(--card);
+    }
+    .strip-inner {
+      display: flex;
+      gap: 48px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      animation: scroll 30s linear infinite;
+      width: max-content;
+    }
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-bottom: 1px solid var(--stroke);
+    }
+    .feature-item {
+      padding: 40px 36px;
+      border-right: 1px solid var(--stroke);
+    }
+    .feature-item:last-child { border-right: none; }
+    .feature-item .num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-style: italic;
+      color: var(--accent-2);
+      line-height: 1;
+    }
+    .feature-item h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+      margin: 8px 0;
+    }
+    .feature-item p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+    .essays {
+      padding: 48px 48px 64px;
+      border-bottom: 1px solid var(--stroke);
+    }
+    .essays-head {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .essays-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .essay-card {
+      border-top: 2px solid var(--stroke);
+      padding: 20px 0;
+    }
+    .essay-card .cat {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-2);
+    }
+    .essay-card h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      margin: 6px 0;
+    }
+    .essay-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+    .essay-card .meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .footer {
+      padding: 40px 48px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .footer-grid a {
+      display: block;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-thickness: 0.5px;
+      text-decoration-color: var(--stroke);
+      transition: color 400ms var(--ease);
+    }
+    .footer-grid a:hover { color: var(--fg); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: transform 500ms var(--ease), opacity 500ms var(--ease);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding: 48px 20px; gap: 24px; }
+      .hero-copy { padding-right: 0; }
+      .features { grid-template-columns: 1fr; }
+      .feature-item { border-right: none; border-bottom: 1px solid var(--stroke); }
+      .essays-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      nav { display: none; }
+      .top-bar { padding: 14px 20px; }
+      .essays { padding: 32px 20px; }
+      .footer { padding: 24px 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="top-bar">
+    <div class="logo">The Standard</div>
+    <nav>
+      <a href="#main">Features</a>
+      <a href="#essays">Essays</a>
+      <a href="#footer">About</a>
+    </nav>
+    <button class="cta">Subscribe</button>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="kicker reveal">Volume VII · 2026</p>
+        <h1 class="reveal">The craft of digital restraint</h1>
+        <p class="lede reveal">In an industry obsessed with motion and density, we make the case for silence, space, and the slow load. A quarterly journal on building with editorial care.</p>
+      </div>
+      <div class="hero-card reveal">
+        <p class="tag">From the editor</p>
+        <h2>The case for a slower web</h2>
+        <p>We asked twelve builders to design the same interface under two constraints: maximum speed and maximum grace. The results surprised us — and reveal something essential about how we ship today.</p>
+        <p class="author">By Marta Velez · 12 min read</p>
+      </div>
+    </section>
+
+    <div class="strip" aria-hidden="true">
+      <div class="strip-inner">
+        <span>Volume VII · 2026 · The craft of digital restraint · Volume VII · 2026 · The craft of digital restraint</span>
+        <span>Volume VII · 2026 · The craft of digital restraint · Volume VII · 2026 · The craft of digital restraint</span>
+      </div>
+    </div>
+
+    <section class="features">
+      <article class="feature-item reveal">
+        <div class="num">01</div>
+        <h3>Typographic hierarchy</h3>
+        <p>Why setting type well is the highest-leverage design decision. Lessons from print, applied to screens.</p>
+      </article>
+      <article class="feature-item reveal">
+        <div class="num">02</div>
+        <h3>The texture of silence</h3>
+        <p>Whitespace as a material. How generous margins and measured pacing create trust and readability.</p>
+      </article>
+      <article class="feature-item reveal">
+        <div class="num">03</div>
+        <h3>Slow interactions</h3>
+        <p>Not every click needs a micro-animation. We explore the forgotten art of the instant response.</p>
+      </article>
+    </section>
+
+    <section class="essays" id="essays">
+      <p class="essays-head reveal">Selected essays</p>
+      <div class="essays-grid">
+        <article class="essay-card reveal">
+          <p class="cat">Design</p>
+          <h4>The grid as a narrative device</h4>
+          <p>How asymmetrical layouts can guide the reader's eye and shape meaning beyond content.</p>
+          <p class="meta">18 min · illustrated</p>
+        </article>
+        <article class="essay-card reveal">
+          <p class="cat">Technology</p>
+          <h4>CSS variables and design tokens</h4>
+          <p>Building a living design system with vanilla CSS. No preprocessors, no frameworks.</p>
+          <p class="meta">12 min · technical</p>
+        </article>
+        <article class="essay-card reveal">
+          <p class="cat">Process</p>
+          <h4>Editing the interface</h4>
+          <p>What writing and publishing can teach us about trimming UI to its essential form.</p>
+          <p class="meta">9 min · opinion</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="footer">
+    <div class="footer-grid">
+      <div>
+        <p class="eyebrow" style="font-family:'DM Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--accent);margin-bottom:8px;">Journal</p>
+        <a href="#">Archive</a>
+        <a href="#">Writers</a>
+        <a href="#">Topics</a>
+      </div>
+      <div>
+        <p class="eyebrow" style="font-family:'DM Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--accent);margin-bottom:8px;">Connect</p>
+        <a href="#">Email</a>
+        <a href="#">RSS</a>
+        <a href="#">Are.na</a>
+      </div>
+      <div>
+        <p class="eyebrow" style="font-family:'DM Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--accent);margin-bottom:8px;">About</p>
+        <p style="color:var(--muted);font-size:0.9rem;">The Standard is a quarterly journal on editorial design for the web. Published since 2022.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>

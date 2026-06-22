@@ -1,0 +1,63 @@
+
+Asociados
+
+    ASOCIADO-001 Un asociado puede ser de tipo asociado o adherente.
+    ASOCIADO-002 Los asociados participan de asambleas; los adherentes no.
+    ASOCIADO-003 Los asociados inactivos o egresados conservan su historial.
+    ASOCIADO-004 Solo los asociados activos generan nuevas cuotas.
+    ASOCIADO-006 No puede existir más de un asociado con el mismo DNI.
+    ASOCIADO-007 El número de asociado debe generarse automáticamente.
+    ASOCIADO-008 Un asociado puede existir sin usuario de acceso.
+
+Cursos
+
+    CURSO-001 El curso actual se guarda en Asociado para simplificar consultas.
+    CURSO-002 El historial de curso se guarda en InscripcionCurso.
+    CURSO-003 Cuando un alumno cambia de curso, se crea una nueva InscripcionCurso y se actualiza curso_actual.
+    CURSO-004 Si un alumno repite, igualmente se crea una nueva InscripcionCurso para el nuevo ciclo lectivo.
+
+Altas de asociado
+
+    ALTA-ASOCIADO-001 Si el alta ocurre antes del día 15, el asociado paga el mes actual.
+    ALTA-ASOCIADO-002 Si el alta ocurre después del día 15, comienza a pagar desde el mes siguiente.
+    ALTA-ASOCIADO-003 La fecha de alta y la fecha de inicio de cobro son independientes. El sistema debe usar fecha_inicio_cobro para generar cuotas.
+
+Cuotas
+
+    CUOTA-001 No puede existir más de una cuota por asociado y período.
+    CUOTA-002 Cada cuota almacena su propio importe.
+    CUOTA-003 Una cuota puede estar pendiente, parcial, pagada, vencida o bonificada.
+    CUOTA-004 Se generan cuotas para asociados activos cuya fecha_inicio_cobro sea menor o igual al período generado.
+    CUOTA-005 Si la cuota ya existe para el asociado y período, no debe generarse otra.
+    CUOTA-006 Si al vencimiento la cuota no esta totalmente cancelada, se aplica un recargo fijo por mora una sola vez.
+    CUOTA-007 El recargo por mora debe copiarse desde PeríodoCuota a Cuota al momento de generarla.
+
+Pagos
+
+    PAGO-001 Los pagos se aplican a la deuda más antigua primero.
+    PAGO-002 Se permiten pagos parciales de cuotas.
+    PAGO-003 No se permite registrar un pago mayor que la deuda seleccionada.
+    PAGO-004 Si el pago se registra después del vencimiento y la cuota no estaba cancelada, la deuda exigible incluye el recargo fijo por mora.
+    PAGO-005 Un pago puede aplicarse a varias cuotas mediante PagoCuota.
+    PAGO-006 Los métodos permitidos en MVP son efectivo y billetera_virtual.
+
+
+CB-pago-parcial
+
+Situación: el importe ingresado no alcanza para cancelar una cuota completa.
+
+Respuesta esperada: el pago parcial está permitido. Se actualiza importe_pagado y el estado queda parcial.
+
+Caso de uso relacionado: CU-registrar-pago-cuota.
+
+Relacionado con: PAGO-002, CUOTA-003.
+CB-pago-mayor-a-deuda
+
+Situación: se intenta registrar un pago mayor que la deuda seleccionada.
+
+Respuesta esperada: no está permitido. El sistema rechaza la operación y no maneja saldo a favor.
+
+Caso de uso relacionado: CU-registrar-pago-cuota.
+
+Relacionado con: PAGO-003.
+

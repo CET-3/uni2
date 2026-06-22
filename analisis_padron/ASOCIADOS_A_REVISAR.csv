@@ -1,0 +1,113 @@
+estado_importacion,numero_asociado,apellido,nombre,dni,tipo,curso,curso_anio,curso_division,division,turno,rol_deducido,telefono,email,direccion,observaciones,fila_origen,apellido_nombre_original,curso_original,ciclo_original,tipo_original
+REVISAR,154,Paz,Giovanni,52535594,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 528458,giovannipaz50@gmail.com,Los sauces 497,número de asociado duplicado,2,Paz Giovanni,1°1°,CB,Activo
+REVISAR,9,Fernandez,Martina,52326597,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984 414728,novoapamela898@gmail.com,Rivadavia 3782,DNI duplicado,10,Fernandez Martina,1°3°,CB,Activo
+REVISAR,13,Rojas,Benjamín Ezequiel,52327275,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 145161,yanibenjaygiane@gmail.com,Pichi picun leufu 2321,DNI duplicado,14,Rojas Benjamín Ezequiel,1°1,CB,Activo
+REVISAR,16,Bruno,Lara,52938101,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984 931317,sotelolaura784@gmail.com,Las gallinas 1897,DNI duplicado,17,Bruno Lara,1°3°,CB,Activo
+REVISAR,18,Izquierdo,Florencia,53015982,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984 338223,alereyes1983@yahoo.com,Fleming 132,DNI duplicado,19,Izquierdo Florencia,1°3°,CB,Activo
+REVISAR,26,Muñoz,Morales Jhoan Stiven,96261972,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 500600,mujhostiven@gmail.com,rivadavia 3828,DNI duplicado,27,Muñoz Morales Jhoan Stiven,1°4°,CB,activo
+REVISAR,36,Sanchez,Roja Julieta,49465995,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984 644151,sanchezarias.caro@gmail.com,los meros 3143,DNI duplicado,37,Sanchez Roja Julieta,4°2,CS,activo
+REVISAR,43,Antolini,Fabrizio,48390987,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984 660288,antolinifabri@gmail.com,alfredo palacios 1219,DNI duplicado,42,Antolini Fabrizio,4°3°,CS,activo
+REVISAR,57,Arsenio,Diaz Valentin Andres,51082122,asociado,1ro 4ta CS TM,1ro,4ta,CS,TM,,2984 334015,alseniovalentino39@gmail.com,tres arrroyos 2634,DNI duplicado,56,Arsenio Diaz Valentin Andres,1°4°,CS,activo
+REVISAR,66,Lopez,Leonel,48391147,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984 873626,marialaura_818@hotmail.com,Urquiza 1825,DNI duplicado,64,Lopez Leonel,4to 4,CS,Activo
+REVISAR,71,Yarmanos,Odin,50796497,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984 789174,odinyer@gmail.com,Tres arroyos 377,DNI duplicado,69,Yarmanos Odin,1°1°,CS,Activo
+REVISAR,77,Ramirez,Martina,52508747,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 819388,martinaramireta@gmail.com,Cerro Ulitorco 4915,DNI duplicado,75,Ramirez Martina,1°1°,CB,Activo
+REVISAR,80,Morales,Jhoan Stiven,96261972,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 500600,mujhoastiven@gmail.com,Rivadavia 3828,DNI duplicado,78,Morales Jhoan Stiven,1°1°,CB,Activo
+REVISAR,86,Joaquin,Darosa,52536191,asociado,,1ro,,CB,,,2984 720732,valeriasoledadpiaren@gmail.com,Epifanio 995,Falta división/comisión del curso; curso incompleto o dudoso para asociado,84,Joaquin Darosa,1ro C.B,CB,Activo
+REVISAR,94,Amaro,Laureano,50024381,asociado,,2do,,CS,,,2984 576508,loreanotoponce@gmail.com,Venezuela 1733,Falta división/comisión del curso; DNI duplicado; curso incompleto o dudoso para asociado,91,Amaro Laureano,2do C.S,CS,Activo
+REVISAR,95,Alvarez,Emanuel Alejandro,36344251,adherente,,,,,,docente,2984 321925,emanuel.alejandro6@gmail.com,Brown 2886,"Rol/cargo en lugar de curso: ""Profesor""; Rol deducido: docente; DNI duplicado",92,Alvarez Emanuel Alejandro,Profesor,,ADHERENTE
+REVISAR,101,Filippini,Maitena Valentina,51024921,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984 762391,ruthramirez@gmail.com,Libertad 2632,DNI duplicado,98,Filippini Maitena Valentina,1°1°,CS,Activo
+REVISAR,103,Celedon,Belinda,50709655,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984 534985,celedonelizabeth6@gmail.com,Artigas 2276,DNI duplicado,100,Celedon Belinda,1°3°,CS,Activo
+REVISAR,104,Veratti,Thiago Benjamin,52324021,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984 594495,caterinegonzalez2310@gmail.com,El Nire 1460,DNI duplicado,101,Veratti Thiago Benjamin,2°2°,CB,Activo
+REVISAR,107,Alba,Paz Melo,53015147,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 877332,albapazmelo@gmai.com,Irlanda 1925,DNI duplicado,104,Alba Paz Melo,1°1°,CB,Activo
+REVISAR,111,Ovalle,Jonatan Ezequiel,50828897,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 401298,quirogakarla12@gmail.com,Lago Lacar,DNI duplicado,108,Ovalle Jonatan Ezequiel,1°4°,CB,Activo
+REVISAR,117,Gomez,Peralta Victoria,,adherente,,,,,,preceptor,2984 577021,lic.gomezperalta@gmail.com,Gueme 274,"Rol/cargo en lugar de curso: ""preceptora""; Rol deducido: preceptor; falta DNI",114,Gomez Peralta Victoria,preceptora,...,Adherente
+REVISAR,122,Dutrus,Alma,48946636,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984409952,dutruzalma@gmail.com,alsina 410,DNI duplicado,119,Dutrus Alma,3°3°,CS,activo
+REVISAR,124,Acosta,Valentina Villegas,48731426,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984672567,acostavalentina125@GMAIL.COM,resistencia 785,DNI duplicado,121,Acosta Valentina Villegas,3°3°,CS,Activo
+REVISAR,132,Cuevas,Gayoso Julieta,49465321,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984 598321,gayosojuu@gmail.com,Chulavista 1935,DNI duplicado,129,Cuevas Gayoso Julieta,3°4°,CS,Activo
+REVISAR,147,León,lautaro joaquín,50992691,asociado,,2do,,CB,,,,rominaleon867@gmail.com,Calle Pública 7135,Falta división/comisión del curso; curso incompleto o dudoso para asociado; Falta teléfono,144,León lautaro joaquín,2doC.B,CB,Activo
+REVISAR,148,Arteaga,Rios Alejo,52535664,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984745183,rosanarios370@gmail.com,Córdoba 1040,DNI duplicado,145,Arteaga Rios Alejo,1°4°,CB,Activo
+REVISAR,149,Sanhueza,Maitena,48318615,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984698782,maitenasanhueza817@gmail.com,Mendoza y Lapataia,DNI duplicado,146,Sanhueza Maitena,4°3°,CS,Activo
+REVISAR,154,Torino,Gaetano Joaquin,50873843,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984887008,,500 Vndas Nicaragua N°79,número de asociado duplicado; Falta email,151,Torino Gaetano Joaquin,1°3°,CS,Activo
+REVISAR,163,4to,2 CS,52534528,asociado,,1ro,,CB,,,2984769360,luli_aixa@hotmail.com,"Tierra del Fuego 261, Cervantes",Falta división/comisión del curso; DNI duplicado; curso incompleto o dudoso para asociado,160,4to 2 CS,1ro C.B,CB,Activo
+REVISAR,167,Fuente,Marin Brisa,49031341,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984393853,marimbrisa91@gmail.com,los fresnos 1995,DNI duplicado,164,Fuente Marin Brisa,3°1°,CS,Activo
+REVISAR,175,Alanoca,Malen,50709669,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984668492,alanoca45marvin@gmail.com,San Juan 2414,DNI duplicado,172,Alanoca Malen,2°2°,CB,Activo
+REVISAR,177,Barriga,Maite,51128068,asociado,,3ro,,CS,,,2984525265,gustavobarriga125@gmail.com,Savedra 1807,Falta división/comisión del curso; curso incompleto o dudoso para asociado,174,Barriga Maite,3roC.S,CS,Activo
+REVISAR,178,Jaramillo,Geronimo,52323072,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984727888,gerozeballos.j@gmail.com,Almirante Brown 3147,DNI duplicado,175,Jaramillo Geronimo,2°3°,CB,Activo
+REVISAR,179,Cardoso,Julieta,49465321,asociado,2do 2da CS TM,2do,2da,CS,TM,,2984985321,cuevasedit428@gmail.com,Tucuman 1400,DNI duplicado,176,Cardoso Julieta,2°2°,CS,Activo
+REVISAR,183,Leiva,Baltazar Agustin,52536980,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984417139,veronicaandreairibarne@gmial.com,Alsina 6290,DNI duplicado,180,Leiva Baltazar Agustin,1°4°,CB,Activo
+REVISAR,186,Jarmillo,Gastón,52326810,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984130636,anavo37@gmail.com,Saavedra 4116,DNI duplicado,183,Jarmillo Gastón,1°1°,CB,Activo
+REVISAR,188,Lopez,Luana,498575132,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984912397,luanalopezxde@gmail.com,urquiza 1825,DNI con longitud dudosa: 498575132,185,Lopez Luana,3°1°,CS,Activo
+REVISAR,199,Muñoz,Stefania,52326506,,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984162064,ameryo23@gmail.com,Calle 445 N°2711,"Tipo dudoso: ""x""; DNI duplicado; tipo dudoso",196,Muñoz Stefania,1°3°,CS,x
+REVISAR,200,Reyes,Paola,,adherente,,,,,,,,,,Falta curso; falta DNI; Falta teléfono; Falta email; Falta dirección,197,Reyes Paola,,...,Adherente
+REVISAR,201,Gutierrez,Mateo Andres,52534173,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984516009,matuandres.g@gmail.com,Calle 231 bis 2229,DNI duplicado,198,Gutierrez Mateo Andres,1°4°,CB,Activo
+REVISAR,206,Telechea,Zoe,50504930,asociado,,3ro,,CB,,,2984121144,leoelordi@gmail.com,Saavedra 715,Falta división/comisión del curso; curso incompleto o dudoso para asociado,202,Telechea Zoe,3°,CB,Activo
+REVISAR,213,Fabi,Carla,47720640,asociado,,4to,,CS,,,2984406411,carlafabi567@gmail.com,Jachal 2202,Falta división/comisión del curso; curso incompleto o dudoso para asociado,209,Fabi Carla,4to,CS,Activo
+REVISAR,222,Rios,Luciano,51082119,asociado,,1ro,,CS,,,2984602956,lucianorioscet3@gmail.com,Los Retamas 881,Falta división/comisión del curso; DNI duplicado; curso incompleto o dudoso para asociado,218,Rios Luciano,1ro,CS,Activo
+REVISAR,259,Camacho,Galo,49465304,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984113060,galoamadeo@gmail.com,calle 1 1612,DNI duplicado,253,Camacho Galo,3°2°,CS,activo
+REVISAR,262,Diaz,Jazmin,48660087,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984882247,xjazmindiaz@gmail.com,jamaica 2462,DNI duplicado,256,Diaz Jazmin,3°2°,CS,activo
+REVISAR,273,Sosa,Julieta,49465995,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984644151,sanchezjuli458@gmail.com,Las heras 3143,DNI duplicado,266,Sosa Julieta,3°4°,C.S,Activo
+REVISAR,274,Latorre,Garcia Alma,50913857,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984574287,latorregarciaalma@gmail.com,Suiza 608,DNI duplicado,267,Latorre Garcia Alma,1°4°,C.B,Activo
+REVISAR,287,Huar,Cristal,49465917,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984899488,huarcristal@gmail.com,rodolfo walsh 509,DNI duplicado,280,Huar Cristal,3°1°,CS,Activo
+REVISAR,288,Gonzales,Morena,49465917,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984135235,morwxdd@gmail.com,gadano 1678,DNI duplicado,281,Gonzales Morena,3°1°,CS,Activo
+REVISAR,308,Farias,Marta,24392014,adherente,,,,,,auxiliar,2984331824,lamgem@gmail.com,"calle 447, 2628","Rol/cargo en lugar de curso: ""portera""; Rol deducido: auxiliar; DNI duplicado",300,Farias Marta,portera,...,adherente
+REVISAR,311,Leiva,Baltazar Agustín,52536980,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984270113,baltazaragustinleiva19@gmail.com,alsina 6290,DNI duplicado,303,Leiva Baltazar Agustín,1°4°,CB,activo
+REVISAR,320,Juarez,Ivan Otoniel,52938101,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984231377,sotelolavra784@gmail.com,las gallinas 1897,DNI duplicado,312,Juarez  Ivan Otoniel,1°3°,CB,Activo
+REVISAR,345,Cativa,Sanitago,49029598,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984723808,santiagocet3@gmail.com,,DNI duplicado; Falta dirección,334,Cativa Sanitago,3°4°,CS,activo
+REVISAR,348,jonatan,ezequiel Ovalle,50828897,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984401298,ovallejonata7@gmail.com,lago lacar 5006,DNI duplicado,337,jonatan ezequiel Ovalle,2°4°,CB,activo
+REVISAR,357,Flade,Agostina,51525837,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984571979,agostinaflade24@gmail.com,urquiza 945,DNI duplicado,346,Flade Agostina,2°3°,CB,Activo
+REVISAR,359,Arratia,Lionel,51129117,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984867664,-,Misiones 99,DNI duplicado,348,Arratia Lionel,1°4°,CB,Activo
+REVISAR,362,Sanhueza,Delfina,48866657,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984356193,delfinasanhuezaima30@gmail.com,los albatos 1361,DNI duplicado,351,Sanhueza Delfina,4to 4°C.S,CS,activo
+REVISAR,365,Zeballos,Gerónimo,52323072,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984727888,gerozeballos.j@gmail.com,altmirantebrown,DNI duplicado,354,Zeballos Gerónimo,2°3°,CB,Activo
+REVISAR,369,Leonel,Lopez,48391147,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984873626,leonelmartilopez@gmail.com,urquiza 1825,DNI duplicado,358,Leonel Lopez,4to4°C.S,CS,Activo
+REVISAR,372,Harris,Agustina,448946610,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984616005,harrisagustina24@gmail.com,jachak2179,DNI con longitud dudosa: 448946610,361,Harris Agustina,4to4° C.S,CS,Activo
+REVISAR,381,Emanuel,Alejandro,36344251,adherente,,,,,,docente,2984321925,emanuel.alejandro6@gmail.com,Almirante Brown 2886,"Rol/cargo en lugar de curso: ""Profesor""; Rol deducido: docente; DNI duplicado",369,Emanuel Alejandro,Profesor,...,ADHERENTE
+REVISAR,385,Rios,Luciano,51082119,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984602956,lucianorivascet3@gmail.com,las retamas 881,DNI duplicado,373,Rios Luciano,1°1°,CS,Activo
+REVISAR,417,Sanhueza,Delfina,48866657,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984356193,delfinasanhuezaimaroca@gmail.com,los alvatros 1361,DNI duplicado,405,Sanhueza Delfina,4to4°C.S,CS,activo
+REVISAR,421,Filippini,Maitena,51024921,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984762391,maitenafilippini@gmail.com,libertad2632,DNI duplicado,409,Filippini Maitena,1°1°,CS,activo
+REVISAR,429,Antolini,Fabricio,48390987,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984 660288,antoinifabricio@gmail.com,,DNI duplicado; Falta dirección,417,Antolini Fabricio,4°3°,CS,activo
+REVISAR,435,Fraporti,Morena,48185811,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984 950380,frapportimorena147@gmail.com,italia 1131,DNI duplicado,423,Fraporti Morena,4°1°,C.S,activo
+REVISAR,445,Sanhueza,Maitena,48318615,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984 698782,maitenasanhueza817@gmail.com,Mendoza y Lapataia,DNI duplicado,433,Sanhueza Maitena,4°3°,C.S,activo
+REVISAR,453,Diaz,Jazmin,48660087,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984882247,xjazmindiaz@gmail.com,jamaica 2462,DNI duplicado,440,Diaz Jazmin,3°2°,C.S,activo
+REVISAR,454,Dutrus,Alma,48946636,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984409952,dutrusalma@gmail.com,,DNI duplicado; Falta dirección,441,Dutrus Alma,3°3°,C.S,activo
+REVISAR,456,Acosta,Valentina,48731426,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984672567,acostavalentina125@gmail.com,resistencia 785,DNI duplicado,443,Acosta Valentina,3°3°,C.S,activo
+REVISAR,459,Izquierdo,Florencia,53015982,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984311003,florencia.izquierdo2013@gmail.com,,DNI duplicado; Falta dirección,446,Izquierdo Florencia,1°3°,C.B,activo
+REVISAR,460,Muñoz,Estefania,52326506,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984539692,ameryo231@gmail.com,calle 445  2744,DNI duplicado,447,Muñoz Estefania,1°3°,C.B,activo
+REVISAR,461,Paz,Melo Alba,53015147,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984862931,albapazmelo@gmail.com,irlanda 1925,DNI duplicado,448,Paz Melo Alba,1°1°,C.B,activo
+REVISAR,462,Vaher,Lisandra,60706082738,asociado,4to 4ta CB TM,4to,4ta,CB,TM,,2984571858,vaherlisandra07@gmail.com,tucuman 2604,DNI con longitud dudosa: 60706082738,449,Vaher Lisandra,4to4,C.B,activo
+REVISAR,463,Jaramillo,Ulises,52326810,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,,,,DNI duplicado; Falta teléfono; Falta email; Falta dirección,450,Jaramillo Ulises,1°1,C.B,activo
+REVISAR,464,Veratti,Thiago,52324021,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984594495,thiagoveratti2025,ñire 1460,DNI duplicado,451,Veratti Thiago,2°2°,C.B,Activo
+REVISAR,468,Gutierrez,Mateo,52534173,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984309448,matuandres.g@gmail.com,"231 bis,venezuela",DNI duplicado,455,Gutierrez Mateo,1°4°,C.B,activo
+REVISAR,473,Amaro,Laureano,50024381,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2984576508,lorenotoponce@gmail.com,venezuela 1733,DNI duplicado,460,Amaro Laureano,2°1°,C.S,activo
+REVISAR,475,Arratia,Lionel,51129117,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984867664,-,misiones99,DNI duplicado,461,Arratia Lionel,1°4°,C.B,activo
+REVISAR,477,Rios,Alejo,52535664,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984745183,rosanaros370@gmail.com,cordoba1040,DNI duplicado,463,Rios Alejo,1°4°,C.B,activo
+REVISAR,478,Alanora,Helen,50709669,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984668492,alanora45marvin@gmail.com,san juan 2414,DNI duplicado,464,Alanora Helen,2°2°,C.B,activo
+REVISAR,480,Diaz,Valentín,51082122,asociado,1ro 4ta CS TM,1ro,4ta,CS,TM,,2984334015,alseniovalentin39@gmail.com,tres arroyos2634,DNI duplicado,466,Diaz Valentín,1°4°,C.S,activo
+REVISAR,481,Catina,Santiago,49029598,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984723808,sa_tiagocet3@gmail.com,,DNI duplicado; Falta dirección,467,Catina Santiago,3°4°,C.S,activo
+REVISAR,482,Diaz,Xiomara,48660087,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984882247,isjazzmindiaz@gmail.com,samaica 2462,DNI duplicado,468,Diaz Xiomara,3°2°,C.S,activo
+REVISAR,484,Currufozo,Albertina,52536141,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984644611,ne.gris.8@hotmail.es,salta  252,DNI duplicado,470,Currufozo Albertina,1°1°,C.B,activo
+REVISAR,485,Celedon,Belinda,50709655,asociado,,3ro,,CS,,,2984534985,celedonelizabeth6@gmail.com,artigaz 2276,Falta división/comisión del curso; DNI duplicado; curso incompleto o dudoso para asociado,471,Celedon Belinda,3ro C.S,C.S,activo
+REVISAR,486,Costilla,Cuenca Bautista,51237059,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984788495,yanicuencagarcia@gmail.com,roxana rudel 2120,DNI duplicado,472,Costilla Cuenca Bautista,2do 3C.B,C.B,activo
+REVISAR,487,Flade,Agostina,51525837,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984571979,agostinaflade24@gmal.com,urquiza945,DNI duplicado,473,Flade Agostina,2do 3 C.B,C.B,activo
+REVISAR,489,Farias,Matías,24392014,adherente,,,,,,,2984331824,,calle 447 2628,"Curso dudoso: ""-""; DNI duplicado; Falta email",475,Farias Matías,-,...,adherente
+REVISAR,490,Fernandez,Martina,52326597,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984414728,novoapamela898@gmail.com,rivadavia3782,DNI duplicado,476,Fernandez Martina,1ro3 C.B,C.B,activo
+REVISAR,492,Marim,Fuentes Brina,49031341,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984393853,,los fresnos 1995,DNI duplicado; Falta email,478,Marim Fuentes Brina,3°1°,C.S,activo
+REVISAR,504,Ramirez,Martina,52508747,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,,,,DNI duplicado; Falta teléfono; Falta email; Falta dirección,489,Ramirez Martina,1ro1 CB,C.B,activo
+REVISAR,506,Rojas,Benjamín,52327275,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984145161,yanibenjaygiane@gmail.com,ilegible,DNI duplicado,491,Rojas Benjamín,1ro1 CB,C.B,activo
+REVISAR,509,Travesi,bastian,52534528,asociado,,1ro,,CB,,,2984769360,lulyaixa@hotmail.com,cervantes,Falta división/comisión del curso; DNI duplicado; curso incompleto o dudoso para asociado,494,Travesi bastian,1ro C.B,C.B,activo
+REVISAR,510,Yermanos,odin,50796497,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984789174,-,tres arroyos 377,DNI duplicado,495,Yermanos odin,1°1°,CS,activo
+REVISAR,516,Garcia,Alma,50913857,asociado,1ro 4ta CS TM,1ro,4ta,CS,TM,,2984574287,latorregarciaalma@gmail.com,Suiza 668,DNI duplicado,501,Garcia Alma,1ro4° CS,C.S,Activo
+REVISAR,518,Arratia,Leonel,,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984867664,,Misiones 99,falta DNI; Falta email,503,Arratia Leonel,1ro4°Cb,C.B,Activo
+REVISAR,519,Baltazar,Leiva,52536980,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984770113,baltazaragustinleiva19@gmail.com,alsina 6290,DNI duplicado,504,Baltazar Leiva,1ro 4cb,C.B,Activo
+REVISAR,520,Morena,Frapporti,48185811,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984950380,morena.frapporti07@gmail.com,italia 131,DNI duplicado,505,Morena Frapporti,4to 1C.S,C.S,Activo
+REVISAR,522,Jaramillo,Gaston,52326810,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984130336,ulisesjara08@gmail.com,saavedra 116,DNI duplicado,507,Jaramillo Gaston,1ro4° Cb,C.B,Activo
+REVISAR,525,Lourdes,Curruqueo Albertina,52536141,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2084514507,albertinalurruqueo@gmail.com,salta 252,División inferida por año; DNI duplicado,510,Lourdes Curruqueo Albertina,1ro 1ra,,activo
+REVISAR,531,CADA,CURSO PONGA SU COLOR CORRESPONDIENTE AL ASOCIAR PARA EVITAR CONFUSIONES!!!!!!!!,,,,,,,,,,,,Falta tipo; Falta curso; falta DNI; tipo dudoso; Falta teléfono; Falta email; Falta dirección,516,CADA CURSO PONGA SU COLOR CORRESPONDIENTE AL ASOCIAR PARA EVITAR CONFUSIONES!!!!!!!!,,,
+REVISAR,538,Costilla,Cuenca Bautista,51237059,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984788495,vanicuencagarcia@gmail.com,Roxana rudel 2120,DNI duplicado,523,Costilla Cuenca Bautista,2°3 CB,C.B,activo
+REVISAR,539,Maldonado,Camila,50505594,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984600563,cmaldonado035813@gmail.com,Malvinas argentina 1730,número de asociado duplicado,524,Maldonado Camila,1°2CS,CS,activo
+REVISAR,540,Civaroli,Luz Jazmin,52322246,asociado,2do 2da CS TM,2do,2da,CS,TM,,2984 642461,civaroliluz039@gmail.com,churrincho 1308,número de asociado duplicado,525,Civaroli Luz Jazmin,2°2°,cs,activo
+REVISAR,539,Maldonado,Camila,50505584,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984 600563,cmaldonado035813@gmail.com,Malvinas argentina 1730,número de asociado duplicado,526,Maldonado Camila,1°2 CS,,activo
+REVISAR,540,Johan,Vazquez,51025350,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2984209704,johan.cet3@gmail.com,El condor 1714,número de asociado duplicado,527,Johan Vazquez,2° 1°,C.S,activo
+REVISAR,541,Paez,Nicolas,49925536,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984673001,nicolaspaez4992@gmail.com,El salvador 899,número de asociado duplicado,528,Paez Nicolas,1°2,C.S,activo
+REVISAR,542,Lencina,Garcia Azul,52327355,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984126544,,Mitre 329,número de asociado duplicado; Falta email,529,Lencina Garcia Azul,1ro 3 C.B,C B,activo
+REVISAR,541,Camacho,Galo,49465304,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984413063,galoamadeo@gmail.com,calle1 1612,DNI duplicado; número de asociado duplicado,965,Camacho Galo,3°2 CS,cs,activo
+REVISAR,542,Rodriguez,Santino,49218340,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984933085,rodriguezsantino058@gmail.com,roxana rudel 2948,número de asociado duplicado,966,Rodriguez Santino,3°2CS,cs,activo

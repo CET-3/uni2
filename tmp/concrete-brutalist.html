@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONCRETE — brutalist toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1a1a;
+      --fg: #f0ede6;
+      --muted: #a09888;
+      --accent: #ff5c39;
+      --accent-2: #f2ff49;
+      --card: #222;
+      --stroke: #333;
+      --radius: 0px;
+      --shadow: none;
+      --ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      min-height: 100vh;
+      line-height: 1.5;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 20px,
+        rgba(255, 255, 255, 0.015) 20px,
+        rgba(255, 255, 255, 0.015) 21px
+      );
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      padding: 14px 20px;
+      background: var(--accent); color: var(--bg);
+      font-weight: 700; font-size: 0.9rem;
+      z-index: 999;
+    }
+    .skip-link:focus { left: 16px; top: 16px; }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 36px;
+      border-bottom: 3px solid var(--fg);
+    }
+
+    .logo {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+    }
+
+    nav { display: flex; gap: 4px; }
+    nav a {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 10px 18px;
+      border: 2px solid var(--stroke);
+      transition: background 150ms var(--ease), color 150ms var(--ease);
+    }
+    nav a:hover { background: var(--fg); color: var(--bg); }
+
+    .cta {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 12px 24px;
+      border: 3px solid var(--accent);
+      background: var(--accent);
+      color: var(--bg);
+      cursor: pointer;
+      transition: background 150ms var(--ease), color 150ms var(--ease);
+    }
+    .cta:hover { background: transparent; color: var(--accent); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.4fr 0.6fr;
+      gap: 0;
+      padding: 80px 36px 60px;
+      border-bottom: 3px solid var(--fg);
+    }
+
+    .hero-copy { padding-right: 40px; }
+
+    .hero-copy h1 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 7vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+      margin: 12px 0;
+      color: var(--fg);
+    }
+
+    .hero-copy h1 .strike {
+      display: inline-block;
+      background: var(--accent-2);
+      color: var(--bg);
+      padding: 0 8px;
+    }
+
+    .hero .lede {
+      max-width: 54ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-top: 20px;
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+    }
+
+    .eyebrow {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin: 28px 0 0;
+    }
+
+    .ghost {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 12px 22px;
+      border: 3px solid var(--fg);
+      background: transparent;
+      color: var(--fg);
+      cursor: pointer;
+      transition: background 150ms var(--ease), color 150ms var(--ease);
+    }
+    .ghost:hover { background: var(--fg); color: var(--bg); }
+
+    .hero-card {
+      border: 3px solid var(--fg);
+      padding: 24px;
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-card .tag {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      display: inline-block;
+      padding: 6px 12px;
+      align-self: flex-start;
+    }
+
+    .hero-card h2 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 1.8rem;
+      letter-spacing: -0.03em;
+      margin: 16px 0 8px;
+    }
+
+    .hero-card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 14px; }
+
+    .rule {
+      height: 3px;
+      background: var(--accent);
+      margin: 12px 0;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .strip {
+      border-bottom: 3px solid var(--fg);
+      padding: 14px 36px;
+      background: var(--accent-2);
+    }
+    .strip p {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--bg);
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 3px solid var(--fg);
+    }
+    .grid .panel {
+      border-right: 2px solid var(--stroke);
+      padding: 32px 28px;
+    }
+    .grid .panel:last-child { border-right: none; }
+    .grid .panel h3 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 1.3rem;
+      letter-spacing: -0.03em;
+      margin: 8px 0 10px;
+    }
+    .grid .panel p { color: var(--muted); font-size: 0.9rem; }
+    .grid .panel .num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 3rem;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .timeline {
+      padding: 40px 36px 64px;
+      border-bottom: 3px solid var(--fg);
+    }
+    .timeline-head h3 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 1.8rem;
+      letter-spacing: -0.03em;
+      margin: 8px 0 24px;
+    }
+    .timeline-items {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .timeline-card {
+      border: 3px solid var(--stroke);
+      padding: 20px;
+      transition: border-color 200ms var(--ease);
+    }
+    .timeline-card:hover { border-color: var(--fg); }
+    .timeline-card .label {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .timeline-card h4 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin: 4px 0 8px;
+    }
+    .timeline-card p { color: var(--muted); font-size: 0.85rem; }
+
+    .footer {
+      padding: 36px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .footer-grid a {
+      display: block;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 2px;
+    }
+    .footer-grid a:hover { color: var(--fg); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: transform 320ms var(--ease), opacity 320ms var(--ease);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding: 40px 20px; }
+      .hero-copy { padding-right: 0; }
+      .grid { grid-template-columns: 1fr; }
+      .grid .panel { border-right: none; border-bottom: 2px solid var(--stroke); }
+      .timeline-items { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      nav { display: none; }
+      .top-bar { padding: 14px 20px; }
+      .strip { padding: 12px 20px; }
+      .timeline { padding: 24px 20px 40px; }
+      .footer { padding: 24px 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="top-bar">
+    <div class="logo">CONCRETE</div>
+    <nav>
+      <a href="#main">Work</a>
+      <a href="#process">Process</a>
+      <a href="#releases">Index</a>
+    </nav>
+    <button class="cta">Punch it</button>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">Est. 2019</p>
+        <h1 class="reveal">Build <span class="strike">hard</span>.<br>Ship heavy.</h1>
+        <p class="lede reveal">We design and engineer brutalist web experiences. No glaze, no gradients, no hesitation. Raw grids, bold type, and interfaces that leave a mark.</p>
+        <div class="actions reveal">
+          <button class="cta">See the work</button>
+          <button class="ghost">Read manifesto</button>
+        </div>
+      </div>
+      <div class="hero-card reveal">
+        <span class="tag">Featured</span>
+        <h2>PUNCH v2</h2>
+        <p>A real-time analytics dashboard with oversized typography, monochrome palette, and data that hits you first.</p>
+        <div class="rule"></div>
+        <div class="card-meta">
+          <span>React · D3 · CSS Grid</span>
+          <span style="color:var(--accent);">Live</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip">
+      <p>No templates. No frameworks-of-the-week. Just intent and structure.</p>
+    </div>
+
+    <section class="grid" id="process">
+      <article class="panel reveal">
+        <div class="num">01</div>
+        <h3>Shape</h3>
+        <p>Define the message, strip the excess, pick a single visual gesture. Every element earns its place.</p>
+      </article>
+      <article class="panel reveal">
+        <div class="num">02</div>
+        <h3>Build</h3>
+        <p>Semantic HTML, deliberate CSS, minimal JS. Oversized headings, visible borders, no hidden affordances.</p>
+      </article>
+      <article class="panel reveal">
+        <div class="num">03</div>
+        <h3>Ship</h3>
+        <p>Performance budgets, keyboard-first navigation, under 100kb total. Your site should feel as fast as it looks.</p>
+      </article>
+    </section>
+
+    <section class="timeline" id="releases">
+      <div class="timeline-head reveal">
+        <p class="eyebrow">Index</p>
+        <h3>Selected projects</h3>
+      </div>
+      <div class="timeline-items">
+        <div class="timeline-card reveal">
+          <p class="label">2026</p>
+          <h4>PUNCH</h4>
+          <p>Real-time ops dashboard with oversized data visualization and monochrome palette.</p>
+        </div>
+        <div class="timeline-card reveal">
+          <p class="label">2025</p>
+          <h4>MASSA</h4>
+          <p>Editorial platform for a architecture firm. Heavy serifs, asymmetric grids, generous whitespace.</p>
+        </div>
+        <div class="timeline-card reveal">
+          <p class="label">2024</p>
+          <h4>BLOCK</h4>
+          <p>E-commerce with brutalist product cards, sticky headers, and high-contrast CTAs.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <a href="#">hello@concrete.studio</a>
+      </div>
+      <div>
+        <p class="eyebrow">Social</p>
+        <a href="#">GitHub</a>
+        <a href="#">X</a>
+      </div>
+      <div>
+        <p class="eyebrow">Colophon</p>
+        <p style="color:var(--muted);font-size:0.85rem;">Set in Bricolage Grotesque &amp; Atkinson Hyperlegible. No JS frameworks.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>

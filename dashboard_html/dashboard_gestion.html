@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panel de Gestión | Uni2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #f0f4fe;
+            color: #1a2332;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+        .sidebar {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        .sidebar-brand {
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: #fff;
+            letter-spacing: -0.03em;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .sidebar-brand span {
+            color: #60a5fa;
+        }
+        .sidebar-brand .badge {
+            font-size: 0.6rem;
+            font-weight: 600;
+            background: rgba(96, 165, 250, 0.2);
+            color: #93c5fd;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            letter-spacing: 0.03em;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            flex: 1;
+        }
+        .sidebar-nav .label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.3);
+            margin: 1.2rem 0 0.5rem;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.65rem 0.8rem;
+            border-radius: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.88rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+        .sidebar-nav a.active {
+            background: rgba(96, 165, 250, 0.12);
+            color: #93c5fd;
+        }
+        .sidebar-nav a .icon {
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* MAIN */
+        .main {
+            padding: 1.5rem 2rem 2rem;
+            max-width: 1100px;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .topbar h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+        .topbar h1 small {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 400;
+            color: #64748b;
+            letter-spacing: 0;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .topbar-actions .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        /* HERO BANNER */
+        .hero-banner {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #60a5fa 100%);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-banner::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.15), transparent 50%);
+            pointer-events: none;
+        }
+        .hero-banner>* {
+            position: relative;
+            z-index: 1;
+        }
+        .hero-banner .eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.7;
+            margin-bottom: 0.4rem;
+        }
+        .hero-banner h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.3rem;
+        }
+        .hero-banner p {
+            opacity: 0.8;
+            font-size: 0.95rem;
+            max-width: 500px;
+        }
+        .hero-banner .actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.2rem;
+        }
+        .btn-white {
+            background: #fff;
+            color: #1a2332;
+            padding: 0.6rem 1.4rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 0;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+        .btn-white:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        .btn-outline-white {
+            background: transparent;
+            color: #fff;
+            padding: 0.6rem 1.4rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+        .btn-outline-white:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* METRICS */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .metric-box {
+            background: #fff;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.3rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .metric-box .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #94a3b8;
+        }
+        .metric-box .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-top: 0.2rem;
+            line-height: 1;
+        }
+        .metric-box .change {
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+        .metric-box .change.up {
+            color: #16a34a;
+        }
+        .metric-box .change.down {
+            color: #dc2626;
+        }
+        .metric-box.blue .value {
+            color: #2563eb;
+        }
+        .metric-box.green .value {
+            color: #16a34a;
+        }
+        .metric-box.amber .value {
+            color: #d97706;
+        }
+        .metric-box.purple .value {
+            color: #7c3aed;
+        }
+
+        /* SECTION */
+        .section-card {
+            background: #fff;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.5rem;
+        }
+        .section-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .section-card .header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .section-card .header .kicker {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #94a3b8;
+            margin-bottom: 0.15rem;
+        }
+        .section-card .header a {
+            font-size: 0.82rem;
+            color: #2563eb;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .section-card .header a:hover {
+            text-decoration: underline;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+        .module-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.1rem;
+            background: linear-gradient(180deg, #fff 0%, #f8fbff 100%);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            border-radius: 1rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+        .module-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+            border-color: rgba(37, 99, 235, 0.2);
+        }
+        .module-item .mi-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .module-item .mi-icon.blue {
+            background: #eff6ff;
+        }
+        .module-item .mi-icon.green {
+            background: #f0fdf4;
+        }
+        .module-item .mi-icon.amber {
+            background: #fffbeb;
+        }
+        .module-item .mi-icon.purple {
+            background: #f5f3ff;
+        }
+        .module-item .mi-text strong {
+            display: block;
+            font-size: 0.92rem;
+        }
+        .module-item .mi-text span {
+            display: block;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.15rem;
+        }
+
+        .admin-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+        .admin-links a {
+            padding: 0.5rem 1rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border-radius: 999px;
+            border: 1.5px solid #e2e8f0;
+            color: #1a2332;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .admin-links a:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+            background: #f8faff;
+        }
+        .admin-links a.primary {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: #fff;
+        }
+        .admin-links a.primary:hover {
+            background: #1d4ed8;
+        }
+
+        /* TABLE */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        table th {
+            text-align: left;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #94a3b8;
+            padding: 0.7rem 0.8rem;
+            border-bottom: 1px solid #f1f5f9;
+            white-space: nowrap;
+        }
+        table td {
+            padding: 0.7rem 0.8rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        table tr:last-child td {
+            border-bottom: 0;
+        }
+        .badge-status {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+        }
+        .badge-status.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge-status.inactive {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .badge-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .btn-sm {
+            padding: 0.35rem 0.9rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 999px;
+            border: 1.5px solid #e2e8f0;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1a2332;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-sm:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        .btn-sm.primary {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: #fff;
+        }
+        .btn-sm.primary:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .main {
+                padding: 1rem;
+            }
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hero-banner .actions {
+                flex-direction: column;
+            }
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                Uni<span>2</span>
+                <span class="badge">staff</span>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="label">Menu</div>
+                <a href="#" class="active"><span class="icon">📊</span> Dashboard</a>
+                <a href="#"><span class="icon">👥</span> Asociados</a>
+                <a href="#"><span class="icon">💰</span> Cobros</a>
+                <a href="#"><span class="icon">⚠️</span> Deudores</a>
+                <a href="#"><span class="icon">📅</span> Períodos de cuota</a>
+
+                <div class="label">Administración</div>
+                <a href="#"><span class="icon">🏫</span> Colegios</a>
+                <a href="#"><span class="icon">📚</span> Cursos</a>
+                <a href="#"><span class="icon">🎁</span> Beneficios</a>
+                <a href="#"><span class="icon">🏪</span> Comercios</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="main">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div>
+                    <h1>Panel de gestión <small>Administración interna — CET 3</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="avatar">AD</span>
+                </div>
+            </div>
+
+            <!-- Hero -->
+            <div class="hero-banner">
+                <div class="eyebrow">Administración interna</div>
+                <h2>Bienvenido al panel de gestión</h2>
+                <p>Accesos directos a las tareas principales del sistema. Usá la barra lateral o los módulos de abajo.</p>
+                <div class="actions">
+                    <a href="#" class="btn-white">💰 Cobrar cuota</a>
+                    <a href="#" class="btn-outline-white">👥 Buscar asociado</a>
+                </div>
+            </div>
+
+            <!-- Metrics -->
+            <div class="metrics">
+                <div class="metric-box blue">
+                    <div class="label">Asociados activos</div>
+                    <div class="value">624</div>
+                    <div class="change up">+12 este mes</div>
+                </div>
+                <div class="metric-box green">
+                    <div class="label">Cuotas al día</div>
+                    <div class="value">487</div>
+                    <div class="change up">78% del total</div>
+                </div>
+                <div class="metric-box amber">
+                    <div class="label">Deudores</div>
+                    <div class="value">137</div>
+                    <div class="change down">-8 este mes</div>
+                </div>
+                <div class="metric-box purple">
+                    <div class="label">Recaudación del mes</div>
+                    <div class="value">$98.400</div>
+                    <div class="change up">+15% vs mes ant.</div>
+                </div>
+            </div>
+
+            <!-- Módulos MVP -->
+            <div class="section-card">
+                <div class="header">
+                    <div>
+                        <div class="kicker">Operación diaria</div>
+                        <h3>Tareas del MVP</h3>
+                    </div>
+                    <a href="#">Ver todo</a>
+                </div>
+                <div class="module-grid">
+                    <a href="#" class="module-item">
+                        <div class="mi-icon blue">👥</div>
+                        <div class="mi-text">
+                            <strong>Asociados</strong>
+                            <span>Buscar y revisar detalle</span>
+                        </div>
+                    </a>
+                    <a href="#" class="module-item">
+                        <div class="mi-icon green">💰</div>
+                        <div class="mi-text">
+                            <strong>Cobros</strong>
+                            <span>Registrar pagos de cuotas</span>
+                        </div>
+                    </a>
+                    <a href="#" class="module-item">
+                        <div class="mi-icon amber">⚠️</div>
+                        <div class="mi-text">
+                            <strong>Deudores</strong>
+                            <span>Asociados con saldo pendiente</span>
+                        </div>
+                    </a>
+                    <a href="#" class="module-item">
+                        <div class="mi-icon purple">📅</div>
+                        <div class="mi-text">
+                            <strong>Períodos de cuota</strong>
+                            <span>Crear y generar cuotas</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tabla de ejemplo -->
+            <div class="section-card">
+                <div class="header">
+                    <div>
+                        <div class="kicker">Resumen</div>
+                        <h3>Últimos períodos de cuota</h3>
+                    </div>
+                    <a href="#">Gestionar períodos</a>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Período</th><th>Importe</th><th>Mora</th><th>Vencimiento</th><th>Cuotas</th><th>Estado</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Marzo 2026</td>
+                                <td>$1.500</td>
+                                <td>$300</td>
+                                <td>15/03/2026</td>
+                                <td>480</td>
+                                <td><span class="badge-status active">Activo</span></td>
+                                <td><a href="#" class="btn-sm">Generar cuotas</a></td>
+                            </tr>
+                            <tr>
+                                <td>Febrero 2026</td>
+                                <td>$1.500</td>
+                                <td>$300</td>
+                                <td>15/02/2026</td>
+                                <td>476</td>
+                                <td><span class="badge-status inactive">Inactivo</span></td>
+                                <td><span class="btn-sm" style="opacity:0.4">Generar cuotas</span></td>
+                            </tr>
+                            <tr>
+                                <td>Enero 2026</td>
+                                <td>$1.400</td>
+                                <td>$250</td>
+                                <td>15/01/2026</td>
+                                <td>470</td>
+                                <td><span class="badge-status inactive">Inactivo</span></td>
+                                <td><span class="btn-sm" style="opacity:0.4">Generar cuotas</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin links -->
+            <div class="section-card">
+                <div class="header">
+                    <div>
+                        <div class="kicker">Soporte técnico</div>
+                        <h3>Admin de Django</h3>
+                    </div>
+                </div>
+                <p style="color:#64748b; font-size:0.88rem; margin-bottom:1rem;">Usar para tareas técnicas o excepciones del MVP.</p>
+                <div class="admin-links">
+                    <a href="#">🏫 Colegios</a>
+                    <a href="#">📚 Cursos</a>
+                    <a href="#">🎁 Beneficios</a>
+                    <a href="#">🏪 Comercios</a>
+                    <a href="#" class="primary">⚙️ Admin completo</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

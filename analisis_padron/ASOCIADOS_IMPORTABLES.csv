@@ -1,0 +1,423 @@
+estado_importacion,numero_asociado,apellido,nombre,dni,tipo,curso,curso_anio,curso_division,division,turno,rol_deducido,telefono,email,direccion,observaciones,fila_origen,apellido_nombre_original,curso_original,ciclo_original,tipo_original
+IMPORTAR,2,Leyes,Lena Muriel,52328996,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 139587,lenamurielleyes@gmail.com,Dillongena 1616,,3,Leyes Lena Muriel,1°2°,CB,Activo
+IMPORTAR,3,Sandoval,Robledo Julieta sofía,53015244,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 193330,magalyrobledo1695@gmail.com,iguazu 2201,,4,Sandoval Robledo Julieta sofía,1°2,CB,Activo
+IMPORTAR,4,Fuentealba,Josefina,52535546,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 152524,josefinafuentealbag7@gmail.com,Bermejo 2024,,5,Fuentealba Josefina,1°2,CB,Activo
+IMPORTAR,5,Aguirre,Lautaro,52535651,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 332292,angyp179@gmail.com,tacuari 297,,6,Aguirre Lautaro,1°1°,CB,Activo
+IMPORTAR,6,Navarrete,Saskia,52537440,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 120922,saskianavarrete026@gmail.com,Rivadavia 3904,,7,Navarrete Saskia,1°2,CB,Activo
+IMPORTAR,7,Plattner,Zaira,53188096,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 764421,zairapattner@gmail.com,hanibal troilo 2829,,8,Plattner Zaira,1°2,CB,Activo
+IMPORTAR,8,Ulloa,Elena,52872070,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 409807,elenavictorialg@gmail.com,Elias zetone 15082,,9,Ulloa Elena,1°2°,CB,Activo
+IMPORTAR,10,Carrizo,Palmeri Tiago,52328939,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 334518,tiagocarrizo1012@gmail.com,Mitre 3255,,11,Carrizo Palmeri Tiago,1°4°,CB,Activo
+IMPORTAR,11,Alien,Vera Valentina,53015550,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 512940,alienzz167g@gmail.com,los cisnes 862,,12,Alien Vera Valentina,1°4°,CB,Activo
+IMPORTAR,12,Lema,Emilia,52535581,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 612966,alaurapaes@gmail.com,mitre 2990,,13,Lema Emilia,1°1°,CB,Activo
+IMPORTAR,14,Brende,Peralta Gemma,52659640,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2926 520211,gemmabrendez@icloud.com,Belgrano 659,,15,Brende Peralta Gemma,1°2°,CB,Activo
+IMPORTAR,15,Muneta,Paula,34608586,adherente,,,,,,preceptor,2984 615546,paumuneta.05@gmail.com,italia 851,"Rol/cargo en lugar de curso: ""preceptora""; Rol deducido: preceptor",16,Muneta Paula,preceptora,...,ADHERENTE
+IMPORTAR,17,Morales,Eugenia,53014072,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 135123,belencayulg@gmail.com,almirante brown 3885,,18,Morales Eugenia,1°1°,CB,Activo
+IMPORTAR,19,Henriquez,Josefina,52535583,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 127342,bellftb@gmail.com,Ñire 1010,,20,Henriquez Josefina,1°2°,CB,Activo
+IMPORTAR,20,Balmaceda,Herbel Sofia,53015917,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984 557833,gustavo.balmaceda@gmai.com,españa 587,,21,Balmaceda Herbel Sofia,1°3°,CB,Activo
+IMPORTAR,21,Saez,Benjamín,52327352,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984 124332,tatiana.parra198@gmail.com,alemania 525,,22,Saez Benjamín,1°3°,CB,Activo
+IMPORTAR,22,Güelén,Guillermo Baltazar,52534155,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 535282,ceci.mio@gmail.com,Alsina 1854,,23,Güelén Guillermo Baltazar,1°4°,CB,Activo
+IMPORTAR,23,SERRANO,[completar],53015200,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984 354168,salvatierraciara08@gmail.con,Isidro lobo 268,Nombre completado con [completar],24,SERRANO,1°3°,CB,Activo
+IMPORTAR,24,Balbo,Lara,52980659,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 129006,larabalbo7@gmail.com,gobernador castello 450,,25,Balbo Lara,1°2°,CB,Activo
+IMPORTAR,25,Cariño,Aravena Gael,52536618,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984 777345,gaelcariño2012@gmail.com,Damas patricias 1180,,26,Cariño Aravena Gael,1°3°,CB,activo
+IMPORTAR,27,Lara,Leonardo Emmanuel,51237368,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984 695542,leonardo.lara123.ok@gmail.com,la plata 1480,,28,Lara Leonardo Emmanuel,2°1°,CB,activo
+IMPORTAR,28,Nuñez,Sofía,52535603,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 469459,sofitanunezd@gmail.com,los alerces 2533,,29,Nuñez Sofía,1°1°,CB,activo
+IMPORTAR,29,Raffler,Zoe Agostina,53189011,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 604404,zoeagostinaraffler@gmail.com,B19A 1972 Stfenelli,,30,Raffler Zoe Agostina,1°4°,CB,activo
+IMPORTAR,30,Jaque,Julieta,52536779,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 122809,jaquejulieta@gmail.com,alte brown 3687,,31,Jaque Julieta,1°4°,CB,activo
+IMPORTAR,31,Ruibal,Merlina,48720877,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984 884399,barbaratriana@yaho.com.ar,martin fierro 1055,,32,Ruibal Merlina,3°1°,CS,activo
+IMPORTAR,32,Yauhar,Layla,50117118,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984 816577,laylayauhar5123@gma.com,tucuman 2604,,33,Yauhar Layla,2°4°,CB,activo
+IMPORTAR,33,Sbiglio,Laura,26503986,adherente,,,,,,preceptor,2984 552517,mlaurasbiglio@gmail.com,tucuman 2604,"Rol/cargo en lugar de curso: ""preceptora""; Rol deducido: preceptor",34,Sbiglio Laura,preceptora,...,ADHERENTE
+IMPORTAR,34,Cappetta,Giuliana,52326622,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 532695,m.gutierrez.chichi@gmail.com,los olmos 251,,35,Cappetta Giuliana,1°1°,CB,activo
+IMPORTAR,35,Franco,Paulina,48013960,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984 922248,paulinaitatifranco@gmail.com,lisandro la torre 1465,,36,Franco Paulina,4°1°,CS,activo
+IMPORTAR,37,Lopez,Nicolle,24991116,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2995 572380,nicolle.lopez1003@gmail.com,2086-02-03 00:00:00,,38,Lopez Nicolle,3°2°,CS,activo
+IMPORTAR,38,Triadani,Tiziana,49187809,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984 216129,tizitriadani@gmail.com,don bosco 1925,,39,Triadani Tiziana,3°1°,CS,activo
+IMPORTAR,39,García,Camila,48392207,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984 167220,camilagarcia55@gmail.com,rodhe 2564,,40,García Camila,4°1°,CS,activo
+IMPORTAR,40,Sartou,Veronica,22195610,adherente,,,,,,preceptor,2984 211913,veronicasartou71@gmail.com,140 viviendas,"Rol/cargo en lugar de curso: ""Preceptora""; Rol deducido: preceptor",41,Sartou Veronica,Preceptora,...,ADHERENTE
+IMPORTAR,44,Vivas,Samira,48250519,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984 654656,loresamyromi@gmail.com,romagnoli 431,,43,Vivas Samira,4°3°,CS,activo
+IMPORTAR,45,Gonzalez,Briana,49279670,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984 350741,brianadavila2009@gmail.com,trelew 416,,44,Gonzalez Briana,3°3°,CS,activo
+IMPORTAR,46,Aedo,Angel,49465922,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984 692467,angelaedo1012@gmail.com,Fernando ragneri 1628,,45,Aedo Angel,3°4°,CS,activo
+IMPORTAR,47,Alonso,Pissani Joaquin,52323682,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984 527753,miriampisani@yahoo.com.ar,don bosco 1415,,46,Alonso Pissani Joaquin,2°4°,CB,activo
+IMPORTAR,48,Gallet,Marchessini Jazmin,52535657,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 657375,jazz2018skz@gmail.com,Alberto Runge 1695,,47,Gallet Marchessini Jazmin,1°2°,CB,activo
+IMPORTAR,49,Calcumil,Daira,51229565,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984 687492,,libertad 3641,Falta email,48,Calcumil Daira,1°2,CS,activo
+IMPORTAR,50,Acevedo,Acsa,95131330,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984 734344,acevedoacsa73@gmail.com,Ecuador 1587,,49,Acevedo Acsa,2°3°,CB,activo
+IMPORTAR,51,Aramendi,Mateo,51237016,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984 657697,mateoancaten433@gmail.com,dia del bancario 3819,,50,Aramendi Mateo,3°1°,CS,activo
+IMPORTAR,52,Salgado,Martina sol,51024718,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984 746421,martinasalgero378@gmail.com,305 bis 2220,,51,Salgado Martina sol,1°1°,CS,activo
+IMPORTAR,53,Vargas,Camila Jazmin,52326563,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 722896,cami.jaz.vargas@gmail.com,el zorzal 2195,,52,Vargas Camila Jazmin,1°4°,CB,activo
+IMPORTAR,54,Adala,Sarah Aixa,49950151,asociado,2do 2da CS TM,2do,2da,CS,TM,,2984 879596,sarah.adala16@gmail.com,rodhe 215,,53,Adala Sarah Aixa,2°2°,CS,activo
+IMPORTAR,55,Martinez,Matias,50504956,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984 76398,vvivianahamburg2000@gmail.com,cuba 1594,,54,Martinez Matias,1°1°,CS,activo
+IMPORTAR,56,Cornejo,Alejo Benjamin,50588134,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984 643868,,rosario santa fe 1071,Falta email,55,Cornejo Alejo Benjamin,1°2°,CS,activo
+IMPORTAR,58,Contreras,Ramirez Keila Juliana,49844477,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984 128725,,,Falta email; Falta dirección,57,Contreras Ramirez Keila Juliana,4°3°,CS,activo
+IMPORTAR,59,Contreras,Ramirez Zoe Jazmin,52535779,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 128725,shagocorias@gmail.com,alemania 1707,,58,Contreras Ramirez Zoe Jazmin,1°2°,CB,activo
+IMPORTAR,60,Gonzalez,Emmanuel,49704233,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2984 645561,raiugi@hotmail.com,los alerces 2591,,59,Gonzalez Emmanuel,2°1°,CS,activo
+IMPORTAR,61,Morales,Delfina,51128057,asociado,1ro 4ta CS TM,1ro,4ta,CS,TM,,,mariageñora@564.com.ar,,Falta teléfono; Falta dirección,60,Morales Delfina,1°4°,CS,activo
+IMPORTAR,62,Sosa,Simón,51082113,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 690321,simonsosa534@gmail.com,Valle azul 534,,61,Sosa Simón,1°1°,CB,Activo
+IMPORTAR,63,Guevara,Luna,48250701,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984 166757,luna0112007@gmail.com,,Falta dirección,62,Guevara Luna,4°3°,CS,Activo
+IMPORTAR,65,Jeldres,Sheila,49279990,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984 634546,jeldressheila@gmail.com,Santa cruz 2443,,63,Jeldres Sheila,3°2°,CS,Activo
+IMPORTAR,67,Sanchez,Joaquin,49399030,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984 690826,,San Juan 2457,Falta email,65,Sanchez Joaquin,3°1°,CS,Activo
+IMPORTAR,68,Vega,Santiago Alejandro,48145021,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984 742118,santykingvega@gmail.com,"Lote 6 ""b""",,66,Vega Santiago Alejandro,4°2°,CS,Activo
+IMPORTAR,69,Lares,Maria Agustina,48731391,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984 505302,agustinalares89@gmail.com,Santa cruz 2443,,67,Lares Maria Agustina,4°1°,CS,Activo
+IMPORTAR,70,Jaramillo,Sandoval Amaia,49703707,asociado,2do 4ta CS TM,2do,4ta,CS,TM,,2984 644572,candelaiaramillo09@gmail.com,Colon 1544,,68,Jaramillo Sandoval Amaia,2°4°,CS,Activo
+IMPORTAR,72,Fierro,Campini Baltazar,49030269,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984 761369,baltazarfierro08@gmail.com,carlos esponda 2736,,70,Fierro Campini Baltazar,3°3°,CS,Activo
+IMPORTAR,73,Bertoli,Martina,52321149,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984 407235,bertolimartina72@gmail.com,Artigas 56,,71,Bertoli Martina,2°2°,CB,Activo
+IMPORTAR,74,carlos,bastian.,53014052,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 773498,carlosbastias942@gmail.com,Mexico 213,,72,carlos bastian.,1°1°,CB,Activo
+IMPORTAR,75,Mariqueo,Sol,50676018,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984 780236,mariqueosol@gmail.com,Maipu 3735,,73,Mariqueo Sol,3°3°,CS,Activo
+IMPORTAR,76,Cepeda,Morena,49031323,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984 121601,morecepeda620@gamil.com,arturo pratt 1269,,74,Cepeda Morena,3°2°,CS,Activo
+IMPORTAR,78,Gómez,León,52537385,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984 724995,leoneliangomezz@gmail.com,447 120  Viviendas 2784,,76,Gómez León,1°3°,CB,Activo
+IMPORTAR,79,Calfuman,Camila,52326828,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 791815,camiiicalfuman@gmail.com,443 Casa 3069,,77,Calfuman Camila,1°4°,CB,Activo
+IMPORTAR,81,Garabito,Marianela,51082101,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984 158413,marianela.garabito20@gmail.com,Padre Nazario 1788,,79,Garabito Marianela,1°3°,CS,Activo
+IMPORTAR,82,Godoy,Ciro,53014036,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 729878,cirogodoyv@gmail.com,Botisttesso 1314,,80,Godoy Ciro,1°1°,CB,Activo
+IMPORTAR,83,Sbaffo,Luciano,23513436,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984 909481,andremiglius@gmail.com,Lago Guillén 1503,,81,Sbaffo Luciano,1°1°,CS,Activo
+IMPORTAR,84,Siella,Zoe Liz,53014045,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 205858,emilioalba1075@gmail.com,Av. San Juan 2750,,82,Siella Zoe Liz,1°2°,CB,Activo
+IMPORTAR,85,Leiva,Joaquin,49466362,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984 417139,leivajoaquin710@gmail.com,Alsina 6290,,83,Leiva Joaquin,3°2°,CS,Activo
+IMPORTAR,87,Toledo,Nicolas Agustin,51523346,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984 406145,toledonicolasagustin728@gmail.com,Calle 99 n° 1489,,85,Toledo Nicolas Agustin,2°2°,CB,Activo
+IMPORTAR,88,Tardugno,Carolina,52328243,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984 792647,azultardugno@gmail.com,Carlos Esponda 3085,,86,Tardugno Carolina,1°2°,CB,Activo
+IMPORTAR,89,Vazquez,Lázaro,53014003,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 121052,vazquezlazaro816@gmail.com,Arturo Pratt 1269,,87,Vazquez Lázaro,1°1°,CB,Activo
+IMPORTAR,90,Ríos,Candela,52169062,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984 393693,canderios05506@gmail.com,villegas 2359,,88,Ríos Candela,2°2°,CB,Activo
+IMPORTAR,92,Nicolle,Lopez,94991116,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,299 5572380,nicolle.lopez1003@gmail.com,,Falta dirección,89,Nicolle Lopez,3°2°,CS,Activo
+IMPORTAR,93,Sosa,Alma Elizabeth,52327299,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984 132665,carososa.36@gmail.com,Chaco 2261,,90,Sosa Alma Elizabeth,1°1°,CB,Activo
+IMPORTAR,96,Herrera,Benjamin,50588114,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984 126787,papabenja24@gmail.com,Yrigoyen 1377,,93,Herrera Benjamin,1°3°,CS,Activo
+IMPORTAR,97,Sosa,Lopez Maia Agustina,51237060,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984 788495,vanycuencagarcia@gmail.com,Roxana Rudel 2021,,94,Sosa Lopez Maia Agustina,2°3°,CB,Activo
+IMPORTAR,98,Burgos,Evangelina,50370808,asociado,3ro 3ra CB TM,3ro,3ra,CB,TM,,2944 539267,burgosevangelina@gmail.com,San Juan 280,,95,Burgos Evangelina,3°3°,CB,Activo
+IMPORTAR,99,Amulef,Mia,51362581,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984 696947,belenhelmer3@gmail.com,Rep. Dominicana 1470,,96,Amulef Mia,2°3°,CB,Activo
+IMPORTAR,100,Namuncura,Julieta,52320347,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984 134097,julietanamuncura274@gmail.com,Rivadavia 3750,,97,Namuncura Julieta,2°1°,CB,Activo
+IMPORTAR,102,Singh,Nicolas Germán,50675550,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984 814908,maricinq@gmail.com,3094-05-25 00:00:00,,99,Singh Nicolas Germán,1°3°,CS,Activo
+IMPORTAR,105,Marquez,Maia Jazmín,50504901,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984 529719,mayaguslove20@gmail.com,Libertad 2530,,102,Marquez Maia Jazmín,1°4°,CB,Activo
+IMPORTAR,106,Campos,Rocio Abigail,48250741,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984 685996,nataliaruis218@gmail.com,Publica y Australia piso 0,,103,Campos Rocio Abigail,1°3°,CS,Activo
+IMPORTAR,108,Moyano,Valdez Laureano,50796454,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984 356645,laureanomoyano300@gmail.com,Cordoba 1172,,105,Moyano Valdez Laureano,1°3°,CS,Activo
+IMPORTAR,109,Villegas,Castro Lucrecia Milagros,49925511,asociado,2do 3ra CS TM,2do,3ra,CS,TM,,2984 351611,lucreciamilagrosvillegascastro@gmail.com,Bariloche 2149,,106,Villegas Castro Lucrecia Milagros,2°3°,CS,Activo
+IMPORTAR,110,Gonzales,Natasha Mia,52325775,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984 829266,natashasara7@gmail.com,Chile 609,,107,Gonzales Natasha Mia,2°4°,CB,Activo
+IMPORTAR,112,Cinthia,Fernandez,50432767,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984 878107,cinthiafernandez94321@gmail.com,los ceibos 945,,109,Cinthia Fernandez,1°3°,CS,Activo
+IMPORTAR,113,Valentina,Salceda Thove,48200691,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984 661027,valentinasalceda35@gmail.com,Mendoza 956 depto 2,,110,Valentina Salceda Thove,4°1°,CS,Activo
+IMPORTAR,114,Patricia,Azcarate,25650969,adherente,,,,,,docente,2984 725853,patriciazcarate77@gmail.com,el condor 1875,"Rol/cargo en lugar de curso: ""profe""; Rol deducido: docente",111,Patricia Azcarate,profe,...,adherente
+IMPORTAR,115,Torres,Nestor,22132829,adherente,,,,,,padrino_mutual,2920 407940,nestortomas810@gmail.com,Viedma,"Rol/cargo en lugar de curso: ""Padrino mutual""; Rol deducido: padrino_mutual",112,Torres Nestor,Padrino mutual,...,adherente
+IMPORTAR,116,Alma,Schwerdt,52397731,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2446 284396,schwerdtalma6@gmail.com,,Falta dirección,113,Alma Schwerdt,2°4°,CB,Activo
+IMPORTAR,118,Speranza,Sabrina,31445523,adherente,,,,,,docente,2984 827028,sabrinasperanza22@gmail.com,Kennedy 1075,"Rol/cargo en lugar de curso: ""profe""; Rol deducido: docente",115,Speranza Sabrina,profe,...,Adherente
+IMPORTAR,119,Maisonave,Sofia,49950110,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2984 815201,analia980@gmail.com,Kennedy 1314,,116,Maisonave Sofia,2°1°,CS,Activo
+IMPORTAR,120,Zunino,Maria,33307759,adherente,,,,,,docente,2984860999,profe.belen.ferrada@gmail,Runge 1175,"Rol/cargo en lugar de curso: ""profe""; Rol deducido: docente",117,Zunino Maria,profe,...,Adherente
+IMPORTAR,121,Valentina,Alarcon,49543131,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984376707,alarconval28@gmail.com,suiza1027,,118,Valentina Alarcon,3°3°,CS,Activo
+IMPORTAR,123,Garcia,Octavio,49465359,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984537833,octagarciaa09@gmail.com,chula vista664,,120,Garcia Octavio,3°3°,CS,Activo
+IMPORTAR,125,Hegoburu,Genaro,49031322,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984952429,hegoburugenarocet@gmail.com,gadano 858,,122,Hegoburu Genaro,3°3°,CS,Activo
+IMPORTAR,126,Rojo,Martina,49520549,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984591179,rojomart2323@gmail.com,general paz 2674,,123,Rojo Martina,3°3°,CS,Activo
+IMPORTAR,127,Martin,Tomas,48531179,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984885055,tomasezequielmartinraya@gmail.com,mendoza915,,124,Martin Tomas,3°3°,CS,Activo
+IMPORTAR,128,Billordo,Ornella,49279618,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984124287,billordoornella@gmail.com,malvino ducas 1795,,125,Billordo Ornella,3°3°,CS,Activo
+IMPORTAR,129,Hiller,Gabriel,49217933,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984 228044,gabrielhiller2008@gmail.com,Republica del libano 1475,,126,Hiller Gabriel,3°3°,CS,Activo
+IMPORTAR,130,Rodriguez,Evangelina,51238737,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984 329613,evangelinarodriguez0708@gmail.com,rochdale 1991,,127,Rodriguez Evangelina,2°3°,CB,activo
+IMPORTAR,131,Lo,Pinto Ninna,49844349,asociado,2do 3ra CS TM,2do,3ra,CS,TM,,2984 759698,lopintocideninna5@gmail.com,alsina 1682,,128,Lo Pinto Ninna,2°3°,CS,Activo
+IMPORTAR,133,Narvaja,Candela,49002269,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,91151241839,chnarvaja@gmail.com,uruguay 1752,,130,Narvaja Candela,3°4°,CS,Activo
+IMPORTAR,134,Jaque,Agostina,49279604,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984 586217,agostinajaque13@gmail.com,mexico 571,,131,Jaque Agostina,3°4°,CS,Activo
+IMPORTAR,135,Escudero,Morena,52322988,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984 781632,escuderoperettomorena@gmail.com,mitre 1685,,132,Escudero Morena,2°2°,CB,Activo
+IMPORTAR,136,Corbalan,Umma,53015954,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984 332441,anamangelzorita@gmail.com,Vitergori --,,133,Corbalan Umma,1°3°,CB,Activo
+IMPORTAR,137,Guzman,Roxana,36709701,adherente,,,,,,biblioteca,2984 789566,roxibiblioteca92@gmail.com,3 de February 1745,"Rol/cargo en lugar de curso: ""Bibliotecaria""; Rol deducido: biblioteca",134,Guzman Roxana,Bibliotecaria,...,Adherente
+IMPORTAR,138,Mendy,Dominguez Alan,30111140,adherente,,,,,,preceptor,2984 702666,alanmendydominguez@gmail.com,Córdoba 1574,"Rol/cargo en lugar de curso: ""preceptora""; Rol deducido: preceptor",135,Mendy Dominguez Alan,preceptora,...,Adherente
+IMPORTAR,139,Allende,Ayelen,25334441,adherente,,,,,,preceptor,2984 916104,pinina76monsa@hotmail.com,Chula Vista 3986,"Rol/cargo en lugar de curso: ""preceptora""; Rol deducido: preceptor",136,Allende Ayelen,preceptora,...,adherente
+IMPORTAR,140,Viscardi,Malena,51155289,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984 715296,viscardimalena2@gmail.com,misiones 1819,,137,Viscardi Malena,2°2°,CB,Activo
+IMPORTAR,141,Acosta,Claudia,32438862,adherente,,,,,,docente,-,lic.claudia.acosta@gmail.com,Mitre 160 Dpto 5,"Rol/cargo en lugar de curso: ""docente""; Rol deducido: docente",138,Acosta Claudia,docente,...,Adherente
+IMPORTAR,142,Tocaimasa,Kiara,50604288,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984 871178,cervezasartesanales15@gmail.com,San Juan 3173,,139,Tocaimasa Kiara,1°2°,CS,Activo
+IMPORTAR,143,Guerrero,Selene,50507305,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984357768,,,Falta email; Falta dirección,140,Guerrero Selene,1°3°,CS,Activo
+IMPORTAR,144,Carrizo,Martina Fiore,52325635,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984244051,cicemclodagulnicafiore@gmail.com,chile 129,,141,Carrizo Martina Fiore,2°4°,CB,Activo
+IMPORTAR,145,Seara,Lara Jazmin,49574344,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2984780996,laraseara9@gmail.com,chile 609,,142,Seara Lara Jazmin,2°1°,CS,Activo
+IMPORTAR,146,Vera,Kiara Maylen,50686340,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984126606,melanidiazmorel1994@gmail.com,,Falta dirección,143,Vera Kiara Maylen,1°2°,CS,Activo
+IMPORTAR,150,Nuñez,Bautista Alejandro,52565395,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984975727,bautynunez85@gmail.com,Mitre 4597,,147,Nuñez Bautista Alejandro,1°4°,CB,Activo
+IMPORTAR,151,Scarola,Sol,52535524,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984601711,vivianamendez1986@gmail.com,Artiagas 610,,148,Scarola Sol,1°4°,CB,Activo
+IMPORTAR,152,Mora,Umma Jazmin,52535628,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984214009,moraumma42@gmail.com,Calle Pública B52A N°2317,,149,Mora Umma Jazmin,1°3°,CB,Activo
+IMPORTAR,153,Rubio,Bautista,50796311,asociado,3ro 4ta CB TM,3ro,4ta,CB,TM,,29844806657,bautistaleonrubio@gmail.com,B. Nuevo Rosario d Snta Fé,,150,Rubio Bautista,3°4°,CB,Activo
+IMPORTAR,155,Andrés,Vanesa,30060227,adherente,,,,,,docente,2984249430,vanesa0371@gmail.com,500 Vndas Nicaragua N°2,"Rol/cargo en lugar de curso: ""docente""; Rol deducido: docente",152,Andrés Vanesa,docente,...,Adherente
+IMPORTAR,156,Olivares,Ian,52119992,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,no tiene,ianbenjaminolivares@gmail.com,isidro lobo 326,,153,Olivares Ian,2°1°,CB,Activo
+IMPORTAR,157,Sosa,Lope Maia Agustina,49950656,asociado,2do 4ta CS TM,2do,4ta,CS,TM,,2984684976,mai.soosa0@gmail.com,Silguero 1747,,154,Sosa Lope Maia Agustina,2°4°,CS,Activo
+IMPORTAR,158,Alba,Paz Melo,53015947,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984877332,albapazmelo@gmail.com,Irlanda 1925,,155,Alba Paz Melo,1°1°,CB,Activo
+IMPORTAR,159,argañaraz,vilma,20486997,adherente,,,,,,docente,3854024632,vilmaarganaraz@gmail.com,españa 1754,"Rol/cargo en lugar de curso: ""docente""; Rol deducido: docente",156,argañaraz vilma,docente,...,Adherente
+IMPORTAR,160,Lopez,Sarahi Zoe,52328201,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984138291,zoesarahi2009@gmail.com,Lago Lacar 1120,,157,Lopez Sarahi Zoe,1°1°,CB,Activo
+IMPORTAR,161,Offidani,Benjamin,52534177,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984861686,carla.renugo@gmail.com,San Martin 947,,158,Offidani Benjamin,1°2°,CB,Activo
+IMPORTAR,162,Fernandez,Carina,23868671,adherente,,,,,,docente,2984677941,car80fer@gmail.com,La Pampa 153,"Rol/cargo en lugar de curso: ""docente""; Rol deducido: docente",159,Fernandez Carina,docente,...,Adherente
+IMPORTAR,164,Reinoso,Roque Ricardo,51237082,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984958049,roquereinosojr@gmail.com,portugal 2358,,161,Reinoso Roque Ricardo,2°3°,CB,Activo
+IMPORTAR,165,Gianluca,Papa Schieroni,51238730,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984126147,gianlucapapaschieroni@gmail.com,Viterbori 550,,162,Gianluca Papa Schieroni,2°2°,CB,Activo
+IMPORTAR,166,Martinez,Alma,52535623,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984417251,gabang1012@gmail.com,Santa Cruz 2213,,163,Martinez Alma,1°4°,CB,Activo
+IMPORTAR,168,Guevara,Kimey,52327478,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984656678,betsabe960@gmail.com,Irlanda 2482,,165,Guevara Kimey,1°1°,CB,Activo
+IMPORTAR,169,Reyes,Marcia,28623708,adherente,,,,,,docente,2984743298,reyesmarcia.019@gmail.com,Churrinche 1308,"Rol/cargo en lugar de curso: ""docente""; Rol deducido: docente",166,Reyes Marcia,docente,...,Adherente
+IMPORTAR,170,Carrasco,Melani Natali,52328995,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984218193,caresmelani38@gmail.com,Formosa 1014,,167,Carrasco Melani Natali,1ro 2,CB,Activo
+IMPORTAR,171,Lagos,Miguel,49950645,asociado,2do 3ra CS TM,2do,3ra,CS,TM,,2984864438,evegarcia609@gmail.com,San Juan 4345,,168,Lagos Miguel,2°3°,CS,Activo
+IMPORTAR,172,Vargas,Bautista,52534172,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984358678,bv8112012@gmail.com,Snta Cruz 2655,,169,Vargas Bautista,1°3°,CB,Activo
+IMPORTAR,173,Sulienta,Valentina,52325739,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984126366,,2026-02-20 00:00:00,Falta email,170,Sulienta Valentina,2°4°,CB,Activo
+IMPORTAR,174,guzman,martin,48531194,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984316889,martinguzman@gmail.com,los cardenales 1710,,171,guzman martin,4°3°,CS,Activo
+IMPORTAR,176,Pulgar,Milena,49703710,asociado,2do 3ra CS TM,2do,3ra,CS,TM,,2984903775,pulgarmilena16@gmail.com,Runge 1611,,173,Pulgar Milena,2°3°,CS,Activo
+IMPORTAR,180,Telechea,Valentina,53015229,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984782269,giulianatelechea04@gmail.com,saavedra 715,,177,Telechea Valentina,1°3°,CB,Activo
+IMPORTAR,181,Hodges,Gianella,52320336,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984322729,gianellahodjes67@gmail.com,Las petunias 5313,,178,Hodges Gianella,2°2°,CB,Activo
+IMPORTAR,182,Gonzalez,Lola,51237000,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984877063,loola.gonzales789@gmail.com,Padre nazario 189,,179,Gonzalez Lola,2°2°,CB,Activo
+IMPORTAR,184,Almada,Tiziano,52534197,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984369446,lauravisentin85@hotmail.com,Bahia Blanca 2144,,181,Almada Tiziano,1°3°,CB,Activo
+IMPORTAR,185,Riffo,Luisana,52326540,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984406229,hluisriffo@gmail.com,Chaco 1034,,182,Riffo Luisana,1°2°,CB,Activo
+IMPORTAR,187,Yañez,Tadeo,52188065,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984503707,tadeoy636@gmail.com,Surinam 163,,184,Yañez Tadeo,1°3°,CB,Activo
+IMPORTAR,189,Teruel,Silva Ulises,53015914,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984216245,ulises777777777@gmail.com,Brasil 80,,186,Teruel Silva Ulises,1°3°,CB,Activo
+IMPORTAR,190,Ranucci,Isabella,48732948,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984523167,ranucciisabella08@gmail.com,Brasil 155,,187,Ranucci Isabella,4°3°,CS,Activo
+IMPORTAR,191,Tronelli,Patricia,21387001,adherente,,,,,,preceptor,2984318818,patriciatronelli@yahoo.com.ar,,"Rol/cargo en lugar de curso: ""preceptora""; Rol deducido: preceptor; Falta dirección",188,Tronelli Patricia,preceptora,...,Adherente
+IMPORTAR,192,Figueroa,Malena,52326819,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984339130,paonatmal@gmail.com,Jachal 2533,,189,Figueroa Malena,1°1°,CB,Activo
+IMPORTAR,193,Vera,Emma,53189003,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,294409660,emmaueva2713@yahoo.com.ar,Colouhia 1070,,190,Vera Emma,1°3°,CB,Activo
+IMPORTAR,194,Rodriguez,Fausto,52535622,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,94251828,fabiangloc@gmail.com,Mendoza 1053,,191,Rodriguez Fausto,1°4°,CB,Activo
+IMPORTAR,195,Garabito,Enzo Sebastian,47375025,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984566651,andrearoca20@gmail.com,Padre Nazario 1788,,192,Garabito Enzo Sebastian,3°3°,CS,Activo
+IMPORTAR,196,Passamonti,Benicio,52535627,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984222497,benicio.gast@gmail.com,Venezuela 1444,,193,Passamonti Benicio,1°3°,CB,Activo
+IMPORTAR,197,Nolting,Vera,52535547,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984391406,noltingyoirisvera@gmail.com,Formosa 1539,,194,Nolting Vera,1°3°,CB,Activo
+IMPORTAR,198,Alvarez,Iturbe Aitor,53236395,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984158882,inesmariaiturbe@gmail.com,Viterbori 2011,,195,Alvarez Iturbe  Aitor,1°4°,CB,Activo
+IMPORTAR,202,Schenfeld,Julian,53014842,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984769543,lucialevin1994@gmail.com,Chile 985 Depto 4,,199,Schenfeld Julian,1°1°,CB,Activo
+IMPORTAR,203,Hegoburu,Carolina,52537992,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984936400,Carolinahegoburu@gmail.com,Gadano 858,,200,Hegoburu Carolina,1°3°,CB,Activo
+IMPORTAR,205,Hernandez,Bruno Valentin,52316266,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984870076,brunitonqn2012@gmail.com,Treleu 2262,,201,Hernandez Bruno Valentin,1°1°,CB,Activo
+IMPORTAR,207,Alvarez,Iturbe Leonidas,50988783,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984158882,inesmoriaiturbe@gmail.com,Viterbori 2011,,203,Alvarez Iturbe Leonidas,1°2°,CS,Activo
+IMPORTAR,208,Goicoechea,Ibai,52534189,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984243784,goicocheaibai3@gmail.com,Limay 2121,,204,Goicoechea Ibai,1°2°,CB,Activo
+IMPORTAR,209,Bogino,Mia,50504974,asociado,3ro 2da CB TM,3ro,2da,CB,TM,,2984150455,miabogino958@gmail.com,500 Viviendas Núcleo 49 PBA,,205,Bogino Mia,3°2°,CB,Activo
+IMPORTAR,210,Marini,Torres Bianca,52537388,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984756040,maii.torres.04@gmail.com,Carlos Esponda 728,,206,Marini Torres Bianca,1°3°,CB,Activo
+IMPORTAR,211,Navarrete,Alicia Viviana,24877004,adherente,,,,,,,2984132160,naliciaviviana@gmail.com,EE.UU 3259,Falta curso,207,Navarrete Alicia Viviana,,,Adherente
+IMPORTAR,212,Sanchez,Ramiro,48731448,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984876141,ramisanchez411@gmail.com,Canada 716,,208,Sanchez Ramiro,4°3°,CS,Activo
+IMPORTAR,214,Napolitano,Giovani,52534150,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984220239,gionavinapolitano2012@gmail.com,Avenida Roca 1897,,210,Napolitano Giovani,1°1°,CB,Activo
+IMPORTAR,215,Tapia,Carla,48731418,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984667600,carlatapia453@gmail.com,Rodhe 2446,,211,Tapia Carla,4°3°,CS,Activo
+IMPORTAR,216,Sulla,Sofia,50504965,asociado,3ro 2da CB TM,3ro,2da,CB,TM,,2984354317,sofiasulla1@gmail.com,Ecuador 1810,,212,Sulla Sofia,3°2°,CB,Activo
+IMPORTAR,217,Amaro,Sofia,52325652,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984894068,aamarosofia@gmail.com,"Chacra 300, Cervantes",,213,Amaro Sofia,1°1°,CS,Activo
+IMPORTAR,218,Astroza,Lucas,51238745,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984771096,lucasastroza20@gmail.com,Australia 2249,,214,Astroza Lucas,2°4°,CB,Activo
+IMPORTAR,219,Contreras,Luciana Belén,49703708,asociado,2do 3ra CS TM,2do,3ra,CS,TM,,2984221727,contreraslucianabelen808@gmail.com,Saavedra 3283,,215,Contreras Luciana Belén,2°3°,CS,Activo
+IMPORTAR,220,Nahuelán,Jazmin,53188687,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984766908,patopacheco777@gmail.com,Cipolletti 3594,,216,Nahuelán Jazmin,1°4°,CB,Activo
+IMPORTAR,221,Aguilera,Liz,48866652,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984550273,aguileraliz@gmail.com,Iguazu 2148,,217,Aguilera Liz,4°1°,CS,Activo
+IMPORTAR,223,Aun,Ciro,52325671,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984697825,ciroaun@gmail.com,Los Alomos 1811,,219,Aun Ciro,1°1°,CB,Activo
+IMPORTAR,224,Salazar,Maitena,52047461,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984287435,maitenazeta@gmail.com,E. del Campo 623,,220,Salazar Maitena,2°4°,CB,Activo
+IMPORTAR,225,Velazquez,Gil Lucio,52535778,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984376081,sublimaciónycreacionesmia@gmail.com,Venezuela 1625,,221,Velazquez Gil Lucio,1°2°,CB,Activo
+IMPORTAR,226,Castro,Mailen,52328972,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984387111,castromailenanahi@gmail.com,b°Alto verde calle 248,,222,Castro Mailen,1°1°,C.B,Activo
+IMPORTAR,227,Merino,Fabricio,52325965,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984653702,fabriciogeremias@gmail.com,Las Petunias 7286,,223,Merino Fabricio,1°2°,CS,Activo
+IMPORTAR,228,Mancilla,Nicolas,53014847,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984149162,nicolas.mancilla567@gmail.com,omeghino 2740,,224,Mancilla Nicolas,1°2°,CB,Activo
+IMPORTAR,229,Santino,Amaro,52536168,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984576508,lorenotoporco@gmail.com,Venezuela 1733,,225,Santino Amaro,1°2°,CB,Activo
+IMPORTAR,230,Tranamil,Eugenia,48616610,asociado,4to 3ra CB TM,4to,3ra,CB,TM,,2994200684,eugetranamil1@gmail.com,"Calle 447, 2463",,226,Tranamil Eugenia,4°3°,CB,Activo
+IMPORTAR,231,Basualdo,Morales Noa Zafira,52535669,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984575152,noamn2026@gmail.com,La Pampa 1738,,227,Basualdo Morales Noa Zafira,1°4°,CB,Activo
+IMPORTAR,232,Aillal,Cabana Ludmila,52535793,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984349173,nahilu793@gmail.com,Rudel 2464,,228,Aillal Cabana Ludmila,1°2°,CB,Activo
+IMPORTAR,233,Vera,Valentina,52535579,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984232552,avera4272@gmail.com,Los Perales 2493,,229,Vera Valentina,1°4°,CB,Activo
+IMPORTAR,234,Hurstel,Totti Mora,53188614,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984142345,ursulakfoth@gmail.com,Libertador 170,,230,Hurstel Totti Mora,1°2°,CB,Activo
+IMPORTAR,235,Cea,Camila,48391866,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984602712,camiicea024@gmail.com,islas orcadas 4225,,231,Cea Camila,4to 4,CS,activo
+IMPORTAR,236,Orieta,Gonzalez,50828585,asociado,2do 2da CB TM,2do,2da,CB,TM,,2984687067,bicicleteriaavenida@gmail.com,Av Roca 1182,,232,Orieta Gonzalez,2°2°,CB,Activo
+IMPORTAR,237,Morena,Cañiu,48531404,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984784246,moreoc13@gmail.com,Río Negro 2396,,233,Morena Cañiu,4°1°,CS,activo
+IMPORTAR,240,Molina,Sebastian,48946743,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984896830,smln120080@gmail.com,Perito Moreno 3486,,234,Molina Sebastian,3°1°,CS,activo
+IMPORTAR,241,Galvan,Zoe,49465395,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984661400,zoegalvan436@gmail.com,Bermejo 2223,,235,Galvan Zoe,3°1°,CS,activo
+IMPORTAR,242,Cruz,Jose,51709601,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984513704,joseignaciocruz7172@gmail.com,Los Angeles 881,,236,Cruz Jose,3°1°,CS,activo
+IMPORTAR,243,Wagner,Nicolas Anguita,49138946,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984400325,nicolas.w3400@gamil.com,Las Fresnos 2149,,237,Wagner Nicolas Anguita,3°1°,CS,activo
+IMPORTAR,244,Bello,Luana,49373221,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984403066,luanabello514@gmail.com,"Cruz del sur, lote n°7",,238,Bello Luana,3°1°,CS,activo
+IMPORTAR,245,Gallego,Gabriel,48946690,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984525830,gabrielkun012@gmail.com,Mendoza y Catamarca 494,,239,Gallego Gabriel,3°1°,CS,activo
+IMPORTAR,246,Molinas,Laila,50992664,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984416053,lailamolinas086@gmail.com,surinam 472,,240,Molinas Laila,3°2°,CS,activo
+IMPORTAR,247,Plattner,Narella,4928306,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984134890,narellaagustinaplattner@gmail.com,anibal troilo 2829,,241,Plattner Narella,3°2°,CS,activo
+IMPORTAR,248,gema,priselac,49031347,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984577498,gema21903@gmail.com,los castaños 1018,,242,gema priselac,3°2°,CS,activo
+IMPORTAR,249,Palavecino,Antonella,49465936,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984199005,antonellapalavecino759@gmail.com,los alerces 2659,,243,Palavecino Antonella,3°2°,CS,activo
+IMPORTAR,250,Retamal,Jazmin,49138187,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984331939,jazminameliretamal@gmail.com,anibal troilo 3885,,244,Retamal Jazmin,3°2°,CS,activo
+IMPORTAR,251,Calvo,Ximena,48731740,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2920615525,ximenacalvo70@gmail.com,Los Cisnes 1362,,245,Calvo Ximena,3°4°,CS,activo
+IMPORTAR,252,Inostroza,Antonella,48731496,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984591313,antonellainostroza20@gmail.com,Mitre 810,,246,Inostroza Antonella,3°2°,CS,activo
+IMPORTAR,253,Maica,Kyara,49573112,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984127369,maicaa555@gmail.com,san juan 2306,,247,Maica Kyara,3°2°,CS,activo
+IMPORTAR,254,Vergara,Agostina,49279704,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984687470,aagostinavergaraa@gmail.com,nicaragua 31,,248,Vergara Agostina,3°4°,CS,activo
+IMPORTAR,255,Radulescu,Candela,48250778,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,29848413107,radulescucandela@gmail.com,urquiza 2315,,249,Radulescu Candela,3°2°,CS,activo
+IMPORTAR,256,Flores,Tahiel,52323029,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984 379873,tahielflores778@gmail.com,cerra 3406,,250,Flores Tahiel,3°2°,CS,activo
+IMPORTAR,257,Suros,Julieta,48946620,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984 208709,surosjulieta@gmail.com,viedma 431,,251,Suros Julieta,3°2°,CS,activo
+IMPORTAR,258,Marbelli,Agostina,51524124,asociado,2do 2da CS TM,2do,2da,CS,TM,,2984736584,agusmarbelli@gmail.com,vintter 383,,252,Marbelli Agostina,2°2°,CS,activo
+IMPORTAR,260,Giambelluca,Benjamin,51179150,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984658258,menendezbenjamin99@gmail.com,damas patricias 3171,,254,Giambelluca Benjamin,2° 1°,CB,activo
+IMPORTAR,261,Rodriguez,Santino,49218310,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984933085,rodriguezsantino58@gmail.com,roxana rudel 2148,,255,Rodriguez Santino,3°2°,CS,activo
+IMPORTAR,263,Rosas,Nicole,51024704,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984874770,torresnancyyanet200@gmail.com,misiones 805,,257,Rosas Nicole,1°3°,CS,activo
+IMPORTAR,265,Cibura,Yasmin,48446637,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984653505,yazmincibura123@gmail.com,arturo llanos 312,,258,Cibura Yasmin,3°3°,CS,activo
+IMPORTAR,266,Franco,Melina,49465362,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984683947,lujimeli9@gmail.com,lisandro de la torre 1465,,259,Franco Melina,3°3°,CS,activo
+IMPORTAR,267,Cantero,Maria Laura,27091682,adherente,,,,,,docente,2984537521,coordinacionpp@gmail.com,uruguay 158,"Rol/cargo en lugar de curso: ""Profesor""; Rol deducido: docente",260,Cantero Maria Laura,Profesor,..,adherente
+IMPORTAR,268,Gargini,giustina,50828713,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984595451,giustinagargini@gmail.com,dia del bancario 4434,,261,Gargini giustina,1°3°,C.B,activo
+IMPORTAR,269,Luna,Nahiara,49536930,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2281663339,Luananahiara414@gmail.com,ayala 2995,,262,Luna Nahiara,2°1°,C.S,activo
+IMPORTAR,270,Gonzalez,Lujan,53256010,asociado,1ro 2da CB TM,1ro,2da,CB,TM,,2984775753,alexa6592@gmail.com,las catalpas 1765,,263,Gonzalez Lujan,1°2°,CB,activo
+IMPORTAR,271,Ledesma,Christian,49029513,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984504589,Nicolaschristianledesma@gmail.com,Enrique Poredano 2549,,264,Ledesma Christian,3°4°,C.S,Activo
+IMPORTAR,272,Lopez,Tadeo,49029884,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984864639,,joselin Iturra 3798,Falta email,265,Lopez Tadeo,3°4°,C.S,Activo
+IMPORTAR,275,Rojas,Paula Ludmila,49465361,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984133739,paulaludmilarojas@gmail.com,Resistencia 1539,,268,Rojas Paula Ludmila,3°4°,C.S,Activo
+IMPORTAR,276,Montecino,Fernanda,49029571,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984655690,fernandajazminn17@gmail.com,Israel 1748,,269,Montecino Fernanda,3°4°,C.S,Activo
+IMPORTAR,277,Cruz,Alex,51709599,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984346050,alexcruz7386@gmail.com,Abedules 881,,270,Cruz Alex,3°4°,C.S,Activo
+IMPORTAR,278,Perez,Elena,49339930,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984130957,eperezrosetti@gmail.com,Calle 99 1834,,271,Perez Elena,3°4°,C.S,Activo
+IMPORTAR,279,Alvarez,Yasmin,52320317,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984860086,yasminabigailmolina@gmail.com,Rivadavia 3578,,272,Alvarez Yasmin,2°1°,CB,Activo
+IMPORTAR,280,Di,biase Mateo,49399257,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984665591,mateodibiase@gmail.com,San Martin,,273,Di biase Mateo,3°4°,CS,Activo
+IMPORTAR,281,Barrientos,valentina,49218051,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2920306769,barrientosvalentina900@gmail.com,La Pampa 910,,274,Barrientos valentina,3°4°,CS,Activo
+IMPORTAR,282,Soraire,Santillan Conrado,49573108,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,386576919,csorairesantillan@gmail.com,Ushuaia 1809,,275,Soraire Santillan Conrado,3°4°,CS,Activo
+IMPORTAR,283,Olavarrieta,Paula,49465396,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984500750,olavarrietapaula09@gmail.com,la pataguia 40,,276,Olavarrieta Paula,3°1°,CS,Activo
+IMPORTAR,284,Escobar,Alexis,49465303,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984895006,maxale832@gmail.com,urquiza 1445,,277,Escobar Alexis,3°1°,CS,Activo
+IMPORTAR,285,Ignacio,Catala,49138198,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984882880,ignaciocatala14@gmail.com,el churrinche 1881,,278,Ignacio Catala,3°1°,CS,Activo
+IMPORTAR,286,Huenchual,Valentina Abril,49466703,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984754937,valentinahuenchual03@gmail.com,ubetal 4393,,279,Huenchual Valentina Abril,3°1°,CS,Activo
+IMPORTAR,289,Farias,Laura,47375877,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984167254,laurabetelfarias080@gmail.com,los ceibos 580,,282,Farias Laura,3°1°,CS,Activo
+IMPORTAR,290,Gargini,Licio,49280128,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984762265,garginilicio2@gmail.com,dia del bancario 4434,,283,Gargini Licio,3°1°,CS,Activo
+IMPORTAR,291,Muñoz,Lautaro,49279686,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984525850,lautaromartin522009@gmail.com,jacha y villegas,,284,Muñoz Lautaro,3°1°,CS,Activo
+IMPORTAR,292,Quiroz,Madelein,48908915,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984959018,madeleinquiroz447@gmail.com,godoy diaz 2374,,285,Quiroz Madelein,3°1°,CS,Activo
+IMPORTAR,293,Gauna,Ulises,49138677,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984666667,ulisesgg198@gmail.com,rochdale 796,,286,Gauna Ulises,3°1°,CS,Activo
+IMPORTAR,294,Nogueiras,Abril,49279609,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984596213,abrilnogueirasgonzalez@gmail.com,battistesa 2119,,287,Nogueiras Abril,3°2°,CS,Activo
+IMPORTAR,295,Abregi,Eugenia Belen,49574420,asociado,2do 3ra CS TM,2do,3ra,CS,TM,,2984254512,eugeczerito2875@gmail.com,Hungria 826,,288,Abregi Eugenia Belen,2°3°,CS,Activo
+IMPORTAR,296,Kusiak,Melanie,48530991,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984868184,melaniekusiak774@gmail.com,Leandro alem 1718,,289,Kusiak Melanie,4to 4 C.S,CS,Activo
+IMPORTAR,297,Argañaraz,Manuel,47975013,asociado,4to 2da CS TM,4to,2da,CS,TM,,,,,Falta teléfono; Falta email; Falta dirección,290,Argañaraz Manuel,4°2°,CS,activo
+IMPORTAR,298,Sosa,Fhara,48731421,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984199583,sosafhara@gmail.com,paisaje valle azul 534,,291,Sosa Fhara,4to 4° C.S,CS,activo
+IMPORTAR,299,Zunino,Maria,48908630,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984246025,zuninobravomaria@gmail.com,primeros pobladores 3527,,292,Zunino Maria,4to 4° C.S,CS,activo
+IMPORTAR,300,Rodriguez,Thiago,47914704,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984222363,thiagoescuelacet3@gmail.com,savedra 2860,,293,Rodriguez Thiago,4°2°,CS,activo
+IMPORTAR,301,Sol,Yasmin Cid,48610639,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984373105,cidsolyasmin@gmail.com,Brasil 284,,294,Sol Yasmin Cid,4°2°,CS,activo
+IMPORTAR,302,Eugenia,Josseau Rudelli,48392410,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984220934,eugenia.josseau@gmail.com,Maipu 1136,,295,Eugenia Josseau Rudelli,4°2°,CS,activo
+IMPORTAR,303,Ambar,Aguero Moreno,48731438,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984223004,aagueromoreno45@gmail.com,Lisandro de la torre 618,,296,Ambar Aguero Moreno,4°1°,CS,ACTIVO
+IMPORTAR,304,Ulises,Kegel Emery,48391148,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984344725,ulisesemerykegel@gmail.com,Uruguay 2529,,297,Ulises Kegel Emery,4°2°,CS,activo
+IMPORTAR,305,Mateo,Venegas,52535545,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984931643,ferreyrasebastian274@gmail.com,isrrael 1936,,298,Mateo Venegas,1°4°,CB,activo
+IMPORTAR,306,Silvia,Gattari,22920451,adherente,,,,,,docente,2984549943,silgattari@gmail.com,alsina 410,"Rol/cargo en lugar de curso: ""docente""; Rol deducido: docente",299,Silvia Gattari,docente,...,adherente
+IMPORTAR,309,Hidalgo,Valentina,48185837,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984884034,valenhidalgo077@gmail.com,calle 445,,301,Hidalgo Valentina,4°3°,CS,Activo
+IMPORTAR,310,Tomas,Correa,48391188,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984220722,tomas1111correa@gmail.com,dillon gigena 740,,302,Tomas Correa,4°1°,CS,activo
+IMPORTAR,312,Arcos,Candela,48732941,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984897269,candelaarcospavletich@gmail.com,Mendoza 1051,,304,Arcos Candela,4°3°,CS,Activo
+IMPORTAR,313,Fosso,Sol Agustina,49950636,asociado,1ro 3ra CS TM,1ro,3ra,CS,TM,,2984150331,,Italia 626,Falta email,305,Fosso Sol Agustina,1°3°,CS,Activo
+IMPORTAR,314,Henriquez,Vilugron Renata,53524148,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984969413,renatavilugron802@gmail.com,ecuador 1770,,306,Henriquez Vilugron Renata,1°1°,CB,Activo
+IMPORTAR,315,Serafini,Nadia,48122998,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984592349,,PARANA 2385,Falta email,307,Serafini Nadia,3°1°,CS,Activo
+IMPORTAR,316,Paz,Morena,48731463,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984354746,paz.morena@icloud.com,ecuador 1834,,308,Paz Morena,4°3°,CS,Activo
+IMPORTAR,317,Singh,Ihara,48714113,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984202212,iharagabrielasingh@gmail.com,rio pilcomayo 1353,,309,Singh Ihara,4°3°,CS,Activo
+IMPORTAR,318,Sandoval,Robledo Mora,53015891,asociado,1ro 1ra CB TM,1ro,1ra,CB,TM,,2984157351,mora24sandoval23@gmail.com,iguazu 2201,,310,Sandoval Robledo Mora,1°1°,CB,Activo
+IMPORTAR,319,Bruno,Lara,48185847,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984784943,brunolara193@gmail.com,libertad 2300,,311,Bruno Lara,4°1°,CS,Activo
+IMPORTAR,321,Azul,Tardugno,50873269,asociado,1ro 4ta CS TM,1ro,4ta,CS,TM,,2984355734,tardugnoazul@gmail.com,carlos esponda 3085,,313,Azul Tardugno,1°4°,CS,activo
+IMPORTAR,322,Juarez,Esteban,48333008,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984 570958,jjuarez.estebann@gmail.com,almirante brown 4407,,314,Juarez Esteban,4°2°,CS,activo
+IMPORTAR,323,Cerda,Ciro Lionel,48318632,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984274600,cerdaciro924@gmai.com,povedano rajneri 1715,,315,Cerda Ciro Lionel,4°2°,CS,activo
+IMPORTAR,324,Medina,Diego,5022865,asociado,2do 2da CB TM,2do,2da,CB,TM,,,,,Falta teléfono; Falta email; Falta dirección,316,Medina Diego,2°2°,CB,activo
+IMPORTAR,325,Videla,Cona Eluney Nahiara,50271105,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984161024,vielaeluney4@gmail.com,los fresnos 2257,,317,Videla Cona Eluney Nahiara,4°2°,CS,activo
+IMPORTAR,327,Milagros,Salles,47180590,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,,,,Falta teléfono; Falta email; Falta dirección,318,Milagros Salles,4°1°,CS,activo
+IMPORTAR,329,Jenifer,Cajal,48722938,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984,,,Falta email; Falta dirección,319,Jenifer Cajal,4°1°,CS,activo
+IMPORTAR,330,Katherine,Fuentes,49244679,asociado,2do 2da CS TM,2do,2da,CS,TM,,2984535182,fuentessofiii09@gmail.com,villegas 3507,,320,Katherine Fuentes,2°2°,CS,activo
+IMPORTAR,331,Flores,Estrella Abigail,48947893,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984245412,estrellitaflores2022@gmail.com,EEUU 1470 1° a,,321,Flores Estrella Abigail,3°1°,CS,activo
+IMPORTAR,332,Camila,Rioseco,52066949,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984779364,c1256842@gmail.com,rio negro 1660,,322,Camila Rioseco,2°4°,CB,activo
+IMPORTAR,333,Salas,Brunella,48659746,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984401094,brunellajazinsalas88@gmail.com,urquiza 4085,,323,Salas Brunella,4to 4°CS,CS,Activo
+IMPORTAR,334,Parra,Lautaro,52326803,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984290865,lautaroparra46,san juan 4411,,324,Parra Lautaro,1°4°,CB,Activo
+IMPORTAR,335,Chocobar,Julieta,48713547,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,381,,Guemes 185,Falta email,325,Chocobar Julieta,4to 4° C.S.,CS,Activo
+IMPORTAR,336,Casiano,Brenda,48732917,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984656682,brendacasiano231@gmail.com,231 Bis 1674,,326,Casiano Brenda,4to 4° C.S.,CS,Activo
+IMPORTAR,337,Peñalve,Priscila,49703751,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2996298066,,Artigas 144,Falta email,327,Peñalve Priscila,3°4°,CS,Activo
+IMPORTAR,338,Godoy,Camila,49354731,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984951859,,Batistesa 1314,Falta email,328,Godoy Camila,3°4°,CS,Activo
+IMPORTAR,339,barrueto,morena,52536148,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984136239,morenabarrueto8@gmail.com,rosario de santa fe 2360,,329,barrueto morena,1°4°,CB,activo
+IMPORTAR,340,mopty,barbara,48318659,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984816310,barbimena9@gmail.com,juana manso 2053,,330,mopty barbara,4to 4 C.S,CS,activo
+IMPORTAR,342,peruzzi,octavio,51362530,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984672550,peruzzioctavio@gmail.com,los sauces 1650,,331,peruzzi octavio,2°1°,CB,activo
+IMPORTAR,343,Emilio,paulino Scaleta,49844367,asociado,2do 4ta CS TM,2do,4ta,CS,TM,,2984154849,emiliopaulino@gmail.com,iguazu 1365,,332,Emilio paulino Scaleta,2°4°,CS,activo
+IMPORTAR,344,Martinez,Juan pablo,48573134,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984398070,juani32bro@gmail.com,calle 477 2386,,333,Martinez Juan pablo,3°4°,CS,activo
+IMPORTAR,346,jeremias,rached,53015526,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984783082,jeremiasrached70@gmail.com,evita 1758,,335,jeremias rached,1°3°,CB,acttivo
+IMPORTAR,347,artiagas,morena,48731320,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984770772,morenaartiagas@gmail.com,artigas,,336,artiagas morena,4°2°,CS,activo
+IMPORTAR,349,Llorens,Indaco Josefina,48185382,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984400435,josefinallorens68@gmail.com,arnol 6935,,338,Llorens Indaco Josefina,4to 4 c s,CS,activo
+IMPORTAR,350,Mariano,Mamoni,48430634,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984736049,marianops232@gmail.com,Alonega 1225,,339,Mariano Mamoni,4°2°,CS,activo
+IMPORTAR,351,Doctorovich,Lila,48318652,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984553924,doctorovchlila7@gmil.com,los alamos 442,,340,Doctorovich Lila,4to 4°CS,CS,activo
+IMPORTAR,352,Julieta,Sanchez,48659721,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984656821,julisanchez742@gmail.com,publica 88a 1866,,341,Julieta Sanchez,4°2°,CS,activo
+IMPORTAR,353,Lucrecia,Zapata,48731474,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984243028,lucreciazapatta@gmail.com,Norberto blanes 1178,,342,Lucrecia Zapata,4°2°,CS,activo
+IMPORTAR,354,Mateo,Bustos,48185633,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984772927,crackmateo550@gmail.com,Los catalpas 976,,343,Mateo Bustos,4°2°,CS,activo
+IMPORTAR,355,Arias,Uma,48731484,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984784638,umaarias08@gmail.com,rivadavia 1666,,344,Arias Uma,4°3°,CS,activo
+IMPORTAR,356,Cruz,Fernanda,96149443,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984602164,mariacruz2006@gmail.com,avenida roca 1155,,345,Cruz Fernanda,4°3°,CS,activo
+IMPORTAR,358,Castillo,Benjamin,51361623,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984873241,benjacastilloezequiel@gmail.com,del libertador 142,,347,Castillo Benjamin,1°4°,CB,Activo
+IMPORTAR,360,Fernandez,Julieta,48732904,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984900052,julietaef008@gmail.cpom,bahamas 2294,,349,Fernandez Julieta,4to 4 C.S,CS,Activo
+IMPORTAR,361,Arigon,Mansilla Abril,48390991,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984643263,amansillaabril@gmail.com,roxana rudel 2631,,350,Arigon Mansilla Abril,4to 4°C.S,CS,Activo
+IMPORTAR,363,Torres,Antonella,48250525,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984288804,nanat2225@gmail.com,pasaje zorzal 1468,,352,Torres Antonella,4to 4°CS,CS,activo
+IMPORTAR,364,Carcamo,Martina,48531198,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984210453,martinacarcamoo16@gmail.com,villegas 3170,,353,Carcamo Martina,4to 4C.S,CS,Activo
+IMPORTAR,366,Ortiz,Nahiara,51523394,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984336330,nahiaraortiz153@gmail.com,colombia 250,,355,Ortiz Nahiara,2°1°,CB,Activo
+IMPORTAR,367,Lo,Pinto Bianca,52536156,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984391599,lopintobianca@gmail.com,admirante brown,,356,Lo Pinto Bianca,1°3°,CB,Activo
+IMPORTAR,368,Lo,pinto Malena,52536157,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984888220,lopintosidemalena@gmail.com,admirante brown,,357,Lo pinto Malena,1°3°,CB,Activo
+IMPORTAR,370,Briceño,Quimey,48731349,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984693295,bricenoquimey31@gmail.com,savdra 3190,,359,Briceño Quimey,4to 4° C.S,CS,Activo
+IMPORTAR,371,Reyes,Ignacio,48318626,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984742788,ignacioreyes312007@gmail.com,Don Bosco 7326,,360,Reyes Ignacio,4to4° C.S,CS,Activo
+IMPORTAR,373,Brayan,Quidel,48250784,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984370326,lucasquidel@gmail.com,francia 1212,,362,Brayan Quidel,4to4° C.S,CS,Activo
+IMPORTAR,375,Amacio,Emilia,48723967,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984150304,emiliaamacio212@gmail.com,artigas 2431,,363,Amacio Emilia,4°3°,CS,activo
+IMPORTAR,376,Salas,Barrueto Santiago,48731495,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984157684,santiagobarrueto3@gmail.com,miguel angel 2845,,364,Salas Barrueto Santiago,4°2°,CS,activo
+IMPORTAR,377,Joaquin,Segura,49339928,asociado,2do 2da CS TM,2do,2da,CS,TM,,2984924328,joaquinsegura2802@gmail.com,miguel angel 2175,,365,Joaquin Segura,2°2°,CS,activo
+IMPORTAR,378,Flores,German Fantino,48944987,asociado,2do 2da CS TM,2do,2da,CS,TM,,2984888805,floresgermanfantino@gmail.com,romagnoli 461,,366,Flores German Fantino,2°2°,CS,activo
+IMPORTAR,379,Santana,Gimena Kiara,48391014,asociado,2do 4ta CS TM,2do,4ta,CS,TM,,2984043730,kiaraguimena@gmail.com,4006-02-03 00:00:00,,367,Santana Gimena Kiara,2°4°,CS,activo
+IMPORTAR,380,Rinaldi,Etiel,49031327,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984139148,rinaldimegustalasmila16@gmail.com,el carpintero y ribadavia,,368,Rinaldi Etiel,3°1°,CS,activo
+IMPORTAR,382,Billordo,Aldana,49279619,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984152534,aldanabillordo779@gmail.com,Malvino Ducas 1795,,370,Billordo Aldana,3°2°,CS,Activo
+IMPORTAR,383,Briceño,Pablo,50505066,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984765375,bricenopablo977@gmail.com,almirante brown 4075,,371,Briceño Pablo,1°1°,CS,Activo
+IMPORTAR,384,Olguin,Bautista,51024937,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984590919,olguinbautista666@gmail.com,calle 4472828,,372,Olguin Bautista,1°1°,CS,Activo
+IMPORTAR,386,Ñancufil,Ailen,49399028,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984773883,aileennancufil2@gmail.com,Kennedy728,,374,Ñancufil Ailen,3°2°,CS,Activo
+IMPORTAR,387,calle,449 2878,49466023,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984342464,evaaaromero7@gmail.com,calle 492878,,375,calle 449 2878,3°2°,CS,Activo
+IMPORTAR,388,Maruelli,Juan,52323614,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984168705,maruellijuanmanuel@gmail.com,Tocuaci 164,,376,Maruelli Juan,2°1°,CB,Activo
+IMPORTAR,389,Villanueva,Julieta,49399262,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984136875,julietavillanuev4@gmail.com,damas patricias 757,,377,Villanueva Julieta,3°3°,CS,activo
+IMPORTAR,390,Pantano,Maria Paz,49138472,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984891109,pantanomariapaz2@gmail.com,rochdale 120,,378,Pantano Maria Paz,3°3°,CS,activo
+IMPORTAR,391,Garcia,Jose ignacio,49029529,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984331174,gjoseignacio940@gmail.com,parana 1674,,379,Garcia Jose ignacio,3°3°,CS,activo
+IMPORTAR,392,Makarof,Gael,49031350,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984124492,gaelmakaroff@gmail.com,bermejo 1388,,380,Makarof Gael,3°3°,CS,activo
+IMPORTAR,393,Saavedra,Thiago,49484050,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,29846339,bautithiago@gmail.com,formosa 933,,381,Saavedra Thiago,3°3°,CS,activo
+IMPORTAR,394,Ruibal,fausto,52157926,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984158637,faustoruibal@gmail.com,rhode 1483,,382,Ruibal fausto,2°1°,CB,activo
+IMPORTAR,395,Dinamarca,Naomi,51691199,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984824238,naomidinamarca@gmail.com,cisne 1483,,383,Dinamarca Naomi,2°1°,CB,activo
+IMPORTAR,396,Vergara,Sofia,51529394,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,298464464,sofiapazum@gmail.com,parana 2233,,384,Vergara Sofia,2°1°,CB,activo
+IMPORTAR,397,Palavecino,franco,50925228,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984371549,ese.pala2011@gmail.com,cerri 1369,,385,Palavecino franco,2°1°,CB,activo
+IMPORTAR,398,Cortes,Morena,52019020,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984417442,cortesmporenatic1@gmail.com,cerri 3863,,386,Cortes Morena,2°1°,CB,activo
+IMPORTAR,399,Montes,Sarai,33715514,adherente,,,,,,docente,2984120549,montessarai@gmail.com,chacra 228,"Rol/cargo en lugar de curso: ""profesora""; Rol deducido: docente",387,Montes Sarai,profesora,...,adherete
+IMPORTAR,400,Avendaño,melisa,48915529,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984161787,cet3melisa@gmail.com,cuba 812,,388,Avendaño melisa,3°4°,CS,activo
+IMPORTAR,401,Altamirano,Ivan Emanuel,49138978,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984875729,ivanaltamirano990@gmail.com,calle 448 2945,,389,Altamirano Ivan Emanuel,3°4°,CS,activo
+IMPORTAR,402,Arrue,Ainara,49574009,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984636593,arrueainara,carlos esbande 2706,,390,Arrue Ainara,3°4°,CS,activo
+IMPORTAR,403,Montecino,Jazmin,51523251,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984680633,montecinojazmin66@gmail.com,carlos gardel 1902,,391,Montecino Jazmin,2°1°,CB,activo
+IMPORTAR,404,Maldonado,Diego,52323658,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2984137116,diegmldo11@gmail.com,,Falta dirección,392,Maldonado Diego,2°1°,CS,activo
+IMPORTAR,405,Antinao,Tania,51238474,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984326374,taniaantinao@gmail.com,,Falta dirección,393,Antinao Tania,2°1°,CB,activo
+IMPORTAR,406,Aburto,Natalia,52322992,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984223148,aburtonatalia2012@gmail.com,santa rosa 1896,,394,Aburto Natalia,2°1°,CB,activo
+IMPORTAR,407,Vera,Kiara,51466249,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984775026,kiaritavera411@gmail.com,fleming 927,,395,Vera Kiara,2°3°,CB,activo
+IMPORTAR,408,Hidalgo,Milagros,41237074,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984664832,milihidalgo@gmail.com,"calle 445, 2405",,396,Hidalgo Milagros,2°3°,CB,activo
+IMPORTAR,409,Gonzalez,Francisco,52322236,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984644546,,rodhe y cipolletti 1158,Falta email,397,Gonzalez Francisco,2°3°,CB,activo
+IMPORTAR,410,Chilano,Juan Martín,52642118,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984376390,jchinalo433@gmail.com,viedma 163,,398,Chilano Juan Martín,2°3°,CB,activo
+IMPORTAR,411,Ciro,Alberto Siva,48185262,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984643523,ciro11alberto@gmail.com,Saenz Peña 2050,,399,Ciro Alberto Siva,4°1°,CS,activo
+IMPORTAR,412,Lopez,Matheo,48132916,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984368158,perezlopezmatheo@gmail.com,San Martin 4627,,400,Lopez Matheo,4°1°,CS,activo
+IMPORTAR,413,Saldia,Giuliana,48122949,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984202256,,,Falta email; Falta dirección,401,Saldia Giuliana,4°1°,CS,activo
+IMPORTAR,414,Corrales,Facundo,47470797,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984416776,,,Falta email; Falta dirección,402,Corrales Facundo,4°1°,CS,activo
+IMPORTAR,415,Montecino,Agustina,51362960,asociado,2do 3ra CB TM,2do,3ra,CB,TM,,2984580894,agustinazu8@gmail.com,venezuela 1864,,403,Montecino Agustina,2°3°,CB,Activo
+IMPORTAR,416,Fernandez,Lola,48318623,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984 878369,fernandezlamadridlola@gmail.com,jujuy 9612,,404,Fernandez Lola,4to4°C.S,CS,activo
+IMPORTAR,418,Lagos,Lilian,48318622,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984337085,nahiara.lagos07@gmail.com,condor 1646,,406,Lagos Lilian,4°1°,CS,activo
+IMPORTAR,419,Julieta,Osman,48391137,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984138653,julietaosman18@gmail.com,las heras 1355,,407,Julieta Osman,4°1°,CS,activo
+IMPORTAR,420,Victoria,Rivera,50675529,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984291529,victoriarivera1410@gmail.com,arturo brown2976,,408,Victoria Rivera,1°1°,CS,activo
+IMPORTAR,422,Uma,gallegos,50873806,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984400470,umagallegos122@gmail.com,san martin 2445,,410,Uma gallegos,1°1°,CS,activo
+IMPORTAR,423,Velarde,Antonella,48319330,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984867668,velardeantonella2007@gmail.com,rodolfo walsh 678,,411,Velarde Antonella,4°1°,CS,activo
+IMPORTAR,424,Gutierrez,Kiara,48251241,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984667704,gutierrezkiara066@gmail.com,Almirante Brown 17,,412,Gutierrez Kiara,4°1°,CS,activo
+IMPORTAR,425,Tronelli,Fiorella,48185241,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984952807,tronelliesperanza@gmail.com,Nazareno Errolan 6951,,413,Tronelli Fiorella,4°1°,CS,activo
+IMPORTAR,426,Garrido,Jorge,48417272,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984376002,jorgeemanuelgarrido777@gmail.com,primeros poobladores 3763,,414,Garrido Jorge,4to4°Cs,CS,activo
+IMPORTAR,427,Lopez,Bautista,47471287,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2984692557,flancklopez15@gmail.com,Pasaje corri 3389,,415,Lopez Bautista,4to4° Cs,CS,activo
+IMPORTAR,428,Rodriguez,Santiago,48731485,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984249103,santiirodriguez024@gmail.com,rochdale 1991,,416,Rodriguez Santiago,4°3°,CS,activo
+IMPORTAR,430,Railef,Mateo,48731354,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984789966,mateorailefaqueveque@gmail.com,montevideo 1928,,418,Railef Mateo,4°3°,C.S,Activo
+IMPORTAR,431,Olguin,Sol,49340052,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2984 146214,olguinnsol@gmail.com,italia 565,,419,Olguin Sol,3°1°,C.S,activo
+IMPORTAR,432,Altamirano,Valentina,48391013,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984 209162,valen48391@gmail.com,,Falta dirección,420,Altamirano Valentina,4°1°,C.S,activo
+IMPORTAR,433,Ulloa,Morena,48013266,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984 779287,morenacarolinaulloa@gmail.com,,Falta dirección,421,Ulloa Morena,4°1°,C.S,activo
+IMPORTAR,434,Barrientos,Ignacio,48185836,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984 619327,juankmd22@gmail.com,,Falta dirección,422,Barrientos Ignacio,4°1°,C.S,activo
+IMPORTAR,436,Alvarez,Candela,48731465,asociado,4to 1ra CS TM,4to,1ra,CS,TM,,2984558658,candealvarez008@gmail.com,,Falta dirección,424,Alvarez Candela,4°1°,C.S,activo
+IMPORTAR,437,Moraes,Barbara,49138033,asociado,4to 2da CS TM,4to,2da,CS,TM,,2920207960,moralesbarbaraa308@gmail.com,bolivia 1245,,425,Moraes Barbara,4°2°,C.S,activo
+IMPORTAR,438,Olivero,Renata,48554977,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984135838,oliverorena22@gmail.com,pejerey3250,,426,Olivero Renata,4°2°,C.S,activo
+IMPORTAR,439,Catallani,Franchesco,48531450,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984209335,francatallanil@gmail.com,chacabuco 2564,,427,Catallani Franchesco,4°2°,C.S,activo
+IMPORTAR,440,Olivera,Felipe,48660455,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984151385,feliipe.olivera.2008@gmail.com,alvear 1481,,428,Olivera Felipe,4°2°,C.S,activo
+IMPORTAR,441,Emery,Ulises,48391128,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984344725,ulisesemerykegel@gmail.com,uruguay 2529,,429,Emery Ulises,4°2°,C.S,activo
+IMPORTAR,442,Coletto,Agustina,48318611,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984630446,agustinacoletto@gmail.com,,Falta dirección,430,Coletto Agustina,4°2°,C.S,activo
+IMPORTAR,443,Figueroa,Natalia,49465384,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,,,,Falta teléfono; Falta email; Falta dirección,431,Figueroa Natalia,3°1°,C.S,activo
+IMPORTAR,444,Flores,Yasmin,48392195,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984 881191,yasminfloress07@gmail.com,,Falta dirección,432,Flores Yasmin,3°4°,"C,S",activo
+IMPORTAR,446,Isla,Pardo francheska,95423413,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2981 801251,franchescaislaprado2007@gmail.com,chaco 2350,,434,Isla Pardo francheska,4°3°,C.S,activo
+IMPORTAR,447,Cabral,Rocio,48616605,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984 767283,cabralrocii80@gmail.com,cordoba 1682,,435,Cabral Rocio,4°3°,C.S,activo
+IMPORTAR,449,Serrano,Mora,48946635,asociado,3ro 1ra CS TM,3ro,1ra,CS,TM,,2983 305003,moraserrano08@gmail.com,rawson 921,,436,Serrano Mora,3°1°,C.S.,activo
+IMPORTAR,450,Pargade,Julieta,52535612,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984784688,pargadejulieta8@gmail.com,pilcomayo 2135,,437,Pargade Julieta,1°4°,C.B,activo
+IMPORTAR,451,Pargade,Mia,49965509,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,,,Pilcomayo 2135,Falta teléfono; Falta email,438,Pargade Mia,1°1°,C.S,activo
+IMPORTAR,452,Inostroza,Alma,49465773,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984318568,alma13ino@gmail.com,La plata 868,,439,Inostroza Alma,3°2°,C.S,activo
+IMPORTAR,455,Alarcon,Morales Valentina,49573131,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984876707,alarconval28@gmail.com,suiza 1027,,442,Alarcon Morales Valentina,3°3°,C.S,activo
+IMPORTAR,457,Maruelli,Malén,49617850,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984141545,maruellimalu1967@gmail.com,tacuari 164,,444,Maruelli Malén,3°3°,C.S,activo
+IMPORTAR,458,Castillo,Jose,48908977,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984401163,josesamuelcastillo132@gmail.com,,Falta dirección,445,Castillo Jose,3°3°,C.S,activo
+IMPORTAR,465,Zarate,Genaro,51524400,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984876739,,calle b50c 2252,Falta email,452,Zarate Genaro,2°4°,C.B,activo
+IMPORTAR,466,Moya,Emilia,51523357,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984669802,,irlanda 182,Falta email,453,Moya Emilia,2°4°,C.B,ACTIVO
+IMPORTAR,467,From,Dilan,48391839,asociado,4to 2da CS TM,4to,2da,CS,TM,,2984583884,dilamfrom25@gmail.com,bahamas1964,,454,From Dilan,4°2°,C.S,Activo
+IMPORTAR,469,Romero,Gerónimo,4922558,asociado,2do 3ra CS TM,2do,3ra,CS,TM,,2984163538,geronimonahuel40gmail.com,lisandro de la torre 140,,456,Romero Gerónimo,2°3°,C.S,activo
+IMPORTAR,470,Rodriguez,Lucas,49339925,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984195202,luc4s.rdgz@gmail.com,buenos aires 1680,,457,Rodriguez Lucas,3°3°,C.S,activo
+IMPORTAR,471,Catalan,Ticiano,49830288,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984133896,ticianocatalannn@gmail.com,general paz 1478,,458,Catalan Ticiano,3°3°,C.S,activo
+IMPORTAR,472,Santiago,Arce,49279667,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984417994,ditexlow216@gmail.com,humberto cande 1315,,459,Santiago Arce,3°3°,C.S,activo
+IMPORTAR,476,Amacio,Emilia,48732967,asociado,4to 3ra CS TM,4to,3ra,CS,TM,,2984150304,emiliaamacia212@gmail.com,artigas2431,,462,Amacio Emilia,4°3°,C.S,activo
+IMPORTAR,479,Roja,Dominguez Luzmila,49466206,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984529236,luzmilaroja24@gmail.com,la rivera,,465,Roja Dominguez Luzmila,3°3°,C.S,activo
+IMPORTAR,483,Fernandez,Abril,50505999,asociado,1ro 4ta CS TM,1ro,4ta,CS,TM,,2984219508,caro.fernandez.vasini@gmail.com,carlos 610,,469,Fernandez Abril,1°4°,C.S,activo
+IMPORTAR,488,Chagumil,Valentin,48531163,asociado,4to 4ta CS TM,4to,4ta,CS,TM,,2985696314,valentinchagumil189@gmail.com,Perú 131,,474,Chagumil Valentin,4to4 C.S,C.S,activo
+IMPORTAR,491,Acosta,nancy,31386979,adherente,,,,,,directivo,2984642992,nancym.acosta@gmail.com,art. argentina 851,"Rol/cargo en lugar de curso: ""vicedirectora""; Rol deducido: directivo",477,Acosta nancy,vicedirectora,...,adherente
+IMPORTAR,493,Sandoval,Joaquin,52321118,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,29847828,joasando.13@gmail.com,grecia,,479,Sandoval Joaquin,2do 1 cb,C.B,activo
+IMPORTAR,494,Priselac,Vera,52320128,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984571063,verapricelac@gmail.com,rodhe 1835,,480,Priselac Vera,2do1 cb,C.B,activo
+IMPORTAR,495,Lardapide,Reyes Naroa,52983441,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,298428935,nanulardapidegmail.com,carlos gardel 459,,481,Lardapide Reyes Naroa,2do 1 cb,C.B,activo
+IMPORTAR,496,Paez,Abigail,52323630,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984211391,belenabigail@gmail.com,los sauces 2467,,482,Paez Abigail,2do 1 cb,C.B,activo
+IMPORTAR,497,Castro,Maia,52323665,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,24044861,maitapaidda33@gmail.com,la plata 1367,,483,Castro Maia,2do 1 cb,C.B,activo
+IMPORTAR,499,Saez,Valentin,50505425,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,298467633,valentin1conelsaez@gmail.com,,Falta dirección,484,Saez Valentin,1ro1 cs,C.S,activo
+IMPORTAR,500,Gonzales,Mia,50505245,asociado,1ro 1ra CS TM,1ro,1ra,CS,TM,,2984779878,gonzalezpablomia@gmail.com,cipolletti 3786,,485,Gonzales Mia,1ro1 cs,C.S,activo
+IMPORTAR,501,Rajneri,Ramay,52321164,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984789537,rajneriyamayinara@gmail.com,santa cruz 4436,,486,Rajneri Ramay,2do 4 cb,C.B,activo
+IMPORTAR,502,Gonzalez,kiara,51237306,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984664771,starspapu@gmail.com,tuduri 944,,487,Gonzalez kiara,2do 4cb,C.B,activo
+IMPORTAR,503,Maya,lucia,49704220,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2984735988,luciamaya324@gmail.com,irlanda 1867,,488,Maya lucia,2do 1 cs,C.S,activo
+IMPORTAR,505,Phommachanh,Iara,50209845,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2984879508,iaraphommachanh@gmail.com,san martin 5584,,490,Phommachanh Iara,2do1 cs,C.S,activo
+IMPORTAR,507,Rojas,Sofia,52534180,asociado,1ro 3ra CB TM,1ro,3ra,CB,TM,,2984595235,sofia.rojas.342901aroa@gmail.com,salvador,,492,Rojas Sofia,1ro3 CB,C.B,activo
+IMPORTAR,508,Lopez,Agustín,48946649,asociado,3ro 1ra CB TM,3ro,1ra,CB,TM,,2984512501,rominalobo14@gmail.com,cuba 1705,,493,Lopez Agustín,3ro1cb,C.B,activo
+IMPORTAR,511,Zampatti,milo,52323967,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984405833,milobananero@gmail.com,italia 175,,496,Zampatti milo,2do 4 CB,C.B,activo
+IMPORTAR,512,Maximo,Escales Coronel,51238726,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984667243,MAXIESCALESQ@GMAIL.COM,SAN MARTIN 1246,,497,Maximo Escales Coronel,2do 1,C.B,Activo
+IMPORTAR,513,Luz,Bastias,49704209,asociado,2do 1ra CS TM,2do,1ra,CS,TM,,2084598834,BASTIALUZ346@GMAIL.COM,DIA DEL BANCARIO1531,,498,Luz Bastias,2do1,CS,Activo
+IMPORTAR,514,Angelo,Safranchik,49029582,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984140219,ANGELOLOSAFRANCHK@GMAIL.COM,SAN MARTIN 1516,,499,Angelo Safranchik,3ro4,C.S,Activo
+IMPORTAR,515,Cappeta,Juan Manuel,48946692,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984123644,JUANMANUELCAPETTA@GMAIL.COM,ROSARIO DE SANTA FE 1441,,500,Cappeta Juan Manuel,3ro4CS,C.S,Activo
+IMPORTAR,517,Fernandez,Abril,50504909,asociado,1ro 4ta CS TM,1ro,4ta,CS,TM,,2984219508,caro.fernandezmassini@gmail.com,Carlos Espondan 610,,502,Fernandez Abril,1ro4° Cs,C.S,Activo
+IMPORTAR,521,Iara,Garcia,49138406,asociado,3ro 4ta CS TM,3ro,4ta,CS,TM,,2984224873,iiaralagos22@gmail.com,Amapolas 5668,,506,Iara Garcia,3ro4° CS,C.S,Activo
+IMPORTAR,523,Ferreira,Luz,49561488,asociado,2do 3ra CS TM,2do,3ra,CS,TM,,2984703260,luzferreira.esc@gmail.com,general paz 3033,,508,Ferreira Luz,2do 3°C.S,C.S,Activo
+IMPORTAR,524,Omar,Aimar,22322347,adherente,,,,,,directivo,2984643869,omaraimar33@gmail.com,Arturo pret 2818,"Rol/cargo en lugar de curso: ""Director""; Rol deducido: directivo",509,Omar Aimar,Director,director,adherente
+IMPORTAR,526,Holoveski,Luis,22323100,adherente,,,,,,docente,2984511689,holoveskiluis@gmail.com,calle126 n°2186,"Rol/cargo en lugar de curso: ""Docente""; Rol deducido: docente",511,Holoveski Luis,Docente,...,Adherente
+IMPORTAR,527,Ciro,Palavecino Folatelli,38710754,adherente,,,,,,docente,2996737808,lenpalavecino@gmail.com,25 de mayo 22 - dpto B2,"Rol/cargo en lugar de curso: ""Docente""; Rol deducido: docente",512,Ciro Palavecino Folatelli,Docente,...,Adherente
+IMPORTAR,528,Rios,Julian,51128612,asociado,2do 4ta CB TM,2do,4ta,CB,TM,,2984743875,marcelojulion1211@gmail.com,O'higgins 1568,,513,Rios Julian,2do4 CB,C.B,Activo
+IMPORTAR,529,Moure,Santiago,49029520,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984745468,santiagomoure2508@gmail.com,tres arroyos 12,,514,Moure Santiago,3ro3 CS,C.S,activo
+IMPORTAR,532,Bejarano,Delfina,49465358,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984529271,delfinaestefania@gmail.com,la plata 968,,517,Bejarano Delfina,3°3 CS,C.S,activo
+IMPORTAR,533,Blatner,maia,49573157,asociado,3ro 3ra CS TM,3ro,3ra,CS,TM,,2984884269,blatnermaia@gmail.com,santa cruz 957,,518,Blatner maia,3°3 CS,C.S,activo
+IMPORTAR,534,rached,alma,50828651,asociado,2do 1ra CB TM,2do,1ra,CB,TM,,2984786497,almarached@gmail.com,evita 1758,,519,rached alma,2°1°,C.B,activo
+IMPORTAR,535,Ferreyra,juan,53328250,asociado,1ro 4ta CB TM,1ro,4ta,CB,TM,,2984579745,juanferreyra12@gmail.com,447 2661,,520,Ferreyra juan,1°4°,C.B,activo
+IMPORTAR,536,Balcoff,Glenda,23017086,adherente,,,,,,docente,2984632205,balcoff@gmail.com,peru 1495,"Rol/cargo en lugar de curso: ""docente""; Rol deducido: docente",521,Balcoff Glenda,docente,,adherente
+IMPORTAR,537,Jauregui,Natalia,26218284,adherente,,,,,,docente,2984 684703,nataliajureguicet3@gmail.com,biterbori4040,"Rol/cargo en lugar de curso: ""docente""; Rol deducido: docente",522,Jauregui Natalia,docente,,adherente
+IMPORTAR,543,Saldia,Thiago,49138998,asociado,3ro 2da CS TM,3ro,2da,CS,TM,,2984305767,thiagosaldia18@gmal.com,limay 2113,,967,Saldia Thiago,3°2°,cs,activo
+IMPORTAR,544,Villanueva,Nara,37946053,adherente,,,,,,particular,2984305526,nara.vil20@gmail.com,damas patricias 757,"Rol/cargo en lugar de curso: ""particular""; Rol deducido: particular",968,Villanueva Nara,particular,,adherente
+IMPORTAR,545,Sarmiento,Barbara,41807321,adherente,,,,,,docente,2664364025,barbysarmiento2@gmail.com,Alfonsina Storni b°,"Rol/cargo en lugar de curso: ""Docente""; Rol deducido: docente",969,Sarmiento Barbara,Docente,,Adherente
+IMPORTAR,546,Reinasa,Luna Jeniffer,38348443,adherente,,,,,,docente,3865585562,Lunareinasajenifer@gmail.com,b° Los Olmos,"Rol/cargo en lugar de curso: ""Docente""; Rol deducido: docente",970,Reinasa Luna Jeniffer,Docente,,Adherente
+IMPORTAR,547,Campos,Mia,50505153,asociado,1ro 2da CS TM,1ro,2da,CS,TM,,2984669297,mia123campos@gmail.com,formosa 1773,,971,Campos Mia,1°2°,C.S,activo

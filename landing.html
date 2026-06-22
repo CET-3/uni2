@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uni2 — Mutual Escolar del CET 3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="logo-unidos-cet3.png">
+  <style>
+    /* ============================================================
+       UNI2 LANDING PAGE — Mutual Escolar del CET 3
+       ============================================================ */
+
+    /* --- Reset & Base ----------------------------------------- */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --blue:       #2356C8;
+      --blue-dark:  #1a42a8;
+      --blue-light: #4a7cf7;
+      --gold:       #F4A518;
+      --gold-dark:  #d48e0a;
+      --dark:       #0f1428;
+      --dark-2:     #1a1f36;
+      --gray:       #64748B;
+      --gray-light: #94A3B8;
+      --light:      #F0F4FA;
+      --white:      #FFFFFF;
+      --card-bg:    rgba(255,255,255,0.04);
+      --stroke:     rgba(255,255,255,0.10);
+      --radius:     20px;
+      --radius-sm:  12px;
+      --shadow:     0 16px 48px rgba(0,0,0,0.30);
+      --shadow-lg:  0 24px 64px rgba(0,0,0,0.35);
+      --ease:       cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-out:   cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--white);
+      background: var(--dark);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* --- Grain & Background Decoration ------------------------ */
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.35;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(1000px at 10% 20%, rgba(35,86,200,0.30), transparent 50%),
+        radial-gradient(1200px at 90% 80%, rgba(244,165,24,0.15), transparent 50%),
+        radial-gradient(800px at 50% 50%, rgba(74,124,247,0.08), transparent 50%);
+    }
+
+    /* --- Skip Link ------------------------------------------- */
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      padding: 14px 20px;
+      background: var(--gold);
+      color: var(--dark);
+      font-weight: 700;
+      border-radius: 0 0 8px 0;
+      z-index: 999;
+      text-decoration: none;
+    }
+    .skip-link:focus { left: 0; top: 0; }
+
+    /* --- Typography ----------------------------------------- */
+    h1, h2, h3, h4 {
+      font-family: 'Space Grotesk', 'Arial Black', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin: 0 0 10px;
+    }
+
+    /* --- Buttons -------------------------------------------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 250ms var(--ease), box-shadow 250ms var(--ease), background 250ms var(--ease);
+    }
+    .btn:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      color: var(--white);
+      box-shadow: 0 8px 28px rgba(35,86,200,0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 14px 40px rgba(35,86,200,0.45);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid var(--stroke);
+    }
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--dark);
+      box-shadow: 0 8px 28px rgba(244,165,24,0.30);
+    }
+    .btn-gold:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 14px 40px rgba(244,165,24,0.40);
+    }
+
+    /* ============================================================
+       TOP BAR
+       ============================================================ */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 36px;
+      background: rgba(15,20,40,0.82);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .top-bar .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--white);
+    }
+    .top-bar .logo img {
+      height: 38px;
+      width: auto;
+    }
+    .top-bar .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+    .top-bar .logo-text small {
+      display: block;
+      font-size: 0.55rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--gray-light);
+      text-transform: uppercase;
+    }
+
+    .top-bar nav {
+      display: flex;
+      gap: 6px;
+    }
+    .top-bar nav a {
+      padding: 8px 16px;
+      border-radius: 999px;
+      color: var(--gray-light);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+      transition: border-color 220ms var(--ease), color 220ms var(--ease);
+    }
+    .top-bar nav a:hover,
+    .top-bar nav a:focus-visible {
+      border-color: var(--stroke);
+      color: var(--white);
+    }
+    .top-bar .btn { padding: 10px 20px; font-size: 0.88rem; }
+    .top-bar .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      color: var(--white);
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 48px;
+      padding: 100px 36px 60px;
+      max-width: 1320px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    /* Diagonal stripe accent */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: linear-gradient(135deg, rgba(35,86,200,0.12), rgba(244,165,24,0.06));
+      border-radius: 50%;
+      transform: rotate(-15deg);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .hero-copy h1 .highlight {
+      background: linear-gradient(135deg, var(--gold), #ffc55a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-copy h1 .highlight-blue {
+      background: linear-gradient(135deg, var(--blue-light), #8ab4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .lede {
+      font-size: 1.1rem;
+      color: var(--gray-light);
+      max-width: 56ch;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    /* Hero metrics */
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--stroke);
+    }
+    .hero-metrics .metric-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--white), var(--gray-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-metrics .metric-label {
+      font-size: 0.8rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    /* Hero card */
+    .hero-card {
+      background: var(--card-bg);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 30% 30%, rgba(35,86,200,0.08), transparent 50%);
+      pointer-events: none;
+    }
+    .hero-card > * { position: relative; z-index: 2; }
+
+    .hero-card .tag {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(35,86,200,0.20);
+      color: var(--blue-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+
+    .hero-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    .hero-card p {
+      color: var(--gray-light);
+      font-size: 0.92rem;
+      margin-bottom: 20px;
+    }
+
+    .hero-card .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .hero-card .pill {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--stroke);
+      font-size: 0.78rem;
+      color: var(--gray-light);
+    }
+
+    .hero-card .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--stroke), transparent);
+      margin: 16px 0;
+    }
+
+    .hero-card .meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--gray);
+      font-size: 0.85rem;
+    }
+
+    /* ============================================================
+       SECTION — About
+       ============================================================ */
+    .section-about {
+      position: relative;
+      z-index: 2;
+      padding: 80px 36px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .about-grid h2 {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      margin-bottom: 20px;
+    }
+
+    .about-grid p {
+      color: var(--gray-light);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .about-stripe {
+      position: relative;
+      padding: 32px;
+      background: var(--card-bg);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .about-stripe::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--blue), var(--gold));
+    }
+    .about-stripe blockquote {
+      margin: 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      line-height: 1.5;
+      color: var(--white);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .about-stripe cite {
+      display: block;
+      margin-top: 16px;
+      font-style: normal;
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+
+    /* ============================================================
+       SECTION — Features
+       ============================================================ */
+    .section-features {
+      position: relative;
+      z-index: 2;
+      padding: 80px 36px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-header h2 {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+    }
+    .section-header p {
+      color: var(--gray-light);
+      max-width: 600px;
+      margin: 12px auto 0;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow);
+    }
+
+    .feature-card .icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+    }
+    .icon-blue  { background: rgba(35,86,200,0.18); color: var(--blue-light); }
+    .icon-gold  { background: rgba(244,165,24,0.18); color: var(--gold); }
+    .icon-white { background: rgba(255,255,255,0.08); color: var(--gray-light); }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+    }
+    .feature-card p {
+      color: var(--gray-light);
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .feature-card .card-accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+    }
+    .feature-card .card-accent.accent-blue  { background: linear-gradient(90deg, var(--blue), var(--blue-light)); }
+    .feature-card .card-accent.accent-gold  { background: linear-gradient(90deg, var(--gold), #ffc55a); }
+    .feature-card .card-accent.accent-white { background: linear-gradient(90deg, var(--gray-light), transparent); }
+
+    /* ============================================================
+       SECTION — Steps
+       ============================================================ */
+    .section-steps {
+      position: relative;
+      z-index: 2;
+      padding: 80px 36px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      position: relative;
+    }
+
+    /* Connecting line between steps */
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 48px;
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--gold), var(--blue-light));
+      z-index: 0;
+    }
+
+    .step-card {
+      text-align: center;
+      padding: 32px 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      position: relative;
+    }
+    .step-number::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 2px solid var(--stroke);
+    }
+    .step-card:nth-child(1) .step-number { background: rgba(35,86,200,0.20); color: var(--blue-light); }
+    .step-card:nth-child(2) .step-number { background: rgba(244,165,24,0.20); color: var(--gold); }
+    .step-card:nth-child(3) .step-number { background: rgba(74,124,247,0.15); color: var(--blue-light); }
+
+    .step-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+    .step-card p {
+      color: var(--gray-light);
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.6;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    /* ============================================================
+       SECTION — Stats
+       ============================================================ */
+    .section-stats {
+      position: relative;
+      z-index: 2;
+      padding: 60px 36px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-lg, 24px);
+      text-align: center;
+    }
+
+    .stat-item {
+      position: relative;
+    }
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -10px;
+      top: 10%;
+      height: 80%;
+      width: 1px;
+      background: var(--stroke);
+    }
+
+    .stat-item .stat-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--white), var(--gray-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+    .stat-item .stat-label {
+      color: var(--gray);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    /* ============================================================
+       SECTION — CTA
+       ============================================================ */
+    .section-cta {
+      position: relative;
+      z-index: 2;
+      padding: 60px 36px 100px;
+      max-width: 1320px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .cta-box {
+      padding: 64px 36px;
+      background: linear-gradient(135deg, rgba(35,86,200,0.10), rgba(244,165,24,0.06));
+      border: 1px solid var(--stroke);
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(35,86,200,0.10), transparent 60%);
+      pointer-events: none;
+    }
+    .cta-box > * { position: relative; z-index: 2; }
+
+    .cta-box h2 {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      margin-bottom: 14px;
+    }
+    .cta-box p {
+      color: var(--gray-light);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid var(--stroke);
+      padding: 0 0 40px;
+      overflow: hidden;
+    }
+
+    .marquee {
+      display: flex;
+      gap: 0;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--stroke);
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      animation: scroll-marquee 28s linear infinite;
+    }
+    .marquee-track span {
+      white-space: nowrap;
+      padding: 0 24px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gray);
+    }
+    .marquee-track span em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    @keyframes scroll-marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 24px;
+      padding: 40px 36px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .footer-col h4 {
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--white);
+    }
+    .footer-col p, .footer-col a {
+      color: var(--gray);
+      font-size: 0.88rem;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 8px;
+      transition: color 200ms var(--ease);
+    }
+    .footer-col a:hover {
+      color: var(--gold);
+    }
+    .footer-col .logo-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .footer-col .logo-footer img {
+      height: 32px;
+      width: auto;
+    }
+    .footer-col .logo-footer span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--stroke);
+      padding: 20px 36px;
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--gray);
+      font-size: 0.82rem;
+    }
+
+    /* ============================================================
+       ANIMATIONS — Scroll Reveal
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: transform 500ms var(--ease-out), opacity 500ms var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 100ms; }
+    .reveal-delay-2 { transition-delay: 200ms; }
+    .reveal-delay-3 { transition-delay: 300ms; }
+    .reveal-delay-4 { transition-delay: 400ms; }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; gap: 32px; padding: 80px 24px 40px; }
+      .hero-metrics { grid-template-columns: repeat(3, 1fr); }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2)::after { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .top-bar { padding: 12px 20px; }
+      .top-bar nav { display: none; }
+      .top-bar .btn { display: none; }
+      .top-bar .mobile-menu-btn { display: block; }
+
+      .hero { padding: 60px 20px 32px; }
+      .hero-actions { flex-direction: column; }
+      .hero-metrics { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .hero-metrics .metric-value { font-size: 1.4rem; }
+
+      .section-about,
+      .section-features,
+      .section-steps,
+      .section-stats,
+      .section-cta { padding: 48px 20px; }
+
+      .features-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; gap: 32px; }
+      .steps-grid::before { display: none; }
+
+      .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 24px; gap: 16px; }
+      .stat-item:nth-child(2)::after { display: none; }
+      .stat-item:nth-child(4)::after { display: none; }
+
+      .cta-box { padding: 40px 24px; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 20px; padding: 32px 20px; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+
+      .hero-card { padding: 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-metrics { grid-template-columns: 1fr; text-align: center; }
+      .stats-bar { grid-template-columns: 1fr; }
+      .stat-item::after { display: none !important; }
+    }
+
+    /* --- Reduced motion -------------------------------------- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip link -->
+  <a class="skip-link" href="#main">Saltar al contenido principal</a>
+
+  <!-- Grain & BG overlays -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       TOP BAR
+       ============================================================ -->
+  <header class="top-bar" role="banner">
+    <a href="#" class="logo" aria-label="Uni2 — Mutual Escolar del CET 3">
+      <img src="logo-unidos-cet3.png" alt="Logo CET 3" />
+      <span class="logo-text">
+        Uni2
+        <small>Mutual Escolar · CET 3</small>
+      </span>
+    </a>
+    <nav aria-label="Navegación principal">
+      <a href="#que-es">Qué es</a>
+      <a href="#beneficios">Beneficios</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <button class="btn btn-primary" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Sumate</button>
+    <button class="mobile-menu-btn" aria-label="Menú" onclick="alert('Menú responsive — implementar con JS si se necesita')">☰</button>
+  </header>
+
+  <!-- ============================================================
+       MAIN
+       ============================================================ -->
+  <main id="main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">Mutual Escolar</p>
+        <h1 class="reveal reveal-delay-1">
+          La comunidad<br>
+          <span class="highlight">Uni2</span> del<br>
+          <span class="highlight-blue">CET 3</span>
+        </h1>
+        <p class="lede reveal reveal-delay-2">
+          Uni2 es la mutual escolar del Centro de Educación Técnica N° 3. Gestionamos cuotas, beneficios y credenciales para toda la comunidad educativa.
+        </p>
+        <div class="hero-actions reveal reveal-delay-2">
+          <a href="#cta" class="btn btn-gold">Sumate a Uni2</a>
+          <a href="#que-es" class="btn btn-ghost">Conocé más</a>
+        </div>
+        <div class="hero-metrics reveal reveal-delay-3">
+          <div>
+            <div class="metric-value">+1200</div>
+            <div class="metric-label">Asociados activos</div>
+          </div>
+          <div>
+            <div class="metric-value">+30</div>
+            <div class="metric-label">Comercios adheridos</div>
+          </div>
+          <div>
+            <div class="metric-value">2025</div>
+            <div class="metric-label">Nueva gestión</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card reveal reveal-delay-3">
+        <div class="tag">✧ Lanzamiento</div>
+        <h2>Tu credencial digital</h2>
+        <p>Accedé a beneficios exclusivos en comercios adheridos con tu credencial Uni2 desde el celular.</p>
+        <div class="pill-group">
+          <span class="pill">Sin costo</span>
+          <span class="pill">Digital</span>
+          <span class="pill">Segura</span>
+          <span class="pill">Para toda la familia</span>
+        </div>
+        <div class="divider"></div>
+        <div class="meta">
+          <span>🚀 Ya disponible</span>
+          <span>Consultá en administración</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section-about" id="que-es">
+      <div class="about-grid">
+        <div class="reveal">
+          <p class="eyebrow">¿Qué es Uni2?</p>
+          <h2>La mutual escolar del CET 3</h2>
+          <p>
+            Uni2 es una mutual escolar creada por y para la comunidad del Centro de Educación Técnica N° 3. 
+            Nace con el objetivo de ofrecer servicios, beneficios y herramientas de gestión que faciliten 
+            la vida de estudiantes, docentes y familias.
+          </p>
+          <p>
+            Formar parte de Uni2 es formar parte de una red de apoyo mutuo que fortalece los lazos 
+            de la comunidad educativa y genera oportunidades para todos.
+          </p>
+          <a href="#cta" class="btn btn-primary" style="margin-top:8px">Quiero sumarme</a>
+        </div>
+        <div class="about-stripe reveal reveal-delay-2">
+          <blockquote>
+            "La mutual escolar no es solo un servicio, es una forma de construir comunidad entre 
+            todos los que formamos parte del CET 3."
+          </blockquote>
+          <cite>— Comunidad educativa CET 3</cite>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section-features" id="beneficios">
+      <div class="section-header reveal">
+        <p class="eyebrow">Beneficios</p>
+        <h2>Todo lo que Uni2 ofrece</h2>
+        <p>Pensado para estudiantes, docentes y familias. Simple, digital y accesible.</p>
+      </div>
+      <div class="features-grid">
+        <article class="feature-card reveal reveal-delay-1">
+          <div class="card-accent accent-blue"></div>
+          <div class="icon-wrap icon-blue">🎓</div>
+          <h3>Credencial digital</h3>
+          <p>Accedé a tu credencial Uni2 desde cualquier dispositivo. Mostrala en comercios adheridos y accedé a descuentos exclusivos.</p>
+        </article>
+        <article class="feature-card reveal reveal-delay-2">
+          <div class="card-accent accent-gold"></div>
+          <div class="icon-wrap icon-gold">💰</div>
+          <h3>Gestión de cuotas</h3>
+          <p>Administrá el pago de cuotas de forma simple. Consultá tu estado de cuenta, historial y vencimientos desde la web.</p>
+        </article>
+        <article class="feature-card reveal reveal-delay-3">
+          <div class="card-accent accent-white"></div>
+          <div class="icon-wrap icon-white">🏪</div>
+          <h3>Comercios adheridos</h3>
+          <p>Descubrí los comercios cerca tuyo que forman parte de la red Uni2. Beneficios exclusivos para asociados.</p>
+        </article>
+        <article class="feature-card reveal reveal-delay-1">
+          <div class="card-accent accent-blue"></div>
+          <div class="icon-wrap icon-blue">📱</div>
+          <h3>100% digital</h3>
+          <p>Todo gestionado desde la plataforma web. Sin papeles, sin vueltas. Pensado para la comunidad educativa.</p>
+        </article>
+        <article class="feature-card reveal reveal-delay-2">
+          <div class="card-accent accent-gold"></div>
+          <div class="icon-wrap icon-gold">🛡️</div>
+          <h3>Segura y confiable</h3>
+          <p>Tus datos protegidos. Validación de credenciales para comercios con código QR. Tranquilidad para todos.</p>
+        </article>
+        <article class="feature-card reveal reveal-delay-3">
+          <div class="card-accent accent-white"></div>
+          <div class="icon-wrap icon-white">🤝</div>
+          <h3>Hecha por y para la escuela</h3>
+          <p>Uni2 es parte del CET 3. Cada decisión se toma pensando en lo que la comunidad educativa necesita.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- STEPS -->
+    <section class="section-steps" id="como-funciona">
+      <div class="section-header reveal">
+        <p class="eyebrow">Cómo funciona</p>
+        <h2>Sumate en 3 pasos</h2>
+        <p>Asociarse a Uni2 es rápido y sencillo.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card reveal reveal-delay-1">
+          <div class="step-number">1</div>
+          <h3>Completá tus datos</h3>
+          <p>Acercate a administración o completá el formulario de admisión con tus datos personales y los de tu grupo familiar.</p>
+        </div>
+        <div class="step-card reveal reveal-delay-2">
+          <div class="step-number">2</div>
+          <h3>Activá tu membresía</h3>
+          <p>Una vez registrado, recibí tus credenciales digitales y accedé a todos los beneficios de la mutual.</p>
+        </div>
+        <div class="step-card reveal reveal-delay-3">
+          <div class="step-number">3</div>
+          <h3>Disfrutá los beneficios</h3>
+          <p>Usá tu credencial en comercios adheridos, gestioná tus cuotas y formá parte de la comunidad Uni2.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="section-stats">
+      <div class="stats-bar reveal">
+        <div class="stat-item">
+          <div class="stat-number">+1200</div>
+          <div class="stat-label">Asociados</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">+30</div>
+          <div class="stat-label">Comercios</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Digital</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">CET 3</div>
+          <div class="stat-label">Comunidad</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section-cta" id="cta">
+      <div class="cta-box reveal">
+        <p class="eyebrow">Sumate</p>
+        <h2>Formá parte de Uni2</h2>
+        <p>Unite a la mutual escolar del CET 3 y accedé a todos los beneficios pensados para la comunidad educativa.</p>
+        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+          <a href="#" class="btn btn-gold">Quiero asociarme</a>
+          <a href="#" class="btn btn-ghost">Consultar más info</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer" id="contacto">
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Uni2 — Mutual Escolar del <em>CET 3</em> · Sumate a la comunidad ·</span>
+        <span>Uni2 — Mutual Escolar del <em>CET 3</em> · Sumate a la comunidad ·</span>
+        <span>Uni2 — Mutual Escolar del <em>CET 3</em> · Sumate a la comunidad ·</span>
+        <span>Uni2 — Mutual Escolar del <em>CET 3</em> · Sumate a la comunidad ·</span>
+      </div>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="logo-footer">
+          <img src="logo-unidos-cet3.png" alt="Logo CET 3" />
+          <span>Uni2</span>
+        </div>
+        <p>Mutual Escolar del Centro de Educación Técnica N° 3. Gestionamos cuotas, beneficios y credenciales para la comunidad educativa.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <a href="#que-es">¿Qué es Uni2?</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#cta">Sumate</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <a href="mailto:mutual@cet3.edu.ar">mutual@cet3.edu.ar</a>
+        <p>Administración del CET 3</p>
+        <p>Horario: turno mañana y tarde</p>
+      </div>
+      <div class="footer-col">
+        <h4>Seguinos</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Web del CET 3</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2025 Uni2 — Mutual Escolar del CET 3</span>
+      <span>Hecho por y para la comunidad educativa</span>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>
+    (function() {
+      'use strict';
+
+      // Intersection Observer for scroll reveals
+      const observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+      // Animate stat numbers on scroll
+      const statNumbers = document.querySelectorAll('.stat-number');
+      let statsAnimated = false;
+
+      const statsObserver = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !statsAnimated) {
+              statsAnimated = true;
+              statNumbers.forEach(el => {
+                const text = el.textContent;
+                const isNumeric = /^[+\d]+$/.test(text.replace(/[+]/g, ''));
+                if (isNumeric) {
+                  const target = parseInt(text.replace(/[^0-9]/g, ''), 10);
+                  const prefix = text.includes('+') ? '+' : '';
+                  let current = 0;
+                  const step = Math.ceil(target / 40);
+                  const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                      current = target;
+                      clearInterval(timer);
+                    }
+                    el.textContent = prefix + current;
+                  }, 40);
+                }
+              });
+              statsObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+
+      const statsBar = document.querySelector('.stats-bar');
+      if (statsBar) statsObserver.observe(statsBar);
+    })();
+  </script>
+</body>
+</html>

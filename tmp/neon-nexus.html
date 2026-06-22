@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexus — retro-futurist platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05060e;
+      --fg: #e8e6f0;
+      --muted: #8a87a0;
+      --accent: #61f4de;
+      --accent-2: #ff6ad5;
+      --accent-3: #8af5ff;
+      --card: rgba(255, 255, 255, 0.03);
+      --stroke: rgba(255, 255, 255, 0.08);
+      --radius: 14px;
+      --shadow: 0 0 40px rgba(97, 244, 222, 0.15);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sora', system-ui, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      min-height: 100vh;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        radial-gradient(1000px at 10% 20%, rgba(97, 244, 222, 0.12), transparent 50%),
+        radial-gradient(1200px at 80% 60%, rgba(255, 106, 213, 0.08), transparent 50%),
+        radial-gradient(800px at 50% 100%, rgba(138, 245, 255, 0.06), transparent 50%);
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.08) 0px,
+        rgba(0, 0, 0, 0.08) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.03), transparent 35%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 3px);
+      mix-blend-mode: soft-light;
+      opacity: 0.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      padding: 12px 16px;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      border-radius: 6px;
+      z-index: 999;
+    }
+    .skip-link:focus { left: 16px; top: 16px; }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 36px;
+      backdrop-filter: blur(12px);
+      background: rgba(5, 6, 14, 0.8);
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .logo {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--accent);
+      text-shadow: 0 0 12px rgba(97, 244, 222, 0.4);
+      letter-spacing: -0.04em;
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    nav a {
+      padding: 6px 0;
+      border-bottom: 1px solid transparent;
+      transition: border-color 220ms var(--ease), color 220ms var(--ease);
+    }
+    nav a:hover { border-color: var(--accent); color: var(--accent); }
+
+    .cta {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 12px 22px;
+      border-radius: 6px;
+      border: 1.5px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(97, 244, 222, 0.1), inset 0 0 20px rgba(97, 244, 222, 0.03);
+      transition: transform 220ms var(--ease), box-shadow 220ms var(--ease), background 220ms var(--ease);
+    }
+    .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(97, 244, 222, 0.25), inset 0 0 30px rgba(97, 244, 222, 0.06);
+      background: rgba(97, 244, 222, 0.06);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 40px;
+      padding: 100px 36px 60px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .hero-copy h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin: 16px 0;
+      color: var(--fg);
+    }
+    .hero-copy h1 .highlight {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .lede {
+      max-width: 52ch;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .eyebrow {
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.72rem;
+      color: var(--accent-2);
+      margin: 0 0 8px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      margin: 28px 0 24px;
+    }
+
+    .ghost {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 12px 20px;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid var(--stroke);
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 220ms var(--ease), color 220ms var(--ease), transform 220ms var(--ease);
+    }
+    .ghost:hover {
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+      transform: translateY(-2px);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .stats div {
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--card);
+    }
+    .stats span {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 1.6rem;
+      color: var(--accent);
+      text-shadow: 0 0 10px rgba(97, 244, 222, 0.3);
+    }
+    .stats .label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+
+    .hero-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 20%, rgba(97, 244, 222, 0.06), transparent 50%);
+    }
+    .hero-card .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-2);
+      border: 1px solid rgba(255, 106, 213, 0.2);
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 4px;
+      position: relative;
+      z-index: 2;
+      align-self: flex-start;
+    }
+    .hero-card h2 {
+      font-family: 'Space Mono', monospace;
+      margin: 16px 0 8px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 2;
+    }
+    .glow-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+      margin: 12px 0;
+      position: relative;
+      z-index: 2;
+    }
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      position: relative;
+      z-index: 2;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      padding: 40px 36px;
+      position: relative;
+      z-index: 5;
+    }
+    .grid .panel {
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 24px;
+      background: var(--card);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 320ms var(--ease);
+    }
+    .grid .panel:hover {
+      border-color: rgba(97, 244, 222, 0.2);
+    }
+    .grid .panel::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      opacity: 0;
+      transition: opacity 320ms var(--ease);
+    }
+    .grid .panel:hover::after { opacity: 1; }
+    .grid .panel h3 {
+      font-family: 'Space Mono', monospace;
+      margin: 8px 0 10px;
+      font-size: 1rem;
+    }
+    .grid .panel p {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    .panel-code {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent-3);
+      margin-top: 12px;
+      opacity: 0.6;
+    }
+
+    .timeline {
+      padding: 24px 36px 80px;
+      border-top: 1px solid var(--stroke);
+      position: relative;
+      z-index: 5;
+    }
+    .timeline-head h3 {
+      font-family: 'Space Mono', monospace;
+      margin: 8px 0 16px;
+    }
+    .timeline-rail {
+      position: relative;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+      border-radius: 999px;
+      margin: 28px 0 36px;
+    }
+    .timeline-rail .node {
+      position: absolute;
+      top: -8px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--bg);
+      box-shadow: 0 0 0 6px rgba(97, 244, 222, 0.08), 0 0 20px rgba(97, 244, 222, 0.15);
+    }
+    .timeline-rail .node:nth-child(1) { left: 5%; }
+    .timeline-rail .node:nth-child(2) { left: 50%; }
+    .timeline-rail .node:nth-child(3) { left: 85%; }
+
+    .timeline-items {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .timeline-card {
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 20px;
+      background: var(--card);
+      transition: border-color 320ms var(--ease), transform 320ms var(--ease);
+    }
+    .timeline-card:hover {
+      border-color: rgba(255, 106, 213, 0.2);
+      transform: translateY(-3px);
+    }
+    .timeline-card .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-2);
+      margin-bottom: 6px;
+    }
+    .timeline-card h4 {
+      font-family: 'Space Mono', monospace;
+      margin: 4px 0 8px;
+    }
+    .timeline-card p {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .marquee-strip {
+      border-top: 1px solid var(--stroke);
+      border-bottom: 1px solid var(--stroke);
+      overflow: hidden;
+      padding: 14px 0;
+      position: relative;
+      z-index: 5;
+    }
+    .marquee-inner {
+      display: flex;
+      gap: 40px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      animation: scroll 24s linear infinite;
+      width: max-content;
+    }
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .footer {
+      padding: 40px 36px;
+      position: relative;
+      z-index: 5;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .footer-grid a {
+      display: block;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      transition: color 220ms var(--ease);
+    }
+    .footer-grid a:hover { color: var(--accent); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: transform 400ms var(--ease), opacity 400ms var(--ease);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 60px;
+      }
+      .grid { grid-template-columns: 1fr; }
+      .timeline-items { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      nav { display: none; }
+      .top-bar { padding: 14px 20px; }
+      .hero { padding-left: 20px; padding-right: 20px; }
+      .grid { padding-left: 20px; padding-right: 20px; }
+      .timeline { padding-left: 20px; padding-right: 20px; }
+      .footer { padding-left: 20px; padding-right: 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="top-bar">
+    <div class="logo">// nexus</div>
+    <nav>
+      <a href="#main">Platform</a>
+      <a href="#process">Protocol</a>
+      <a href="#releases">Releases</a>
+    </nav>
+    <button class="cta">Connect</button>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">v3.0 — now live</p>
+        <h1 class="reveal">Build at the <span class="highlight">edge of latency</span>. Deploy anywhere.</h1>
+        <p class="lede reveal">Nexus is a distributed runtime for real-time applications. Low-latency sync, edge-native storage, and a developer experience that doesn't get in the way.</p>
+        <div class="actions reveal">
+          <button class="cta">Start building</button>
+          <button class="ghost">Read the docs</button>
+        </div>
+        <div class="stats reveal">
+          <div><span>2ms</span><span class="label">p99 latency</span></div>
+          <div><span>99.99%</span><span class="label">uptime</span></div>
+          <div><span>47</span><span class="label">regions</span></div>
+        </div>
+      </div>
+      <div class="hero-card reveal">
+        <span class="tag">quickstart</span>
+        <h2>nexus sync</h2>
+        <p>Initialize a real-time channel with zero config. Data syncs across edges automatically.</p>
+        <div style="font-family:'Space Mono',monospace;font-size:0.8rem;color:var(--accent-3);background:rgba(0,0,0,0.3);border-radius:8px;padding:14px;position:relative;z-index:2;">
+          <span style="color:var(--accent-2);">$</span> nexus channel create --name "chat-1" --region all
+          <br>
+          <span style="color:var(--muted);">✓ Channel live · 12 edges connected</span>
+        </div>
+        <div class="glow-line"></div>
+        <div class="card-meta">
+          <span>sync: real-time</span>
+          <span style="color:var(--accent);">active</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" id="process">
+      <article class="panel reveal">
+        <p class="eyebrow">01 / sync</p>
+        <h3>Real-time state across every edge</h3>
+        <p>CRDT-based sync that converges instantly. No conflict resolution logic needed on your side.</p>
+        <div class="panel-code">=> 2ms p99</div>
+      </article>
+      <article class="panel reveal">
+        <p class="eyebrow">02 / compute</p>
+        <h3>Run logic where the data lives</h3>
+        <p>Deploy functions at the edge with a single CLI command. Automatic scaling, zero cold starts.</p>
+        <div class="panel-code">=> 47 regions</div>
+      </article>
+      <article class="panel reveal">
+        <p class="eyebrow">03 / storage</p>
+        <h3>Edge-native durable storage</h3>
+        <p>Key-value and document store replicated across your chosen regions. Strong consistency when you need it.</p>
+        <div class="panel-code">=> 99.99%</div>
+      </article>
+    </section>
+
+    <section class="timeline" id="releases">
+      <div class="timeline-head reveal">
+        <p class="eyebrow">changelog</p>
+        <h3>Recent releases</h3>
+      </div>
+      <div class="timeline-rail reveal" aria-hidden="true">
+        <div class="node"></div>
+        <div class="node"></div>
+        <div class="node"></div>
+      </div>
+      <div class="timeline-items">
+        <div class="timeline-card reveal">
+          <p class="label">v3.0 · 2026</p>
+          <h4>Nexus Sync</h4>
+          <p>Distributed real-time channels with CRDT convergence. Zero-config setup from CLI.</p>
+        </div>
+        <div class="timeline-card reveal">
+          <p class="label">v2.4 · 2025</p>
+          <h4>Edge Compute</h4>
+          <p>Function deployment at the edge with sub-millisecond cold start via pre-warmed sandboxes.</p>
+        </div>
+        <div class="timeline-card reveal">
+          <p class="label">v2.0 · 2025</p>
+          <h4>Durable Store</h4>
+          <p>Edge-native KV and document store with configurable replication and strong consistency mode.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee-strip" aria-hidden="true">
+      <div class="marquee-inner">
+        <span>Nexus runtime · sync · compute · store · edge-native · 2ms p99 · 47 regions</span>
+        <span>Nexus runtime · sync · compute · store · edge-native · 2ms p99 · 47 regions</span>
+        <span>Nexus runtime · sync · compute · store · edge-native · 2ms p99 · 47 regions</span>
+        <span>Nexus runtime · sync · compute · store · edge-native · 2ms p99 · 47 regions</span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <p class="eyebrow">Docs</p>
+        <a href="#">Getting started</a>
+        <a href="#">CLI reference</a>
+        <a href="#">API reference</a>
+      </div>
+      <div>
+        <p class="eyebrow">Community</p>
+        <a href="#">Discord</a>
+        <a href="#">GitHub</a>
+        <a href="#">Twitter</a>
+      </div>
+      <div>
+        <p class="eyebrow">Company</p>
+        <p style="color:var(--muted);font-size:0.85rem;">Nexus Inc. · Building the distributed future.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
