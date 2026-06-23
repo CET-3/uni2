@@ -17,7 +17,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 3.  Verifica el estado.
 4.  Muestra el resultado.
 
-**Reglas relacionadas:** [COMERCIO-004](/reglas/comercios.md#comercio-004), [CREDENCIAL-001](/reglas/credenciales.md#credencial-001), [CREDENCIAL-002](/reglas/credenciales.md#credencial-002), [CREDENCIAL-003](/reglas/credenciales.md#credencial-003), [CREDENCIAL-004](/reglas/credenciales.md#credencial-004).
+**Reglas relacionadas:** [COMERCIO-OPERACION-001](../reglas/comercios-operacion.md#comercio-operacion-001), [CREDENCIAL-001](../reglas/credenciales.md#credencial-001), [CREDENCIAL-002](../reglas/credenciales.md#credencial-002), [CREDENCIAL-003](../reglas/credenciales.md#credencial-003), [CREDENCIAL-004](../reglas/credenciales.md#credencial-004).
 
 **Situaciones especiales:** QR invalido, asociado inactivo, comercio inactivo.
 

@@ -17,6 +17,7 @@ class ComercioAdmin(admin.ModelAdmin):
         "nombre",
         "beneficio_texto",
         "estado",
+        "orden",
         "flyer_disponible",
         "direccion",
         "usuario",

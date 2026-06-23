@@ -4,19 +4,19 @@ okf_version: "0.1"
 
 # Especificación Uni2
 
-* [Proyecto](proyecto/) - Visión del producto y contexto general.
-* [Roles](roles/) - Perfiles de usuario y permisos esperados.
-* [Alcance](alcance/) - Alcance del MVP y fuera de alcance.
-* [Entidades](entidades/) - Modelo de datos funcional del MVP.
-* [Relaciones](relaciones/) - Relaciones entre entidades del MVP.
-* [Reglas](reglas/) - Reglas de negocio vigentes.
-* [Casos de uso](casos-de-uso/) - Flujos funcionales del MVP.
-* [Casos borde](casos-borde/) - Situaciones especiales y respuesta esperada.
-* [Reportes](reportes/) - Reportes y listados operativos del MVP.
-* [Pantallas](pantallas/) - Pantallas previstas para cada experiencia.
-* [Arquitectura](arquitectura/) - Organización actual del código y decisiones técnicas.
-* [Versión 2](v2/) - Diseño aprobado fuera del MVP.
-* [Roadmap](roadmap/) - Evolución futura del producto.
+* [Proyecto](proyecto/index.md) - Visión del producto y contexto general.
+* [Roles](roles/index.md) - Perfiles de usuario y permisos esperados.
+* [Alcance](alcance/index.md) - Alcance del MVP y fuera de alcance.
+* [Entidades](entidades/index.md) - Modelo de datos funcional del MVP.
+* [Relaciones](relaciones/index.md) - Relaciones entre entidades del MVP.
+* [Reglas](reglas/index.md) - Reglas de negocio vigentes.
+* [Casos de uso](casos-de-uso/index.md) - Flujos funcionales del MVP.
+* [Casos borde](casos-borde/index.md) - Situaciones especiales y respuesta esperada.
+* [Reportes](reportes/index.md) - Reportes y listados operativos del MVP.
+* [Pantallas](pantallas/index.md) - Pantallas previstas para cada experiencia.
+* [Arquitectura](arquitectura/index.md) - Organización actual del código y decisiones técnicas.
+* [Versión 2](v2/index.md) - Diseño aprobado fuera del MVP.
+* [Roadmap](roadmap/index.md) - Evolución futura del producto.
 
 # Fuente original
 

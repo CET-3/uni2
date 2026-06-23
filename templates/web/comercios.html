@@ -4,29 +4,27 @@
 
 {% block content %}
 <h1 class="h2 mb-4">Comercios adheridos</h1>
-<div class="row g-3">
+<div class="comercios-publicos-lista d-flex flex-column gap-3">
     {% for comercio in comercios %}
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="h5">{{ comercio.nombre }}</h2>
-                    <p class="mb-1"><strong>Actividad:</strong> {{ comercio.actividad_comercial.nombre }}</p>
-                    <p class="mb-1 text-secondary">{{ comercio.direccion }}</p>
-                    {% if comercio.ciudad or comercio.provincia %}
-                        <p class="mb-1 text-secondary">{{ comercio.ciudad }} {{ comercio.provincia }}</p>
-                    {% endif %}
-                    {% if comercio.beneficio_texto %}
-                        <p class="mb-1"><strong>Beneficio:</strong> {{ comercio.beneficio_texto }}</p>
-                    {% endif %}
-                    {% if comercio.telefono %}
-                        <p class="mb-1"><strong>Teléfono:</strong> {{ comercio.telefono }}</p>
-                    {% endif %}
-                    {% if comercio.url_presencia_web %}
-                        <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Visitar presencia web</a>
-                    {% endif %}
-                </div>
+        <article class="card">
+            <div class="card-body">
+                <h2 class="h5">{{ comercio.nombre }}</h2>
+                <p class="mb-1"><strong>Actividad:</strong> {{ comercio.actividad_comercial.nombre }}</p>
+                <p class="mb-1 text-secondary">{{ comercio.direccion }}</p>
+                {% if comercio.ciudad or comercio.provincia %}
+                    <p class="mb-1 text-secondary">{{ comercio.ciudad }} {{ comercio.provincia }}</p>
+                {% endif %}
+                {% if comercio.beneficio_texto %}
+                    <p class="mb-1"><strong>Beneficio:</strong> {{ comercio.beneficio_texto }}</p>
+                {% endif %}
+                {% if comercio.telefono %}
+                    <p class="mb-1"><strong>Teléfono:</strong> {{ comercio.telefono }}</p>
+                {% endif %}
+                {% if comercio.url_presencia_web %}
+                    <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Visitar presencia web</a>
+                {% endif %}
             </div>
-        </div>
+        </article>
     {% empty %}
         <p>No hay comercios adheridos cargados.</p>
     {% endfor %}

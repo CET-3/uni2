@@ -6,6 +6,7 @@
 * [Cuotas](cuotas.md) - Reglas de negocio sobre cuotas.
 * [Pagos](pagos.md) - Reglas de negocio sobre pagos.
 * [Usuarios](usuarios.md) - Reglas de negocio sobre usuarios.
-* [Comercios](comercios.md) - Reglas de negocio sobre comercios.
+* [Comercios públicos](comercios-publicos.md) - Reglas de negocio sobre publicación y visualización de comercios.
+* [Comercios operación](comercios-operacion.md) - Reglas de negocio sobre el uso del sistema por parte de comercios.
 * [Beneficios](beneficios.md) - Reglas de negocio sobre beneficios.
 * [Credenciales](credenciales.md) - Reglas de negocio sobre credenciales.

@@ -17,6 +17,6 @@ status: "listo"
 2.  Consulta información institucional.
 3.  Accede desde la home a los listados públicos de beneficios y comercios.
 
-**Casos de uso relacionados:** [CU-listar-beneficios-publicos](/casos-de-uso/cu-listar-beneficios-publicos.md), [CU-listar-comercios-publicos](/casos-de-uso/cu-listar-comercios-publicos.md).
+**Casos de uso relacionados:** [CU-listar-beneficios-publicos](../casos-de-uso/cu-listar-beneficios-publicos.md), [CU-listar-comercios-publicos](../casos-de-uso/cu-listar-comercios-publicos.md).
 
 **Modelos afectados:** ninguno.

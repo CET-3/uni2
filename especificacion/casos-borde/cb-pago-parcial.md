@@ -12,6 +12,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Respuesta esperada:** el sistema rechaza la operación. En el MVP no se registran pagos parciales de cuota desde la pantalla de cobro.
 
-**Caso de uso relacionado:** [CU-registrar-pago-cuota](/casos-de-uso/cu-registrar-pago-cuota.md).
+**Caso de uso relacionado:** [CU-registrar-pago-cuota](../casos-de-uso/cu-registrar-pago-cuota.md).
 
-**Relacionado con:** [PAGO-002](/reglas/pagos.md#pago-002), [PAGO-007](/reglas/pagos.md#pago-007).
+**Relacionado con:** [PAGO-002](../reglas/pagos.md#pago-002), [PAGO-007](../reglas/pagos.md#pago-007).

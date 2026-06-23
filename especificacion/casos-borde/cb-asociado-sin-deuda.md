@@ -12,6 +12,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Respuesta esperada:** la operación no debería permitirse.
 
-**Caso de uso relacionado:** [CU-registrar-pago-cuota](/casos-de-uso/cu-registrar-pago-cuota.md).
+**Caso de uso relacionado:** [CU-registrar-pago-cuota](../casos-de-uso/cu-registrar-pago-cuota.md).
 
-**Relacionado con:** [CU-registrar-pago-cuota](/casos-de-uso/cu-registrar-pago-cuota.md).
+**Relacionado con:** [CU-registrar-pago-cuota](../casos-de-uso/cu-registrar-pago-cuota.md).

@@ -12,6 +12,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Respuesta esperada:** la situación es válida. El asociado queda cargado, pero no puede iniciar sesión hasta que se cree su `User`.
 
-**Caso de uso relacionado:** [CU-crear-asociado](/casos-de-uso/cu-crear-asociado.md), [CU-crear-usuario-asociado](/casos-de-uso/cu-crear-usuario-asociado.md).
+**Caso de uso relacionado:** [CU-crear-asociado](../casos-de-uso/cu-crear-asociado.md), [CU-crear-usuario-asociado](../casos-de-uso/cu-crear-usuario-asociado.md).
 
-**Relacionado con:** [ASOCIADO-008](/reglas/asociados.md#asociado-008), [USUARIO-001](/reglas/usuarios.md#usuario-001).
+**Relacionado con:** [ASOCIADO-008](../reglas/asociados.md#asociado-008), [USUARIO-001](../reglas/usuarios.md#usuario-001).

@@ -19,6 +19,7 @@ Comercio adherido a la mutual.
 - nombre\*: nombre público del comercio adherido.
 - beneficio_texto\*: texto público que describe el beneficio vigente del comercio.
 - estado\*: estado del convenio con el comercio.
+- orden\*: posición usada para ordenar los comercios publicados.
 - flyer_disponible\*: indica si existe un flyer o pieza de difusión disponible.
 - dirección\*: dirección física del comercio.
 - usuario: usuario que puede iniciar sesión como este comercio.
@@ -35,6 +36,6 @@ Comercio adherido a la mutual.
 
 **Estados:** pendiente, firmado, vencido, baja.
 
-**Restricciones de datos:** puede tener usuario de acceso, usa una actividad comercial definida, guarda un único beneficio como texto libre y puede guardar coordenadas para uso futuro.
+**Restricciones de datos:** puede tener usuario de acceso, usa una actividad comercial definida, guarda un único beneficio como texto libre, se ordena públicamente por `orden` y puede guardar coordenadas para uso futuro.
 
-**Referencias funcionales:** ver [reglas de comercios](../reglas/comercios.md), [credenciales](../reglas/credenciales.md) y [validar credencial](../casos-de-uso/cu-validar-credencial.md).
+**Referencias funcionales:** ver [comercios públicos](../reglas/comercios-publicos.md), [comercios operación](../reglas/comercios-operacion.md), [credenciales](../reglas/credenciales.md) y [validar credencial](../casos-de-uso/cu-validar-credencial.md).

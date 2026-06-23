@@ -9,4 +9,3 @@
 * [CB-pago-mayor-a-deuda](cb-pago-mayor-a-deuda.md) - Situación: se registra un importe recibido mayor que el mínimo calculado para las cuotas incluidas.
 * [CB-asociado-sin-deuda](cb-asociado-sin-deuda.md) - Situación: se intenta registrar un pago de cuota para un asociado sin deuda.
 * [CB-qr-invalido](cb-qr-invalido.md) - Situación: el token del QR no existe o es inválido.
-* [CB-comercio-sin-convenio-firmado](cb-comercio-sin-convenio-firmado.md) - Situación: un comercio con estado pendiente, vencido o baja intenta validar credenciales.

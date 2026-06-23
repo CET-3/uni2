@@ -12,6 +12,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Respuesta esperada:** el sistema registra el pago de las cuotas incluidas y registra el excedente como `Donacion`. No genera saldo a favor.
 
-**Caso de uso relacionado:** [CU-registrar-pago-cuota](/casos-de-uso/cu-registrar-pago-cuota.md).
+**Caso de uso relacionado:** [CU-registrar-pago-cuota](../casos-de-uso/cu-registrar-pago-cuota.md).
 
-**Relacionado con:** [PAGO-008](/reglas/pagos.md#pago-008).
+**Relacionado con:** [PAGO-008](../reglas/pagos.md#pago-008).

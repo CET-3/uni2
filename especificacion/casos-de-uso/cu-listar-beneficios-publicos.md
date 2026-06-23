@@ -18,6 +18,6 @@ status: "listo"
 3.  El sistema muestra los beneficios activos.
 4.  El listado respeta el orden definido para publicación.
 
-**Reglas relacionadas:** [BENEFICIO-001](/reglas/beneficios.md#beneficio-001), [BENEFICIO-002](/reglas/beneficios.md#beneficio-002).
+**Reglas relacionadas:** [BENEFICIO-001](../reglas/beneficios.md#beneficio-001), [BENEFICIO-002](../reglas/beneficios.md#beneficio-002).
 
 **Modelos afectados:** Beneficio.

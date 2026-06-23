@@ -70,6 +70,11 @@ class Comercio(models.Model):
         default=ESTADO_PENDIENTE,
         help_text="Estado del convenio con el comercio.",
     )
+    orden = models.PositiveIntegerField(
+        "orden",
+        default=0,
+        help_text="Posición usada para ordenar los comercios publicados.",
+    )
     fecha_convenio = models.DateField(
         "fecha de convenio",
         blank=True,
@@ -145,8 +150,8 @@ class Comercio(models.Model):
     class Meta:
         verbose_name = "Comercio"
         verbose_name_plural = "Comercios"
-        ordering = ["nombre"]
-        indexes = [models.Index(fields=["estado", "nombre"])]
+        ordering = ["orden", "nombre"]
+        indexes = [models.Index(fields=["estado", "orden", "nombre"])]
 
     def __str__(self):
         return self.nombre
