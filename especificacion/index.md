@@ -13,6 +13,7 @@ okf_version: "0.1"
 * [Casos de uso](casos-de-uso/index.md) - Flujos funcionales del MVP.
 * [Casos borde](casos-borde/index.md) - Situaciones especiales y respuesta esperada.
 * [Reportes](reportes/index.md) - Reportes y listados operativos del MVP.
+* [Pruebas manuales](pruebas-manuales/index.md) - Guías simples para verificar funcionalidades desde la interfaz.
 * [Pantallas](pantallas/index.md) - Pantallas previstas para cada experiencia.
 * [Arquitectura](arquitectura/index.md) - Organización actual del código y decisiones técnicas.
 * [Versión 2](v2/index.md) - Diseño aprobado fuera del MVP.
