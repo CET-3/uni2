@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ actividad_comercial.nombre }} | Uni2{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'web:home' %}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'web:comercios' %}">Comercios</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ actividad_comercial.nombre }}</li>
+    </ol>
+</nav>
+
+<h1 class="h2 mb-4">{{ actividad_comercial.nombre }}</h1>
+
+<div class="d-flex flex-column gap-3">
+    {% for comercio in actividad_comercial.comercios.all %}
+        <article class="card">
+            <div class="card-body">
+                <h2 class="h5">{{ comercio.nombre }}</h2>
+                <p class="mb-1 text-secondary">{{ comercio.direccion }}</p>
+                {% if comercio.beneficio_texto %}
+                    <p class="mb-1"><strong>Beneficio:</strong> {{ comercio.beneficio_texto }}</p>
+                {% endif %}
+                {% if comercio.telefono %}
+                    <p class="mb-1"><strong>Teléfono:</strong> {{ comercio.telefono }}</p>
+                {% endif %}
+                {% if comercio.url_presencia_web %}
+                    <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Presencia web</a>
+                {% endif %}
+            </div>
+        </article>
+    {% empty %}
+        <p class="text-secondary">No hay comercios adheridos en esta categoría.</p>
+    {% endfor %}
+</div>
+
+<a href="{% url 'web:comercios' %}" class="btn btn-outline-secondary mt-4">← Todos los comercios</a>
+{% endblock %}

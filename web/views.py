@@ -2,7 +2,7 @@ from django.db.models import Prefetch
 from django.views.generic import DetailView, TemplateView
 
 from comercios.selectors import get_comercios_firmados, get_rubros_con_comercios
-from comercios.models import Comercio
+from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
 from contenidos.selectors import get_categorias_productos_servicios_publicas, get_publicidades_home
 
@@ -65,5 +65,21 @@ class CategoriaProductoServicioDetalleView(DetailView):
             Prefetch(
                 "productos_servicios",
                 queryset=ProductoServicio.objects.filter(activo=True).order_by("orden", "nombre"),
+            )
+        )
+
+
+class ActividadComercialDetalleView(DetailView):
+    model = ActividadComercial
+    template_name = "web/actividadcomercial_detalle.html"
+    context_object_name = "actividad_comercial"
+
+    def get_queryset(self):
+        return ActividadComercial.objects.filter(
+            comercios__estado=Comercio.ESTADO_FIRMADO,
+        ).distinct().prefetch_related(
+            Prefetch(
+                "comercios",
+                queryset=Comercio.objects.filter(estado=Comercio.ESTADO_FIRMADO).order_by("orden", "nombre"),
             )
         )

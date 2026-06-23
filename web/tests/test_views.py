@@ -294,3 +294,56 @@ def test_categoria_detalle_404_si_inactiva_o_inexistente(client):
 
     response = client.get(reverse("web:categoria_detalle", args=[999]))
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
+    actividad = ActividadComercial.objects.create(nombre="Gastronomía")
+    Comercio.objects.create(
+        nombre="Parrilla Don Pancho",
+        direccion="Mitre 100",
+        actividad_comercial=actividad,
+        beneficio_texto="10% de descuento",
+        estado=Comercio.ESTADO_FIRMADO,
+        orden=1,
+    )
+    Comercio.objects.create(
+        nombre="Lo de Carlitos",
+        direccion="Belgrano 200",
+        actividad_comercial=actividad,
+        beneficio_texto="2x1 en milanesas",
+        estado=Comercio.ESTADO_FIRMADO,
+        orden=2,
+    )
+    Comercio.objects.create(
+        nombre="No Visible",
+        direccion="Oculta 300",
+        actividad_comercial=actividad,
+        beneficio_texto="No publicado",
+        estado=Comercio.ESTADO_PENDIENTE,
+        orden=3,
+    )
+
+    url = reverse("web:actividad_comercial_detalle", args=[actividad.pk])
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert response.template_name == ["web/actividadcomercial_detalle.html"]
+    assert response.context["actividad_comercial"].nombre == "Gastronomía"
+    contenido = response.content.decode()
+    assert "Gastronomía" in contenido
+    assert "Parrilla Don Pancho" in contenido
+    assert "10% de descuento" in contenido
+    assert "Lo de Carlitos" in contenido
+    assert "No Visible" not in contenido
+
+
+@pytest.mark.django_db
+def test_actividad_comercial_detalle_404_sin_comercios_o_inexistente(client):
+    actividad = ActividadComercial.objects.create(nombre="Vacía")
+
+    response = client.get(reverse("web:actividad_comercial_detalle", args=[actividad.pk]))
+    assert response.status_code == 404
+
+    response = client.get(reverse("web:actividad_comercial_detalle", args=[999]))
+    assert response.status_code == 404
