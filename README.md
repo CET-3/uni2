@@ -76,3 +76,7 @@ La base de datos de producción es Supabase (PostgreSQL). Para correr migracione
 ```bash
 DATABASE_URL=<url-de-supabase> uv run python manage.py migrate
 ```
+
+Las migraciones no se ejecutan automáticamente dentro de la función de Vercel.
+En producción deben correrse como paso explícito para evitar abrir conexiones de
+base de datos durante cada arranque de función.

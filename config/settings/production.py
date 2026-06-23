@@ -10,14 +10,18 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+CSRF_TRUSTED_ORIGINS = [
+    origin
+    for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin
+]
 
 # --- Base de datos ----------------------------------------------------------
 DATABASES = {
     "default": dj_database_url.config(
         env="DATABASE_URL",
-        conn_max_age=600,
-        conn_health_checks=True,
+        conn_max_age=0,
+        conn_health_checks=False,
     )
 }
 
