@@ -8,8 +8,8 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 # Asociado
 
-- Panel simple con accesos a credencial, cuotas, beneficios y comercios.
+- Panel simple con accesos a credencial, cuotas, productos, servicios y comercios.
 - Mi credencial.
 - Mis cuotas.
-- Beneficios.
+- Productos y servicios.
 - Comercios adheridos.

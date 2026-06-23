@@ -18,7 +18,7 @@ Esta sección reúne definiciones ya acordadas que quedan fuera del MVP, pero fo
 - Items de pedido.
 - Pagos de pedidos.
 - Movimiento de stock.
-- Pantalla propia de gestión de beneficios en backoffice.
+- Pantalla propia de gestión de productos y servicios en backoffice.
 - Pantalla propia de gestión de comercios en backoffice.
 - Pantalla propia de gestión de actividades comerciales en backoffice.
 - Reportes de ventas y stock.

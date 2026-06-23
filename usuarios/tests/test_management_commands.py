@@ -5,6 +5,7 @@ from django.core.management import call_command
 
 from asociados.models import Asociado
 from comercios.models import Comercio
+from contenidos.models import CategoriaProductoServicio, ProductoServicio
 from gestion.permissions import GESTION_COBRAR_CUOTAS, GESTION_IMPORTAR_ASOCIADOS
 
 
@@ -30,3 +31,5 @@ def test_carga_inicial_crea_usuarios_de_prueba():
     assert Asociado.objects.get(dni="40111223").usuario == atencion_user
     assert Asociado.objects.get(dni="40111222").usuario == asociado_user
     assert Comercio.objects.get(nombre="Librería Sur").usuario == comercio_user
+    assert CategoriaProductoServicio.objects.filter(nombre="Impresiones y fotocopias").exists()
+    assert ProductoServicio.objects.filter(nombre="Fotocopia simple").exists()

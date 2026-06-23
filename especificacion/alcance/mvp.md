@@ -26,7 +26,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Deudores.
 - Credencial digital.
 - Validación de credencial por comercio.
-- Consulta pública de beneficios institucionales.
+- Consulta pública de productos y servicios de la mutual.
 - Consulta pública de comercios adheridos.
 - Beneficio de cada comercio, cargado desde el admin técnico de Django.
 - Reportes básicos.
@@ -35,7 +35,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 - Pedidos.
 - Stock.
-- Productos para venta.
 - Pago de pedidos.
 - Tickets de consultas.
 - Mensajería.

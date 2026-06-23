@@ -1,9 +1,9 @@
 from django.urls import path
 
 from .views import (
-    BeneficiosPublicosView,
     ComerciosPublicosView,
     HomeView,
+    ProductosServiciosPublicosView,
 )
 
 
@@ -11,6 +11,6 @@ app_name = "web"
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
-    path("beneficios/", BeneficiosPublicosView.as_view(), name="beneficios"),
+    path("productos-servicios/", ProductosServiciosPublicosView.as_view(), name="productos_servicios"),
     path("comercios/", ComerciosPublicosView.as_view(), name="comercios"),
 ]

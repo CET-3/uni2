@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Productos y servicios | Uni2{% endblock %}
+
+{% block content %}
+<h1 class="h2 mb-4">Productos y servicios</h1>
+<div class="vstack gap-4">
+    {% for categoria in categorias_productos_servicios %}
+        <section>
+            <div class="d-flex align-items-start gap-3 mb-3">
+                {% if categoria.etiqueta_icono %}
+                    <span class="badge text-bg-primary">{{ categoria.etiqueta_icono }}</span>
+                {% endif %}
+                <div>
+                    <h2 class="h4 mb-1">{{ categoria.nombre }}</h2>
+                    {% if categoria.descripcion %}
+                        <p class="mb-0 text-secondary">{{ categoria.descripcion }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row g-3">
+                {% for item in categoria.items_publicos %}
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between gap-3">
+                                    <h3 class="h5 mb-2">{{ item.nombre }}</h3>
+                                    <span class="badge text-bg-light border">{{ item.es_servicio|yesno:"Servicio,Producto" }}</span>
+                                </div>
+                                <p class="text-secondary">{{ item.descripcion }}</p>
+                                <dl class="row mb-0 small">
+                                    <dt class="col-6">Asociados</dt>
+                                    <dd class="col-6 text-end">${{ item.precio_asociados }}</dd>
+                                    <dt class="col-6">No asociados</dt>
+                                    <dd class="col-6 text-end">${{ item.precio_no_asociados }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No hay productos o servicios cargados en esta categoría.</p>
+                {% endfor %}
+            </div>
+            {% if categoria.texto_cta %}
+                <p class="mt-3 mb-0">{{ categoria.texto_cta|urlize }}</p>
+            {% endif %}
+        </section>
+    {% empty %}
+        <p>No hay productos o servicios cargados.</p>
+    {% endfor %}
+</div>
+{% endblock %}

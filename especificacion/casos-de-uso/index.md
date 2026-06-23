@@ -7,7 +7,7 @@
 ### Sitio público
 
 * [CU-consultar-sitio-publico](cu-consultar-sitio-publico.md) - Actor: Visitante
-* [CU-listar-beneficios-publicos](cu-listar-beneficios-publicos.md) - Actor: Visitante
+* [CU-listar-productos-servicios-publicos](cu-listar-productos-servicios-publicos.md) - Actor: Visitante
 * [CU-listar-comercios-publicos](cu-listar-comercios-publicos.md) - Actor: Visitante
 
 ## Asociado
