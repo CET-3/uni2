@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -19,9 +20,13 @@ CUOTAS_HISTORICAS_SESSION_KEY = "cuotas_historicas_preview"
 CUOTAS_HISTORICAS_SHEET = "COBRO CUOTAS SOCIALES"
 CUOTAS_HISTORICAS_HEADER_ROW = 7
 CUOTAS_HISTORICAS_FIRST_DATA_ROW = 8
-CUOTA_HISTORICA_IMPORTE = Decimal("500.00")
-CUOTA_HISTORICA_RECARGO = Decimal("100.00")
+CUOTA_HISTORICA_IMPORTE_INICIAL = Decimal("500.00")
+CUOTA_HISTORICA_RECARGO_INICIAL = Decimal("100.00")
+CUOTA_HISTORICA_IMPORTE_DESDE_MAYO = Decimal("600.00")
+CUOTA_HISTORICA_RECARGO_DESDE_MAYO = Decimal("200.00")
 CUOTA_HISTORICA_ANIO = 2026
+CUOTAS_HISTORICAS_LOG_EVERY = 25
+logger = logging.getLogger(__name__)
 CUOTAS_HISTORICAS_REVISAR_HEADERS = [
     "Fila original",
     "Número de asociado",
@@ -217,6 +222,12 @@ def _periodo_fecha(mes):
     return date(CUOTA_HISTORICA_ANIO, mes, 10)
 
 
+def _valores_cuota_historica(mes):
+    if mes >= 5:
+        return CUOTA_HISTORICA_IMPORTE_DESDE_MAYO, CUOTA_HISTORICA_RECARGO_DESDE_MAYO
+    return CUOTA_HISTORICA_IMPORTE_INICIAL, CUOTA_HISTORICA_RECARGO_INICIAL
+
+
 def _estado_impaga(mes, fecha_operacion):
     if fecha_operacion > _periodo_fecha(mes):
         return Cuota.ESTADO_VENCIDA
@@ -255,6 +266,7 @@ def analyze_cuotas_historicas_xlsx(file_obj, fecha_operacion: date) -> CuotasHis
             if not pagada and metodo:
                 pagada = True
             observaciones = [item for item in [pago_note, metodo_note] if item]
+            importe, recargo = _valores_cuota_historica(mes_data["mes"])
 
             item = {
                 "fila_origen": row_number,
@@ -268,9 +280,9 @@ def analyze_cuotas_historicas_xlsx(file_obj, fecha_operacion: date) -> CuotasHis
                 "metodo": metodo,
                 "asociado_id": asociado.id if asociado else None,
                 "asociado_nombre": str(asociado) if asociado else "",
-                "importe": str(CUOTA_HISTORICA_IMPORTE),
-                "importe_recargo_mes": str(CUOTA_HISTORICA_RECARGO),
-                "importe_recargo_mes_siguiente": str(CUOTA_HISTORICA_RECARGO),
+                "importe": str(importe),
+                "importe_recargo_mes": str(recargo),
+                "importe_recargo_mes_siguiente": str(recargo),
                 "estado": Cuota.ESTADO_PAGADA if pagada else _estado_impaga(mes_data["mes"], fecha_operacion),
             }
 
@@ -348,19 +360,22 @@ def import_cuotas_historicas_preview(preview: CuotasHistoricasPreview, registrad
     result = CuotasHistoricasImportResult()
     ciclo, _ = CicloLectivo.objects.get_or_create(anio=CUOTA_HISTORICA_ANIO)
     periodos = {}
+    total = len(preview.importables)
+    logger.info("Importacion de cuotas historicas iniciada: %s cuotas importables.", total)
 
-    for item in preview.importables:
+    for index, item in enumerate(preview.importables, start=1):
         try:
             mes = int(item["mes"])
+            importe, recargo = _valores_cuota_historica(mes)
             periodo_key = (CUOTA_HISTORICA_ANIO, mes)
             if periodo_key not in periodos:
                 periodo, created = PeriodoCuota.objects.get_or_create(
                     mes=mes,
                     ciclo_lectivo=ciclo,
                     defaults={
-                        "importe": CUOTA_HISTORICA_IMPORTE,
-                        "importe_recargo_mes": CUOTA_HISTORICA_RECARGO,
-                        "importe_recargo_mes_siguiente": CUOTA_HISTORICA_RECARGO,
+                        "importe": importe,
+                        "importe_recargo_mes": recargo,
+                        "importe_recargo_mes_siguiente": recargo,
                         "fecha_vencimiento": _periodo_fecha(mes),
                         "activo": True,
                     },
@@ -374,10 +389,10 @@ def import_cuotas_historicas_preview(preview: CuotasHistoricasPreview, registrad
                 asociado=asociado,
                 periodo=periodo,
                 defaults={
-                    "importe": CUOTA_HISTORICA_IMPORTE,
-                    "importe_recargo_mes": CUOTA_HISTORICA_RECARGO,
-                    "importe_recargo_mes_siguiente": CUOTA_HISTORICA_RECARGO,
-                    "importe_pagado": CUOTA_HISTORICA_IMPORTE if item["pagada"] else Decimal("0.00"),
+                    "importe": importe,
+                    "importe_recargo_mes": recargo,
+                    "importe_recargo_mes_siguiente": recargo,
+                    "importe_pagado": importe if item["pagada"] else Decimal("0.00"),
                     "estado": item["estado"],
                 },
             )
@@ -390,7 +405,7 @@ def import_cuotas_historicas_preview(preview: CuotasHistoricasPreview, registrad
                 pago = Pago.objects.create(
                     asociado=asociado,
                     fecha=_periodo_fecha(mes),
-                    importe=CUOTA_HISTORICA_IMPORTE,
+                    importe=importe,
                     metodo=item["metodo"],
                     registrado_por=registrado_por,
                     observaciones=(
@@ -398,9 +413,22 @@ def import_cuotas_historicas_preview(preview: CuotasHistoricasPreview, registrad
                         f"Fila original {item['fila_origen']}, mes {item['mes_nombre']}."
                     ),
                 )
-                PagoCuota.objects.create(pago=pago, cuota=cuota, importe=CUOTA_HISTORICA_IMPORTE)
+                PagoCuota.objects.create(pago=pago, cuota=cuota, importe=importe)
                 result.pagos_creados += 1
         except Exception as exc:  # noqa: BLE001
             result.errores.append(f"Fila {item.get('fila_origen')} mes {item.get('mes_nombre')}: {exc}")
 
+        if index == total or index % CUOTAS_HISTORICAS_LOG_EVERY == 0:
+            logger.info("Importacion de cuotas historicas: %s/%s cuotas procesadas.", index, total)
+
+    result.omitidas += preview.omitidas
+    logger.info(
+        "Importacion de cuotas historicas finalizada: %s periodos creados, %s cuotas creadas, "
+        "%s pagos creados, %s omitidas, %s errores.",
+        result.periodos_creados,
+        result.cuotas_creadas,
+        result.pagos_creados,
+        result.omitidas,
+        len(result.errores),
+    )
     return result

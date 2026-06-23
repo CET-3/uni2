@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 from io import BytesIO
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Group, Permission
 from django.utils import timezone
 from django.urls import reverse
 from openpyxl import Workbook, load_workbook
@@ -24,6 +24,7 @@ from gestion.permissions import (
     GESTION_PERMISSIONS,
     GESTION_DASHBOARD,
 )
+from usuarios.services import ASOCIADO_GROUP
 
 
 def crear_usuario_gestion(username="usuario_gestion", permisos=None):
@@ -356,6 +357,11 @@ def test_importar_asociados_confirma_desde_sesion(client):
     assert asociado.numero_asociado == 1
     assert asociado.direccion == "Calle 1"
     assert asociado.fecha_alta == timezone.localdate()
+    assert asociado.fecha_inicio_cobro == date(2026, 3, 1)
+    assert asociado.usuario is not None
+    assert asociado.usuario.username == "52328996"
+    assert asociado.usuario.check_password("52328996")
+    assert Group.objects.get(name=ASOCIADO_GROUP) in asociado.usuario.groups.all()
     assert not Asociado.objects.filter(dni="52536191").exists()
     assert "1 creados" in response.content.decode()
 
@@ -486,10 +492,17 @@ def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client):
     assert PagoCuota.objects.filter(pago__asociado=asociado).count() == 2
     marzo = Cuota.objects.get(asociado=asociado, periodo__mes=3)
     abril = Cuota.objects.get(asociado=asociado, periodo__mes=4)
+    mayo = Cuota.objects.get(asociado=asociado, periodo__mes=5)
     assert marzo.estado == Cuota.ESTADO_PAGADA
     assert marzo.importe == 500
     assert marzo.importe_recargo_mes == 100
     assert abril.estado == Cuota.ESTADO_VENCIDA
+    assert mayo.estado == Cuota.ESTADO_PAGADA
+    assert mayo.importe == 600
+    assert mayo.importe_recargo_mes == 200
+    pago_mayo = Pago.objects.get(asociado=asociado, fecha=date(2026, 5, 10))
+    assert pago_mayo.importe == 600
+    assert PagoCuota.objects.get(pago=pago_mayo).importe == 600
     assert "4 cuotas creadas" in response.content.decode()
 
 
