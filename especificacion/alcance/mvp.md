@@ -27,6 +27,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Credencial digital.
 - Validación de credencial por comercio.
 - Consulta pública de productos y servicios de la mutual.
+- Publicidades destacadas en la home.
 - Consulta pública de comercios adheridos.
 - Beneficio de cada comercio, cargado desde el admin técnico de Django.
 - Reportes básicos.

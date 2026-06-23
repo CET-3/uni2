@@ -3,12 +3,18 @@ type: "Pantalla"
 title: "Sitio público"
 description: "Sitio público"
 tags: [mvp, pantalla]
-timestamp: 2026-06-22T00:00:00-03:00
+timestamp: 2026-06-23T00:00:00-03:00
 ---
 
 # Sitio público
 
 - Inicio.
+  - Hero: presentación de la mutual con título, descripción y botones de acción ("Asociate", "Iniciar sesión").
+  - Servicios: grilla de `CategoriaProductoServicio` activas. Cada card muestra nombre, descripción y enlace al listado completo.
+  - Beneficios: grilla de rubros (`ActividadComercial`) que tienen al menos un comercio con estado `Firmado`. Cada card enlaza al listado de comercios.
+  - Nuestros favoritos: publicidades activas en cards. Cada card muestra foto, etiqueta principal, título, etiqueta secundaria (descuento), descripción y enlace al detalle vinculado (producto/servicio o comercio).
+  - Cómo asociarse: cuatro pasos numerados con indicaciones e información de cuota social y horarios de atención en tabla.
 - Productos y servicios.
+  - Categoría detalle (`/servicios/<pk>/`): muestra nombre, ícono y descripción de la categoría, grilla de productos/servicios activos con precios diferenciados para asociados y no asociados, y texto CTA configurable. Incluye breadcrumb (Inicio > Productos y servicios > {categoría}).
 - Comercios: listado público vertical de comercios con estado `Firmado`, ordenado por `orden`.
 - Login.

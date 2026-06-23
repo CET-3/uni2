@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ categoria.nombre }} | Uni2{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'web:home' %}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'web:productos_servicios' %}">Productos y servicios</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ categoria.nombre }}</li>
+    </ol>
+</nav>
+
+<div class="d-flex align-items-start gap-3 mb-4">
+    {% if categoria.etiqueta_icono %}
+        <span class="badge text-bg-primary fs-6">{{ categoria.etiqueta_icono }}</span>
+    {% endif %}
+    <div>
+        <h1 class="h2 mb-1">{{ categoria.nombre }}</h1>
+        {% if categoria.descripcion %}
+            <p class="mb-0 text-secondary">{{ categoria.descripcion }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-3">
+    {% for item in categoria.productos_servicios.all %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between gap-3">
+                        <h2 class="h5 mb-2">{{ item.nombre }}</h2>
+                        <span class="badge text-bg-light border">{{ item.es_servicio|yesno:"Servicio,Producto" }}</span>
+                    </div>
+                    <p class="text-secondary">{{ item.descripcion }}</p>
+                    <dl class="row mb-0 small">
+                        <dt class="col-6">Asociados</dt>
+                        <dd class="col-6 text-end">${{ item.precio_asociados }}</dd>
+                        <dt class="col-6">No asociados</dt>
+                        <dd class="col-6 text-end">${{ item.precio_no_asociados }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <p class="text-secondary">No hay productos o servicios cargados en esta categoría.</p>
+        </div>
+    {% endfor %}
+</div>
+
+{% if categoria.texto_cta %}
+    <p class="mt-4 mb-0">{{ categoria.texto_cta|urlize }}</p>
+{% endif %}
+{% endblock %}

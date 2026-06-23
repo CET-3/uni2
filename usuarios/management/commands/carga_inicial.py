@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 
 from asociados.models import Asociado, Curso
 from comercios.models import ActividadComercial, Comercio
-from contenidos.models import CategoriaProductoServicio, ProductoServicio
+from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publicidad
 from gestion.permissions import (
     GESTION_COBRAR_CUOTAS,
     GESTION_CONSULTAR_ASOCIADOS,
@@ -47,6 +47,7 @@ class Command(BaseCommand):
         )
         Group.objects.get(name=ATENCION_MUTUAL_GROUP).permissions.add(*permisos_atencion)
 
+        # Cursos
         cursos_data = [
             ("1ro", "1ra", Curso.DIVISION_CB, Curso.TURNO_TM),
             ("1ro", "2da", Curso.DIVISION_CB, Curso.TURNO_TM),
@@ -70,18 +71,20 @@ class Command(BaseCommand):
                 defaults={"activo": True},
             )
 
-        impresiones, _ = CategoriaProductoServicio.objects.get_or_create(
-            nombre="Impresiones y fotocopias",
+        # ── Servicios (CategoriaProductoServicio + ProductoServicio) ──
+
+        fotocopias, _ = CategoriaProductoServicio.objects.get_or_create(
+            nombre="Fotocopias",
             defaults={
-                "descripcion": "Servicios de impresión para estudiantes y familias.",
+                "descripcion": "Servicios de impresión y fotocopiado para estudiantes y familias.",
                 "etiqueta_icono": "printer",
-                "texto_cta": "Consultá disponibilidad uni2mutual@gmail.com",
+                "texto_cta": "Consultá disponibilidad en la mutual o al uni2mutual@gmail.com",
                 "activa": True,
                 "orden": 1,
             },
         )
         ProductoServicio.objects.get_or_create(
-            categoria=impresiones,
+            categoria=fotocopias,
             nombre="Fotocopia simple",
             defaults={
                 "descripcion": "Fotocopia en blanco y negro.",
@@ -91,44 +94,127 @@ class Command(BaseCommand):
             },
         )
         ProductoServicio.objects.get_or_create(
-            categoria=impresiones,
+            categoria=fotocopias,
+            nombre="Impresión color",
+            defaults={
+                "descripcion": "Impresión color tamaño A4.",
+                "precio_asociados": 120,
+                "precio_no_asociados": 180,
+                "orden": 2,
+            },
+        )
+        ProductoServicio.objects.get_or_create(
+            categoria=fotocopias,
             nombre="Anillado",
             defaults={
                 "descripcion": "Anillado de apuntes y trabajos prácticos.",
                 "es_servicio": True,
                 "precio_asociados": 600,
                 "precio_no_asociados": 900,
-                "orden": 2,
+                "orden": 3,
             },
         )
-        utiles, _ = CategoriaProductoServicio.objects.get_or_create(
-            nombre="Útiles escolares",
+
+        uniformes, _ = CategoriaProductoServicio.objects.get_or_create(
+            nombre="Uniformes",
             defaults={
-                "descripcion": "Productos de apoyo para el cursado.",
-                "etiqueta_icono": "pencil",
-                "texto_cta": "Consultá stock en la mutual.",
+                "descripcion": "Prendas y accesorios del uniforme escolar.",
+                "etiqueta_icono": "tag",
+                "texto_cta": "Consultá talles disponibles en la mutual.",
                 "activa": True,
                 "orden": 2,
             },
         )
         ProductoServicio.objects.get_or_create(
-            categoria=utiles,
-            nombre="Kit básico",
+            categoria=uniformes,
+            nombre="Campera polar",
             defaults={
-                "descripcion": "Conjunto básico de útiles escolares.",
-                "precio_asociados": 2500,
-                "precio_no_asociados": 3200,
+                "descripcion": "Campera polar azul con logo bordado.",
+                "precio_asociados": 8500,
+                "precio_no_asociados": 10500,
+                "orden": 1,
+            },
+        )
+        ProductoServicio.objects.get_or_create(
+            categoria=uniformes,
+            nombre="Buzo",
+            defaults={
+                "descripcion": "Buzo de uniforme con capucha.",
+                "precio_asociados": 7200,
+                "precio_no_asociados": 9500,
+                "orden": 2,
+            },
+        )
+
+        bici, _ = CategoriaProductoServicio.objects.get_or_create(
+            nombre="Bicicleta solidaria",
+            defaults={
+                "descripcion": "Programa de préstamo de bicicletas para estudiantes.",
+                "etiqueta_icono": "bicycle",
+                "texto_cta": "Inscribite en la mutual para usar el servicio.",
+                "activa": True,
+                "orden": 3,
+            },
+        )
+        ProductoServicio.objects.get_or_create(
+            categoria=bici,
+            nombre="Préstamo de bicicleta",
+            defaults={
+                "descripcion": "Uso de bicicleta por el ciclo lectivo.",
+                "es_servicio": True,
+                "precio_asociados": 0,
+                "precio_no_asociados": 0,
                 "orden": 1,
             },
         )
 
-        libreria, _ = ActividadComercial.objects.get_or_create(nombre="Librería")
-        papeleria, _ = ActividadComercial.objects.get_or_create(nombre="Papelería")
+        cuadernillos, _ = CategoriaProductoServicio.objects.get_or_create(
+            nombre="Cuadernillos y anillado",
+            defaults={
+                "descripcion": "Cuadernillos armados por la mutual y servicio de anillado.",
+                "etiqueta_icono": "book",
+                "texto_cta": "Pedí presupuesto en la mutual.",
+                "activa": True,
+                "orden": 4,
+            },
+        )
+        ProductoServicio.objects.get_or_create(
+            categoria=cuadernillos,
+            nombre="Cuadernillo A4",
+            defaults={
+                "descripcion": "Cuadernillo A4 con hojas rayadas, 48 hojas.",
+                "precio_asociados": 400,
+                "precio_no_asociados": 600,
+                "orden": 1,
+            },
+        )
+        ProductoServicio.objects.get_or_create(
+            categoria=cuadernillos,
+            nombre="Anillado profesional",
+            defaults={
+                "descripcion": "Anillado de trabajos prácticos y documentos.",
+                "es_servicio": True,
+                "precio_asociados": 500,
+                "precio_no_asociados": 800,
+                "orden": 2,
+            },
+        )
+
+        # ── Actividades comerciales (rubros) ──
+
+        gastronomia, _ = ActividadComercial.objects.get_or_create(nombre="Gastronomía")
+        act_fisica, _ = ActividadComercial.objects.get_or_create(nombre="Actividad física")
+        belleza, _ = ActividadComercial.objects.get_or_create(nombre="Belleza")
+        vestimenta, _ = ActividadComercial.objects.get_or_create(nombre="Vestimenta")
+        educacion, _ = ActividadComercial.objects.get_or_create(nombre="Educación")
+        tecnologia, _ = ActividadComercial.objects.get_or_create(nombre="Tecnología y accesorios")
+
+        # ── Comercios ──
 
         libreria_sur, _ = Comercio.objects.get_or_create(
             nombre="Librería Sur",
             defaults={
-                "actividad_comercial": libreria,
+                "actividad_comercial": educacion,
                 "propietario": "Marina López",
                 "beneficio_texto": "10% en útiles escolares",
                 "estado": Comercio.ESTADO_FIRMADO,
@@ -141,21 +227,129 @@ class Command(BaseCommand):
                 "url_presencia_web": "https://instagram.com/libreriasur",
             },
         )
+
         Comercio.objects.get_or_create(
-            nombre="Papelera Centro",
+            nombre="Alto Drugstore",
             defaults={
-                "actividad_comercial": papeleria,
-                "propietario": "Juan Pérez",
-                "beneficio_texto": "2x1 en anillados",
+                "actividad_comercial": gastronomia,
+                "propietario": "Carlos Gómez",
+                "beneficio_texto": "10% de descuento en compras al contado",
                 "estado": Comercio.ESTADO_FIRMADO,
                 "flyer_disponible": True,
-                "telefono": "2944-000222",
-                "direccion": "San Martín 55",
+                "telefono": "2944-100111",
+                "direccion": "San Martín 250",
                 "ciudad": "General Roca",
                 "provincia": "Río Negro",
-                "url_presencia_web": "https://papeleracentro.example.com",
             },
         )
+        Comercio.objects.get_or_create(
+            nombre="Librería Muñoz",
+            defaults={
+                "actividad_comercial": educacion,
+                "propietario": "Ana Muñoz",
+                "beneficio_texto": "15% en todos los productos recibiendo Becas",
+                "estado": Comercio.ESTADO_FIRMADO,
+                "flyer_disponible": True,
+                "telefono": "2944-100222",
+                "direccion": "Mitre 340",
+                "ciudad": "General Roca",
+                "provincia": "Río Negro",
+            },
+        )
+        Comercio.objects.get_or_create(
+            nombre="Atenas Gimnasio",
+            defaults={
+                "actividad_comercial": act_fisica,
+                "propietario": "María Atenas Covelli",
+                "beneficio_texto": "1 clase gratis + 10% en cuotas",
+                "estado": Comercio.ESTADO_FIRMADO,
+                "flyer_disponible": True,
+                "telefono": "2944-100333",
+                "direccion": "Belgrano 500",
+                "ciudad": "General Roca",
+                "provincia": "Río Negro",
+            },
+        )
+        Comercio.objects.get_or_create(
+            nombre="Andromeda Studio",
+            defaults={
+                "actividad_comercial": belleza,
+                "propietario": "Luciana López",
+                "beneficio_texto": "20% en manicuría y peinados",
+                "estado": Comercio.ESTADO_FIRMADO,
+                "flyer_disponible": True,
+                "telefono": "2944-100444",
+                "direccion": "Rivadavia 150",
+                "ciudad": "General Roca",
+                "provincia": "Río Negro",
+            },
+        )
+        Comercio.objects.get_or_create(
+            nombre="Carolina's Closet",
+            defaults={
+                "actividad_comercial": vestimenta,
+                "propietario": "Carolina Fernández",
+                "beneficio_texto": "15% en indumentaria femenina",
+                "estado": Comercio.ESTADO_FIRMADO,
+                "flyer_disponible": True,
+                "telefono": "2944-100555",
+                "direccion": "Mitre 420",
+                "ciudad": "General Roca",
+                "provincia": "Río Negro",
+            },
+        )
+        Comercio.objects.get_or_create(
+            nombre="Techno Store",
+            defaults={
+                "actividad_comercial": tecnologia,
+                "propietario": "Pedro Martínez",
+                "beneficio_texto": "10% en accesorios tecnológicos",
+                "estado": Comercio.ESTADO_FIRMADO,
+                "flyer_disponible": True,
+                "telefono": "2944-100666",
+                "direccion": "San Martín 600",
+                "ciudad": "General Roca",
+                "provincia": "Río Negro",
+            },
+        )
+
+        # ── Publicidades ──
+
+        Publicidad.objects.get_or_create(
+            titulo="Fotocopia simple desde $50",
+            defaults={
+                "descripcion": "Aprovechá el precio especial para asociados en todas las fotocopias.",
+                "etiqueta_principal": "Servicio",
+                "etiqueta_secundaria": "50% OFF",
+                "producto_servicio": ProductoServicio.objects.get(nombre="Fotocopia simple"),
+                "activa": True,
+                "orden": 1,
+            },
+        )
+        Publicidad.objects.get_or_create(
+            titulo="Bicicleta solidaria",
+            defaults={
+                "descripcion": "Sumate al programa de préstamo gratuito de bicicletas.",
+                "etiqueta_principal": "Programa",
+                "etiqueta_secundaria": "Gratuito",
+                "producto_servicio": ProductoServicio.objects.get(nombre="Préstamo de bicicleta"),
+                "activa": True,
+                "orden": 2,
+            },
+        )
+        Publicidad.objects.get_or_create(
+            titulo="10% OFF en Librería Sur",
+            defaults={
+                "descripcion": "Descuento exclusivo para asociados en útiles escolares.",
+                "etiqueta_principal": "Comercio adherido",
+                "etiqueta_secundaria": "10% OFF",
+                "comercio": Comercio.objects.get(nombre="Librería Sur"),
+                "activa": True,
+                "orden": 3,
+            },
+        )
+
+        # ── Usuarios ──
 
         user_model = get_user_model()
         if not user_model.objects.filter(username="admin").exists():

@@ -19,3 +19,5 @@ timestamp: 2026-06-22T00:00:00-03:00
 - ActividadComercial 1 - N Comercio
 - Usuario 1 - 0..1 Comercio
 - CategoriaProductoServicio 1 - N ProductoServicio
+- ProductoServicio 1 - N Publicidad
+- Comercio 1 - N Publicidad

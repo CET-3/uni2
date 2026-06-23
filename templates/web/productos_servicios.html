@@ -6,7 +6,7 @@
 <h1 class="h2 mb-4">Productos y servicios</h1>
 <div class="vstack gap-4">
     {% for categoria in categorias_productos_servicios %}
-        <section>
+        <section id="{{ categoria.nombre|slugify }}">
             <div class="d-flex align-items-start gap-3 mb-3">
                 {% if categoria.etiqueta_icono %}
                     <span class="badge text-bg-primary">{{ categoria.etiqueta_icono }}</span>

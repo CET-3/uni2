@@ -18,7 +18,7 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
 - `comercios`: validación y panel del comercio adherido.
 - `cuotas`: modelos y servicios de cuotas, deuda y pagos.
 - `web`: home y páginas públicas del sitio.
-- `contenidos`: productos y servicios publicados por la web; en MVP se administran desde el admin técnico de Django.
+- `contenidos`: productos, servicios y publicidades publicados por la web; en MVP se administran desde el admin técnico de Django.
 
 ### Criterio de separación
 
@@ -50,13 +50,14 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
 ### Objetivo de la app gestión
 
 - Evitar que tareas frecuentes dependan del admin genérico de Django.
-- En el MVP, la gestión de productos, servicios, comercios y actividades comerciales queda como excepción documentada y se resuelve desde el admin técnico de Django.
+- En el MVP, la gestión de productos, servicios, publicidades, comercios y actividades comerciales queda como excepción documentada y se resuelve desde el admin técnico de Django.
 - Ofrecer pantallas operativas orientadas a flujo: buscar asociado, dar alta manual, ver detalle, editar datos, cobrar, ver deudores y administrar cuotas.
 - No cargar el dashboard del MVP con métricas, rankings o reportes avanzados.
 - Permitir una UX propia para escritorio y mobile sin contaminar la app de autenticación.
 - Hacer más claro el mantenimiento: auth y roles en `usuarios`, backoffice en `gestion`.
 - Registrar los permisos propios mediante un modelo técnico no gestionado por Django llamado `PermisoGestion`. Este modelo no representa una tabla de negocio: sirve para que las migraciones creen permisos personalizados de la app `gestion`.
 - Controlar cada pantalla de gestión con permisos Django propios: ver dashboard de gestión, consultar asociados, editar asociados, importar asociados, exportar asociados, cobrar cuotas, ver deudores, administrar períodos de cuota e importar cuotas históricas.
-- El comando `carga_inicial` crea datos de desarrollo: grupos, cursos, productos, servicios, comercios, un usuario de gestión/admin técnico, un usuario de atención de mutual vinculado también a un asociado de prueba, un usuario asociado vinculado a un asociado de prueba y un usuario comercio vinculado a un comercio de prueba.
+- El comando `carga_inicial` crea datos de desarrollo con contenido de ejemplo del sitio público Vercel: 4 categorías de servicios (Fotocopias, Uniformes, Bicicleta solidaria, Cuadernillos y anillado) con productos asociados, 6 rubros de actividad comercial (Gastronomía, Actividad física, Belleza, Vestimenta, Educación, Tecnología y accesorios), 7 comercios adheridos con beneficios, 3 publicidades sin foto, grupos y permisos, cursos, un usuario admin, un usuario de atención de mutual vinculado también a un asociado de prueba, un usuario asociado vinculado a un asociado de prueba y un usuario comercio vinculado al comercio Librería Sur.
+- Las fotos cargadas por admin técnico usan la configuración de archivos media documentada en [Archivos media](media.md).
 - El límite técnico `DATA_UPLOAD_MAX_NUMBER_FIELDS` se eleva a `10000` para permitir acciones masivas razonables en el admin técnico luego de importaciones iniciales con muchas cuotas.
 - En producción sobre Vercel, las conexiones a Supabase no deben quedar persistentes entre requests y las migraciones no deben ejecutarse dentro del handler serverless. Las migraciones se corren como paso explícito de operación.

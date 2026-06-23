@@ -1,7 +1,10 @@
-from django.views.generic import TemplateView
+from django.db.models import Prefetch
+from django.views.generic import DetailView, TemplateView
 
-from comercios.selectors import get_comercios_firmados
-from contenidos.selectors import get_categorias_productos_servicios_publicas
+from comercios.selectors import get_comercios_firmados, get_rubros_con_comercios
+from comercios.models import Comercio
+from contenidos.models import CategoriaProductoServicio, ProductoServicio
+from contenidos.selectors import get_categorias_productos_servicios_publicas, get_publicidades_home
 
 
 class HomeView(TemplateView):
@@ -9,7 +12,9 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categorias_productos_servicios"] = get_categorias_productos_servicios_publicas()[:3]
+        context["categorias_productos_servicios"] = get_categorias_productos_servicios_publicas()
+        context["publicidades"] = get_publicidades_home()
+        context["rubros_beneficio"] = get_rubros_con_comercios()
         context["comercios"] = get_comercios_firmados()[:3]
         return context
 
@@ -30,3 +35,35 @@ class ComerciosPublicosView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["comercios"] = get_comercios_firmados()
         return context
+
+
+class ProductoServicioDetalleView(DetailView):
+    model = ProductoServicio
+    template_name = "web/producto_servicio_detalle.html"
+    context_object_name = "producto_servicio"
+
+    def get_queryset(self):
+        return ProductoServicio.objects.filter(activo=True, categoria__activa=True).select_related("categoria")
+
+
+class ComercioDetalleView(DetailView):
+    model = Comercio
+    template_name = "web/comercio_detalle.html"
+    context_object_name = "comercio"
+
+    def get_queryset(self):
+        return Comercio.objects.filter(estado=Comercio.ESTADO_FIRMADO).select_related("actividad_comercial")
+
+
+class CategoriaProductoServicioDetalleView(DetailView):
+    model = CategoriaProductoServicio
+    template_name = "web/categoria_detalle.html"
+    context_object_name = "categoria"
+
+    def get_queryset(self):
+        return CategoriaProductoServicio.objects.filter(activa=True).prefetch_related(
+            Prefetch(
+                "productos_servicios",
+                queryset=ProductoServicio.objects.filter(activo=True).order_by("orden", "nombre"),
+            )
+        )
