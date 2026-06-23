@@ -1,17 +1,42 @@
-<footer class="bg-primary text-white mt-auto py-4">
+<footer class="bg-primary text-white mt-auto py-5" id="contacto">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <p class="mb-1 fw-semibold">Uni2 — Mutual Escolar CET 3</p>
-                <p class="mb-0 small opacity-75">Unidos para crecer juntos</p>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <h4 class="fw-bold">MUTUAL <span class="fw-normal">UNI2</span></h4>
+                <p class="small opacity-75 mt-2">Un espacio creado por y para los estudiantes, promoviendo valores, solidaridad y crecimiento conjunto.</p>
             </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                <ul class="list-inline mb-0 small">
-                    <li class="list-inline-item"><a class="text-white text-decoration-none opacity-75" href="{% url 'web:productos_servicios' %}">Productos y servicios</a></li>
-                    <li class="list-inline-item mx-2 opacity-50">·</li>
-                    <li class="list-inline-item"><a class="text-white text-decoration-none opacity-75" href="{% url 'web:comercios' %}">Comercios</a></li>
+
+            <div class="col-md-2">
+                <h6 class="fw-semibold text-uppercase small mb-3">Recursos</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a href="{% url 'web:home' %}" class="text-white text-decoration-none opacity-75">Inicio</a></li>
+                    <li class="mb-2"><a href="#beneficios" class="text-white text-decoration-none opacity-75">Beneficios</a></li>
+                    <li class="mb-2"><a href="{% url 'web:productos_servicios' %}" class="text-white text-decoration-none opacity-75">Servicios</a></li>
+                    <li class="mb-2"><a href="#como-asociarse" class="text-white text-decoration-none opacity-75">Asociarse</a></li>
                 </ul>
             </div>
+
+            <div class="col-md-3">
+                <h6 class="fw-semibold text-uppercase small mb-3">Contacto</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2 opacity-75">Email: <a href="mailto:unidosatencionalcliente@gmail.com" class="text-white text-decoration-none">unidosatencionalcliente@gmail.com</a></li>
+                    <li class="mb-2 opacity-75">WhatsApp: <a href="https://wa.me/5492984210672" target="_blank" rel="noopener" class="text-white text-decoration-none">+54 9 298 421-0672</a></li>
+                    <li class="mb-2 opacity-75">Chacabuco 1050, General Roca, Río Negro</li>
+                </ul>
+            </div>
+
+            <div class="col-md-3">
+                <h6 class="fw-semibold text-uppercase small mb-3">Seguinos</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a href="https://www.instagram.com/unidos.cet3" target="_blank" rel="noopener" class="text-white text-decoration-none opacity-75">Instagram: @unidos.cet3</a></li>
+                </ul>
+                <p class="small mt-3">
+                    <a href="{% url 'web:home' %}#como-asociarse" class="btn btn-outline-light btn-sm">Asociate ahora</a>
+                </p>
+            </div>
         </div>
+
+        <hr class="mt-4 mb-3 opacity-25">
+        <p class="small opacity-50 text-center mb-0">&copy; {% now "Y" %} Mutual Escolar UNI2 — CET N&deg; 3. Todos los derechos reservados.</p>
     </div>
 </footer>

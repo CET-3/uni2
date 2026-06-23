@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import CategoriaProductoServicio, ProductoServicio
+from .models import CategoriaProductoServicio, ProductoServicio, Publicidad
 
 
 class ProductoServicioInline(admin.TabularInline):
@@ -23,3 +23,11 @@ class ProductoServicioAdmin(admin.ModelAdmin):
     list_filter = ("activo", "es_servicio", "categoria")
     search_fields = ("nombre", "descripcion", "categoria__nombre")
     list_select_related = ("categoria",)
+
+
+@admin.register(Publicidad)
+class PublicidadAdmin(admin.ModelAdmin):
+    list_display = ("titulo", "etiqueta_principal", "etiqueta_secundaria", "activa", "orden")
+    list_filter = ("activa", "etiqueta_principal")
+    search_fields = ("titulo", "descripcion", "etiqueta_principal", "etiqueta_secundaria")
+    list_select_related = ("producto_servicio", "comercio")

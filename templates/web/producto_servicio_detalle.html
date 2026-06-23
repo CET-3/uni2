@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{{ producto_servicio.nombre }} | Uni2{% endblock %}
+
+{% block content %}
+<article class="vstack gap-3">
+    <a href="{% url 'web:productos_servicios' %}">Volver a productos y servicios</a>
+    <div>
+        <span class="badge text-bg-primary">{{ producto_servicio.categoria.nombre }}</span>
+        <h1 class="h2 mt-3">{{ producto_servicio.nombre }}</h1>
+        <p class="text-secondary">{{ producto_servicio.descripcion }}</p>
+    </div>
+    <dl class="row">
+        <dt class="col-sm-4">Tipo</dt>
+        <dd class="col-sm-8">{{ producto_servicio.es_servicio|yesno:"Servicio,Producto" }}</dd>
+        <dt class="col-sm-4">Precio para asociados</dt>
+        <dd class="col-sm-8">${{ producto_servicio.precio_asociados }}</dd>
+        <dt class="col-sm-4">Precio para no asociados</dt>
+        <dd class="col-sm-8">${{ producto_servicio.precio_no_asociados }}</dd>
+    </dl>
+    {% if producto_servicio.categoria.texto_cta %}
+        <p>{{ producto_servicio.categoria.texto_cta|urlize }}</p>
+    {% endif %}
+</article>
+{% endblock %}

@@ -1,7 +1,9 @@
 import pytest
+from django.core.exceptions import ValidationError
 
-from contenidos.models import CategoriaProductoServicio, ProductoServicio
-from contenidos.selectors import get_categorias_productos_servicios_publicas
+from comercios.models import ActividadComercial, Comercio
+from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publicidad
+from contenidos.selectors import get_categorias_productos_servicios_publicas, get_publicidades_home
 
 
 @pytest.mark.django_db
@@ -87,3 +89,90 @@ def test_get_categorias_productos_servicios_publicas_ordenadas_con_items_ordenad
 
     assert [categoria.nombre for categoria in resultado] == ["Primera", "Segunda"]
     assert [item.nombre for item in resultado[0].items_publicos] == ["Primer item", "Segundo item"]
+
+
+@pytest.mark.django_db
+def test_get_publicidades_home_solo_activas_ordenadas_y_con_vinculos():
+    categoria = CategoriaProductoServicio.objects.create(nombre="Impresiones", descripcion="Servicios")
+    producto = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Anillado",
+        descripcion="Anillado simple",
+        precio_asociados=600,
+        precio_no_asociados=900,
+    )
+    actividad = ActividadComercial.objects.create(nombre="Librería")
+    comercio = Comercio.objects.create(
+        actividad_comercial=actividad,
+        nombre="Librería Sur",
+        beneficio_texto="10% en útiles",
+        estado=Comercio.ESTADO_FIRMADO,
+        direccion="Mitre 123",
+    )
+    Publicidad.objects.create(
+        titulo="Oculta",
+        descripcion="No visible",
+        etiqueta_principal="Promo",
+        etiqueta_secundaria="OFF",
+        foto="publicidades/oculta.webp",
+        activa=False,
+        orden=1,
+    )
+    Publicidad.objects.create(
+        titulo="Producto destacado",
+        descripcion="Anillado para apuntes",
+        etiqueta_principal="Servicio",
+        etiqueta_secundaria="Nuevo",
+        foto="publicidades/anillado.webp",
+        producto_servicio=producto,
+        activa=True,
+        orden=2,
+    )
+    Publicidad.objects.create(
+        titulo="Comercio destacado",
+        descripcion="Librería adherida",
+        etiqueta_principal="Comercio",
+        etiqueta_secundaria="10% OFF",
+        foto="publicidades/libreria.webp",
+        comercio=comercio,
+        activa=True,
+        orden=1,
+    )
+
+    resultado = list(get_publicidades_home())
+
+    assert [publicidad.titulo for publicidad in resultado] == ["Comercio destacado", "Producto destacado"]
+    assert resultado[0].comercio == comercio
+    assert resultado[1].producto_servicio == producto
+
+
+@pytest.mark.django_db
+def test_publicidad_no_puede_vincular_producto_y_comercio_a_la_vez():
+    categoria = CategoriaProductoServicio.objects.create(nombre="Impresiones", descripcion="Servicios")
+    producto = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Anillado",
+        descripcion="Anillado simple",
+        precio_asociados=600,
+        precio_no_asociados=900,
+    )
+    actividad = ActividadComercial.objects.create(nombre="Librería")
+    comercio = Comercio.objects.create(
+        actividad_comercial=actividad,
+        nombre="Librería Sur",
+        beneficio_texto="10% en útiles",
+        estado=Comercio.ESTADO_FIRMADO,
+        direccion="Mitre 123",
+    )
+    publicidad = Publicidad(
+        titulo="Destino doble",
+        descripcion="No válido",
+        etiqueta_principal="Promo",
+        etiqueta_secundaria="OFF",
+        foto="publicidades/doble.webp",
+        producto_servicio=producto,
+        comercio=comercio,
+    )
+
+    with pytest.raises(ValidationError, match="no puede estar vinculada"):
+        publicidad.full_clean()

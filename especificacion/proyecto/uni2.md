@@ -23,6 +23,7 @@ Uni2 es una plataforma de gestión para mutuales escolares. Inicialmente será u
 - Cuotas y pagos.
 - Credenciales digitales.
 - Consulta pública de productos y servicios de la mutual, cargados desde el admin técnico de Django.
+- Publicidades destacadas en la home, cargadas desde el admin técnico de Django.
 - Comercios adheridos con su beneficio comercial, cargados desde el admin técnico de Django.
 - Reportes administrativos básicos.
 

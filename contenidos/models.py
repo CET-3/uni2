@@ -1,4 +1,8 @@
 from django.db import models
+from django.urls import reverse
+from django.core.exceptions import ValidationError
+
+from comercios.models import Comercio
 
 
 class CategoriaProductoServicio(models.Model):
@@ -101,3 +105,86 @@ class ProductoServicio(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class Publicidad(models.Model):
+    titulo = models.CharField(
+        "título",
+        max_length=150,
+        help_text="Título visible de la publicidad.",
+    )
+    descripcion = models.TextField(
+        "descripción",
+        help_text="Texto breve que acompaña la publicidad.",
+    )
+    etiqueta_principal = models.CharField(
+        "etiqueta principal",
+        max_length=80,
+        help_text="Etiqueta superior de la card, por ejemplo Alimentos o Servicio.",
+    )
+    etiqueta_secundaria = models.CharField(
+        "etiqueta secundaria",
+        max_length=80,
+        help_text="Texto destacado de la card, por ejemplo 10% OFF o Nuevo.",
+    )
+    foto = models.ImageField(
+        "foto",
+        upload_to="publicidades/",
+        blank=True,
+        help_text="Imagen horizontal recomendada: 1600x900 px, WebP o JPG, menor a 500 KB.",
+    )
+    producto_servicio = models.ForeignKey(
+        ProductoServicio,
+        on_delete=models.SET_NULL,
+        related_name="publicidades",
+        blank=True,
+        null=True,
+        verbose_name="producto o servicio",
+        help_text="Producto o servicio al que apunta la publicidad, si corresponde.",
+    )
+    comercio = models.ForeignKey(
+        Comercio,
+        on_delete=models.SET_NULL,
+        related_name="publicidades",
+        blank=True,
+        null=True,
+        verbose_name="comercio",
+        help_text="Comercio al que apunta la publicidad, si corresponde.",
+    )
+    activa = models.BooleanField(
+        "activa",
+        default=True,
+        help_text="Indica si la publicidad se muestra en la home.",
+    )
+    orden = models.PositiveIntegerField(
+        "orden",
+        default=0,
+        help_text="Posición usada para ordenar las publicidades en la home.",
+    )
+
+    class Meta:
+        verbose_name = "Publicidad"
+        verbose_name_plural = "Publicidades"
+        ordering = ["orden", "titulo"]
+        indexes = [models.Index(fields=["activa", "orden"])]
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(producto_servicio__isnull=True) | models.Q(comercio__isnull=True),
+                name="publicidad_un_solo_destino",
+            )
+        ]
+
+    def __str__(self):
+        return self.titulo
+
+    def clean(self):
+        super().clean()
+        if self.producto_servicio_id and self.comercio_id:
+            raise ValidationError("La publicidad no puede estar vinculada a un producto/servicio y a un comercio a la vez.")
+
+    def get_absolute_url(self):
+        if self.producto_servicio_id:
+            return reverse("web:producto_servicio_detalle", args=[self.producto_servicio_id])
+        if self.comercio_id:
+            return reverse("web:comercio_detalle", args=[self.comercio_id])
+        return ""

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ comercio.nombre }} | Uni2{% endblock %}
+
+{% block content %}
+<article class="vstack gap-3">
+    <a href="{% url 'web:comercios' %}">Volver a comercios</a>
+    <div>
+        <span class="badge text-bg-primary">{{ comercio.actividad_comercial.nombre }}</span>
+        <h1 class="h2 mt-3">{{ comercio.nombre }}</h1>
+        <p class="text-secondary">{{ comercio.direccion }}</p>
+    </div>
+    {% if comercio.beneficio_texto %}
+        <p><strong>Beneficio:</strong> {{ comercio.beneficio_texto }}</p>
+    {% endif %}
+    {% if comercio.telefono %}
+        <p><strong>Teléfono:</strong> {{ comercio.telefono }}</p>
+    {% endif %}
+    {% if comercio.email %}
+        <p><strong>Email:</strong> <a href="mailto:{{ comercio.email }}">{{ comercio.email }}</a></p>
+    {% endif %}
+    {% if comercio.url_presencia_web %}
+        <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Visitar presencia web</a>
+    {% endif %}
+</article>
+{% endblock %}

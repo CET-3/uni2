@@ -9,4 +9,5 @@
 * [Comercios públicos](comercios-publicos.md) - Reglas de negocio sobre publicación y visualización de comercios.
 * [Comercios operación](comercios-operacion.md) - Reglas de negocio sobre el uso del sistema por parte de comercios.
 * [Productos y servicios](productos-servicios.md) - Reglas de negocio sobre productos y servicios publicados por la mutual.
+* [Publicidades](publicidades.md) - Reglas de negocio sobre publicidades destacadas en la home.
 * [Credenciales](credenciales.md) - Reglas de negocio sobre credenciales.
