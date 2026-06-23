@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import re
 from io import BytesIO
 from collections import Counter
@@ -10,9 +11,13 @@ from typing import Any
 from django.db import transaction
 
 from .models import Asociado, Curso
+from usuarios.services import create_user_for_asociado
 
 
 PADRON_IMPORT_SESSION_KEY = "padron_import_preview"
+PADRON_FECHA_INICIO_COBRO = date(2026, 3, 1)
+PADRON_IMPORT_LOG_EVERY = 25
+logger = logging.getLogger(__name__)
 
 ROLE_MAP = {
     "docente": "docente",
@@ -463,7 +468,9 @@ def build_revisar_padron_xlsx(preview: PadronPreview) -> bytes:
 def import_padron_preview(preview: PadronPreview, fecha_alta: date) -> PadronImportResult:
     result = PadronImportResult()
     cursos = {}
-    for row in preview.importables:
+    total = len(preview.importables)
+    logger.info("Importacion de padron inicial iniciada: %s filas importables.", total)
+    for index, row in enumerate(preview.importables, start=1):
         curso = None
         if row.get("curso"):
             key = (row["curso_anio"], row["curso_division"], row["division"], row["turno"])
@@ -485,7 +492,19 @@ def import_padron_preview(preview: PadronPreview, fecha_alta: date) -> PadronImp
         except Exception as exc:  # noqa: BLE001
             result.errores.append(f"Fila {row.get('fila_origen')}: {exc}")
 
+        if index == total or index % PADRON_IMPORT_LOG_EVERY == 0:
+            logger.info("Importacion de padron inicial: %s/%s filas procesadas.", index, total)
+
     result.omitidos = len(preview.revisar) + preview.no_importar_count
+    logger.info(
+        "Importacion de padron inicial finalizada: %s creados, %s actualizados, "
+        "%s cursos creados, %s omitidos, %s errores.",
+        result.creados,
+        result.actualizados,
+        result.cursos_creados,
+        result.omitidos,
+        len(result.errores),
+    )
     return result
 
 
@@ -500,9 +519,11 @@ def _upsert_asociado(row, curso, fecha_alta, result):
         "direccion": row.get("direccion", ""),
         "estado": Asociado.ESTADO_ACTIVO,
         "fecha_alta": fecha_alta,
-        "fecha_inicio_cobro": fecha_alta,
+        "fecha_inicio_cobro": PADRON_FECHA_INICIO_COBRO,
     }
     asociado, created = Asociado.objects.update_or_create(dni=row["dni"], defaults=defaults)
+    if asociado.usuario_id is None:
+        create_user_for_asociado(asociado=asociado, password=asociado.dni)
     if created:
         result.creados += 1
     else:
