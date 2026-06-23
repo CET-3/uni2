@@ -57,7 +57,7 @@
             <div class="row g-3">
                 {% for rubro in rubros_beneficio %}
                     <div class="col-6 col-md-4 col-lg-2">
-                        <a href="{% url 'web:comercios' %}" class="card h-100 text-center text-decoration-none">
+                        <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="card h-100 text-center text-decoration-none">
                             <div class="card-body">
                                 <span class="fw-semibold small">{{ rubro.nombre }}</span>
                             </div>
