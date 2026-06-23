@@ -196,7 +196,7 @@ Notificación interna del sistema.
 
 **Decisión funcional:** este importador no debe deducir apellido, nombre, ciclo, año, división o turno desde textos libres. Si esos datos faltan o no coinciden con los valores esperados, la fila debe quedar para revisar.
 
-**Relación con la exportación:** debe aceptar el mismo formato generado por [CU-exportar-asociados-formato-uni2](/casos-de-uso/cu-exportar-asociados-formato-uni2.md), que ya está definido para el MVP.
+**Relación con la exportación:** debe aceptar el mismo formato generado por [CU-exportar-asociados-formato-uni2](../casos-de-uso/cu-exportar-asociados-formato-uni2.md), que ya está definido para el MVP.
 
 **Modelos afectados:** Asociado, Curso.
 

@@ -12,6 +12,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Respuesta esperada:** el sistema no genera duplicados.
 
-**Caso de uso relacionado:** [CU-generar-periodo-cuota](/casos-de-uso/cu-generar-periodo-cuota.md).
+**Caso de uso relacionado:** [CU-generar-periodo-cuota](../casos-de-uso/cu-generar-periodo-cuota.md).
 
-**Relacionado con:** [CUOTA-001](/reglas/cuotas.md#cuota-001), [CUOTA-005](/reglas/cuotas.md#cuota-005).
+**Relacionado con:** [CUOTA-001](../reglas/cuotas.md#cuota-001), [CUOTA-005](../reglas/cuotas.md#cuota-005).

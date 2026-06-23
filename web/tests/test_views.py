@@ -42,6 +42,7 @@ def test_comercios_publicos_muestran_actividad_comercial(client):
         actividad_comercial=actividad,
         beneficio_texto="10% en útiles",
         estado=Comercio.ESTADO_FIRMADO,
+        orden=1,
     )
     Comercio.objects.create(
         nombre="Librería Alfa",
@@ -49,6 +50,7 @@ def test_comercios_publicos_muestran_actividad_comercial(client):
         actividad_comercial=actividad,
         beneficio_texto="2x1 en anillados",
         estado=Comercio.ESTADO_FIRMADO,
+        orden=2,
     )
     Comercio.objects.create(
         nombre="Librería Pendiente",
@@ -61,7 +63,13 @@ def test_comercios_publicos_muestran_actividad_comercial(client):
     response = client.get(reverse("web:comercios"))
 
     contenido = response.content.decode()
-    assert contenido.index("Librería Alfa") < contenido.index("Librería Zeta")
+    assert contenido.index("Librería Zeta") < contenido.index("Librería Alfa")
     assert "Actividad:" in contenido
     assert "Librería" in contenido
     assert "Librería Pendiente" not in contenido
+
+
+def test_comercio_tiene_orden_para_publicacion():
+    campo = Comercio._meta.get_field("orden")
+
+    assert campo.verbose_name == "orden"
