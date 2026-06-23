@@ -13,5 +13,5 @@ Usuario autenticado vinculado a un asociado o adherente. Puede:
 - Ver su panel.
 - Ver su credencial digital.
 - Ver estado de cuotas.
-- Consultar beneficios.
+- Consultar productos y servicios.
 - Consultar comercios adheridos.

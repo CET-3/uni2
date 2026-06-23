@@ -9,6 +9,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 # Sitio público
 
 - Inicio.
-- Beneficios.
+- Productos y servicios.
 - Comercios: listado público vertical de comercios con estado `Firmado`, ordenado por `orden`.
 - Login.

@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 
 from comercios.selectors import get_comercios_firmados
-from contenidos.selectors import get_beneficios_publicos
+from contenidos.selectors import get_categorias_productos_servicios_publicas
 
 
 class HomeView(TemplateView):
@@ -9,17 +9,17 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["beneficios"] = get_beneficios_publicos()[:3]
+        context["categorias_productos_servicios"] = get_categorias_productos_servicios_publicas()[:3]
         context["comercios"] = get_comercios_firmados()[:3]
         return context
 
 
-class BeneficiosPublicosView(TemplateView):
-    template_name = "web/beneficios.html"
+class ProductosServiciosPublicosView(TemplateView):
+    template_name = "web/productos_servicios.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["beneficios"] = get_beneficios_publicos()
+        context["categorias_productos_servicios"] = get_categorias_productos_servicios_publicas()
         return context
 
 

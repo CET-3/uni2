@@ -16,7 +16,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Items de pedido.
 - PagoPedido.
 - MovimientoStock.
-- Gestión de beneficios institucionales en backoffice.
+- Gestión de productos y servicios en backoffice.
 - Múltiples beneficios por comercio.
 - Importación regular de asociados en formato Uni2.
 - Reportes de ventas y stock.
@@ -32,4 +32,3 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Mensajería.
 - Asambleas.
 - Votaciones.
-

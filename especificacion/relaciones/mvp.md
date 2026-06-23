@@ -18,4 +18,4 @@ timestamp: 2026-06-22T00:00:00-03:00
 - CicloLectivo 1 - N PeríodoCuota
 - ActividadComercial 1 - N Comercio
 - Usuario 1 - 0..1 Comercio
-
+- CategoriaProductoServicio 1 - N ProductoServicio

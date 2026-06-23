@@ -9,6 +9,7 @@
 * [Pago](pago.md) - Representa un ingreso de dinero.
 * [PagoCuota](pago-cuota.md) - Aplicación de un pago a una cuota.
 * [Donacion](donacion.md) - Registra el excedente voluntario recibido en un cobro.
-* [Beneficio](beneficio.md) - Beneficio institucional de la mutual.
+* [CategoriaProductoServicio](categoria-producto-servicio.md) - Agrupa productos y servicios publicados por la mutual.
+* [ProductoServicio](producto-servicio.md) - Representa un producto o servicio publicado por la mutual.
 * [ActividadComercial](actividad-comercial.md) - Clasifica el rubro o actividad principal de un comercio adherido.
 * [Comercio](comercio.md) - Comercio adherido a la mutual.

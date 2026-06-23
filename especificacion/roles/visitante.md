@@ -12,6 +12,6 @@ Usuario no autenticado. Puede consultar:
 
 - Página de inicio.
 - Información institucional.
-- Beneficios.
+- Productos y servicios.
 - Comercios adheridos.
 - Acceso al login.

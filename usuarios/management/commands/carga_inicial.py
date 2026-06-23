@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 
 from asociados.models import Asociado, Curso
 from comercios.models import ActividadComercial, Comercio
-from contenidos.models import Beneficio
+from contenidos.models import CategoriaProductoServicio, ProductoServicio
 from gestion.permissions import (
     GESTION_COBRAR_CUOTAS,
     GESTION_CONSULTAR_ASOCIADOS,
@@ -70,16 +70,57 @@ class Command(BaseCommand):
                 defaults={"activo": True},
             )
 
-        beneficios = [
-            ("Descuento en fotocopias", "Acceso a descuentos para estudiantes y familias."),
-            ("Acompañamiento escolar", "Beneficios y apoyo en materiales para el cursado."),
-            ("Promociones con comercios", "Acuerdos con librerías y comercios de la comunidad."),
-        ]
-        for orden, (titulo, descripcion) in enumerate(beneficios, start=1):
-            Beneficio.objects.get_or_create(
-                titulo=titulo,
-                defaults={"descripcion": descripcion, "activo": True, "orden": orden},
-            )
+        impresiones, _ = CategoriaProductoServicio.objects.get_or_create(
+            nombre="Impresiones y fotocopias",
+            defaults={
+                "descripcion": "Servicios de impresión para estudiantes y familias.",
+                "etiqueta_icono": "printer",
+                "texto_cta": "Consultá disponibilidad uni2mutual@gmail.com",
+                "activa": True,
+                "orden": 1,
+            },
+        )
+        ProductoServicio.objects.get_or_create(
+            categoria=impresiones,
+            nombre="Fotocopia simple",
+            defaults={
+                "descripcion": "Fotocopia en blanco y negro.",
+                "precio_asociados": 50,
+                "precio_no_asociados": 80,
+                "orden": 1,
+            },
+        )
+        ProductoServicio.objects.get_or_create(
+            categoria=impresiones,
+            nombre="Anillado",
+            defaults={
+                "descripcion": "Anillado de apuntes y trabajos prácticos.",
+                "es_servicio": True,
+                "precio_asociados": 600,
+                "precio_no_asociados": 900,
+                "orden": 2,
+            },
+        )
+        utiles, _ = CategoriaProductoServicio.objects.get_or_create(
+            nombre="Útiles escolares",
+            defaults={
+                "descripcion": "Productos de apoyo para el cursado.",
+                "etiqueta_icono": "pencil",
+                "texto_cta": "Consultá stock en la mutual.",
+                "activa": True,
+                "orden": 2,
+            },
+        )
+        ProductoServicio.objects.get_or_create(
+            categoria=utiles,
+            nombre="Kit básico",
+            defaults={
+                "descripcion": "Conjunto básico de útiles escolares.",
+                "precio_asociados": 2500,
+                "precio_no_asociados": 3200,
+                "orden": 1,
+            },
+        )
 
         libreria, _ = ActividadComercial.objects.get_or_create(nombre="Librería")
         papeleria, _ = ActividadComercial.objects.get_or_create(nombre="Papelería")
