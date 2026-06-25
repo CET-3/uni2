@@ -16,6 +16,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 2.  Entra a Mi Credencial.
 3.  El sistema muestra la credencial digital con QR.
 
-**Reglas relacionadas:** [CREDENCIAL-001](../reglas/credenciales.md#credencial-001), [CREDENCIAL-002](../reglas/credenciales.md#credencial-002).
+**Reglas relacionadas:** [Credenciales](../reglas/credenciales.md).
 
 **Modelos afectados:** Asociado, Usuario.

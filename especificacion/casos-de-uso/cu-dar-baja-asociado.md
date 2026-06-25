@@ -18,7 +18,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 4.  El sistema cambia el estado a inactivo.
 5.  Conserva cuotas y pagos.
 
-**Reglas relacionadas:** [ASOCIADO-003](../reglas/asociados.md#asociado-003), [ASOCIADO-004](../reglas/asociados.md#asociado-004).
+**Reglas relacionadas:** [Asociados](../reglas/asociados.md).
 
 **Situaciones especiales:** baja con deuda, baja sin deuda, asociado con usuario.
 

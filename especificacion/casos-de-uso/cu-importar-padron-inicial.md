@@ -24,7 +24,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 8.  El administrador confirma la importación.
 9.  El sistema importa solo las filas `IMPORTAR`, crea cursos faltantes y omite las filas a revisar.
 
-**Reglas relacionadas:** [ASOCIADO-006](../reglas/asociados.md#asociado-006), [ASOCIADO-007](../reglas/asociados.md#asociado-007), [CURSO-001](../reglas/cursos.md#curso-001).
+**Reglas relacionadas:** [Asociados](../reglas/asociados.md), [Cursos](../reglas/cursos.md).
 
 **Reglas de importación:** la primera palabra de `Apellido/nombre` se toma como apellido y el resto como nombre. Si falta nombre se completa con `[completar]`. Si no se pueden deducir año, división, ciclo y turno del curso, la fila queda para revisar. Los cargos como docente, preceptora o director no se toman como curso. Si la planilla no indica turno y el curso es completo, se usa `TM` como valor provisorio y se lista el curso antes de confirmar.
 

@@ -29,7 +29,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 13. Crea `PagoCuota` por cada cuota cubierta.
 14. Si el importe recibido supera el mínimo calculado, registra el excedente como `Donacion`.
 
-**Reglas relacionadas:** [PAGO-001](../reglas/pagos.md#pago-001), [PAGO-002](../reglas/pagos.md#pago-002), [PAGO-003](../reglas/pagos.md#pago-003), [PAGO-004](../reglas/pagos.md#pago-004), [PAGO-005](../reglas/pagos.md#pago-005), [PAGO-006](../reglas/pagos.md#pago-006), [PAGO-007](../reglas/pagos.md#pago-007), [PAGO-008](../reglas/pagos.md#pago-008), [PAGO-009](../reglas/pagos.md#pago-009).
+**Reglas relacionadas:** [Pagos](../reglas/pagos.md).
 
 **Situaciones especiales:** pago exacto, pago de una cuota, pago de varias cuotas, pago mayor al mínimo calculado, importe recibido menor al mínimo calculado, asociado sin deuda.
 

@@ -23,7 +23,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 7.  Si la persona de gestión también tiene permiso para cobrar cuotas, redirige a la pantalla de cobro con el asociado preseleccionado.
 8.  Si no tiene permiso para cobrar cuotas, redirige al detalle operativo del asociado.
 
-**Reglas relacionadas:** [ASOCIADO-001](../reglas/asociados.md#asociado-001), [ASOCIADO-006](../reglas/asociados.md#asociado-006), [ASOCIADO-007](../reglas/asociados.md#asociado-007), [ALTA-ASOCIADO-001](../reglas/altas-de-asociado.md#alta-asociado-001), [ALTA-ASOCIADO-002](../reglas/altas-de-asociado.md#alta-asociado-002), [ALTA-ASOCIADO-003](../reglas/altas-de-asociado.md#alta-asociado-003), [ALTA-ASOCIADO-004](../reglas/altas-de-asociado.md#alta-asociado-004), [ALTA-ASOCIADO-005](../reglas/altas-de-asociado.md#alta-asociado-005).
+**Reglas relacionadas:** [Asociados](../reglas/asociados.md), [Altas de asociado](../reglas/altas-de-asociado.md).
 
 **Situaciones especiales:** DNI duplicado, curso inexistente, alta después del día 15, asociado sin usuario, períodos de cuota faltantes, usuario sin permiso para cobrar cuotas.
 

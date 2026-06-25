@@ -22,6 +22,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Permisos:** la pantalla de edición requiere permiso para editar asociados. Los usuarios con permiso solo de consulta pueden ver datos, deuda y pagos recientes, pero no modificar el asociado.
 
-**Reglas relacionadas:** [ASOCIADO-003](../reglas/asociados.md#asociado-003), [ALTA-ASOCIADO-003](../reglas/altas-de-asociado.md#alta-asociado-003).
+**Reglas relacionadas:** [Asociados](../reglas/asociados.md), [Altas de asociado](../reglas/altas-de-asociado.md).
 
 **Modelos afectados:** Asociado, Curso.
