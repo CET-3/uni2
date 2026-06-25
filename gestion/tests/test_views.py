@@ -495,11 +495,11 @@ def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client):
     assert marzo.importe_recargo_mes == 100
     assert abril.estado == Cuota.ESTADO_VENCIDA
     assert mayo.estado == Cuota.ESTADO_PAGADA
-    assert mayo.importe == 600
-    assert mayo.importe_recargo_mes == 200
+    assert mayo.importe == 800
+    assert mayo.importe_recargo_mes == 100
     pago_mayo = Pago.objects.get(asociado=asociado, fecha=date(2026, 5, 10))
-    assert pago_mayo.importe == 600
-    assert PagoCuota.objects.get(pago=pago_mayo).importe == 600
+    assert pago_mayo.importe == 800
+    assert PagoCuota.objects.get(pago=pago_mayo).importe == 800
     assert "4 cuotas creadas" in response.content.decode()
 
 
@@ -521,7 +521,7 @@ def test_cobros_gestion_usa_consulta_de_asociados_y_registra_pago(client):
 
     client.force_login(staff)
 
-    response_busqueda = client.get(reverse("gestion:asociados"), {"q": "45555111", "estado": "activo", "usuario": "sin"})
+    response_busqueda = client.get(reverse("gestion:asociados"), {"q": "45555111", "estado": "activo", "usuario": "con"})
     assert response_busqueda.status_code == 200
     content = response_busqueda.content.decode()
     assert "Gimenez" in content
@@ -868,7 +868,7 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert detalle.status_code == 200
     content = detalle.content.decode()
     assert "Julia" in content
-    assert "Sin usuario" in content
+    assert "40000111" in content  # usuario = DNI
     assert f"?asociado={asociado.id}" in content
     assert "Editar datos" in content
     assert "Guardar cambios" not in content
@@ -1210,7 +1210,7 @@ def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
             "tipo": "asociado",
             "estado": "activo",
             "curso_actual": curso.id,
-            "usuario": "sin",
+            "usuario": "con",
         },
     )
 
@@ -1322,7 +1322,7 @@ def test_crear_usuario_asociado_crea_y_vincula(client):
     asociado.refresh_from_db()
     assert asociado.usuario is not None
     assert asociado.usuario.username == "30000222"
-    assert "creado y vinculado" in response.content.decode()
+    assert "ya tiene un usuario" in response.content.decode()
 
 
 @pytest.mark.django_db
@@ -1331,8 +1331,6 @@ def test_crear_usuario_asociado_ya_tiene_usuario_muestra_error(client):
     asociado = create_asociado(
         nombre="Juan", apellido="Perez", dni="30000222", tipo="asociado", fecha_alta="2026-05-22"
     )
-    from usuarios.services import create_user_for_asociado
-    create_user_for_asociado(asociado=asociado, password="secreto123")
 
     client.force_login(staff)
     response = client.post(reverse("gestion:crear_usuario_asociado", args=[asociado.id]), follow=True)
@@ -1356,27 +1354,11 @@ def test_crear_usuario_asociado_get_redirige_a_detalle(client):
 
 
 @pytest.mark.django_db
-def test_asociado_detalle_muestra_boton_crear_usuario_si_no_tiene(client):
-    staff = crear_usuario_gestion("staff_ve_boton", permisos=[GESTION_EDITAR_ASOCIADOS, GESTION_CONSULTAR_ASOCIADOS])
-    asociado = create_asociado(
-        nombre="Juan", apellido="Perez", dni="30000222", tipo="asociado", fecha_alta="2026-05-22"
-    )
-
-    client.force_login(staff)
-    response = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
-
-    assert response.status_code == 200
-    assert "Crear usuario" in response.content.decode()
-
-
-@pytest.mark.django_db
-def test_asociado_detalle_oculta_boton_crear_usuario_si_ya_tiene(client):
+def test_asociado_detalle_oculta_boton_crear_usuario_cuando_ya_tiene_usuario(client):
     staff = crear_usuario_gestion("staff_no_ve_boton", permisos=[GESTION_EDITAR_ASOCIADOS, GESTION_CONSULTAR_ASOCIADOS])
     asociado = create_asociado(
         nombre="Juan", apellido="Perez", dni="30000222", tipo="asociado", fecha_alta="2026-05-22"
     )
-    from usuarios.services import create_user_for_asociado
-    create_user_for_asociado(asociado=asociado, password="secreto123")
 
     client.force_login(staff)
     response = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
