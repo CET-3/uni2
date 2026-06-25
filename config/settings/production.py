@@ -10,11 +10,11 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
-CSRF_TRUSTED_ORIGINS = [
-    origin
-    for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
-    if origin
-]
+_csrf_origins = [o for o in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if o]
+if vercel_url := os.environ.get("VERCEL_URL"):
+    _csrf_origins.append(f"https://{vercel_url}")
+CSRF_TRUSTED_ORIGINS = _csrf_origins
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # --- Base de datos ----------------------------------------------------------
 DATABASES = {
