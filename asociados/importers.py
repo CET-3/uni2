@@ -10,8 +10,10 @@ from typing import Any
 
 from django.db import transaction
 
-from .models import Asociado, Curso
 from usuarios.services import create_user_for_asociado
+
+from .models import Asociado, Curso
+
 
 
 PADRON_IMPORT_SESSION_KEY = "padron_import_preview"
