@@ -7,7 +7,21 @@
             <small class="text-muted">{{ ruta_relativa }}</small>
             <a href="{% url 'especificacion:indice' %}" class="btn btn-outline-primary btn-sm">← Índice</a>
         </div>
-        <div class="contenido-especificacion" style="max-height:80vh; overflow-y:auto;">{{ contenido_html|safe }}</div>
+        <div class="contenido-especificacion" style="max-height:80vh; overflow-y:auto;">
+            <style>
+                .contenido-especificacion h1,
+                .contenido-especificacion h2,
+                .contenido-especificacion h3,
+                .contenido-especificacion h4,
+                .contenido-especificacion h5,
+                .contenido-especificacion h6 {
+                    font-size: inherit;
+                    font-weight: bold;
+                    margin: 1em 0 0.5em;
+                }
+            </style>
+            {{ contenido_html|safe }}
+        </div>
     </div>
 </div>
 {% endblock %}
