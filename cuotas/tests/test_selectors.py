@@ -67,9 +67,9 @@ def test_calcula_cuota_vencida_mes_siguiente(cuota_marzo):
     estado = calcular_estado_cuota(cuota_marzo, date(2026, 4, 5))
 
     assert estado.estado == Cuota.ESTADO_VENCIDA
-    assert estado.recargo == Decimal("1000")
-    assert estado.total_exigible == Decimal("4000")
-    assert estado.saldo == Decimal("4000")
+    assert estado.recargo == Decimal("1500")  # recargo_mes (500) + recargo_mes_siguiente (1000)
+    assert estado.total_exigible == Decimal("4500")
+    assert estado.saldo == Decimal("4500")
 
 
 @pytest.mark.django_db

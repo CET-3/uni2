@@ -15,7 +15,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 3. La cuota tiene un atributo `estado` que se almacena. Se crea con estado `Pendiente` y pasa a `Pagada` cuando se registra el cobro completo.
 4. El recargo sobre una cuota tiene dos niveles, ambos definidos en `PeriodoCuota`:
    - **Recargo por vencimiento:** se aplica si el pago se realiza después del día 10 del mes del período.
-   - **Recargo por mora:** se aplica si la cuota no se saldó durante el mes del período. Reemplaza al recargo por vencimiento.
+   - **Recargo por mora:** se aplica si la cuota no se saldó durante el mes del período. Se suma al recargo por vencimiento.
 5. El estado `Vencida` no se almacena: se determina en el momento de mostrar la cuota, comparando la fecha de vencimiento con una fecha de referencia explícita. Las pantallas siempre calculan el estado y el saldo para una fecha de referencia.
 
 ## Creación de cuotas
