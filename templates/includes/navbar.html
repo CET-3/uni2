@@ -1,7 +1,24 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+{% load static %}
+<!-- Topbar -->
+<div class="uni2-topbar d-none d-md-block">
     <div class="container">
-        <a class="navbar-brand fw-semibold" href="{% url 'web:home' %}">Uni2</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUni2">
+        <span>
+            <i class="bi bi-clock"></i> Lun–Vie 08:50–16:30
+        </span>
+        <span>
+            <a href="https://wa.me/5492984210672" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+            <a href="https://www.instagram.com/unidos.cet3" target="_blank" rel="noopener" class="ms-3"><i class="bi bi-instagram"></i> Instagram</a>
+        </span>
+    </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg uni2-navbar">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'web:home' %}">
+            <img src="{% static 'img/LOJO_UNI2.png' %}" alt="Uni2">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUni2" aria-controls="navbarUni2" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarUni2">
@@ -10,9 +27,12 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'web:comercios' %}">Comercios</a></li>
             </ul>
             <div class="d-flex align-items-center gap-2 flex-wrap">
+                <button class="theme-toggle" onclick="window.__uni2ToggleTheme()" aria-label="Cambiar tema">
+                    <span id="theme-icon">🌙</span>
+                </button>
                 {% if user.is_authenticated %}
                     <div class="dropdown">
-                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ nombre_usuario }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -49,7 +69,7 @@
                         </ul>
                     </div>
                 {% else %}
-                    <a class="btn btn-light btn-sm" href="{% url 'usuarios:login' %}">Ingresar</a>
+                    <a class="btn btn-primary btn-sm" href="{% url 'usuarios:login' %}">Ingresar</a>
                 {% endif %}
             </div>
         </div>
