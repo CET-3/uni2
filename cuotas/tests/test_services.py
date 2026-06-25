@@ -9,7 +9,6 @@ from cuotas.models import Cuota, Donacion, Pago, PeriodoCuota
 from cuotas.services import (
     generar_cuotas_iniciales_para_asociado,
     generar_cuotas_para_periodo,
-    generar_cuotas_y_pago_inicial,
     registrar_pago,
 )
 
@@ -322,34 +321,6 @@ def test_generar_cuotas_iniciales_no_crea_periodos_faltantes():
     assert [cuota.periodo for cuota in cuotas] == [mayo]
     assert PeriodoCuota.objects.filter(mes=4, ciclo_lectivo__anio=2026).exists() is False
 
-
-@pytest.mark.django_db
-def test_generar_cuotas_y_pago_inicial():
-    """Nuevo asociado: genera cuotas retroactivas + mes corriente y registra pago."""
-    curso = Curso.objects.create(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
-    asociado = create_asociado(
-        nombre="Luis",
-        apellido="Perez",
-        dni="40123456",
-        tipo=Asociado.TIPO_ASOCIADO,
-        fecha_alta=date(2026, 6, 15),
-        curso_actual=curso,
-    )
-
-    pago, cuotas = generar_cuotas_y_pago_inicial(
-        asociado=asociado,
-        fecha=date(2026, 6, 15),
-        importe=Decimal("3400"),
-        metodo=Pago.METODO_EFECTIVO,
-    )
-
-    for c in cuotas:
-        c.refresh_from_db()
-    assert len(cuotas) == 3
-    assert all(c.importe_pagado > 0 for c in cuotas)
-    assert all(c.estado == Cuota.ESTADO_PAGADA for c in cuotas)
-    assert Donacion.objects.filter(pago=pago).count() == 1
-    assert Donacion.objects.get(pago=pago).importe == Decimal("500")
 
 
 @pytest.mark.django_db

@@ -22,8 +22,8 @@ La fecha de alta y la fecha de inicio de cobro son independientes. El sistema de
 
 ## ALTA-ASOCIADO-004
 
-Al crear un asociado desde gestión, el sistema genera cuotas iniciales solo para períodos de cuota existentes entre `fecha_inicio_cobro` y la fecha de alta.
+Al crear un asociado, el sistema genera cuotas para los 2 meses anteriores al mes de alta y el mes actual, siempre que existan períodos de cuota activos para esos meses.
 
 ## ALTA-ASOCIADO-005
 
-El alta de asociado no crea períodos de cuota automáticamente. Si faltan períodos, no se generan cuotas para esos meses y la administración debe crearlos desde la pantalla de períodos de cuota.
+El alta de asociado no crea períodos de cuota automáticamente. Si faltan períodos para alguno de los 3 meses, no se genera la cuota correspondiente. La administración debe crear los períodos desde la pantalla de períodos de cuota.

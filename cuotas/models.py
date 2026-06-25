@@ -101,13 +101,7 @@ class Cuota(models.Model):
     def paga_mora(self, fecha_referencia) -> bool:
         if fecha_referencia <= self.periodo.fecha_vencimiento:
             return False
-        pagado_al_vencimiento = (
-            self.aplicaciones.filter(pago__fecha__lte=self.periodo.fecha_vencimiento).aggregate(
-                total=models.Sum("importe")
-            )["total"]
-            or Decimal("0")
-        )
-        return pagado_al_vencimiento < self.get_importe_total_base()
+        return Decimal(str(self.importe_pagado)) < self.get_importe_total_base()
 
     def get_recargo_aplicable(self, fecha_referencia) -> Decimal:
         if not self.paga_mora(fecha_referencia):
