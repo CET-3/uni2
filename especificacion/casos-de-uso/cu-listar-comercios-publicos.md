@@ -19,6 +19,6 @@ status: "listo"
 4.  El visitante puede consultar los datos públicos de contacto o presencia web disponibles.
 5.  Desde una publicidad o un enlace público, el visitante puede abrir el detalle de un comercio. Si el comercio está `Firmado`, ve sus datos completos. Si no lo está, ve una pantalla informativa "Este comercio estará disponible próximamente".
 
-**Reglas relacionadas:** aplican todas las [reglas de comercios públicos](../reglas/comercios-publicos.md).
+**Reglas relacionadas:** [Comercios públicos](../reglas/comercios-publicos.md).
 
 **Modelos afectados:** ActividadComercial, Comercio.
