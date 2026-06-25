@@ -108,7 +108,7 @@ class Cuota(models.Model):
             return Decimal("0")
         if fecha_referencia.year == self.periodo.ciclo_lectivo.anio and fecha_referencia.month == self.periodo.mes:
             return Decimal(str(self.importe_recargo_mes))
-        return Decimal(str(self.importe_recargo_mes_siguiente))
+        return Decimal(str(self.importe_recargo_mes)) + Decimal(str(self.importe_recargo_mes_siguiente))
 
     def get_importe_total_con_mora(self, fecha_referencia) -> Decimal:
         return self.get_importe_total_base() + self.get_recargo_aplicable(fecha_referencia)

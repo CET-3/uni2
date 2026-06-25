@@ -678,7 +678,7 @@ def test_cobros_gestion_permite_cobrar_solo_cuotas_mas_viejas_seleccionadas(clie
             "asociado_id": asociado.id,
             "cuotas_ids": [str(cuota_marzo.id)],
             "fecha": "2026-04-05",
-            "importe": "3500.00",
+            "importe": "4000.00",
             "metodo": Pago.METODO_EFECTIVO,
             "observaciones": "",
         },
