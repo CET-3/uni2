@@ -10,7 +10,7 @@ timestamp: 2026-06-23T00:00:00-03:00
 
 ## PUBLICIDAD-001
 
-La home muestra solamente publicidades activas, ordenadas por `orden` y luego por `título`.
+La home muestra solamente publicidades activas, ordenadas por `orden` y luego por `título`. Si una publicidad está vinculada a un comercio, solo se muestra si ese comercio tiene estado `Firmado`.
 
 ## PUBLICIDAD-002
 

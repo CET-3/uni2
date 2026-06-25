@@ -27,3 +27,7 @@ En el MVP, la gestión de comercios se realiza desde el admin técnico de Django
 ## COMERCIO-PUBLICO-004
 
 Los comercios publicados se listan de acuerdo al atributo `orden`.
+
+## COMERCIO-PUBLICO-005
+
+El detalle público de un comercio (`/comercios/<pk>/`) está disponible para cualquier comercio existente, independientemente de su estado. Si el comercio tiene estado `Firmado`, se muestran sus datos completos. Si tiene otro estado (`Pendiente`, `Vencido` o `Baja`), se muestra una pantalla informativa con el mensaje "Este comercio estará disponible próximamente" y un enlace para volver al listado de comercios.

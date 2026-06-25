@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}{{ comercio.nombre }} | Uni2{% endblock %}
+
+{% block content %}
+<article class="vstack gap-3 text-center py-5">
+    <h1 class="h2">{{ comercio.nombre }}</h1>
+    <p class="text-secondary fs-5">Este comercio estará disponible próximamente.</p>
+    <div>
+        <a href="{% url 'web:comercios' %}" class="btn btn-outline-primary">Ver comercios adheridos</a>
+    </div>
+</article>
+{% endblock %}

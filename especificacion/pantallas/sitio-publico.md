@@ -18,4 +18,5 @@ timestamp: 2026-06-23T00:00:00-03:00
   - Categoría detalle (`/servicios/<pk>/`): muestra nombre, ícono y descripción de la categoría, grilla de productos/servicios activos con precios diferenciados para asociados y no asociados, y texto CTA configurable. Incluye breadcrumb (Inicio > Productos y servicios > {categoría}).
   - Actividad comercial detalle (`/actividades-comerciales/<pk>/`): breadcrumb Inicio > Comercios > {actividad comercial}, nombre de la actividad, listado de comercios firmados con dirección, beneficio, teléfono y presencia web. Botón "← Todos los comercios".
 - Comercios: listado público vertical de comercios con estado `Firmado`, ordenado por `orden`.
+  - Comercio detalle (`/comercios/<pk>/`): muestra nombre, actividad comercial, dirección, beneficio, teléfono, email y presencia web si el comercio está `Firmado`. Si el comercio no está firmado, muestra mensaje "Este comercio estará disponible próximamente" con enlace "Ver comercios adheridos".
 - Login.

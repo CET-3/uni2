@@ -194,7 +194,8 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
     assert response.status_code == 200
     assert "Librería Sur" in contenido
     assert "10% en útiles" in contenido
-    assert response_pendiente.status_code == 404
+    assert response_pendiente.status_code == 200
+    assert "próximamente" in response_pendiente.content.decode()
 
 
 @pytest.mark.django_db

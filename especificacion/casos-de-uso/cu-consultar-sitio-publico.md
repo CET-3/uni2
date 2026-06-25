@@ -15,7 +15,7 @@ status: "listo"
 
 1.  Ingresa al sitio.
 2.  Consulta información institucional.
-3.  Ve las publicidades activas de la sección `Nuestros favoritos`.
+3.  Ve las publicidades activas de la sección `Nuestros favoritos`. Si una publicidad está vinculada a un comercio con estado distinto de `Firmado`, no se muestra.
 4.  Si una publicidad está vinculada a un producto, servicio o comercio, puede abrir su detalle público.
 5.  Accede desde la home a los listados públicos de productos, servicios y comercios.
 
