@@ -65,18 +65,31 @@ Para deployar manualmente:
 vercel --prod
 ```
 
-Variables de entorno necesarias en Vercel:
+Variables de entorno necesarias en Vercel (setear desde el dashboard):
 - `SECRET_KEY`
 - `DATABASE_URL`
 - `ALLOWED_HOSTS`
 - `CSRF_TRUSTED_ORIGINS`
 
-La base de datos de producción es Supabase (PostgreSQL). Para correr migraciones en producción:
+### Migraciones y carga inicial en producción
+
+Las migraciones **no** se ejecutan automáticamente dentro de la función serverless
+de Vercel (se eliminó para no saturar el pool de conexiones de Supabase).
+Tampoco los comandos de gestión (`carga_inicial`).
+
+Para correrlos hay que hacerlo desde la máquina local apuntando a la base de
+producción. Obtené la DATABASE_URL desde el dashboard de Vercel
+(Project → Settings → Environment Variables) o desde Supabase
+(Supabase → Project Settings → Database → Connection string → URI):
 
 ```bash
-DATABASE_URL=<url-de-supabase> uv run python manage.py migrate
+# Migraciones
+DATABASE_URL="postgresql://..." uv run python manage.py migrate
+
+# Carga inicial de datos (idempotente)
+DATABASE_URL="postgresql://..." uv run python manage.py carga_inicial
 ```
 
-Las migraciones no se ejecutan automáticamente dentro de la función de Vercel.
-En producción deben correrse como paso explícito para evitar abrir conexiones de
-base de datos durante cada arranque de función.
+> **Importante**: después de correr migraciones o carga inicial, si el deploy
+> anterior falló, hacer un nuevo push (commit vacío o reploy manual desde Vercel)
+> para que la función serverless arranque fresca con la base actualizada.
