@@ -11,27 +11,9 @@ timestamp: 2026-06-24T00:00:00-03:00
 Estas reglas describen cómo se cargan, mantienen y muestran los comercios adheridos
 en el sitio público.
 
-## COMERCIO-PUBLICO-001
-
-En el sitio público se muestran los comercios con estado `Firmado`.
-
-## COMERCIO-PUBLICO-002
-
-El estado del comercio se selecciona desde una lista fija definida en el sistema.
-No se administra como entidad independiente.
-
-## COMERCIO-PUBLICO-003
-
-En el MVP, la gestión de comercios se realiza desde el admin técnico de Django.
-
-## COMERCIO-PUBLICO-004
-
-Los comercios publicados se listan de acuerdo al atributo `orden`.
-
-## COMERCIO-PUBLICO-005
-
-El detalle público de un comercio (`/comercios/<pk>/`) está disponible para cualquier comercio existente, independientemente de su estado. Si el comercio tiene estado `Firmado`, se muestran sus datos completos. Si tiene otro estado (`Pendiente`, `Vencido` o `Baja`), se muestra una pantalla informativa con el mensaje "Este comercio estará disponible próximamente" y un enlace para volver al listado de comercios.
-
-## COMERCIO-PUBLICO-006
-
-En la sección Beneficios de la home se muestran hasta 3 comercios con foto por cada rubro (`ActividadComercial`) que tenga al menos un comercio en estado `Firmado`. Las fotos se toman del campo `foto` del modelo `Comercio`. Los comercios sin foto no se muestran en la nube de logos de la card del rubro.
+1. En el sitio público se muestran los comercios con estado `Firmado`.
+2. El estado del comercio se selecciona desde una lista fija definida en el sistema. No se administra como entidad independiente.
+3. Los comercios publicados se listan de acuerdo al atributo `orden`.
+4. El detalle público de un comercio (`/comercios/<pk>/`) está disponible para cualquier comercio existente, independientemente de su estado. Si el comercio tiene estado `Firmado`, se muestran sus datos completos. Si tiene otro estado (`Pendiente`, `Vencido` o `Baja`), se muestra una pantalla informativa con el mensaje "Este comercio estará disponible próximamente" y un enlace para volver al listado de comercios.
+5. En la sección Beneficios de la home se muestran hasta 3 comercios con foto por cada rubro (`ActividadComercial`) que tenga al menos un comercio en estado `Firmado`. Las fotos se toman del campo `foto` del modelo `Comercio`. Los comercios sin foto no se muestran en la nube de logos de la card del rubro.
+6. En el MVP, la gestión de comercios se realiza desde el admin técnico de Django.
