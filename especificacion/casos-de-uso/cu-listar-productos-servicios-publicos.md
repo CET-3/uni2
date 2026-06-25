@@ -21,6 +21,6 @@ status: "listo"
 6.  Si la categoría tiene texto de call to action, el sistema lo muestra debajo del listado y convierte emails o URLs en enlaces.
 7.  Desde una publicidad o un enlace público, el visitante puede abrir el detalle de un producto o servicio activo.
 
-**Reglas relacionadas:** [PRODUCTO-SERVICIO-001](../reglas/productos-servicios.md#producto-servicio-001), [PRODUCTO-SERVICIO-002](../reglas/productos-servicios.md#producto-servicio-002), [PRODUCTO-SERVICIO-003](../reglas/productos-servicios.md#producto-servicio-003).
+**Reglas relacionadas:** [Productos y servicios](../reglas/productos-servicios.md).
 
 **Modelos afectados:** CategoriaProductoServicio, ProductoServicio.

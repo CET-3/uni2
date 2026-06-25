@@ -18,7 +18,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 4.  Lo vincula con `Asociado`.
 5.  Lo agrega al grupo Asociados.
 
-**Reglas relacionadas:** [USUARIO-001](../reglas/usuarios.md#usuario-001), [USUARIO-002](../reglas/usuarios.md#usuario-002), [USUARIO-003](../reglas/usuarios.md#usuario-003), [USUARIO-004](../reglas/usuarios.md#usuario-004).
+**Reglas relacionadas:** [Usuarios](../reglas/usuarios.md).
 
 **Situaciones especiales:** asociado ya posee usuario, DNI inexistente, username duplicado, email vacío.
 

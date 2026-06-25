@@ -16,6 +16,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 2.  Entra a Mis Cuotas.
 3.  Visualiza cuotas pagadas, pendientes y vencidas calculadas a la fecha de consulta.
 
-**Reglas relacionadas:** [CUOTA-001](../reglas/cuotas.md#cuota-001), [CUOTA-002](../reglas/cuotas.md#cuota-002), [CUOTA-003](../reglas/cuotas.md#cuota-003).
+**Reglas relacionadas:** [Cuotas](../reglas/cuotas.md).
 
 **Modelos afectados:** Cuota, PeríodoCuota, PagoCuota.
