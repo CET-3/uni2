@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "cuotas",
     "comercios",
     "contenidos",
+    "especificacion",
 ]
 
 MIDDLEWARE = [
