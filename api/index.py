@@ -16,8 +16,4 @@ from django.core.management import call_command  # noqa: E402
 
 call_command("migrate", interactive=False, verbosity=0)
 
-# Carga inicial de datos (idempotente — usa get_or_create).
-# Se puede comentar o eliminar después del primer deploy.
-call_command("carga_inicial")
-
 from config.wsgi import application  # noqa: E402, F401
