@@ -46,7 +46,7 @@ Si un usuario tiene más de una experiencia disponible, luego del login ve una p
 
 ## USUARIO-010
 
-El grupo `Atención de mutual` representa a estudiantes que atienden la mutual. Tiene permisos para ver gestión, consultar y editar asociados, y cobrar cuotas. No incluye importaciones, exportaciones, deudores ni administración de períodos de cuota. En la carga inicial, el usuario `atencion` también queda vinculado a un asociado de prueba para poder probar el selector de paneles.
+El grupo `Atención de mutual` representa a estudiantes que atienden la mutual. Tiene permisos para ver gestión, consultar y editar asociados, cobrar cuotas y ver la especificación del proyecto. No incluye importaciones, exportaciones, deudores ni administración de períodos de cuota. En la carga inicial, el usuario `atencion` también queda vinculado a un asociado de prueba para poder probar el selector de paneles.
 
 ## USUARIO-011
 
@@ -63,3 +63,7 @@ El sistema define tres grupos base: `asociado`, `comercio` y `gestion`. La data 
 ## USUARIO-014
 
 El `GestionPermissionRequiredMixin` usa `UserPassesTestMixin` con `raise_exception = True` para rechazar con 403 en lugar de redirigir al login. Las vistas deben declarar su lógica en métodos `get()`/`post()` y no en `dispatch()` para que el permiso se evalúe antes.
+
+## USUARIO-015
+
+La especificación del proyecto se sirve en `/especificacion/` y requiere el permiso `gestion.ver_especificacion`. Usa un mixin propio `VerEspecificacionRequiredMixin` que verifica ese permiso. En la carga inicial, el permiso se asigna al grupo `Atención de mutual` y a `Administradores` (estos reciben todos los permisos de gestión).

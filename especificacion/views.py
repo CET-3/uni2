@@ -9,6 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import Http404
 from django.views.generic import TemplateView
 
+from gestion.permissions import GESTION_VER_ESPECIFICACION, user_has_gestion_permission
+
 
 BASE_ESPECIFICACION = Path(settings.BASE_DIR) / "especificacion"
 
@@ -41,14 +43,15 @@ def _render_markdown(texto: str, ruta_relativa: str = "") -> str:
     return html
 
 
-class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+class VerEspecificacionRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     raise_exception = True
+    permission_required = GESTION_VER_ESPECIFICACION
 
     def test_func(self):
-        return self.request.user.is_staff
+        return user_has_gestion_permission(self.request.user, self.permission_required)
 
 
-class IndiceView(StaffRequiredMixin, TemplateView):
+class IndiceView(VerEspecificacionRequiredMixin, TemplateView):
     template_name = "especificacion/archivo.html"
 
     def get_context_data(self, **kwargs):
@@ -60,7 +63,7 @@ class IndiceView(StaffRequiredMixin, TemplateView):
         return context
 
 
-class ArchivoView(StaffRequiredMixin, TemplateView):
+class ArchivoView(VerEspecificacionRequiredMixin, TemplateView):
     template_name = "especificacion/archivo.html"
 
     def get(self, request, *args, **kwargs):
