@@ -29,7 +29,12 @@ def _rewrite_md_links(html: str, ruta_relativa: str) -> str:
     return re.sub(r'href="([^"]+)"', _replace, html)
 
 
+def _strip_frontmatter(texto: str) -> str:
+    return re.sub(r"^---.*?---\s*", "", texto, count=1, flags=re.DOTALL)
+
+
 def _render_markdown(texto: str, ruta_relativa: str = "") -> str:
+    texto = _strip_frontmatter(texto)
     html = md.markdown(texto, extensions=["fenced_code"])
     if ruta_relativa:
         html = _rewrite_md_links(html, ruta_relativa)
