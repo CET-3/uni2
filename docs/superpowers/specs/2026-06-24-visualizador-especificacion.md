@@ -6,7 +6,7 @@ Los alumnos que trabajan en la app necesitan poder leer la especificación (arch
 
 ## Solución
 
-Crear una app `especificacion` que lee los archivos `.md` del bundle OKF y los muestra como texto plano monospace, accesible solo para usuarios staff.
+Crear una app `especificacion` que lee los archivos `.md` del bundle OKF, los renderiza a HTML y los muestra en pantalla, accesible solo para usuarios staff.
 
 ## Cambios
 
@@ -25,8 +25,9 @@ especificacion/
 
 ### especificacion/views.py
 
-- `IndiceView` (TemplateView): lee `especificacion/index.md`, lo pasa como contexto `contenido_md`
-- `ArchivoView` (TemplateView): recibe `ruta` por URL, construye la ruta absoluta dentro de `especificacion/`, lee el archivo, lo pasa como `contenido_md`. Validación de seguridad: rechazar si la ruta intenta salir de `especificacion/`.
+- `IndiceView` (TemplateView): lee `especificacion/index.md`, lo renderiza a HTML con `python-markdown`, lo pasa como `contenido_html`
+- `ArchivoView` (TemplateView): recibe `ruta` por URL, construye la ruta absoluta dentro de `especificacion/`, lee el archivo, lo renderiza a HTML, lo pasa como `contenido_html`. Validación de seguridad: rechazar si la ruta intenta salir de `especificacion/`.
+- Ambos usan `_render_markdown()` que llama a `markdown.markdown(text, extensions=["fenced_code"])`
 - Ambos usan `StaffMemberRequiredMixin` para restringir acceso solo a `is_staff=True`.
 
 ### especificacion/urls.py
@@ -40,8 +41,8 @@ especificacion/
 ### especificacion/templates/especificacion/archivo.html
 
 - Extiende `base.html`
-- Muestra el contenido Markdown en un `<pre>` con clase `font-monospace`
-- Estilo limpio, fondo claro, scroll horizontal para líneas largas
+- Muestra el contenido HTML renderizado desde Markdown en un `<div class="contenido-especificacion">` con `{{ contenido_html|safe }}`
+- Scroll vertical si el contenido excede 80vh
 - Breadcrumb indicando la ruta del archivo
 
 ### config/urls.py
@@ -57,7 +58,7 @@ especificacion/
 - Archivos de especificación existentes (`especificacion/**/*.md`) — sin modificaciones
 - Modelos, selectors, services, admin — sin cambios
 - Otras apps (`web`, `gestion`, `asociados`, etc.) — sin cambios
-- No se instalan librerías nuevas
+- Se incorpora `python-markdown` (`markdown`) para renderizado a HTML
 
 ## Seguridad
 
