@@ -89,3 +89,7 @@ class ActividadComercialDetalleView(DetailView):
                 queryset=Comercio.objects.filter(estado=Comercio.ESTADO_FIRMADO).order_by("orden", "nombre"),
             )
         )
+
+
+class DesignSystemView(TemplateView):
+    template_name = "web/design-system.html"

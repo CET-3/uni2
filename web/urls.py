@@ -5,6 +5,7 @@ from .views import (
     CategoriaProductoServicioDetalleView,
     ComercioDetalleView,
     ComerciosPublicosView,
+    DesignSystemView,
     HomeView,
     ProductoServicioDetalleView,
     ProductosServiciosPublicosView,
@@ -21,4 +22,5 @@ urlpatterns = [
     path("comercios/<int:pk>/", ComercioDetalleView.as_view(), name="comercio_detalle"),
     path("servicios/<int:pk>/", CategoriaProductoServicioDetalleView.as_view(), name="categoria_detalle"),
     path("actividades-comerciales/<int:pk>/", ActividadComercialDetalleView.as_view(), name="actividad_comercial_detalle"),
+    path("design-system/", DesignSystemView.as_view(), name="design-system"),
 ]
