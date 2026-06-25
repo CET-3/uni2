@@ -5,17 +5,196 @@
 
 {% block content %}
 
-<section class="py-5" id="inicio" aria-labelledby="hero-title">
-    <div class="text-center">
-        <p class="text-uppercase text-secondary small fw-semibold mb-1">Mutual Escolar UNI2</p>
-        <h1 id="hero-title" class="display-5 fw-bold">Tu mutual, más cerca que nunca</h1>
-        <p class="lead text-secondary mx-auto" style="max-width: 600px;">Una comunidad comprometida con sus asociados, ofreciendo beneficios, servicios y oportunidades.</p>
-        <div class="mt-4 d-flex gap-3 justify-content-center">
-            <a class="btn btn-primary btn-lg" href="#como-asociarse">Asociate</a>
-            <a class="btn btn-outline-primary btn-lg" href="{% url 'usuarios:login' %}">Iniciar sesión</a>
+<!-- HERO -->
+<section class="hero-section" id="inicio" aria-labelledby="hero-title">
+    <div class="container">
+        <div class="hero-content text-center text-md-start">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <p class="text-uppercase small fw-semibold mb-1" style="opacity: 0.8;">Mutual Escolar UNI2</p>
+                    <h1 id="hero-title">Tu mutual, más cerca que nunca</h1>
+                    <p class="lead">Una comunidad comprometida con sus asociados, ofreciendo beneficios, servicios y oportunidades.</p>
+                    <div class="mt-4 d-flex gap-3 flex-wrap">
+                        <a class="btn btn-hero btn-hero-primary" href="#como-asociarse">SÚMATE</a>
+                        <a class="btn btn-hero btn-hero-outline" href="{% url 'usuarios:login' %}">INICIAR SESIÓN</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
+<div class="container my-5">
+
+    <!-- SERVICIOS -->
+    <section class="mb-5" id="servicios" aria-labelledby="servicios-title">
+        <p class="text-uppercase text-secondary small fw-semibold mb-1">Servicios</p>
+        <h2 id="servicios-title" class="h3 mb-4">Nuestros servicios</h2>
+
+        <div class="row g-4">
+            {% for categoria in categorias_productos_servicios %}
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 card-border-{% cycle 'rojo' 'amarillo' 'verde' 'primary' %}">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="h5">{{ categoria.nombre }}</h3>
+                            {% if categoria.descripcion %}
+                                <p class="card-text text-secondary small flex-grow-1">{{ categoria.descripcion }}</p>
+                            {% endif %}
+                            <a href="{% url 'web:categoria_detalle' categoria.pk %}" class="btn btn-outline-primary btn-sm mt-2">
+                                Ver más
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-secondary">Sin servicios cargados por ahora.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- BENEFICIOS -->
+    {% if rubros_beneficio %}
+        <aside class="mb-5" id="beneficios" aria-labelledby="beneficios-title">
+            <p class="text-uppercase text-secondary small fw-semibold mb-1">Beneficios</p>
+            <h2 id="beneficios-title" class="h3 mb-4">Beneficios para vos</h2>
+
+            <div class="benefit-grid">
+                {% for rubro in rubros_beneficio %}
+                    <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="benefit-mix-card benefit-mix-card-{{ forloop.counter0 }}">
+                        <span class="logo-cloud">
+                            {% for comercio in rubro.comercios_con_foto|slice:":3" %}
+                                {% if comercio.foto %}
+                                <span class="logo-dot 
+                                    {% if forloop.counter == 1 %}logo-dot-left
+                                    {% elif forloop.counter == 2 %}logo-dot-main
+                                    {% else %}logo-dot-right{% endif %}">
+                                    <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
+                                </span>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        <span class="benefit-rubric">{{ rubro.nombre }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </aside>
+    {% endif %}
+
+    <!-- PUBLICIDADES -->
+    {% if publicidades %}
+        <section class="mb-5" aria-labelledby="publicidad-title">
+            <p class="text-uppercase text-secondary small fw-semibold mb-1">Promos destacadas</p>
+            <h2 id="publicidad-title" class="h3 mb-4">Nuestros favoritos</h2>
+
+            <div class="row g-4">
+                {% for publicidad in publicidades %}
+                    <div class="col-md-6 col-lg-3">
+                        <article class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                {% if publicidad.foto %}
+                                    <img src="{{ publicidad.foto.url }}" alt="{{ publicidad.titulo }}" class="card-img-top mb-3" style="height: 160px; object-fit: cover; border-radius: var(--radius-sm) var(--radius-sm) 0 0;">
+                                {% endif %}
+                                <span class="badge bg-light text-dark align-self-start mb-2">{{ publicidad.etiqueta_principal }}</span>
+                                <h3 class="h5">{{ publicidad.titulo }}</h3>
+                                <strong class="h4 text-primary">{{ publicidad.etiqueta_secundaria }}</strong>
+                                <p class="card-text text-secondary small flex-grow-1 mt-2">{{ publicidad.descripcion }}</p>
+                                {% if publicidad.get_absolute_url %}
+                                    <a href="{{ publicidad.get_absolute_url }}" class="btn btn-outline-primary btn-sm mt-auto">Conocer más</a>
+                                {% endif %}
+                            </div>
+                        </article>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- CÓMO ASOCIARSE (pasos + info) -->
+    <section class="mb-5" id="como-asociarse" aria-labelledby="asociarse-title">
+        <p class="text-uppercase text-secondary small fw-semibold mb-1">Asociate en cuatro pasos</p>
+        <h2 id="asociarse-title" class="h3 mb-4">Cómo ser parte de UNI2</h2>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number step-number-primary">1</div>
+                    <h3>Acércate a la mutual</h3>
+                    <p>Visitá UNI2 durante nuestros horarios de atención.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number step-number-rojo">2</div>
+                    <h3>Completá tu inscripción</h3>
+                    <p>Registrá tus datos de forma rápida y sencilla.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number step-number-amarillo">3</div>
+                    <h3>Sumate a la comunidad</h3>
+                    <p>Con una cuota social de solo $700 por mes, ya sos asociado.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number step-number-verde">4</div>
+                    <h3>Disfrutá tus beneficios</h3>
+                    <p>Accedé a servicios, descuentos y oportunidades exclusivas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="h6">Asociación</h3>
+                        <p class="small text-secondary mb-0">Presencial en la mutual.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="h6">Cuota social</h3>
+                        <p class="small text-secondary mb-0">$700 mensuales.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="h6 mb-3">Horarios de atención</h3>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Día</th>
+                                        <th>Horario 1</th>
+                                        <th>Horario 2</th>
+                                        <th>Horario 3</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Lunes</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
+                                    <tr><td>Martes</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
+                                    <tr><td>Miércoles</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
+                                    <tr><td>Jueves</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
+                                    <tr><td>Viernes</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div> <!-- /container -->
+{% endblock %}
 
 <section class="py-5 bg-white rounded-3 shadow-sm mb-4" id="servicios" aria-labelledby="servicios-title">
     <div class="d-flex align-items-end justify-content-between gap-3 mb-4">
