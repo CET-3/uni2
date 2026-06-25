@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Design System | Uni2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <h1 class="mb-4">Design System — Uni2</h1>
+    <p class="text-secondary mb-5">Referencia visual de todos los componentes del sistema. Basado en el diseño de PAGINA-WEB con Bootstrap 5.3.3.</p>
+
+    <!-- ======== COLORES ======== -->
+    <section class="mb-5" id="colors">
+        <h2 class="h4 mb-3">Colores</h2>
+        <div class="row g-3">
+            <div class="col-6 col-md-3"><div class="card"><div class="card-body"><div style="width:100%;height:60px;background:var(--primary);border-radius:8px;margin-bottom:8px;"></div><code>--primary</code><br><span class="small text-secondary">#3f51b5</span></div></div></div>
+            <div class="col-6 col-md-3"><div class="card"><div class="card-body"><div style="width:100%;height:60px;background:var(--rojo);border-radius:8px;margin-bottom:8px;"></div><code>--rojo</code><br><span class="small text-secondary">#ff2b2b</span></div></div></div>
+            <div class="col-6 col-md-3"><div class="card"><div class="card-body"><div style="width:100%;height:60px;background:var(--amarillo);border-radius:8px;margin-bottom:8px;"></div><code>--amarillo</code><br><span class="small text-secondary">#ffcb30</span></div></div></div>
+            <div class="col-6 col-md-3"><div class="card"><div class="card-body"><div style="width:100%;height:60px;background:var(--verde);border-radius:8px;margin-bottom:8px;"></div><code>--verde</code><br><span class="small text-secondary">#4ccb4a</span></div></div></div>
+        </div>
+    </section>
+
+    <!-- ======== TIPOGRAFÍA ======== -->
+    <section class="mb-5" id="typography">
+        <h2 class="h4 mb-3">Tipografía</h2>
+        <div class="card"><div class="card-body">
+            <p style="font-weight:300">Inter Light (300) — El acceso a la educación es un derecho.</p>
+            <p style="font-weight:400">Inter Regular (400) — El acceso a la educación es un derecho.</p>
+            <p style="font-weight:500">Inter Medium (500) — El acceso a la educación es un derecho.</p>
+            <p style="font-weight:600">Inter Semibold (600) — El acceso a la educación es un derecho.</p>
+            <p style="font-weight:700">Inter Bold (700) — El acceso a la educación es un derecho.</p>
+            <p style="font-weight:800">Inter ExtraBold (800) — El acceso a la educación es un derecho.</p>
+            <hr>
+            <h1>h1. Heading</h1>
+            <h2>h2. Heading</h2>
+            <h3>h3. Heading</h3>
+            <h4>h4. Heading</h4>
+            <h5>h5. Heading</h5>
+            <h6>h6. Heading</h6>
+        </div></div>
+    </section>
+
+    <!-- ======== BOTONES ======== -->
+    <section class="mb-5" id="buttons">
+        <h2 class="h4 mb-3">Botones</h2>
+        <div class="card"><div class="card-body d-flex flex-wrap gap-2">
+            <button class="btn btn-primary">Primario</button>
+            <button class="btn btn-outline-primary">Outline</button>
+            <button class="btn btn-light">Light</button>
+            <button class="btn btn-outline-light" style="background:#1a1a2e;">Outline Light</button>
+            <button class="btn btn-hero btn-hero-primary">SÚMATE</button>
+            <button class="btn btn-hero btn-hero-outline" style="background:var(--primary);">INICIAR SESIÓN</button>
+            <button class="btn btn-primary btn-sm">Chico</button>
+            <button class="btn btn-primary btn-lg">Grande</button>
+        </div></div>
+    </section>
+
+    <!-- ======== CARDS ======== -->
+    <section class="mb-5" id="cards">
+        <h2 class="h4 mb-3">Cards</h2>
+        <div class="row g-3">
+            <div class="col-md-3"><div class="card card-border-rojo h-100"><div class="card-body"><h5>Borde rojo</h5><p class="small text-secondary mb-0">Card con borde superior rojo.</p></div></div></div>
+            <div class="col-md-3"><div class="card card-border-amarillo h-100"><div class="card-body"><h5>Borde amarillo</h5><p class="small text-secondary mb-0">Card con borde superior amarillo.</p></div></div></div>
+            <div class="col-md-3"><div class="card card-border-verde h-100"><div class="card-body"><h5>Borde verde</h5><p class="small text-secondary mb-0">Card con borde superior verde.</p></div></div></div>
+            <div class="col-md-3"><div class="card card-border-primary h-100"><div class="card-body"><h5>Borde primary</h5><p class="small text-secondary mb-0">Card con borde superior azul.</p></div></div></div>
+        </div>
+    </section>
+
+    <!-- ======== TABLAS ======== -->
+    <section class="mb-5" id="tables">
+        <h2 class="h4 mb-3">Tablas</h2>
+        <div class="card"><div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead><tr><th>Columna 1</th><th>Columna 2</th><th>Columna 3</th></tr></thead>
+                <tbody>
+                    <tr><td>Dato 1</td><td>Dato 2</td><td>Dato 3</td></tr>
+                    <tr><td>Dato 4</td><td>Dato 5</td><td>Dato 6</td></tr>
+                    <tr><td>Dato 7</td><td>Dato 8</td><td>Dato 9</td></tr>
+                </tbody>
+            </table>
+        </div></div>
+    </section>
+
+    <!-- ======== FORMULARIOS ======== -->
+    <section class="mb-5" id="forms">
+        <h2 class="h4 mb-3">Formularios</h2>
+        <div class="card"><div class="card-body">
+            <div class="mb-3">
+                <label class="form-label" for="input-ejemplo">Input de texto</label>
+                <input type="text" class="form-control" id="input-ejemplo" placeholder="Escribí algo...">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="select-ejemplo">Select</label>
+                <select class="form-select" id="select-ejemplo"><option>Opción 1</option><option>Opción 2</option></select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="input-error">Input con error</label>
+                <input type="text" class="form-control is-invalid" id="input-error" value="mal">
+                <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+        </div></div>
+    </section>
+
+    <!-- ======== ALERTS ======== -->
+    <section class="mb-5" id="alerts">
+        <h2 class="h4 mb-3">Alertas</h2>
+        <div class="d-flex flex-column gap-2">
+            <div class="alert alert-success mb-0">Operación exitosa.</div>
+            <div class="alert alert-danger mb-0">Ocurrió un error.</div>
+            <div class="alert alert-warning mb-0">Atención: revisá los datos.</div>
+            <div class="alert alert-info mb-0">Información importante.</div>
+        </div>
+    </section>
+
+    <!-- ======== HERO ======== -->
+    <section class="mb-5" id="hero">
+        <h2 class="h4 mb-3">Hero (landing)</h2>
+        <div style="background:linear-gradient(135deg, #3f51b5 0%, #5c6bc0 40%, #7c4dff 100%);color:#fff;border-radius:var(--radius);padding:3rem 2rem;position:relative;overflow:hidden;">
+            <div style="position:relative;z-index:1;">
+                <p class="text-uppercase small fw-semibold mb-1" style="opacity:0.8;">Mutual Escolar UNI2</p>
+                <h1 class="display-5 fw-bold">Tu mutual, más cerca que nunca</h1>
+                <button class="btn btn-hero btn-hero-primary mt-3">SÚMATE</button>
+                <button class="btn btn-hero btn-hero-outline mt-3 ms-2">INICIAR SESIÓN</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== STEPS ======== -->
+    <section class="mb-5" id="steps">
+        <h2 class="h4 mb-3">Pasos</h2>
+        <div class="row g-3">
+            <div class="col-md-3"><div class="step-card"><div class="step-number step-number-primary">1</div><h3>Paso uno</h3><p class="small text-secondary mb-0">Descripción del paso.</p></div></div>
+            <div class="col-md-3"><div class="step-card"><div class="step-number step-number-rojo">2</div><h3>Paso dos</h3><p class="small text-secondary mb-0">Descripción del paso.</p></div></div>
+            <div class="col-md-3"><div class="step-card"><div class="step-number step-number-amarillo">3</div><h3>Paso tres</h3><p class="small text-secondary mb-0">Descripción del paso.</p></div></div>
+            <div class="col-md-3"><div class="step-card"><div class="step-number step-number-verde">4</div><h3>Paso cuatro</h3><p class="small text-secondary mb-0">Descripción del paso.</p></div></div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
