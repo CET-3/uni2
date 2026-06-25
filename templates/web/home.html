@@ -59,12 +59,14 @@
                     <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="benefit-mix-card benefit-mix-card-{{ forloop.counter0 }}">
                         <span class="logo-cloud">
                             {% for comercio in rubro.comercios_con_foto|slice:":3" %}
+                                {% if comercio.foto %}
                                 <span class="logo-dot 
                                     {% if forloop.counter == 1 %}logo-dot-left
                                     {% elif forloop.counter == 2 %}logo-dot-main
                                     {% else %}logo-dot-right{% endif %}">
                                     <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
                                 </span>
+                                {% endif %}
                             {% endfor %}
                         </span>
                         <span class="benefit-rubric">{{ rubro.nombre }}</span>

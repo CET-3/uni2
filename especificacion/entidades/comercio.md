@@ -4,7 +4,7 @@ title: "Comercio"
 description: "Comercio adherido a la mutual."
 resource: "comercios.models.Comercio"
 tags: [mvp, modelo-de-datos]
-timestamp: 2026-06-22T00:00:00-03:00
+timestamp: 2026-06-24T00:00:00-03:00
 status: "listo"
 ---
 
@@ -21,6 +21,7 @@ Comercio adherido a la mutual.
 - estado\*: estado del convenio con el comercio.
 - orden\*: posición usada para ordenar los comercios publicados.
 - flyer_disponible\*: indica si existe un flyer o pieza de difusión disponible.
+- foto: fotografía del comercio para mostrar en la sección Beneficios de la home. Opcional (puede no tener foto). Subida a `comercios/`.
 - dirección\*: dirección física del comercio.
 - usuario: usuario que puede iniciar sesión como este comercio.
 - propietario: nombre de la persona propietaria o referente del comercio.
