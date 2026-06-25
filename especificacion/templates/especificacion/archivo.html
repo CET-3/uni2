@@ -7,7 +7,7 @@
             <small class="text-muted">{{ ruta_relativa }}</small>
             <a href="{% url 'especificacion:indice' %}" class="btn btn-outline-primary btn-sm">← Índice</a>
         </div>
-        <pre class="font-monospace" style="font-size:0.88rem; white-space:pre-wrap; word-break:break-word; background:#f8f9fa; padding:1rem; border-radius:0.5rem; max-height:80vh; overflow-y:auto;">{{ contenido_md }}</pre>
+        <div class="contenido-especificacion" style="max-height:80vh; overflow-y:auto;">{{ contenido_html|safe }}</div>
     </div>
 </div>
 {% endblock %}
