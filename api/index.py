@@ -1,7 +1,13 @@
 import os
+import sys
 
+# Ensure project root is in path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-def app(environ, start_response):
-    db_url = os.environ.get("DATABASE_URL", "no-encontrada")
-    start_response("200 OK", [("Content-Type", "text/plain")])
-    return [db_url.encode()]
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
+
+import django
+
+django.setup()
+
+from config.wsgi import application  # noqa: E402, F401
