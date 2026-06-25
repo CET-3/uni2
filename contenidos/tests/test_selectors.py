@@ -147,6 +147,50 @@ def test_get_publicidades_home_solo_activas_ordenadas_y_con_vinculos():
 
 
 @pytest.mark.django_db
+def test_publicidad_con_comercio_pendiente_no_se_muestra_en_home():
+    actividad = ActividadComercial.objects.create(nombre="Librería")
+    comercio_firmado = Comercio.objects.create(
+        actividad_comercial=actividad,
+        nombre="Librería Sur",
+        beneficio_texto="10% en útiles",
+        estado=Comercio.ESTADO_FIRMADO,
+        direccion="Mitre 123",
+    )
+    comercio_pendiente = Comercio.objects.create(
+        actividad_comercial=actividad,
+        nombre="Librería Norte",
+        beneficio_texto="15% en libros",
+        estado=Comercio.ESTADO_PENDIENTE,
+        direccion="Av. Siempre Viva 742",
+    )
+    publicidad_visible = Publicidad.objects.create(
+        titulo="Comercio firmado",
+        descripcion="Visible",
+        etiqueta_principal="Comercio",
+        etiqueta_secundaria="10% OFF",
+        foto="publicidades/firmado.webp",
+        comercio=comercio_firmado,
+        activa=True,
+        orden=1,
+    )
+    Publicidad.objects.create(
+        titulo="Comercio pendiente",
+        descripcion="No visible",
+        etiqueta_principal="Comercio",
+        etiqueta_secundaria="15% OFF",
+        foto="publicidades/pendiente.webp",
+        comercio=comercio_pendiente,
+        activa=True,
+        orden=2,
+    )
+
+    resultado = list(get_publicidades_home())
+
+    assert len(resultado) == 1
+    assert resultado[0] == publicidad_visible
+
+
+@pytest.mark.django_db
 def test_publicidad_no_puede_vincular_producto_y_comercio_a_la_vez():
     categoria = CategoriaProductoServicio.objects.create(nombre="Impresiones", descripcion="Servicios")
     producto = ProductoServicio.objects.create(

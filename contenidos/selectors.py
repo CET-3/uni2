@@ -1,5 +1,6 @@
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 
+from comercios.models import Comercio
 from .models import CategoriaProductoServicio, ProductoServicio, Publicidad
 
 
@@ -15,6 +16,7 @@ def get_categorias_productos_servicios_publicas():
 def get_publicidades_home():
     return (
         Publicidad.objects.filter(activa=True)
+        .filter(Q(comercio__isnull=True) | Q(comercio__estado=Comercio.ESTADO_FIRMADO))
         .select_related("producto_servicio", "producto_servicio__categoria", "comercio", "comercio__actividad_comercial")
         .order_by("orden", "titulo")
     )

@@ -27,7 +27,7 @@ class ProductoServicioAdmin(admin.ModelAdmin):
 
 @admin.register(Publicidad)
 class PublicidadAdmin(admin.ModelAdmin):
-    list_display = ("titulo", "etiqueta_principal", "etiqueta_secundaria", "activa", "orden")
+    list_display = ("titulo", "producto_servicio", "comercio", "etiqueta_principal", "activa", "orden")
     list_filter = ("activa", "etiqueta_principal")
     search_fields = ("titulo", "descripcion", "etiqueta_principal", "etiqueta_secundaria")
     list_select_related = ("producto_servicio", "comercio")

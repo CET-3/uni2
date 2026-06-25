@@ -113,7 +113,23 @@ administrativos que no correspondan a visitantes.
 
 **Resultado esperado:** la página no se rompe y muestra un estado vacío claro.
 
-### PM-COMERCIO-PUBLICO-010 - Revisar en pantalla chica
+### PM-COMERCIO-PUBLICO-010 - Revisar detalle de comercio pendiente
+
+**Pasos:**
+
+1. Ir a `/comercios/<pk>/` de un comercio con estado `Pendiente`.
+
+**Resultado esperado:** no da error 404. Muestra "Este comercio estará disponible próximamente" con un enlace "Ver comercios adheridos".
+
+### PM-COMERCIO-PUBLICO-011 - Revisar detalle de comercio firmado
+
+**Pasos:**
+
+1. Ir a `/comercios/<pk>/` de un comercio con estado `Firmado`.
+
+**Resultado esperado:** se ven nombre, actividad comercial, dirección, beneficio y datos de contacto del comercio.
+
+### PM-COMERCIO-PUBLICO-012 - Revisar en pantalla chica
 
 **Pasos:**
 

@@ -52,7 +52,13 @@ class ComercioDetalleView(DetailView):
     context_object_name = "comercio"
 
     def get_queryset(self):
-        return Comercio.objects.filter(estado=Comercio.ESTADO_FIRMADO).select_related("actividad_comercial")
+        return Comercio.objects.select_related("actividad_comercial")
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.estado != Comercio.ESTADO_FIRMADO:
+            self.template_name = "web/comercio_no_disponible.html"
+        return obj
 
 
 class CategoriaProductoServicioDetalleView(DetailView):
