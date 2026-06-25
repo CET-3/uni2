@@ -16,98 +16,112 @@
 </div>
 
 {% if selected_asociado %}
-    <div class="row g-4">
-        <div class="col-lg-5">
-            <div class="card surface-card h-100">
-                <div class="card-body">
-                    <h2 class="h5 mb-3">Asociado seleccionado</h2>
-                    <p class="mb-2"><strong>Nombre:</strong> {{ selected_asociado.apellido }}, {{ selected_asociado.nombre }}</p>
-                    <p class="mb-2"><strong>Número:</strong> {{ selected_asociado.numero_asociado }}</p>
-                    <p class="mb-2"><strong>DNI:</strong> {{ selected_asociado.dni }}</p>
-                    <p class="mb-2"><strong>Curso:</strong> {{ selected_asociado.curso_actual|default:"-" }}</p>
-                    <p class="mb-0"><strong>Deuda al {{ fecha_referencia|date:"d/m/Y" }}:</strong> ${{ total_deuda }}</p>
+    <div class="card surface-card mb-4">
+        <div class="card-body py-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-sm-auto">
+                    <span class="text-secondary small">Asociado</span>
+                    <div class="fw-semibold">{{ selected_asociado.apellido }}, {{ selected_asociado.nombre }}</div>
+                </div>
+                <div class="col-sm-auto">
+                    <span class="text-secondary small">Número</span>
+                    <div>{{ selected_asociado.numero_asociado }}</div>
+                </div>
+                <div class="col-sm-auto">
+                    <span class="text-secondary small">DNI</span>
+                    <div>{{ selected_asociado.dni }}</div>
+                </div>
+                <div class="col-sm-auto">
+                    <span class="text-secondary small">Curso</span>
+                    <div>{{ selected_asociado.curso_actual|default:"-" }}</div>
+                </div>
+                <div class="col-sm-auto ms-sm-auto">
+                    <span class="text-secondary small">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</span>
+                    <div class="fw-semibold">${{ total_deuda }}</div>
+                </div>
+                <div class="col-sm-auto">
+                    <a class="btn btn-outline-secondary btn-sm" href="{% url 'gestion:asociado_detalle' selected_asociado.id %}">Ver detalle</a>
                 </div>
             </div>
         </div>
-        <div class="col-lg-7">
-            <div class="card surface-card h-100">
-                <div class="card-body">
-                    <h2 class="h5 mb-3">Registrar pago</h2>
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-                        {{ cobro_form.asociado_id }}
-                        <h3 class="h6 mb-3">Cuotas a cobrar</h3>
-                        <div class="table-responsive mb-3">
-                            <table class="table table-soft align-middle mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Elegir</th>
-                                        <th>Periodo</th>
-                                        <th>Original</th>
-                                        <th>Recargo actual</th>
-                                        <th>Total actual</th>
-                                        <th>Pagado</th>
-                                        <th>Saldo</th>
-                                        <th>Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for cuota in cuotas_deudoras %}
-                                        <tr>
-                                            <td>
-                                                <input
-                                                    class="form-check-input cuota-cobro-check"
-                                                    type="checkbox"
-                                                    name="cuotas_ids"
-                                                    value="{{ cuota.cuota.id }}"
-                                                    data-saldo="{{ cuota.saldo|unlocalize }}"
-                                                    {% if cuota.cuota.id|stringformat:"s" in selected_cuotas_ids %}checked{% endif %}
-                                                >
-                                            </td>
-                                            <td>{{ cuota.cuota.periodo }}</td>
-                                            <td>${{ cuota.importe_original }}</td>
-                                            <td>${{ cuota.recargo }}</td>
-                                            <td>${{ cuota.total_exigible }}</td>
-                                            <td>${{ cuota.importe_pagado }}</td>
-                                            <td>${{ cuota.saldo }}</td>
-                                            <td>{{ cuota.estado_display }}</td>
-                                        </tr>
-                                    {% empty %}
-                                        <tr><td colspan="8">El asociado no tiene cuotas pendientes.</td></tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% for error in cobro_form.cuotas_ids.errors %}<div class="text-danger small mb-2">{{ error }}</div>{% endfor %}
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label" for="{{ cobro_form.fecha.id_for_label }}">Fecha</label>
-                                {{ cobro_form.fecha }}
-                                {% for error in cobro_form.fecha.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="{{ cobro_form.importe.id_for_label }}">Importe</label>
-                                {{ cobro_form.importe }}
-                                {% for error in cobro_form.importe.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="{{ cobro_form.metodo.id_for_label }}">Metodo</label>
-                                {{ cobro_form.metodo }}
-                                {% for error in cobro_form.metodo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label" for="{{ cobro_form.observaciones.id_for_label }}">Observaciones</label>
-                                {{ cobro_form.observaciones }}
-                                {% for error in cobro_form.observaciones.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-                            </div>
-                        </div>
-                        {% for error in cobro_form.non_field_errors %}<div class="text-danger small mt-2">{{ error }}</div>{% endfor %}
-                        <div class="mt-3">
-                            <button class="btn btn-primary" type="submit" {% if total_deuda <= 0 %}disabled{% endif %}>Confirmar cobro</button>
-                        </div>
-                    </form>
+    </div>
+
+    <div class="card surface-card">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Registrar pago</h2>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ cobro_form.asociado_id }}
+                <h3 class="h6 mb-3">Cuotas a cobrar</h3>
+                <div class="table-responsive mb-3">
+                    <table class="table table-soft align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Elegir</th>
+                                <th>Periodo</th>
+                                <th>Original</th>
+                                <th>Recargo actual</th>
+                                <th>Total actual</th>
+                                <th>Pagado</th>
+                                <th>Saldo</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cuota in cuotas_deudoras %}
+                                <tr>
+                                    <td>
+                                        <input
+                                            class="form-check-input cuota-cobro-check"
+                                            type="checkbox"
+                                            name="cuotas_ids"
+                                            value="{{ cuota.cuota.id }}"
+                                            data-saldo="{{ cuota.saldo|unlocalize }}"
+                                            {% if cuota.cuota.id|stringformat:"s" in selected_cuotas_ids %}checked{% endif %}
+                                        >
+                                    </td>
+                                    <td>{{ cuota.cuota.periodo }}</td>
+                                    <td>${{ cuota.importe_original }}</td>
+                                    <td>${{ cuota.recargo }}</td>
+                                    <td>${{ cuota.total_exigible }}</td>
+                                    <td>${{ cuota.importe_pagado }}</td>
+                                    <td>${{ cuota.saldo }}</td>
+                                    <td>{{ cuota.estado_display }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="8">El asociado no tiene cuotas pendientes.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+                {% for error in cobro_form.cuotas_ids.errors %}<div class="text-danger small mb-2">{{ error }}</div>{% endfor %}
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ cobro_form.fecha.id_for_label }}">Fecha</label>
+                        {{ cobro_form.fecha }}
+                        {% for error in cobro_form.fecha.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ cobro_form.importe.id_for_label }}">Importe</label>
+                        {{ cobro_form.importe }}
+                        {% for error in cobro_form.importe.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ cobro_form.metodo.id_for_label }}">Metodo</label>
+                        {{ cobro_form.metodo }}
+                        {% for error in cobro_form.metodo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ cobro_form.observaciones.id_for_label }}">Observaciones</label>
+                        {{ cobro_form.observaciones }}
+                        {% for error in cobro_form.observaciones.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                </div>
+                {% for error in cobro_form.non_field_errors %}<div class="text-danger small mt-2">{{ error }}</div>{% endfor %}
+                <div class="mt-3">
+                    <button class="btn btn-primary" type="submit" {% if total_deuda <= 0 %}disabled{% endif %}>Confirmar cobro</button>
+                </div>
+            </form>
         </div>
     </div>
 

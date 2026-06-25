@@ -31,7 +31,7 @@
             <div class="section-title-row">
                 <div>
                     <div class="muted-kicker">Operación diaria</div>
-                    <h2 class="h4 mb-0">Tareas del MVP</h2>
+                    <h2 class="h4 mb-0">Tareas de la operación diaria del MVP</h2>
                 </div>
             </div>
             <div class="module-card-grid">
@@ -39,27 +39,11 @@
                     <a class="module-link-item" href="{% url 'gestion:asociados' %}">
                         <div class="module-link-copy">
                             <strong>Asociados</strong>
-                            <span>Buscar, dar altas y revisar detalles.</span>
+                            <span>Buscar, dar altas, revisar detalles y cobrar.</span>
                         </div>
                     </a>
                 {% endif %}
-                {% if perms.gestion.cobrar_cuotas %}
-                    <a class="module-link-item" href="{% url 'gestion:asociados' %}">
-                        <div class="module-link-copy">
-                            <strong>Cobros</strong>
-                            <span>Buscar un asociado y registrar pagos de cuotas.</span>
-                        </div>
-                    </a>
-                {% endif %}
-                {% if perms.gestion.ver_deudores %}
-                    <a class="module-link-item" href="{% url 'gestion:deudores' %}">
-                        <div class="module-link-copy">
-                            <strong>Deudores</strong>
-                            <span>Ver asociados con saldo pendiente.</span>
-                        </div>
-                    </a>
-                {% endif %}
-                {% if perms.gestion.administrar_periodos_cuota %}
+{% if perms.gestion.administrar_periodos_cuota %}
                     <a class="module-link-item" href="{% url 'gestion:periodos_cuota' %}">
                         <div class="module-link-copy">
                             <strong>Períodos de cuota</strong>
@@ -108,13 +92,7 @@
                 <div class="muted-kicker">Soporte técnico</div>
                 <h2 class="h4 mb-3">Admin de Django</h2>
                 <p class="text-secondary">Usar para tareas técnicas o excepciones del MVP, como cursos, productos, servicios y comercios.</p>
-                <div class="dashboard-actions-grid">
-                    <a class="btn btn-outline-primary" href="{% url 'admin:asociados_curso_changelist' %}">Cursos</a>
-                    <a class="btn btn-outline-primary" href="{% url 'admin:contenidos_productoservicio_changelist' %}">Productos y servicios</a>
-                    <a class="btn btn-outline-primary" href="{% url 'admin:contenidos_publicidad_changelist' %}">Publicidades</a>
-                    <a class="btn btn-outline-primary" href="{% url 'admin:comercios_comercio_changelist' %}">Comercios</a>
-                    <a class="btn btn-outline-primary" href="{% url 'admin:index' %}">Admin completo</a>
-                </div>
+                <a class="btn btn-outline-primary" href="{% url 'admin:index' %}">Ir al admin</a>
             </div>
         </section>
     {% endif %}
