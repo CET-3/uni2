@@ -86,13 +86,16 @@
         </section>
     {% endif %}
 
-    {% if user.is_staff %}
+    {% if user.is_staff or perms.gestion.ver_especificacion %}
         <section class="section-card card">
             <div class="card-body">
                 <div class="muted-kicker">Soporte técnico</div>
                 <h2 class="h4 mb-3">Admin de Django</h2>
                 <p class="text-secondary">Usar para tareas técnicas o excepciones del MVP, como cursos, productos, servicios y comercios.</p>
                 <a class="btn btn-outline-primary" href="{% url 'admin:index' %}">Ir al admin</a>
+                {% if perms.gestion.ver_especificacion %}
+                    <a class="btn btn-outline-primary ms-2" href="{% url 'especificacion:indice' %}">Ver especificación</a>
+                {% endif %}
             </div>
         </section>
     {% endif %}
