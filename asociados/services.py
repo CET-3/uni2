@@ -6,6 +6,8 @@ from datetime import date
 
 from django.db import transaction
 
+from usuarios.services import create_user_for_asociado, ensure_default_groups
+
 from .models import Asociado, Curso
 
 
@@ -53,6 +55,9 @@ def create_asociado(
         telefono=telefono,
         direccion=direccion,
     )
+
+    ensure_default_groups()
+    create_user_for_asociado(asociado=asociado, password=dni)
 
     return asociado
 
