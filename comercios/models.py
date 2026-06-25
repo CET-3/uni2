@@ -92,6 +92,13 @@ class Comercio(models.Model):
         default=False,
         help_text="Indica si existe un flyer o pieza de difusión disponible.",
     )
+    foto = models.ImageField(
+        "foto",
+        upload_to="comercios/",
+        blank=True,
+        null=True,
+        help_text="Fotografía del comercio para mostrar en la sección Beneficios de la home.",
+    )
     email = models.EmailField(
         "email",
         blank=True,
