@@ -54,15 +54,21 @@
                 <h2 id="beneficios-title" class="h3">Beneficios para vos</h2>
             </div>
 
-            <div class="row g-3">
+            <div class="benefit-grid">
                 {% for rubro in rubros_beneficio %}
-                    <div class="col-6 col-md-4 col-lg-2">
-                        <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="card h-100 text-center text-decoration-none">
-                            <div class="card-body">
-                                <span class="fw-semibold small">{{ rubro.nombre }}</span>
-                            </div>
-                        </a>
-                    </div>
+                    <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="benefit-mix-card benefit-mix-card-{{ forloop.counter0 }}">
+                        <span class="logo-cloud">
+                            {% for comercio in rubro.comercios_con_foto|slice:":3" %}
+                                <span class="logo-dot 
+                                    {% if forloop.counter == 1 %}logo-dot-left
+                                    {% elif forloop.counter == 2 %}logo-dot-main
+                                    {% else %}logo-dot-right{% endif %}">
+                                    <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
+                                </span>
+                            {% endfor %}
+                        </span>
+                        <span class="benefit-rubric">{{ rubro.nombre }}</span>
+                    </a>
                 {% endfor %}
             </div>
         </aside>
