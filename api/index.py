@@ -10,4 +10,10 @@ import django
 
 django.setup()
 
+# Correr migraciones automáticamente en el frío inicio.
+# Django salta las ya aplicadas, así que es seguro en cada deploy.
+from django.core.management import call_command  # noqa: E402
+
+call_command("migrate", interactive=False, verbosity=0)
+
 from config.wsgi import application  # noqa: E402, F401
