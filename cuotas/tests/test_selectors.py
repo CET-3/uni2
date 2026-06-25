@@ -30,7 +30,7 @@ def cuota_marzo(asociado_activo):
         ciclo_lectivo=ciclo,
         importe=Decimal("3000"),
         importe_recargo_mes=Decimal("500"),
-        importe_recargo_mes_siguiente=Decimal("500"),
+        importe_recargo_mes_siguiente=Decimal("1000"),
         fecha_vencimiento=date(2026, 3, 10),
     )
     return Cuota.objects.create(
@@ -53,13 +53,23 @@ def test_calcula_cuota_pendiente_antes_del_vencimiento(cuota_marzo):
 
 
 @pytest.mark.django_db
-def test_calcula_cuota_vencida_despues_del_vencimiento(cuota_marzo):
+def test_calcula_cuota_vencida_mismo_mes(cuota_marzo):
     estado = calcular_estado_cuota(cuota_marzo, date(2026, 3, 12))
 
     assert estado.estado == Cuota.ESTADO_VENCIDA
     assert estado.recargo == Decimal("500")
     assert estado.total_exigible == Decimal("3500")
     assert estado.saldo == Decimal("3500")
+
+
+@pytest.mark.django_db
+def test_calcula_cuota_vencida_mes_siguiente(cuota_marzo):
+    estado = calcular_estado_cuota(cuota_marzo, date(2026, 4, 5))
+
+    assert estado.estado == Cuota.ESTADO_VENCIDA
+    assert estado.recargo == Decimal("1000")
+    assert estado.total_exigible == Decimal("4000")
+    assert estado.saldo == Decimal("4000")
 
 
 @pytest.mark.django_db

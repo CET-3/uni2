@@ -8,34 +8,20 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 # Cuotas
 
-## CUOTA-001
+## Características de la cuota
 
-No puede existir más de una cuota por asociado y período.
+1. No puede existir más de una cuota por asociado y período.
+2. Cada cuota almacena su propio importe.
+3. La cuota tiene un atributo `estado` que se almacena. Se crea con estado `Pendiente` y pasa a `Pagada` cuando se registra el cobro completo.
+4. El recargo sobre una cuota tiene dos niveles, ambos definidos en `PeriodoCuota`:
+   - **Recargo por vencimiento:** se aplica si el pago se realiza después del día 10 del mes del período.
+   - **Recargo por mora:** se aplica si la cuota no se saldó durante el mes del período. Reemplaza al recargo por vencimiento.
+5. El estado `Vencida` no se almacena: se determina en el momento de mostrar la cuota, comparando la fecha de vencimiento con una fecha de referencia explícita. Las pantallas siempre calculan el estado y el saldo para una fecha de referencia.
 
-## CUOTA-002
+## Creación de cuotas
 
-Cada cuota almacena su propio importe.
+Cada mes, el administrador del sistema crea el próximo período de cuota desde la sección Períodos de cuota. Al crearlo define la fecha, la fecha de vencimiento, el importe y el recargo por mora. Una vez creado el período, ejecuta la operación de generar cuotas, que crea una cuota por cada asociado activo elegible.
 
-## CUOTA-003
-
-Una cuota puede mostrarse como pendiente, pagada o vencida. Ese estado operativo se calcula para una fecha de referencia junto con el recargo aplicable y el saldo exigible.
-
-## CUOTA-004
-
-Se generan cuotas para asociados activos cuya fecha_inicio_cobro sea menor o igual al período generado.
-
-## CUOTA-005
-
-Si la cuota ya existe para el asociado y período, no debe generarse otra.
-
-## CUOTA-006
-
-Si al vencimiento la cuota no esta totalmente cancelada, se aplica un recargo fijo por mora una sola vez.
-
-## CUOTA-007
-
-El recargo por mora debe copiarse desde `PeríodoCuota` a `Cuota` al momento de generarla.
-
-## CUOTA-008
-
-Una cuota no "sabe" sola si está vencida: está vencida mirando una fecha. Las pantallas deben mostrar estado y saldo calculados para una fecha de referencia explícita.
+1. Si la cuota ya existe para el asociado y período, no debe generarse otra.
+2. Los dos valores de recargo (por vencimiento y por mora) deben copiarse desde `PeriodoCuota` a `Cuota` al momento de generarla.
+3. Al crear un nuevo asociado, se generan automáticamente las cuotas que le corresponden según las [reglas de alta de asociado](altas-de-asociado.md).

@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from datetime import date
 from decimal import Decimal
 
 from django.db import transaction
 from django.utils import timezone
 
-from asociados.models import Asociado, CicloLectivo
+from asociados.models import Asociado
 
 from .models import Cuota, Donacion, Pago, PagoCuota, PeriodoCuota
 from .selectors import calcular_estado_cuota, get_cuotas_deudoras
@@ -69,20 +68,21 @@ def generar_cuotas_para_periodo(periodo: PeriodoCuota) -> int:
     return created
 
 
-@transaction.atomic
 def generar_cuotas_iniciales_para_asociado(*, asociado: Asociado, fecha_referencia) -> list[Cuota]:
-    inicio = asociado.fecha_inicio_cobro
-    periodos = PeriodoCuota.objects.filter(
-        ciclo_lectivo__anio__gte=inicio.year,
-        ciclo_lectivo__anio__lte=fecha_referencia.year,
-        activo=True,
-    ).select_related("ciclo_lectivo")
+    meses = []
+    for i in range(2, -1, -1):
+        m = fecha_referencia.month - i
+        a = fecha_referencia.year
+        while m < 1:
+            m += 12
+            a -= 1
+        meses.append((a, m))
+
     cuotas = []
-    for periodo in periodos.order_by("ciclo_lectivo__anio", "mes"):
-        periodo_key = (periodo.ciclo_lectivo.anio, periodo.mes)
-        if periodo_key < (inicio.year, inicio.month):
-            continue
-        if periodo_key > (fecha_referencia.year, fecha_referencia.month):
+    for anio, mes in meses:
+        try:
+            periodo = PeriodoCuota.objects.get(mes=mes, ciclo_lectivo__anio=anio, activo=True)
+        except PeriodoCuota.DoesNotExist:
             continue
         cuota, _ = Cuota.objects.get_or_create(
             asociado=asociado,
@@ -146,55 +146,3 @@ def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por
     return pago
 
 
-@transaction.atomic
-def generar_cuotas_y_pago_inicial(*, asociado: Asociado, fecha, importe, metodo, registrado_por=None, observaciones=""):
-    """
-    Genera cuotas retroactivas (2 meses) + mes corriente para un nuevo asociado
-    y registra el pago correspondiente.
-    """
-    hoy = timezone.localdate()
-    ciclo, _ = CicloLectivo.objects.get_or_create(anio=hoy.year)
-
-    meses = []
-    for i in range(2, -1, -1):
-        m = hoy.month - i
-        a = hoy.year
-        while m < 1:
-            m += 12
-            a -= 1
-        meses.append((a, m))
-
-    cuotas_generadas = []
-    for anio, mes in meses:
-        ciclo_periodo, _ = CicloLectivo.objects.get_or_create(anio=anio)
-        periodo, _ = PeriodoCuota.objects.get_or_create(
-            mes=mes,
-            ciclo_lectivo=ciclo_periodo,
-            defaults={
-                "importe": Decimal("800.00"),
-                "importe_recargo_mes": Decimal("100.00"),
-                "importe_recargo_mes_siguiente": Decimal("200.00"),
-                "fecha_vencimiento": date(anio, mes, 10),
-            },
-        )
-        cuota, created = Cuota.objects.get_or_create(
-            asociado=asociado,
-            periodo=periodo,
-            defaults={
-                "importe": periodo.importe,
-                "importe_recargo_mes": periodo.importe_recargo_mes,
-                "importe_recargo_mes_siguiente": periodo.importe_recargo_mes_siguiente,
-            },
-        )
-        if created:
-            cuotas_generadas.append(cuota)
-
-    pago = registrar_pago(
-        asociado=asociado,
-        fecha=fecha,
-        importe=importe,
-        metodo=metodo,
-        registrado_por=registrado_por,
-        observaciones=observaciones,
-    )
-    return pago, cuotas_generadas

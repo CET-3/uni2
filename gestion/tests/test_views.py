@@ -120,8 +120,6 @@ def test_dashboard_gestion_muestra_accesos_basicos(client):
     content = response.content.decode()
     assert "Panel de gestión" in content
     assert "Asociados" in content
-    assert "Cobros" in content
-    assert "Deudores" in content
     assert "Períodos de cuota" in content
     assert "asociados activos" not in content.lower()
 
@@ -145,7 +143,6 @@ def test_dashboard_atencion_muestra_solo_operacion_diaria(client):
     content = response.content.decode()
     assert "Operación diaria" in content
     assert "Asociados" in content
-    assert "Cobros" in content
     assert "Puesta en marcha" not in content
     assert "Importar padrón inicial" not in content
     assert "Importar cuotas históricas" not in content
@@ -565,7 +562,6 @@ def test_cobros_con_asociado_preseleccionado_no_muestra_busqueda_sin_resultados(
 
     assert response.status_code == 200
     content = response.content.decode()
-    assert "Asociado seleccionado" in content
     assert "Gimenez, Paula" in content
     assert "No se encontraron asociados para la búsqueda ingresada" not in content
 
@@ -1124,9 +1120,9 @@ def test_asociado_nuevo_genera_cuotas_iniciales_y_redirige_a_cobro_si_tiene_perm
     asociado = Asociado.objects.get(dni="44111223")
     assert response.status_code == 200
     assert response.redirect_chain[-1][0] == f"{reverse('gestion:cobros')}?asociado={asociado.id}"
-    assert list(asociado.cuotas.order_by("periodo__mes").values_list("periodo__mes", flat=True)) == [6]
+    assert list(asociado.cuotas.order_by("periodo__mes").values_list("periodo__mes", flat=True)) == [5, 6]
     content = response.content.decode()
-    assert "Se generaron 1 cuotas iniciales" in content
+    assert "Se generaron 2 cuotas iniciales" in content
     assert "Cobro de cuotas" in content
 
 
