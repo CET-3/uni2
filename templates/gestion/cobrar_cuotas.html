@@ -59,6 +59,7 @@
                             <tr>
                                 <th>Elegir</th>
                                 <th>Periodo</th>
+                                <th>Vencimiento</th>
                                 <th>Original</th>
                                 <th>Recargo actual</th>
                                 <th>Total actual</th>
@@ -81,6 +82,7 @@
                                         >
                                     </td>
                                     <td>{{ cuota.cuota.periodo }}</td>
+                                    <td>{{ cuota.cuota.periodo.fecha_vencimiento|date:"d/m/Y" }}</td>
                                     <td>${{ cuota.importe_original }}</td>
                                     <td>${{ cuota.recargo }}</td>
                                     <td>${{ cuota.total_exigible }}</td>

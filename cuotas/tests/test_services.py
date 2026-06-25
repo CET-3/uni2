@@ -120,13 +120,13 @@ def test_aplicacion_a_deuda_mas_antigua(asociado_activo, periodos):
     pago = registrar_pago(
         asociado=asociado_activo,
         fecha=date(2026, 4, 5),
-        importe=Decimal("6500"),
+        importe=Decimal("7000"),
         metodo=Pago.METODO_BILLETERA,
     )
     aplicaciones = list(pago.aplicaciones.order_by("id").values_list("importe", flat=True))
     cuotas = list(Cuota.objects.filter(asociado=asociado_activo).order_by("periodo__mes"))
 
-    assert aplicaciones == [Decimal("3500"), Decimal("3000")]
+    assert aplicaciones == [Decimal("4000"), Decimal("3000")]
     assert cuotas[0].estado == Cuota.ESTADO_PAGADA
     assert cuotas[1].estado == Cuota.ESTADO_PAGADA
 
@@ -140,14 +140,14 @@ def test_pago_de_cuotas_seleccionadas_deja_cuotas_posteriores_pendientes(asociad
     pago = registrar_pago(
         asociado=asociado_activo,
         fecha=date(2026, 4, 5),
-        importe=Decimal("3500"),
+        importe=Decimal("4000"),
         metodo=Pago.METODO_EFECTIVO,
         cuotas_ids=[cuota_marzo.id],
     )
 
     cuota_marzo.refresh_from_db()
     cuota_abril.refresh_from_db()
-    assert pago.importe == Decimal("3500")
+    assert pago.importe == Decimal("4000")
     assert list(pago.aplicaciones.values_list("cuota_id", flat=True)) == [cuota_marzo.id]
     assert cuota_marzo.estado == Cuota.ESTADO_PAGADA
     assert cuota_abril.estado == Cuota.ESTADO_PENDIENTE
@@ -212,16 +212,16 @@ def test_pago_fuera_de_termino_aplica_recargo_mes(asociado_activo, periodos):
 
 @pytest.mark.django_db
 def test_recargo_escalonado_mes_anterior_aplica_recargo_mayor(asociado_activo, periodos):
-    """Pagar en abril una cuota de marzo vencida: aplica recargo de mes siguiente."""
+    """Pagar en abril una cuota de marzo vencida: aplica recargo_mes + recargo_mes_siguiente."""
     generar_cuotas_para_periodo(periodos[0])
     pago = registrar_pago(
         asociado=asociado_activo,
         fecha=date(2026, 4, 5),
-        importe=Decimal("3500"),
+        importe=Decimal("4000"),
         metodo=Pago.METODO_EFECTIVO,
     )
     cuota = Cuota.objects.get(asociado=asociado_activo, periodo=periodos[0])
-    assert cuota.importe_pagado == Decimal("3500")
+    assert cuota.importe_pagado == Decimal("4000")
     assert cuota.estado == Cuota.ESTADO_PAGADA
 
 
