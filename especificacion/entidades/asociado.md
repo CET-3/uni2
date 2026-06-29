@@ -37,4 +37,6 @@ Representa a una persona asociada o adherente a la mutual.
 
 **Restricciones de datos:** DNI único, número automático, token UUID único, usuario opcional.
 
+**Admin técnico:** la selección de `usuario` debe usar búsqueda/autocompletado para soportar muchos usuarios y evitar combos largos.
+
 **Referencias funcionales:** ver [reglas de asociados](../reglas/asociados.md), [altas de asociado](../reglas/altas-de-asociado.md), [credenciales](../reglas/credenciales.md) y [usuarios](../reglas/usuarios.md).

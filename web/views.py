@@ -1,10 +1,14 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Prefetch
+from django.shortcuts import redirect
 from django.views.generic import DetailView, TemplateView
 
 from comercios.selectors import get_comercios_firmados, get_rubros_con_comercios
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
 from contenidos.selectors import get_categorias_productos_servicios_publicas, get_publicidades_home
+from gestion.permissions import GESTION_VER_DESIGN_SYSTEM, user_has_gestion_permission
+from usuarios.services import get_available_experiences
 
 
 class HomeView(TemplateView):
@@ -17,6 +21,25 @@ class HomeView(TemplateView):
         context["rubros_beneficio"] = get_rubros_con_comercios()
         context["comercios"] = get_comercios_firmados()[:3]
         return context
+
+
+class SmartStartView(HomeView):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            experiences = get_available_experiences(request.user)
+            if len(experiences) > 1:
+                return redirect("usuarios:selector_panel")
+            if experiences == ["gestion"]:
+                return redirect("gestion:dashboard")
+            if experiences == ["asociado"]:
+                return redirect("asociados:dashboard")
+            if experiences == ["comercio"]:
+                return redirect("comercios:dashboard")
+        return super().dispatch(request, *args, **kwargs)
+
+
+class PublicHomeView(HomeView):
+    pass
 
 
 class ProductosServiciosPublicosView(TemplateView):
@@ -89,3 +112,25 @@ class ActividadComercialDetalleView(DetailView):
                 queryset=Comercio.objects.filter(estado=Comercio.ESTADO_FIRMADO).order_by("orden", "nombre"),
             )
         )
+
+
+class VerDesignSystemRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    login_url = "/usuarios/login/"
+    permission_required = GESTION_VER_DESIGN_SYSTEM
+
+    def test_func(self):
+        return user_has_gestion_permission(self.request.user, self.permission_required)
+
+
+class DesignSystemView(VerDesignSystemRequiredMixin, TemplateView):
+    template_name = "web/design-system.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["show_site_chrome"] = False
+        context["load_theme_script"] = False
+        return context
+
+
+class DesignSystemEstructuraView(VerDesignSystemRequiredMixin, TemplateView):
+    template_name = "web/design-system/estructura.html"

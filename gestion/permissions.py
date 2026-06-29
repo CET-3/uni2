@@ -8,6 +8,7 @@ GESTION_VER_DEUDORES = "gestion.ver_deudores"
 GESTION_ADMINISTRAR_PERIODOS_CUOTA = "gestion.administrar_periodos_cuota"
 GESTION_IMPORTAR_CUOTAS_HISTORICAS = "gestion.importar_cuotas_historicas"
 GESTION_VER_ESPECIFICACION = "gestion.ver_especificacion"
+GESTION_VER_DESIGN_SYSTEM = "gestion.ver_design_system"
 
 
 GESTION_PERMISSION_LABELS = [
@@ -21,6 +22,7 @@ GESTION_PERMISSION_LABELS = [
     (GESTION_ADMINISTRAR_PERIODOS_CUOTA, "Puede administrar períodos de cuota"),
     (GESTION_IMPORTAR_CUOTAS_HISTORICAS, "Puede importar cuotas históricas"),
     (GESTION_VER_ESPECIFICACION, "Puede ver la especificación del proyecto"),
+    (GESTION_VER_DESIGN_SYSTEM, "Puede ver el design system del proyecto"),
 ]
 
 GESTION_PERMISSIONS = tuple(permission for permission, label in GESTION_PERMISSION_LABELS)

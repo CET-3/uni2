@@ -2,38 +2,58 @@
 
 {% block title %}{{ actividad_comercial.nombre }} | Uni2{% endblock %}
 
+{% block body_class %} detail-page{% endblock %}
+
 {% block content %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'web:home' %}">Inicio</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'web:comercios' %}">Comercios</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ actividad_comercial.nombre }}</li>
-    </ol>
-</nav>
+<section class="benefit-page" aria-labelledby="actividad-title">
+  <div class="container py-4">
+    <div class="benefit-page-header">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="{% url 'web:home' %}">Inicio</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'web:comercios' %}">Comercios</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ actividad_comercial.nombre }}</li>
+        </ol>
+      </nav>
+      <span class="uni2-eyebrow">Actividad comercial</span>
+      <h1 id="actividad-title">{{ actividad_comercial.nombre }}</h1>
+      <p>Comercios adheridos en esta categoría.</p>
+      <a class="benefit-back" href="{% url 'web:comercios' %}">Volver a comercios</a>
+    </div>
 
-<h1 class="h2 mb-4">{{ actividad_comercial.nombre }}</h1>
-
-<div class="d-flex flex-column gap-3">
-    {% for comercio in actividad_comercial.comercios.all %}
-        <article class="card">
-            <div class="card-body">
-                <h2 class="h5">{{ comercio.nombre }}</h2>
-                <p class="mb-1 text-secondary">{{ comercio.direccion }}</p>
-                {% if comercio.beneficio_texto %}
-                    <p class="mb-1"><strong>Beneficio:</strong> {{ comercio.beneficio_texto }}</p>
-                {% endif %}
-                {% if comercio.telefono %}
-                    <p class="mb-1"><strong>Teléfono:</strong> {{ comercio.telefono }}</p>
-                {% endif %}
-                {% if comercio.url_presencia_web %}
-                    <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Presencia web</a>
-                {% endif %}
-            </div>
-        </article>
-    {% empty %}
-        <p class="text-secondary">No hay comercios adheridos en esta categoría.</p>
-    {% endfor %}
-</div>
-
-<a href="{% url 'web:comercios' %}" class="btn btn-outline-secondary mt-4">← Todos los comercios</a>
+    <div class="benefit-list" aria-label="Comercios adheridos">
+      {% for comercio in actividad_comercial.comercios.all %}
+        <a class="benefit-list-card" href="{% url 'web:comercio_detalle' comercio.pk %}" aria-label="Ver detalle de {{ comercio.nombre }}">
+          <span class="benefit-list-logo{% if not comercio.foto %} benefit-list-initials{% endif %}">
+            {% if comercio.foto %}
+              <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
+            {% else %}
+              {{ comercio.nombre|slice:":2"|upper }}
+            {% endif %}
+          </span>
+          <span class="benefit-list-body">
+            <h2>{{ comercio.nombre }}</h2>
+            {% if comercio.beneficio_texto %}
+              <p>{{ comercio.beneficio_texto }}</p>
+            {% endif %}
+            <span class="benefit-meta">
+              <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {{ comercio.direccion }}</span>
+              {% if comercio.telefono %}
+                <span><i class="fa-solid fa-phone" aria-hidden="true"></i> {{ comercio.telefono }}</span>
+              {% endif %}
+              {% if comercio.url_presencia_web %}
+                <span><i class="fa-solid fa-globe" aria-hidden="true"></i> Presencia web</span>
+              {% endif %}
+            </span>
+          </span>
+          {% if comercio.beneficio_texto %}
+            <strong class="discount-tag">{{ comercio.beneficio_texto }}</strong>
+          {% endif %}
+        </a>
+      {% empty %}
+        <p>No hay comercios adheridos en esta categoría.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
 {% endblock %}

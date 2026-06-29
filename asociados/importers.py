@@ -10,8 +10,6 @@ from typing import Any
 
 from django.db import transaction
 
-from usuarios.services import create_user_for_asociado
-
 from .models import Asociado, Curso
 
 
@@ -524,8 +522,6 @@ def _upsert_asociado(row, curso, fecha_alta, result):
         "fecha_inicio_cobro": PADRON_FECHA_INICIO_COBRO,
     }
     asociado, created = Asociado.objects.update_or_create(dni=row["dni"], defaults=defaults)
-    if asociado.usuario_id is None:
-        create_user_for_asociado(asociado=asociado, password=asociado.dni)
     if created:
         result.creados += 1
     else:

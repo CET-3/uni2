@@ -8,6 +8,7 @@ from comercios.models import Comercio
 from usuarios.services import (
     ASOCIADO_GROUP,
     COMERCIO_GROUP,
+    create_missing_users_for_asociados,
     create_user_for_asociado,
     create_user_for_comercio,
     ensure_default_groups,
@@ -81,6 +82,93 @@ def test_create_user_for_asociado_desde_manual():
 
 
 @pytest.mark.django_db
+def test_create_missing_users_for_asociados_crea_usuarios_faltantes_y_es_idempotente():
+    ensure_default_groups()
+    asociado = Asociado.objects.create(
+        nombre="Lena",
+        apellido="Leyes",
+        dni="52328996",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+    )
+
+    resultado = create_missing_users_for_asociados()
+    segundo_resultado = create_missing_users_for_asociados()
+
+    asociado.refresh_from_db()
+    assert resultado.creados == 1
+    assert resultado.omitidos == 0
+    assert resultado.errores == []
+    assert asociado.usuario is not None
+    assert asociado.usuario.username == "52328996"
+    assert asociado.usuario.check_password("52328996")
+    assert Group.objects.get(name=ASOCIADO_GROUP) in asociado.usuario.groups.all()
+    assert segundo_resultado.creados == 0
+    assert segundo_resultado.omitidos == 1
+    assert segundo_resultado.errores == []
+
+
+@pytest.mark.django_db
+def test_create_missing_users_for_asociados_vincula_usuario_existente_sin_asociado():
+    ensure_default_groups()
+    user_model = get_user_model()
+    user_existente = user_model.objects.create_user(username="52328996", password="existente")
+    asociado = Asociado.objects.create(
+        nombre="Lena",
+        apellido="Leyes",
+        dni="52328996",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+    )
+    resultado = create_missing_users_for_asociados()
+
+    asociado.refresh_from_db()
+    user_existente.refresh_from_db()
+    assert resultado.creados == 0
+    assert resultado.vinculados == 1
+    assert resultado.omitidos == 0
+    assert resultado.errores == []
+    assert asociado.usuario == user_existente
+    assert Group.objects.get(name=ASOCIADO_GROUP) in user_existente.groups.all()
+
+
+@pytest.mark.django_db
+def test_create_missing_users_for_asociados_continua_si_username_pertenece_a_otro_asociado():
+    ensure_default_groups()
+    user_model = get_user_model()
+    user_existente = user_model.objects.create_user(username="52328996", password="existente")
+    Asociado.objects.create(
+        nombre="Otra",
+        apellido="Persona",
+        dni="30000000",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+        usuario=user_existente,
+    )
+    asociado_con_conflicto = Asociado.objects.create(
+        nombre="Lena",
+        apellido="Leyes",
+        dni="52328996",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+    )
+
+    resultado = create_missing_users_for_asociados()
+
+    asociado_con_conflicto.refresh_from_db()
+    assert resultado.creados == 0
+    assert resultado.vinculados == 0
+    assert resultado.omitidos == 1
+    assert len(resultado.errores) == 1
+    assert "52328996" in resultado.errores[0]
+    assert asociado_con_conflicto.usuario is None
+
+
+@pytest.mark.django_db
 def test_create_user_for_comercio():
     ensure_default_groups()
     from comercios.models import ActividadComercial
@@ -112,4 +200,3 @@ def test_create_user_for_comercio_ya_tiene_usuario():
 
     with pytest.raises(ValueError, match="ya tiene un usuario"):
         create_user_for_comercio(comercio=comercio, password="otra123")
-
