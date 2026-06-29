@@ -1,6 +1,8 @@
 *.swp
+.env.prod
+.env.production
+.venv_tests/
+**/__pycache__/
 .superpowers/
 docs/superpowers/
-data/chico2.xls
-data/chico2.xlsx
-data/padron completooo.xlsx
+data/
