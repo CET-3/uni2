@@ -2,25 +2,56 @@
 
 {% block title %}{{ comercio.nombre }} | Uni2{% endblock %}
 
+{% block body_class %} detail-page{% endblock %}
+
 {% block content %}
-<article class="vstack gap-3">
-    <a href="{% url 'web:comercios' %}">Volver a comercios</a>
-    <div>
-        <span class="badge text-bg-primary">{{ comercio.actividad_comercial.nombre }}</span>
-        <h1 class="h2 mt-3">{{ comercio.nombre }}</h1>
-        <p class="text-secondary">{{ comercio.direccion }}</p>
+<div class="container py-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'web:home' %}">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'web:comercios' %}">Comercios</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ comercio.nombre }}</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="service-detail" aria-labelledby="comercio-title">
+  <div class="container pb-5">
+    <div class="detail-layout">
+      <div class="detail-copy">
+        <span class="uni2-eyebrow">{{ comercio.actividad_comercial.nombre }}</span>
+        <h1 id="comercio-title">{{ comercio.nombre }}</h1>
+        <p>{{ comercio.direccion }}</p>
+        <a href="{% url 'web:comercios' %}" class="uni2-cta uni2-cta-secondary">← Todos los comercios</a>
+      </div>
+
+      <div class="detail-panel">
+        {% if comercio.beneficio_texto %}
+          <div>
+            <h2>Beneficio</h2>
+            <p>{{ comercio.beneficio_texto }}</p>
+          </div>
+        {% endif %}
+        {% if comercio.telefono %}
+          <div>
+            <h2>Teléfono</h2>
+            <p>{{ comercio.telefono }}</p>
+          </div>
+        {% endif %}
+        {% if comercio.email %}
+          <div>
+            <h2>Email</h2>
+            <p><a href="mailto:{{ comercio.email }}">{{ comercio.email }}</a></p>
+          </div>
+        {% endif %}
+        {% if comercio.url_presencia_web %}
+          <div>
+            <h2>Presencia web</h2>
+            <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Visitar sitio</a>
+          </div>
+        {% endif %}
+      </div>
     </div>
-    {% if comercio.beneficio_texto %}
-        <p><strong>Beneficio:</strong> {{ comercio.beneficio_texto }}</p>
-    {% endif %}
-    {% if comercio.telefono %}
-        <p><strong>Teléfono:</strong> {{ comercio.telefono }}</p>
-    {% endif %}
-    {% if comercio.email %}
-        <p><strong>Email:</strong> <a href="mailto:{{ comercio.email }}">{{ comercio.email }}</a></p>
-    {% endif %}
-    {% if comercio.url_presencia_web %}
-        <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Visitar presencia web</a>
-    {% endif %}
-</article>
+  </div>
+</section>
 {% endblock %}

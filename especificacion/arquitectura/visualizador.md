@@ -39,4 +39,4 @@ Usa `python-markdown` con extensión `fenced_code`. El HTML se inyecta con `{{ c
 
 ## Link en navegación
 
-Aparece como "Especificación" en el menú desplegable del usuario, solo cuando `user.is_staff == True`.
+Aparece como "Especificación" en la sección `Herramientas` del menú de usuario, solo cuando la persona tiene el permiso `gestion.ver_especificacion`.
