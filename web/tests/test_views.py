@@ -84,6 +84,7 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "uni2-footer" not in content
     assert "style2.css" not in content
     assert "assets/logos/" not in content
+    assert "uni2-theme.js" not in content
 
 
 @pytest.mark.django_db
