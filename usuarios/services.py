@@ -1,3 +1,5 @@
+from dataclasses import dataclass, field
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.db import transaction
@@ -12,6 +14,14 @@ ATENCION_MUTUAL_GROUP = "Atención de mutual"
 ASOCIADO_GROUP = "Asociados"
 COMERCIO_GROUP = "Comercios"
 DEFAULT_GROUPS = (ADMIN_GROUP, ATENCION_MUTUAL_GROUP, ASOCIADO_GROUP, COMERCIO_GROUP)
+
+
+@dataclass
+class MissingAsociadoUsersResult:
+    creados: int = 0
+    vinculados: int = 0
+    omitidos: int = 0
+    errores: list[str] = field(default_factory=list)
 
 
 def ensure_default_groups():
@@ -72,6 +82,35 @@ def create_user_for_asociado(asociado: Asociado, password: str, email: str | Non
     group = Group.objects.get(name=ASOCIADO_GROUP)
     user.groups.add(group)
     return user
+
+
+def create_missing_users_for_asociados() -> MissingAsociadoUsersResult:
+    result = MissingAsociadoUsersResult()
+    result.omitidos = Asociado.objects.filter(usuario__isnull=False).count()
+    asociados = Asociado.objects.filter(usuario__isnull=True).order_by("apellido", "nombre", "id")
+    user_model = get_user_model()
+
+    for asociado in asociados:
+        username = str(asociado.dni)
+        existing_user = user_model.objects.filter(username=username).first()
+        if existing_user is not None:
+            if hasattr(existing_user, "asociado"):
+                result.errores.append(f"Asociado {asociado.dni}: el usuario existente ya está vinculado a otro asociado.")
+                continue
+            asociado.usuario = existing_user
+            asociado.save(update_fields=["usuario"])
+            existing_user.groups.add(Group.objects.get(name=ASOCIADO_GROUP))
+            result.vinculados += 1
+            continue
+
+        try:
+            create_user_for_asociado(asociado=asociado, password=username)
+        except ValueError as exc:
+            result.errores.append(f"Asociado {asociado.dni}: {exc}")
+        else:
+            result.creados += 1
+
+    return result
 
 
 @transaction.atomic

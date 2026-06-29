@@ -72,6 +72,13 @@
                                 <span>Previsualizar e importar asociados desde la planilla heredada.</span>
                             </div>
                         </a>
+                        <form class="module-link-item" method="post" action="{% url 'gestion:crear_usuarios_asociados_faltantes' %}">
+                            {% csrf_token %}
+                            <button class="module-link-copy text-start border-0 bg-transparent p-0 w-100" type="submit">
+                                <strong>Crear usuarios faltantes</strong>
+                                <span>Crear accesos para asociados que ya están cargados y todavía no tienen usuario.</span>
+                            </button>
+                        </form>
                     {% endif %}
                     {% if perms.gestion.importar_cuotas_historicas %}
                         <a class="module-link-item" href="{% url 'gestion:importar_cuotas_historicas' %}">

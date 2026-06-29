@@ -43,6 +43,8 @@ class AsociadoAdminForm(forms.ModelForm):
 @admin.register(Asociado)
 class AsociadoAdmin(admin.ModelAdmin):
     form = AsociadoAdminForm
+    autocomplete_fields = ("usuario",)
+    list_select_related = ("curso_actual", "usuario")
     list_display = (
         "numero_asociado",
         "apellido",
