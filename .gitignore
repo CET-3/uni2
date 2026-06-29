@@ -6,3 +6,16 @@
 .superpowers/
 docs/superpowers/
 data/
+*.swp
+.env
+.env.prod
+.env.production
+.venv_tests/
+**/__pycache__/
+.vercel/
+.superpowers/
+docs/superpowers/
+data/
+db.sqlite3
+test.sqlite3
+media/
