@@ -59,6 +59,9 @@
                             {% if perms.gestion.ver_especificacion %}
                                 <li><a class="dropdown-item" href="{% url 'especificacion:indice' %}">Especificación</a></li>
                             {% endif %}
+                            {% if perms.gestion.ver_design_system %}
+                                <li><a class="dropdown-item" href="{% url 'web:design-system' %}">Design system</a></li>
+                            {% endif %}
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="post" action="{% url 'usuarios:logout' %}">
