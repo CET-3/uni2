@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.db import IntegrityError
 from django.db import transaction
 
 from asociados.models import Asociado
@@ -119,10 +120,24 @@ def create_missing_users_for_asociados(batch_size: int | None = None, after_id: 
             continue
 
         try:
-            create_user_for_asociado(asociado=asociado, password=username)
+            user = create_user_for_asociado(asociado=asociado, password=username)
         except ValueError as exc:
             result.errores.append(f"Asociado {asociado.dni}: {exc}")
+        except IntegrityError:
+            existing_user = user_model.objects.filter(username=username).first()
+            if existing_user is None:
+                result.errores.append(f"Asociado {asociado.dni}: no se pudo crear el usuario.")
+                continue
+            if hasattr(existing_user, "asociado"):
+                result.errores.append(f"Asociado {asociado.dni}: el usuario existente ya está vinculado a otro asociado.")
+                continue
+            asociado.usuario = existing_user
+            asociado.save(update_fields=["usuario"])
+            existing_user.groups.add(asociado_group)
+            usuarios_existentes[username] = existing_user
+            result.vinculados += 1
         else:
+            usuarios_existentes[username] = user
             result.creados += 1
 
     if asociados and result.hay_mas:

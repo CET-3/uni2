@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.db import IntegrityError
 
 from asociados.models import Asociado
 from asociados.services import create_asociado
@@ -143,6 +144,42 @@ def test_create_missing_users_for_asociados_en_lotes():
     assert resultado_2.restantes == 0
     assert primero.usuario is not None
     assert segundo.usuario is not None
+
+
+@pytest.mark.django_db
+def test_create_missing_users_for_asociados_reconoce_race_con_usuario_creado_en_otro_proceso(monkeypatch):
+    ensure_default_groups()
+    user_model = get_user_model()
+    asociado = Asociado.objects.create(
+        nombre="Lena",
+        apellido="Leyes",
+        dni="53015244",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+    )
+
+    def crear_usuario_interferente(*, asociado, password, email=None):
+        user = user_model.objects.create_user(
+            username=str(asociado.dni),
+            password=password,
+            email=email or asociado.email,
+            first_name=asociado.nombre,
+            last_name=asociado.apellido,
+            is_active=True,
+        )
+        raise IntegrityError("duplicate key value violates unique constraint")
+
+    monkeypatch.setattr("usuarios.services.create_user_for_asociado", crear_usuario_interferente)
+
+    resultado = create_missing_users_for_asociados()
+
+    asociado.refresh_from_db()
+    assert resultado.creados == 0
+    assert resultado.vinculados == 1
+    assert resultado.errores == []
+    assert asociado.usuario is not None
+    assert asociado.usuario.username == "53015244"
 
 
 @pytest.mark.django_db
