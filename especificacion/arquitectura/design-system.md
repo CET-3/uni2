@@ -26,6 +26,22 @@ Cuando una pantalla nueva o un rediseño necesita un patrón visual que todavía
 
 Los componentes sugeridos en el design system se nombran por patrón visual o responsabilidad de interfaz, no por entidad de negocio. Esto permite reutilizarlos en pantallas públicas, backoffice y experiencias autenticadas sin arrastrar nombres del ejemplo original.
 
+## Relación entre Bootstrap, componentes UNI2 y catálogo
+
+Bootstrap es la base técnica de maquetación y controles estándar. Se usa para grillas simples, formularios, tablas, dropdowns, collapse, botones operativos y utilidades responsive.
+
+Los componentes visuales propios de Uni2 usan clases productivas con prefijo `uni2-` cuando deben funcionar en pantallas reales. Ejemplos: `uni2-hero`, `uni2-cta`, `uni2-section-inner`, `uni2-section-heading`, `uni2-section-kicker`, `uni2-section-copy`, `uni2-service-grid`, `uni2-service-card`, `uni2-service-icon`, `uni2-benefit-grid`, `uni2-benefit-card`, `uni2-ad-card`, `uni2-steps`, `uni2-step-card`, `uni2-info-box`, `uni2-navbar` y `uni2-footer`.
+
+La página interna `/design-system/` puede conservar nombres históricos de showcase cuando eso ayuda a mantener fidelidad con la referencia visual del proyecto. En particular, el bloque de home interno puede usar `service-grid`, `service-card`, `benefit-band`, `benefit-links`, `benefit-mix-card`, `logo-cloud` y `logo-dot`. Esos nombres quedan acotados al catálogo y no deben volver a aparecer en pantallas productivas nuevas.
+
+La clase `ds-page` se reserva para la página interna `/design-system/`. Sirve como marco documental del catálogo: navegación propia, secciones de explicación, previews y tarjetas de referencia. Las páginas productivas no deben depender de `ds-page` para que un componente se vea correctamente.
+
+Cuando el catálogo muestra un componente que también existe en producción, debe usar la misma clase productiva `uni2-*` que usa la pantalla real. Las clases `ds-*` quedan para piezas exclusivas del catálogo, como `ds-card`, `ds-kicker`, `ds-heading` o `ds-preview`.
+
+Las clases genéricas sin prefijo, como `hero`, `cta`, `step`, `info-box`, `ad-card`, `benefit-card` o `section-inner`, no deben usarse en pantallas productivas nuevas. Si el catálogo conserva nombres genéricos para ejemplos internos, esos estilos deben estar acotados por `.ds-page`.
+
+Algunos patrones históricos del catálogo, como la lista de beneficios con logo circular, metadata y descuento, pueden compartirse con pantallas productivas siempre que se les expongan selectores globales equivalentes. En esos casos la vista interna sigue siendo la referencia visual, pero la implementación real no depende de `.ds-page` para renderizar correctamente.
+
 Ejemplos de nombres esperados:
 
 - `components/media_list_item.html`: item de listado con imagen o logo, título, descripción, metadata y etiqueta destacada.
@@ -50,6 +66,10 @@ Cuando se cree un template reusable nuevo, el nombre debe responder a esta pregu
 El chrome compartido de Django se organiza en `base.html`, `includes/navbar.html` e `includes/footer.html`.
 
 La cabecera global contiene solo marca, navegación principal, acceso de usuario y entradas internas según permisos. No incluye horario de atención, WhatsApp, Instagram ni otros datos de contacto; esos contenidos viven en secciones específicas de la home, páginas de detalle o footer cuando correspondan.
+
+El menú de usuario de la cabecera usa el componente productivo `uni2-user-menu`. Las opciones internas se agrupan como `Paneles`, `Herramientas` y `Cuenta` para diferenciar experiencias operativas, herramientas técnicas y salida de sesión.
+
+En desktop, `uni2-user-menu` funciona como dropdown de Bootstrap. En mobile, las mismas entradas se muestran como enlaces directos dentro de la lista abierta por la hamburguesa, con el mismo comportamiento visual que "Productos y servicios" y "Comercios". Esto evita un segundo nivel de apertura y mantiene la navegación principal como una lista plana.
 
 El cambio de tema no forma parte de la cabecera. Se muestra como botón flotante fijo abajo a la derecha, siguiendo el diseño visual base.
 
