@@ -12,7 +12,13 @@
     <div class="page-header-actions d-flex flex-wrap gap-2">
         <form method="post" action="{% url 'gestion:crear_usuarios_asociados_faltantes' %}">
             {% csrf_token %}
-            <button class="btn btn-primary" type="submit">Crear usuarios faltantes</button>
+            <button class="btn btn-primary" type="submit">
+                {% if usuarios_faltantes_estado %}
+                    Continuar creando usuarios faltantes
+                {% else %}
+                    Crear usuarios faltantes
+                {% endif %}
+            </button>
         </form>
         <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Volver a asociados</a>
     </div>
@@ -244,6 +250,13 @@
             </ul>
         </div>
     </section>
+{% endif %}
+
+{% if usuarios_faltantes_estado %}
+    <div class="alert alert-warning mt-4 mb-0">
+        Se están creando usuarios por tandas para evitar que la operación supere el tiempo máximo de Vercel.
+        Presioná nuevamente <strong>Continuar creando usuarios faltantes</strong> hasta completar el proceso.
+    </div>
 {% endif %}
 </div>
 {% endblock %}

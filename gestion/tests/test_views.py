@@ -387,6 +387,53 @@ def test_crear_usuarios_faltantes_asociados_desde_importacion(client):
 
 
 @pytest.mark.django_db
+def test_crear_usuarios_faltantes_asociados_se_procesa_en_lotes(client, monkeypatch):
+    staff = crear_usuario_gestion("staff_usuarios_faltantes_lotes", permisos=[GESTION_IMPORTAR_ASOCIADOS])
+    primero = Asociado.objects.create(
+        nombre="Lena",
+        apellido="Leyes",
+        dni="52328996",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+    )
+    segundo = Asociado.objects.create(
+        nombre="Joaquin",
+        apellido="Darosa",
+        dni="52536191",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+    )
+
+    monkeypatch.setattr("gestion.views.GestionCrearUsuariosAsociadosFaltantesView.usuarios_batch_size", 1)
+
+    client.force_login(staff)
+    response_1 = client.post(reverse("gestion:crear_usuarios_asociados_faltantes"), follow=True)
+
+    primero.refresh_from_db()
+    segundo.refresh_from_db()
+    assert response_1.status_code == 200
+    assert primero.usuario is not None
+    assert segundo.usuario is None
+    assert "Continuar creando usuarios faltantes" in response_1.content.decode()
+    state = client.session["usuarios_asociados_faltantes_state"]
+    assert state["cursor"] == primero.id
+    assert state["creados"] == 1
+
+    response_2 = client.post(reverse("gestion:crear_usuarios_asociados_faltantes"), follow=True)
+
+    primero.refresh_from_db()
+    segundo.refresh_from_db()
+    assert response_2.status_code == 200
+    assert primero.usuario is not None
+    assert segundo.usuario is not None
+    assert "Continuar creando usuarios faltantes" not in response_2.content.decode()
+    assert "Usuarios de asociados creados: 2" in response_2.content.decode()
+    assert "usuarios_asociados_faltantes_state" not in client.session
+
+
+@pytest.mark.django_db
 def test_importar_cuotas_historicas_previsualiza_desde_planilla(client):
     staff = crear_usuario_gestion("staff_cuotas_preview")
     asociado = create_asociado(

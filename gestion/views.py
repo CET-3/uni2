@@ -58,6 +58,9 @@ from .selectors import get_asociados_deudores
 from usuarios.services import create_missing_users_for_asociados, create_user_for_asociado
 
 
+USUARIOS_ASOCIADOS_FALTANTES_STATE_KEY = "usuarios_asociados_faltantes_state"
+
+
 class GestionPermissionRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     permission_required = None
     raise_exception = True
@@ -228,31 +231,79 @@ class GestionImportarAsociadosView(GestionPermissionRequiredMixin, TemplateView)
         context["form"] = getattr(self.request, "_import_form", ImportarPadronAsociadosForm())
         context["preview"] = self.request.session.get(PADRON_IMPORT_SESSION_KEY)
         context["result"] = getattr(self.request, "_import_result", None)
-        context["usuarios_faltantes_errores"] = self.request.session.pop(
-            "usuarios_asociados_faltantes_errores",
-            [],
-        )
+        context["usuarios_faltantes_estado"] = self.request.session.get(USUARIOS_ASOCIADOS_FALTANTES_STATE_KEY)
+        context["usuarios_faltantes_errores"] = self.request.session.get("usuarios_asociados_faltantes_errores", [])
         return context
 
 
 class GestionCrearUsuariosAsociadosFaltantesView(GestionPermissionRequiredMixin, TemplateView):
+    usuarios_batch_size = 25
     permission_required = GESTION_IMPORTAR_ASOCIADOS
 
+    def _get_state(self, request):
+        state = request.session.get(USUARIOS_ASOCIADOS_FALTANTES_STATE_KEY)
+        if not state:
+            state = {
+                "cursor": 0,
+                "creados": 0,
+                "vinculados": 0,
+                "omitidos": Asociado.objects.filter(usuario__isnull=False).count(),
+                "errores": [],
+            }
+        return state
+
+    def _save_state(self, request, state):
+        request.session[USUARIOS_ASOCIADOS_FALTANTES_STATE_KEY] = state
+        request.session.modified = True
+
     def post(self, request, *args, **kwargs):
-        result = create_missing_users_for_asociados()
-        messages.success(
-            request,
-            (
-                f"Usuarios de asociados creados: {result.creados}. "
-                f"Usuarios existentes vinculados: {result.vinculados}. "
-                f"Ya tenían usuario: {result.omitidos}."
-            ),
+        state = self._get_state(request)
+        result = create_missing_users_for_asociados(
+            batch_size=self.usuarios_batch_size,
+            after_id=state["cursor"],
         )
-        if result.errores:
-            messages.warning(request, f"No se pudieron crear {len(result.errores)} usuarios de asociados.")
-            request.session["usuarios_asociados_faltantes_errores"] = result.errores
+
+        state["creados"] += result.creados
+        state["vinculados"] += result.vinculados
+        state["errores"].extend(result.errores)
+
+        if result.procesados == 0:
+            request.session.pop(USUARIOS_ASOCIADOS_FALTANTES_STATE_KEY, None)
+            messages.info(request, "No hay usuarios faltantes para crear.")
+            return redirect("gestion:importar_asociados")
+
+        if result.hay_mas and result.siguiente_cursor is not None:
+            state["cursor"] = result.siguiente_cursor
+            self._save_state(request, state)
+            if state["errores"]:
+                request.session["usuarios_asociados_faltantes_errores"] = state["errores"]
+            else:
+                request.session.pop("usuarios_asociados_faltantes_errores", None)
+            messages.warning(
+                request,
+                (
+                    f"Se procesaron {result.procesados} asociados sin usuario. "
+                    f"Quedan {result.restantes}. Volvé a presionar para continuar."
+                ),
+            )
         else:
-            request.session.pop("usuarios_asociados_faltantes_errores", None)
+            request.session.pop(USUARIOS_ASOCIADOS_FALTANTES_STATE_KEY, None)
+            messages.success(
+                request,
+                (
+                    f"Usuarios de asociados creados: {state['creados']}. "
+                    f"Usuarios existentes vinculados: {state['vinculados']}. "
+                    f"Ya tenían usuario: {state['omitidos']}."
+                ),
+            )
+            if state["errores"]:
+                messages.warning(
+                    request,
+                    f"No se pudieron crear {len(state['errores'])} usuarios de asociados.",
+                )
+                request.session["usuarios_asociados_faltantes_errores"] = state["errores"]
+            else:
+                request.session.pop("usuarios_asociados_faltantes_errores", None)
         return redirect("gestion:importar_asociados")
 
     def get(self, request, *args, **kwargs):

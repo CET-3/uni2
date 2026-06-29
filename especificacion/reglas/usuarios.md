@@ -62,7 +62,7 @@ El sistema define tres grupos base: `asociado`, `comercio` y `gestion`. La data 
 
 ## USUARIO-014
 
-`GestionCrearUsuariosAsociadosFaltantesView` en `gestion/views.py` permite a un usuario con permiso `importar_asociados` crear usuarios para todos los asociados sin usuario vinculado desde la pantalla de importación de padrón. Usa el DNI como username y contraseña inicial. Si ya existe un usuario con username igual al DNI y no está vinculado a otro asociado, lo vincula al asociado. Si un asociado falla, registra el error y sigue con los demás. La acción es idempotente: si se ejecuta otra vez, no duplica usuarios ya vinculados.
+`GestionCrearUsuariosAsociadosFaltantesView` en `gestion/views.py` permite a un usuario con permiso `importar_asociados` crear usuarios para los asociados sin usuario vinculado desde la pantalla de importación de padrón. Usa el DNI como username y contraseña inicial. Si ya existe un usuario con username igual al DNI y no está vinculado a otro asociado, lo vincula al asociado. Si un asociado falla, registra el error y sigue con los demás. La acción se ejecuta por tandas para evitar timeouts de Vercel y puede repetirse hasta completar el padrón. El comportamiento sigue siendo idempotente: si se ejecuta otra vez, no duplica usuarios ya vinculados.
 
 ## USUARIO-015
 
