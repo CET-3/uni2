@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Prefetch
 from django.views.generic import DetailView, TemplateView
 
@@ -5,6 +6,7 @@ from comercios.selectors import get_comercios_firmados, get_rubros_con_comercios
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
 from contenidos.selectors import get_categorias_productos_servicios_publicas, get_publicidades_home
+from gestion.permissions import GESTION_VER_DESIGN_SYSTEM, user_has_gestion_permission
 
 
 class HomeView(TemplateView):
@@ -91,5 +93,13 @@ class ActividadComercialDetalleView(DetailView):
         )
 
 
-class DesignSystemView(TemplateView):
+class VerDesignSystemRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    login_url = "/usuarios/login/"
+    permission_required = GESTION_VER_DESIGN_SYSTEM
+
+    def test_func(self):
+        return user_has_gestion_permission(self.request.user, self.permission_required)
+
+
+class DesignSystemView(VerDesignSystemRequiredMixin, TemplateView):
     template_name = "web/design-system.html"
