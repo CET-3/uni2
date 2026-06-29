@@ -27,15 +27,15 @@
                 <a class="ds-nav-secondary" href="#beneficios">Beneficios</a>
                 <a class="ds-nav-primary" href="#operaciones">Operaciones</a>
                 <a class="ds-nav-primary" href="#django">Django</a>
-                <a class="ds-nav-secondary" href="{% url 'web:home' %}">Ver sitio</a>
+                <a class="ds-nav-secondary" href="{% url 'web:inicio' %}">Ver sitio</a>
             </nav>
             <nav class="ds-more-nav" aria-label="Más opciones del design system">
                 <a href="#componentes">Componentes</a>
                 <a href="#servicios">Servicios</a>
                 <a href="#beneficios">Beneficios</a>
-                <a href="{% url 'web:home' %}">Ver sitio</a>
+                <a href="{% url 'web:inicio' %}">Ver sitio</a>
             </nav>
-            <a class="cta secondary service-topbar-cta" href="{% url 'web:home' %}">Ver sitio</a>
+            <a class="cta secondary service-topbar-cta" href="{% url 'web:inicio' %}">Ver sitio</a>
         </header>
 
         <main>
@@ -165,65 +165,70 @@
                     </div>
                 </div>
 
-                <section class="hero ds-mini-hero" aria-labelledby="ds-hero-title">
-                    <div class="section-inner hero-layout">
+                <section class="uni2-hero ds-mini-hero" aria-labelledby="ds-hero-title">
+                    <div class="uni2-section-inner uni2-hero-layout">
                         <div>
-                            <span class="eyebrow">Mutual Escolar UNI2</span>
+                            <span class="uni2-eyebrow">Mutual Escolar UNI2</span>
                             <h1 id="ds-hero-title">Tu mutual, más cerca que nunca</h1>
                             <p>Una comunidad comprometida con vos, con beneficios para cada momento</p>
-                            <div class="hero-actions">
-                                <a class="cta" href="#django">Sumate</a>
-                                <a class="cta secondary" href="#componentes">Iniciar sesión</a>
+                            <div class="uni2-hero-actions">
+                                <a class="uni2-cta" href="#django">Sumate</a>
+                                <a class="uni2-cta uni2-cta-secondary" href="#componentes">Iniciar sesión</a>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 <div class="section-inner ds-preview" style="margin-top:28px">
-                    <div class="section-heading compact-heading">
+                    <div class="uni2-section-heading compact-heading">
                         <div><h2>Servicios que suman</h2></div>
                     </div>
-                    <div class="service-grid" aria-label="Servicios de la mutual">
-                        <article class="service-card service-card-blue" data-href="#servicios">
-                            <span class="service-icon" aria-hidden="true"><i data-lucide="copy"></i></span>
+                    <div class="uni2-service-grid" aria-label="Servicios de la mutual">
+                        <article class="uni2-service-card uni2-service-card-blue" data-href="#servicios">
+                            <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="copy"></i></span>
                             <div><h3>Fotocopias</h3><p>Fotocopias rápidas y de excelente calidad.</p></div>
                             <a class="link" href="#servicios">Ver más</a>
                         </article>
-                        <article class="service-card service-card-yellow" data-href="#servicios">
-                            <span class="service-icon" aria-hidden="true"><i data-lucide="shirt"></i></span>
+                        <article class="uni2-service-card uni2-service-card-yellow" data-href="#servicios">
+                            <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="shirt"></i></span>
                             <div><h3>Uniformes</h3><p>Calidad y comodidad para acompa&ntilde;arte todo el a&ntilde;o.</p></div>
                             <a class="link" href="#servicios">Ver más</a>
                         </article>
-                        <article class="service-card service-card-green" data-href="#servicios">
-                            <span class="service-icon" aria-hidden="true"><i data-lucide="bike"></i></span>
+                        <article class="uni2-service-card uni2-service-card-green" data-href="#servicios">
+                            <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="bike"></i></span>
                             <div><h3>Bicicleta Solidaria</h3><p>Una forma práctica y sustentable de moverte.</p></div>
                             <a class="link" href="#servicios">Ver más</a>
                         </article>
-                        <article class="service-card service-card-red" data-href="#servicios">
-                            <span class="service-icon" aria-hidden="true"><i data-lucide="notebook-tabs"></i></span>
+                        <article class="uni2-service-card uni2-service-card-red" data-href="#servicios">
+                            <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="notebook-tabs"></i></span>
                             <div><h3>Cuadernillos</h3><p>Todo el material que necesitás para cada materia.</p></div>
                             <a class="link" href="#servicios">Ver más</a>
                         </article>
                     </div>
 
-                    <aside class="benefit-band" aria-labelledby="beneficios-home-title">
-                        <div class="benefit-intro"><h2 id="beneficios-home-title">Club de Beneficios</h2></div>
-                        <nav class="benefit-links js-auto-slider" aria-label="Rubros con beneficios">
-                            <a class="benefit-mix-card benefit-food" href="#beneficios">
-                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>AD</span></span><span class="logo-dot logo-dot-main"><span>BM</span></span><span class="logo-dot logo-dot-right"><span>LC</span></span></span>
-                                <span class="benefit-rubric">Gastronomía y kioscos</span>
+                    <aside aria-labelledby="beneficios-home-title">
+                        <div class="uni2-section-heading">
+                            <div>
+                                <span class="uni2-section-kicker">Club de Beneficios</span>
+                                <h2 id="beneficios-home-title">Beneficios para vos</h2>
+                            </div>
+                        </div>
+                        <nav class="uni2-benefit-grid" aria-label="Rubros con beneficios">
+                            <a class="uni2-benefit-card uni2-benefit-card-0" href="#beneficios">
+                                <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo uni2-benefit-logo-left"><span>AD</span></span><span class="uni2-benefit-logo uni2-benefit-logo-main"><span>BM</span></span><span class="uni2-benefit-logo uni2-benefit-logo-right"><span>LC</span></span></span>
+                                <span class="uni2-benefit-rubric">Gastronomía y kioscos</span>
                             </a>
-                            <a class="benefit-mix-card benefit-sport" href="#beneficios">
-                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>AG</span></span><span class="logo-dot logo-dot-main"><span>AC</span></span><span class="logo-dot logo-dot-right"><span>ER</span></span></span>
-                                <span class="benefit-rubric">Gym y deportes</span>
+                            <a class="uni2-benefit-card uni2-benefit-card-1" href="#beneficios">
+                                <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo uni2-benefit-logo-left"><span>AG</span></span><span class="uni2-benefit-logo uni2-benefit-logo-main"><span>AC</span></span><span class="uni2-benefit-logo uni2-benefit-logo-right"><span>ER</span></span></span>
+                                <span class="uni2-benefit-rubric">Gym y deportes</span>
                             </a>
-                            <a class="benefit-mix-card benefit-beauty" href="#beneficios">
-                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>AS</span></span><span class="logo-dot logo-dot-main"><span>AM</span></span><span class="logo-dot logo-dot-right"><span>OM</span></span></span>
-                                <span class="benefit-rubric">Belleza y Bienestar</span>
+                            <a class="uni2-benefit-card uni2-benefit-card-2" href="#beneficios">
+                                <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo uni2-benefit-logo-left"><span>AS</span></span><span class="uni2-benefit-logo uni2-benefit-logo-main"><span>AM</span></span><span class="uni2-benefit-logo uni2-benefit-logo-right"><span>OM</span></span></span>
+                                <span class="uni2-benefit-rubric">Belleza y Bienestar</span>
                             </a>
-                            <a class="benefit-mix-card benefit-fashion" href="#beneficios">
-                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>CC</span></span><span class="logo-dot logo-dot-main"><span>GC</span></span><span class="logo-dot logo-dot-right"><span>JD</span></span></span>
-                                <span class="benefit-rubric">Indumentaria</span>
+                            <a class="uni2-benefit-card uni2-benefit-card-3" href="#beneficios">
+                                <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo uni2-benefit-logo-left"><span>CC</span></span><span class="uni2-benefit-logo uni2-benefit-logo-main"><span>GC</span></span><span class="uni2-benefit-logo uni2-benefit-logo-right"><span>JD</span></span></span>
+                                <span class="uni2-benefit-rubric">Indumentaria</span>
                             </a>
                         </nav>
                     </aside>
@@ -236,14 +241,14 @@
                         </div>
                     </div>
                     <div class="carousel js-auto-slider" id="ds-ad-carousel" aria-label="Carrusel de publicidades">
-                        <article class="ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1100&q=80');">
-                            <span class="badge">Alimentos</span><h3>Alto Drugstore</h3><strong class="discount">10% OFF</strong><p>Kiosco y drugstore con snacks, bebidas y productos para resolver compras rápidas.</p><a class="link" href="#beneficios">Conocer más</a>
+                        <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1100&q=80');">
+                            <span class="uni2-badge">Alimentos</span><h3>Alto Drugstore</h3><strong class="uni2-discount">10% OFF</strong><p>Kiosco y drugstore con snacks, bebidas y productos para resolver compras rápidas.</p><a class="link" href="#beneficios">Conocer más</a>
                         </article>
-                        <article class="ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1100&q=80');">
-                            <span class="badge">Librería</span><h3>Librería Mu&ntilde;oz</h3><strong class="discount">10% OFF</strong><p>Útiles escolares, carpetas, hojas y materiales para la cursada.</p><a class="link" href="#beneficios">Conocer más</a>
+                        <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1100&q=80');">
+                            <span class="uni2-badge">Librería</span><h3>Librería Mu&ntilde;oz</h3><strong class="uni2-discount">10% OFF</strong><p>Útiles escolares, carpetas, hojas y materiales para la cursada.</p><a class="link" href="#beneficios">Conocer más</a>
                         </article>
-                        <article class="ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1100&q=80');">
-                            <span class="badge">Actividad física</span><h3>Atenas Gimnasio</h3><strong class="discount">10% OFF</strong><p>Gimnasio de musculación y entrenamiento para sumar actividad física.</p><a class="link" href="#beneficios">Conocer más</a>
+                        <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1100&q=80');">
+                            <span class="uni2-badge">Actividad física</span><h3>Atenas Gimnasio</h3><strong class="uni2-discount">10% OFF</strong><p>Gimnasio de musculación y entrenamiento para sumar actividad física.</p><a class="link" href="#beneficios">Conocer más</a>
                         </article>
                     </div>
                     <div class="d-flex justify-content-center gap-2" data-slider-dots="ds-ad-carousel" aria-label="Indicadores del carrusel Los más elegidos">
@@ -254,20 +259,20 @@
 
                     <div>
                         <h2>C&oacute;mo ser parte de nuestra comunidad</h2>
-                        <div class="steps">
-                            <article class="step"><strong>1</strong><h3>Acércate a la mutual</h3><p>Visitá UNI2 durante nuestros horarios de atención.</p></article>
-                            <article class="step"><strong>2</strong><h3>Completá tu inscripción</h3><p>Registrá tus datos de forma rápida y sencilla.</p></article>
-                            <article class="step"><strong>3</strong><h3>Sumate a la comunidad</h3><p>Con una cuota social de solo $800 por mes, ya sos asociado.</p></article>
-                            <article class="step"><strong>4</strong><h3>Disfrutá tus beneficios</h3><p>Accedé a servicios, descuentos y oportunidades exclusivas.</p></article>
+                        <div class="uni2-steps">
+                            <article class="uni2-step-card uni2-step-card-blue"><strong class="uni2-step-number">1</strong><h3>Acércate a la mutual</h3><p>Visitá UNI2 durante nuestros horarios de atención.</p></article>
+                            <article class="uni2-step-card uni2-step-card-yellow"><strong class="uni2-step-number">2</strong><h3>Completá tu inscripción</h3><p>Registrá tus datos de forma rápida y sencilla.</p></article>
+                            <article class="uni2-step-card uni2-step-card-green"><strong class="uni2-step-number">3</strong><h3>Sumate a la comunidad</h3><p>Con una cuota social de solo $800 por mes, ya sos asociado.</p></article>
+                            <article class="uni2-step-card uni2-step-card-red"><strong class="uni2-step-number">4</strong><h3>Disfrutá tus beneficios</h3><p>Accedé a servicios, descuentos y oportunidades exclusivas.</p></article>
                         </div>
-                        <div class="info-box" aria-label="Información importante">
+                        <div class="uni2-info-box" aria-label="Información importante">
                             <div><h3>Asociación</h3><p>Presencial en la mutual.</p></div>
                             <div><h3>Cuota social</h3><p>$800 mensuales.</p></div>
-                            <div class="schedule-card">
+                            <div class="uni2-schedule-card">
                                 <h3>Horarios de atención</h3>
-                                <table class="hours-table hours-table-compact" style="display:table" aria-label="Horarios de atención resumidos">
+                                <table class="uni2-hours-table uni2-hours-table-compact" style="display:table" aria-label="Horarios de atención resumidos">
                                     <thead><tr><th>Día</th><th>Horarios de atención</th></tr></thead>
-                                    <tbody><tr><th>Lunes a Jueves</th><td><span class="hours-chip hours-chip-blue">08:50-09:00</span><span class="hours-chip hours-chip-yellow">10:20-10:30</span><span class="hours-chip hours-chip-green">13:30-17:30</span></td></tr></tbody>
+                                    <tbody><tr><th>Lunes a Jueves</th><td><span class="uni2-hours-chip uni2-hours-chip-blue">08:50-09:00</span><span class="uni2-hours-chip uni2-hours-chip-yellow">10:20-10:30</span><span class="uni2-hours-chip uni2-hours-chip-green">13:30-17:30</span></td></tr></tbody>
                                 </table>
                             </div>
                         </div>
