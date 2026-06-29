@@ -45,6 +45,14 @@ Antes de crear una pantalla, el equipo debe identificar qué patrón del design 
 
 Cuando se cree un template reusable nuevo, el nombre debe responder a esta pregunta: "qué patrón de interfaz es", no "para qué entidad lo usamos hoy".
 
+## Chrome base
+
+El chrome compartido de Django se organiza en `base.html`, `includes/navbar.html` e `includes/footer.html`.
+
+La cabecera global contiene solo marca, navegación principal, acceso de usuario y entradas internas según permisos. No incluye horario de atención, WhatsApp, Instagram ni otros datos de contacto; esos contenidos viven en secciones específicas de la home, páginas de detalle o footer cuando correspondan.
+
+El cambio de tema no forma parte de la cabecera. Se muestra como botón flotante fijo abajo a la derecha, siguiendo el diseño visual base.
+
 ## Alcance de esta decisión
 
 Esta página es una referencia de trabajo, no una pantalla operativa del MVP. Su objetivo es ordenar decisiones visuales y hacerlas compartidas para que el proyecto siga siendo entendible para estudiantes que se suman después.
