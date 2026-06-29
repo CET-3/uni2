@@ -583,19 +583,19 @@
                                 <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>base.html</h3><p>Head, fuentes, `uni2-design-system.css`, script de tema, topbar, bloque main, footer y scripts comunes.</p></article></div>
                                 <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>includes/topbar.html</h3><p>Marca, navegación, CTAs y versión responsive.</p></article></div>
                                 <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>includes/footer.html</h3><p>Íconos de contacto, ubicación y texto institucional.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/benefit_card.html</h3><p>Logo, nombre, descripción, metadata y descuento para listas de beneficios.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/service_card.html</h3><p>Ícono, título, descripción y link para servicios de la mutual.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/price_table.html</h3><p>Tabla de precios con columnas para asociados y no asociados.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/media_list_item.html</h3><p>Imagen o logo, título, descripción, metadata y etiqueta destacada para listados.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/action_card.html</h3><p>Ícono, título, descripción y link para accesos principales.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/comparison_table.html</h3><p>Tabla para comparar columnas de valores, estados o condiciones.</p></article></div>
                                 <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/filter_bar.html</h3><p>Búsqueda, selects, rango de fecha, chips activos y acción de limpiar.</p></article></div>
                                 <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/metric_card.html</h3><p>Indicadores de dashboard con número, contexto y color semántico.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>forms/asociado_form.html</h3><p>Formulario Django renderizado con clases Bootstrap y mensajes de validación.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>forms/entity_form.html</h3><p>Formulario Django renderizado con clases Bootstrap y mensajes de validación.</p></article></div>
                             </div>
                         </div>
                         <div class="col-12 col-xl-4"><pre class="ds-snippet h-100"><code>{% verbatim %}{% extends "base.html" %}
 {% block content %}
   {% include "sections/hero.html" %}
-  {% include "sections/services.html" %}
-  {% include "sections/benefits.html" %}
+  {% include "sections/action_grid.html" %}
+  {% include "sections/feature_strip.html" %}
 {% endblock %}{% endverbatim %}</code></pre></div>
                     </div>
                 </div>
