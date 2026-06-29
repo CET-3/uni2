@@ -2,6 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.urls import reverse
+from pytest_django.asserts import assertContains, assertNotContains
 
 from asociados.services import create_asociado
 from comercios.models import ActividadComercial, Comercio
@@ -219,9 +220,11 @@ def test_navbar_muestra_design_system_si_tiene_permiso(client):
     response = client.get(reverse("web:home"))
 
     assert response.status_code == 200
-    content = response.content.decode()
-    assert "Design system" in content
-    assert reverse("web:design-system") in content
+    assertContains(
+        response,
+        f'<a class="dropdown-item" href="{reverse("web:design-system")}">Design system</a>',
+        html=True,
+    )
 
 
 @pytest.mark.django_db
@@ -233,4 +236,8 @@ def test_navbar_no_muestra_design_system_sin_permiso(client):
     response = client.get(reverse("web:home"))
 
     assert response.status_code == 200
-    assert "Design system" not in response.content.decode()
+    assertNotContains(
+        response,
+        f'<a class="dropdown-item" href="{reverse("web:design-system")}">Design system</a>',
+        html=True,
+    )
