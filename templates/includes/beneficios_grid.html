@@ -1,8 +1,12 @@
 {% if rubros_beneficio %}
 <aside class="benefit-band" aria-labelledby="beneficios-title">
-    <div class="benefit-intro"><h2 id="beneficios-title">Club de Beneficios</h2></div>
+    <div class="uni2-section-heading compact-heading">
+        <div>
+            <h2 id="beneficios-title">Club de Beneficios</h2>
+        </div>
+    </div>
 
-    <nav class="benefit-links js-auto-slider" aria-label="Rubros con beneficios">
+    <nav class="benefit-links js-auto-slider js-home-benefits-slider" aria-label="Rubros con beneficios">
         {% for rubro in rubros_beneficio %}
             {% cycle 'benefit-food' 'benefit-sport' 'benefit-beauty' 'benefit-fashion' as benefit_color silent %}
             <a class="benefit-mix-card {{ benefit_color }}" href="{% url 'web:actividad_comercial_detalle' rubro.pk %}">
