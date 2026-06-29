@@ -1,4 +1,6 @@
 import pytest
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 from django.urls import reverse
 
 from comercios.models import ActividadComercial, Comercio
@@ -23,6 +25,39 @@ def test_url_beneficios_no_se_mantiene(client):
     response = client.get("/beneficios/")
 
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_design_system_requiere_login(client):
+    response = client.get(reverse("web:design-system"))
+
+    assert response.status_code == 302
+    assert response.url.startswith("/usuarios/login/")
+
+
+@pytest.mark.django_db
+def test_design_system_requiere_permiso(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="sin_design_system", password="secreto123")
+    client.force_login(user)
+
+    response = client.get(reverse("web:design-system"))
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_design_system_con_permiso_responde(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="con_design_system", password="secreto123")
+    permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_design_system")
+    user.user_permissions.add(permiso)
+    client.force_login(user)
+
+    response = client.get(reverse("web:design-system"))
+
+    assert response.status_code == 200
+    assert "Sistema visual UNI2" in response.content.decode()
 
 
 @pytest.mark.django_db
