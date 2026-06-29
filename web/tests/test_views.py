@@ -231,6 +231,7 @@ def test_home_muestra_publicidad_sin_foto_sin_error(client):
     assert response.status_code == 200
     assert "Bicicleta solidaria" in contenido
     assert "Préstamo gratuito de bicicletas." in contenido
+    assert "Conocer más" not in contenido
 
 
 @pytest.mark.django_db
@@ -388,6 +389,11 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
     assert response.status_code == 200
     assert "Librería Sur" in contenido
     assert "10% en útiles" in contenido
+    assert "Todos los comercios" not in contenido
+    assert "Mitre 123" in contenido
+    assert "commerce-benefit-logo" in contenido
+    assert "Visitar online" not in contenido
+    assert "Visitar sitio" not in contenido
     assert response_pendiente.status_code == 200
     assert "próximamente" in response_pendiente.content.decode()
 
@@ -425,6 +431,8 @@ def test_comercios_publicos_muestran_actividad_comercial(client):
     assert contenido.index("Librería Zeta") < contenido.index("Librería Alfa")
     assert "Actividad:" in contenido
     assert "Librería" in contenido
+    assert "Presencia web" not in contenido
+    assert "Visitar online" not in contenido
     assert "Librería Pendiente" not in contenido
 
 
