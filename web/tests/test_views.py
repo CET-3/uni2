@@ -262,7 +262,7 @@ def test_home_usa_el_mismo_formato_visual_que_el_design_system(client):
     assert "uni2-section-heading" in content
     assert "benefit-band" in content
     assert "benefit-mix-card" in content
-    assert "js-home-benefits-slider" in content
+    assert "js-home-benefits-grid" in content
     assert "uni2-hours-mobile" in content
     assert 'class="service-grid"' not in content
 
