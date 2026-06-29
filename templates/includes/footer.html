@@ -1,41 +1,23 @@
 {% load static %}
 <footer class="uni2-footer mt-auto" id="contacto">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-md-4">
-                <h4 class="fw-bold">MUTUAL <span class="fw-normal">UNI2</span></h4>
-                <p class="small mt-2" style="opacity: 0.75;">Un espacio creado por y para los estudiantes, promoviendo valores, solidaridad y crecimiento conjunto.</p>
-            </div>
-
-            <div class="col-md-2">
-                <h6 class="fw-semibold text-uppercase small mb-3">Recursos</h6>
-                <ul class="list-unstyled small">
-                    <li class="mb-2"><a href="{% url 'web:home' %}">Inicio</a></li>
-                    <li class="mb-2"><a href="#beneficios">Beneficios</a></li>
-                    <li class="mb-2"><a href="{% url 'web:productos_servicios' %}">Servicios</a></li>
-                    <li class="mb-2"><a href="#como-asociarse">Asociarse</a></li>
-                </ul>
-            </div>
-
-            <div class="col-md-3">
-                <h6 class="fw-semibold text-uppercase small mb-3">Contacto</h6>
-                <ul class="list-unstyled small">
-                    <li class="mb-2">Email: <a href="mailto:unidosatencionalcliente@gmail.com">unidosatencionalcliente@gmail.com</a></li>
-                    <li class="mb-2">WhatsApp: <a href="https://wa.me/5492984210672" target="_blank" rel="noopener">+54 9 298 421-0672</a></li>
-                    <li class="mb-2">Chacabuco 1050, General Roca, Río Negro</li>
-                </ul>
-            </div>
-
-            <div class="col-md-3">
-                <h6 class="fw-semibold text-uppercase small mb-3">Seguinos</h6>
-                <ul class="list-unstyled small">
-                    <li class="mb-2"><a href="https://www.instagram.com/unidos.cet3" target="_blank" rel="noopener">Instagram: @unidos.cet3</a></li>
-                </ul>
-                <a href="{% url 'web:home' %}#como-asociarse" class="btn btn-outline-light btn-sm">Asociate ahora</a>
-            </div>
+    <div class="uni2-footer-container">
+        <div class="uni2-footer-actions" aria-label="Contacto de la mutual">
+            <a class="uni2-footer-icon uni2-footer-icon-mail" href="mailto:unidosatencionalcliente@gmail.com" aria-label="Enviar mail a la mutual">
+                <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+            </a>
+            <a class="uni2-footer-icon uni2-footer-icon-whatsapp" href="https://wa.me/5492984210672" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">
+                <i class="bi bi-whatsapp" aria-hidden="true"></i>
+            </a>
+            <a class="uni2-footer-icon uni2-footer-icon-instagram" href="https://www.instagram.com/unidos.cet3" target="_blank" rel="noopener" aria-label="Abrir Instagram de la mutual">
+                <i class="bi bi-instagram" aria-hidden="true"></i>
+            </a>
         </div>
 
-        <hr class="mt-4 mb-3">
-        <p class="small text-center mb-0" style="opacity: 0.5;">&copy; {% now "Y" %} Mutual Escolar UNI2 — CET N&deg; 3. Todos los derechos reservados.</p>
+        <div class="uni2-footer-location">
+            <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+            <span>Chacabuco 1050 · General Roca, Río Negro</span>
+        </div>
+
+        <p class="uni2-footer-copy">&copy; {% now "Y" %} Mutual UNI2 &middot; CET N&deg;3</p>
     </div>
 </footer>

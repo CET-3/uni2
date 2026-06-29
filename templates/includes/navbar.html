@@ -1,18 +1,4 @@
 {% load static %}
-<!-- Topbar -->
-<div class="uni2-topbar d-none d-md-block">
-    <div class="container">
-        <span>
-            <i class="bi bi-clock"></i> Lun–Vie 08:50–16:30
-        </span>
-        <span>
-            <a href="https://wa.me/5492984210672" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
-            <a href="https://www.instagram.com/unidos.cet3" target="_blank" rel="noopener" class="ms-3"><i class="bi bi-instagram"></i> Instagram</a>
-        </span>
-    </div>
-</div>
-
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg uni2-navbar">
     <div class="container">
         <a class="navbar-brand" href="{% url 'web:home' %}">
@@ -27,9 +13,6 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'web:comercios' %}">Comercios</a></li>
             </ul>
             <div class="d-flex align-items-center gap-2 flex-wrap">
-                <button class="theme-toggle" onclick="window.__uni2ToggleTheme()" aria-label="Cambiar tema">
-                    <span id="theme-icon">🌙</span>
-                </button>
                 {% if user.is_authenticated %}
                     <div class="dropdown">
                         <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
