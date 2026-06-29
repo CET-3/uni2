@@ -39,14 +39,19 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
 - `pantallas/` describe qué se ve, desde dónde se opera y qué acciones ofrece cada experiencia.
 - Las entidades pueden tener notas funcionales breves solo para orientar lectura, pero no deben repetir reglas de negocio completas.
 
+### Inicio inteligente
+
+La raíz (`/`) redirige según el perfil del usuario (ver [USUARIO-018](../reglas/usuarios.md#usuario-018--inicio-inteligente)). El logo de la aplicación sigue el mismo comportamiento. El menú de usuario incluye "Sitio público" para volver a la home pública desde cualquier experiencia.
+
+El sistema no recuerda el último panel en el MVP. Cada visita a `/` o al logo vuelve a evaluar las experiencias disponibles.
+
 ### Dashboards y entradas
 
 - Gestión: dashboard simple de `gestion` con accesos a las tareas permitidas para el usuario.
 - El dashboard de gestión separa las tareas de operación diaria de las importaciones iniciales de puesta en marcha.
 - Asociado autenticado: panel simple de `asociados` con accesos a credencial, cuotas, productos, servicios y comercios.
 - Comercio autenticado: panel simple de `comercios` con acceso a validar credenciales.
-- Luego del login, el sistema redirige directo si hay una sola experiencia disponible; si hay más de una, muestra una pantalla de elección.
-- La navegación superior muestra el nombre del usuario autenticado como menú desplegable. Si tiene una sola experiencia, el menú muestra el acceso directo a ese panel; si tiene más de una, lista los paneles disponibles. El acceso a gestión se muestra como `Panel de gestión`. El admin de Django aparece como herramienta técnica complementaria solo para usuarios `is_staff`.
+- La navegación superior muestra el nombre del usuario autenticado como menú desplegable. El menú se organiza en secciones visuales: `Paneles`, `Herramientas` y `Cuenta`. Si tiene una sola experiencia, `Paneles` muestra el acceso directo a ese panel; si tiene más de una, lista los paneles disponibles. El acceso a gestión se muestra como `Panel de gestión`. `Herramientas` agrupa el admin técnico para usuarios `is_staff`, la especificación para usuarios con `gestion.ver_especificacion` y el design system para usuarios con `gestion.ver_design_system`. La sección `Cuenta` incluye "Sitio público" para todas las experiencias.
 
 ### Objetivo de la app gestión
 
