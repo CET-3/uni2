@@ -1,9 +1,10 @@
 # Pantallas
 
-* [Sitio público](sitio-publico.md) - Sitio público
-* [Asociado](asociado.md) - Asociado
-* [Gestión](gestion.md) - Gestión
-* [Comercio](comercio.md) - Comercio
+* [Sitio público](sitio-publico.md) — Sitio público
+* [Navegación global](navegacion.md) — Inicio inteligente, barra superior y menú de usuario
+* [Asociado](asociado.md) — Asociado
+* [Gestión](gestion.md) — Gestión
+* [Comercio](comercio.md) — Comercio
 
 ## Regla de trabajo visual
 

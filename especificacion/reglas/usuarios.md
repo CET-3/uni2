@@ -75,3 +75,25 @@ La especificación del proyecto se sirve en `/especificacion/` y requiere el per
 ## USUARIO-017
 
 El design system del proyecto se sirve en `/design-system/` y requiere el permiso `gestion.ver_design_system`. El enlace "Design system" aparece en el menú de usuario solo cuando la persona tiene ese permiso. Este permiso está separado de `gestion.ver_especificacion`: una cosa es leer la especificación funcional y otra consultar la referencia visual para construir pantallas.
+
+## USUARIO-018 — Inicio inteligente
+
+La raíz del sitio (`/`) funciona como inicio inteligente: en lugar de servir siempre la home pública, evalúa la sesión actual y redirige al destino más útil.
+
+| Situación | Destino |
+|---|---|
+| Visitante sin sesión | Home pública (`web:home`) |
+| Usuario autenticado con 1 experiencia (asociado, gestión o comercio) | Home de esa experiencia |
+| Usuario autenticado con 2+ experiencias | Pantalla Elegir panel |
+| Usuario autenticado sin ninguna experiencia (solo tiene usuario pero sin vínculos) | Home pública (`web:home`) |
+
+Las experiencias se determinan así:
+- **Asociado**: el usuario tiene un `Asociado` vinculado y pertenece al grupo `asociado`.
+- **Gestión**: el usuario tiene el permiso `gestion.ver_dashboard_gestion`.
+- **Comercio**: el usuario tiene un `Comercio` vinculado y pertenece al grupo `comercio`.
+
+El logo de la aplicación (arriba a la izquierda) enlaza a `/`, respetando el mismo criterio de inicio inteligente.
+
+El enlace "Sitio público" está disponible en el menú de usuario autenticado para acceder a la home pública en cualquier momento.
+
+En el MVP el sistema no recuerda el último panel elegido. Cada visita a `/` o al logo vuelve a evaluar las experiencias disponibles.
