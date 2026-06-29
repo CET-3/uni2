@@ -515,104 +515,100 @@ body {
 }
 
 /* === FOOTER === */
-.uni2-footer {
+.custom-footer {
+  padding: 34px 18px 96px;
+  background: var(--surface-muted);
+  color: var(--texto);
   border-top: 1px solid var(--linea);
-  background: var(--fondo);
-  color: var(--suave);
-  padding: 28px clamp(18px, 5vw, 76px);
 }
 
-.uni2-footer-container {
-  align-items: center;
+.custom-footer .footer-container {
   display: flex;
-  gap: 18px;
-  justify-content: space-between;
-  margin: 0 auto;
-  max-width: 1180px;
-  width: 100%;
-}
-
-.uni2-footer-actions {
+  flex-direction: row;
   align-items: center;
-  display: flex;
-  gap: 12px;
   justify-content: center;
+  gap: 22px;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  text-align: left;
 }
 
-.uni2-footer-icon {
-  border: 1px solid var(--linea);
-  border-radius: 999px;
-  box-shadow: 0 12px 28px rgba(47, 63, 146, 0.08);
+.footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.footer-icon {
   display: grid;
-  font-size: 1.25rem;
+  width: 46px;
   height: 46px;
   place-items: center;
-  text-decoration: none;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: var(--surface-solid);
+  color: var(--texto);
+  font-size: 1.25rem;
+  box-shadow: 0 12px 28px rgba(47, 63, 146, 0.08);
   transition: transform 180ms ease, color 180ms ease, border-color 180ms ease;
-  width: 46px;
 }
 
-.uni2-footer-icon:hover {
+.footer-icon:hover {
   transform: translateY(-2px);
 }
 
-.uni2-footer-icon-mail { background: var(--rojo); color: var(--blanco); }
-.uni2-footer-icon-whatsapp { background: var(--verde); color: #07230d; }
-.uni2-footer-icon-instagram { background: var(--amarillo); color: #2d2606; }
+.footer-icon-mail {
+  background: var(--rojo);
+  color: var(--blanco);
+}
 
-.uni2-footer-location {
-  align-items: center;
-  color: var(--suave);
+.footer-icon-whatsapp {
+  background: var(--verde);
+  color: #07230d;
+}
+
+.footer-icon-instagram {
+  background: var(--amarillo);
+  color: #2d2606;
+}
+
+.footer-location {
   display: inline-flex;
-  font-weight: 800;
-  gap: 8px;
+  align-items: center;
   justify-content: center;
+  gap: 8px;
+  color: var(--suave);
+  font-weight: 800;
 }
 
-.uni2-footer-location i {
+.footer-location i {
   color: var(--rojo);
+  flex: 0 0 auto;
+  line-height: 1;
 }
 
-.uni2-footer-copy {
+.footer-copy {
+  max-width: none;
   color: var(--suave);
   font-size: 0.94rem;
-  margin: 0;
+  padding: 0;
   white-space: nowrap;
 }
 
 @media (max-width: 900px) {
-  .uni2-footer {
-    padding: 30px 18px;
-  }
-
-  .uni2-footer-container {
+  .custom-footer .footer-container {
     flex-direction: column;
-    gap: 16px;
-    line-height: 1.4;
+    gap: 18px;
     text-align: center;
   }
 
-  .uni2-footer-location {
-    align-items: flex-start;
-    max-width: 320px;
+  .footer-location {
+    align-items: center;
   }
 
-  .uni2-footer-location span {
-    display: block;
-  }
-
-  .uni2-footer-copy {
+  .footer-copy {
     white-space: normal;
-  }
-}
-
-@media (max-width: 560px) {
-  .uni2-footer {
-    padding: 28px 16px 30px;
-  }
-
-  .uni2-footer-copy {
-    padding: 0 12px;
   }
 }
 
@@ -2971,6 +2967,71 @@ body {
   max-width: 540px;
   margin-top: 22px;
   font-size: clamp(1.05rem, 2vw, 1.2rem);
+}
+
+.commerce-detail .detail-panel h2 {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.commerce-detail .detail-panel p {
+  margin: 0;
+}
+
+.commerce-benefit-row {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+
+.commerce-benefit-logo {
+  align-items: center;
+  background-image: var(--grain), linear-gradient(140deg, var(--azul-dark) 0 22%, var(--azul) 45%, var(--amarillo-dark) 72%, var(--rojo) 100%);
+  border: 3px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  box-shadow: 0 12px 24px rgba(23, 32, 59, 0.18);
+  color: var(--blanco);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.92rem;
+  font-weight: 950;
+  height: 56px;
+  justify-content: center;
+  overflow: hidden;
+  width: 56px;
+}
+
+.commerce-benefit-logo img {
+  display: block;
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.commerce-benefit-logo--fallback {
+  font-size: 0.82rem;
+}
+
+.commerce-benefit-copy {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.commerce-benefit-text {
+  color: var(--texto);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.commerce-benefit-copy p {
+  color: var(--suave);
+  font-size: 0.92rem;
 }
 
 .detail-panel {

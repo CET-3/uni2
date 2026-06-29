@@ -5,10 +5,6 @@
         <div>
             <h2 id="publicidad-title">Nuestros favoritos</h2>
         </div>
-        <div class="btn-group" role="group" aria-label="Controles del carrusel Nuestros favoritos">
-            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="{{ carousel_id }}" aria-label="Ver favorito anterior"><i class="bi bi-chevron-left"></i></button>
-            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="{{ carousel_id }}" aria-label="Ver favorito siguiente"><i class="bi bi-chevron-right"></i></button>
-        </div>
     </div>
 
     <div class="uni2-carousel js-auto-slider" id="{{ carousel_id }}" aria-label="Carrusel de publicidades">
@@ -21,8 +17,10 @@
                 <h3>{{ publicidad.titulo }}</h3>
                 <strong class="uni2-discount">{{ publicidad.etiqueta_secundaria }}</strong>
                 <p>{{ publicidad.descripcion }}</p>
-                {% if publicidad.get_absolute_url %}
-                    <a class="link" href="{{ publicidad.get_absolute_url }}">Conocer más</a>
+                {% if publicidad.producto_servicio_id %}
+                    <a class="link" href="{% url 'web:producto_servicio_detalle' publicidad.producto_servicio_id %}">Conocer más</a>
+                {% elif publicidad.comercio_id %}
+                    <a class="link" href="{% url 'web:comercio_detalle' publicidad.comercio_id %}">Conocer más</a>
                 {% endif %}
             </article>
         {% endfor %}

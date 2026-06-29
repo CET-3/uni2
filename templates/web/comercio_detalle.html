@@ -15,23 +15,33 @@
   </nav>
 </div>
 
-<section class="service-detail" aria-labelledby="comercio-title">
+<section class="service-detail commerce-detail" aria-labelledby="comercio-title">
   <div class="container pb-5">
     <div class="detail-layout">
       <div class="detail-copy">
         <span class="uni2-eyebrow">{{ comercio.actividad_comercial.nombre }}</span>
         <h1 id="comercio-title">{{ comercio.nombre }}</h1>
-        <p>{{ comercio.direccion }}</p>
-        <a href="{% url 'web:comercios' %}" class="uni2-cta uni2-cta-secondary">← Todos los comercios</a>
       </div>
 
       <div class="detail-panel">
         {% if comercio.beneficio_texto %}
-          <div>
-            <h2>Beneficio</h2>
-            <p>{{ comercio.beneficio_texto }}</p>
+          <div class="commerce-benefit-row">
+            <span class="commerce-benefit-logo{% if not comercio.foto %} commerce-benefit-logo--fallback{% endif %}">
+              {% if comercio.foto %}
+                <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
+              {% else %}
+                {{ comercio.nombre|slice:":2"|upper }}
+              {% endif %}
+            </span>
+            <div class="commerce-benefit-copy">
+              <strong class="commerce-benefit-text">{{ comercio.beneficio_texto }}</strong>
+            </div>
           </div>
         {% endif %}
+        <div>
+          <h2>Dirección</h2>
+          <p>{{ comercio.direccion }}</p>
+        </div>
         {% if comercio.telefono %}
           <div>
             <h2>Teléfono</h2>
@@ -46,8 +56,7 @@
         {% endif %}
         {% if comercio.url_presencia_web %}
           <div>
-            <h2>Presencia web</h2>
-            <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Visitar sitio</a>
+            <a class="uni2-cta uni2-cta-secondary" href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Visitar online</a>
           </div>
         {% endif %}
       </div>
