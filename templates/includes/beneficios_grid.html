@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <nav class="benefit-links js-auto-slider js-home-benefits-slider" id="{{ carousel_id }}" aria-label="Rubros con beneficios">
+    <nav class="benefit-links js-home-benefits-grid" id="{{ carousel_id }}" aria-label="Rubros con beneficios">
         {% for rubro in rubros_beneficio %}
             {% cycle 'benefit-food' 'benefit-sport' 'benefit-beauty' 'benefit-fashion' as benefit_color silent %}
             <a class="benefit-mix-card {{ benefit_color }}" href="{% url 'web:actividad_comercial_detalle' rubro.pk %}">
@@ -35,11 +35,6 @@
         {% endfor %}
     </nav>
 
-    <div class="d-flex justify-content-center gap-2" data-slider-dots="{{ carousel_id }}" aria-label="Indicadores del carrusel Club de Beneficios">
-        {% for rubro in rubros_beneficio %}
-            <button class="btn btn-sm {% if forloop.first %}btn-primary{% else %}btn-outline-primary{% endif %} rounded-circle p-0" style="width: 12px; height: 12px;" type="button" data-slide-index="{{ forloop.counter0 }}" aria-label="Ir a beneficio {{ forloop.counter }}"></button>
-        {% endfor %}
-    </div>
 </aside>
 {% endwith %}
 {% endif %}

@@ -1640,20 +1640,13 @@ body {
 }
 
 .benefit-links {
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
   gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   min-width: 0;
   width: 100%;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.benefit-links::-webkit-scrollbar {
-  display: none;
+  overflow: visible;
+  padding-bottom: 0;
 }
 
 .uni2-benefit-card {
@@ -1794,10 +1787,8 @@ body {
   display: grid;
   min-height: 0;
   min-width: 0;
-  flex: 0 0 clamp(260px, 24vw, 320px);
   overflow: hidden;
   position: relative;
-  scroll-snap-align: start;
 }
 
 .logo-cloud {
@@ -3344,15 +3335,11 @@ body {
 
   .benefit-links {
     gap: 10px;
-    width: 100%;
-    overflow-x: auto;
-    padding: 2px 2px 14px;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .benefit-mix-card {
-    flex-basis: clamp(230px, 72vw, 280px);
+    border-radius: 14px;
   }
 
   .benefit-list-card,
@@ -3386,7 +3373,6 @@ body {
 
   .benefit-mix-card {
     border-radius: 14px;
-    scroll-snap-align: start;
   }
 
   .benefit-rubric {
