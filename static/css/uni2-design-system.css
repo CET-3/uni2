@@ -95,6 +95,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  scroll-padding-top: 92px;
+}
+
 /* Grain texture overlay */
 .ds-page::before {
   content: '';
@@ -1468,6 +1472,10 @@ body {
   line-height: 1.45;
   margin: 10px 0 0;
   max-width: 58ch;
+}
+
+#como-asociarse {
+  scroll-margin-top: 92px;
 }
 
 .uni2-service-grid,
