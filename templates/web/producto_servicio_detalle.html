@@ -2,24 +2,62 @@
 
 {% block title %}{{ producto_servicio.nombre }} | Uni2{% endblock %}
 
+{% block body_class %} detail-page{% endblock %}
+
 {% block content %}
-<article class="vstack gap-3">
-    <a href="{% url 'web:productos_servicios' %}">Volver a productos y servicios</a>
-    <div>
-        <span class="badge text-bg-primary">{{ producto_servicio.categoria.nombre }}</span>
-        <h1 class="h2 mt-3">{{ producto_servicio.nombre }}</h1>
-        <p class="text-secondary">{{ producto_servicio.descripcion }}</p>
+<div class="container py-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'web:home' %}">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'web:productos_servicios' %}">Productos y servicios</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ producto_servicio.nombre }}</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="service-detail" aria-labelledby="ps-title">
+  <div class="container pb-5">
+    <div class="detail-layout">
+      <div class="detail-copy">
+        <span class="uni2-eyebrow">{{ producto_servicio.categoria.nombre }}</span>
+        <h1 id="ps-title">{{ producto_servicio.nombre }}</h1>
+        <p>{{ producto_servicio.descripcion }}</p>
+        <a href="{% url 'web:productos_servicios' %}" class="uni2-cta uni2-cta-secondary">← Todos los productos</a>
+      </div>
+
+      <div class="detail-panel">
+        <h2>Precios</h2>
+        <div class="price-table-wrap">
+          <table class="price-table price-table-compact" aria-label="Precios">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Precio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Asociados</th>
+                <td>${{ producto_servicio.precio_asociados }}</td>
+              </tr>
+              <tr>
+                <th>No asociados</th>
+                <td>${{ producto_servicio.precio_no_asociados }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {% if producto_servicio.categoria.texto_cta %}
+          <aside class="print-contact">
+            <span class="print-icon" aria-hidden="true"><i class="bi bi-send"></i></span>
+            <div>
+              {{ producto_servicio.categoria.texto_cta|linebreaks|urlize }}
+            </div>
+          </aside>
+        {% endif %}
+      </div>
     </div>
-    <dl class="row">
-        <dt class="col-sm-4">Tipo</dt>
-        <dd class="col-sm-8">{{ producto_servicio.es_servicio|yesno:"Servicio,Producto" }}</dd>
-        <dt class="col-sm-4">Precio para asociados</dt>
-        <dd class="col-sm-8">${{ producto_servicio.precio_asociados }}</dd>
-        <dt class="col-sm-4">Precio para no asociados</dt>
-        <dd class="col-sm-8">${{ producto_servicio.precio_no_asociados }}</dd>
-    </dl>
-    {% if producto_servicio.categoria.texto_cta %}
-        <p>{{ producto_servicio.categoria.texto_cta|urlize }}</p>
-    {% endif %}
-</article>
+  </div>
+</section>
 {% endblock %}

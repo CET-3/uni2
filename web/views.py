@@ -130,3 +130,7 @@ class DesignSystemView(VerDesignSystemRequiredMixin, TemplateView):
         context["show_site_chrome"] = False
         context["load_theme_script"] = False
         return context
+
+
+class DesignSystemEstructuraView(VerDesignSystemRequiredMixin, TemplateView):
+    template_name = "web/design-system/estructura.html"

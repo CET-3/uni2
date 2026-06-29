@@ -2,12 +2,29 @@
 
 {% block title %}{{ comercio.nombre }} | Uni2{% endblock %}
 
+{% block body_class %} detail-page{% endblock %}
+
 {% block content %}
-<article class="vstack gap-3 text-center py-5">
-    <h1 class="h2">{{ comercio.nombre }}</h1>
-    <p class="text-secondary fs-5">Este comercio estará disponible próximamente.</p>
-    <div>
-        <a href="{% url 'web:comercios' %}" class="btn btn-outline-primary">Ver comercios adheridos</a>
+<div class="container py-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'web:home' %}">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'web:comercios' %}">Comercios</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ comercio.nombre }}</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="service-detail" aria-labelledby="comercio-title">
+  <div class="container pb-5">
+    <div class="detail-layout">
+      <div class="detail-copy">
+        <span class="uni2-eyebrow">{{ comercio.actividad_comercial.nombre }}</span>
+        <h1 id="comercio-title">{{ comercio.nombre }}</h1>
+        <p>Este comercio estará disponible próximamente.</p>
+        <a href="{% url 'web:comercios' %}" class="uni2-cta uni2-cta-secondary">← Todos los comercios</a>
+      </div>
     </div>
-</article>
+  </div>
+</section>
 {% endblock %}

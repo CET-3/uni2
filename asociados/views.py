@@ -5,6 +5,8 @@ from django.views.generic import TemplateView
 
 from django.utils import timezone
 
+from comercios.selectors import get_rubros_con_comercios
+from contenidos.selectors import get_categorias_productos_servicios_publicas, get_publicidades_home
 from cuotas.selectors import calcular_estado_cuota, get_total_deuda
 from usuarios.services import user_is_asociado
 
@@ -31,6 +33,9 @@ class AsociadoDashboardView(AsociadoRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["asociado"] = self.request.user.asociado
+        context["categorias_productos_servicios"] = get_categorias_productos_servicios_publicas()
+        context["rubros_beneficio"] = get_rubros_con_comercios()
+        context["publicidades"] = get_publicidades_home()
         return context
 
 
