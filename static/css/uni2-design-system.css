@@ -2465,6 +2465,17 @@ body {
   max-width: 780px;
 }
 
+.benefit-page-header h1,
+.ds-page .benefit-page-header h1 {
+  color: var(--texto);
+  font-size: clamp(3.2rem, 8vw, 6.6rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-top: 18px;
+  max-width: 760px;
+}
+
 .benefit-back,
 .ds-page .benefit-back {
   color: var(--azul);
@@ -2487,17 +2498,29 @@ body {
   border-radius: 18px;
   box-shadow: 0 16px 34px rgba(23, 32, 59, 0.09);
   color: inherit;
-  display: flex;
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  align-items: start;
   gap: 18px;
   text-decoration: none;
   padding: 16px 18px;
   width: 100%;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
-.benefit-list-card .discount-tag,
-.ds-page .benefit-list-card .discount-tag {
-  flex: 0 0 auto;
-  margin-left: auto;
+.benefit-list-card:hover,
+.ds-page .benefit-list-card:hover,
+.benefit-list-card:focus-visible,
+.ds-page .benefit-list-card:focus-visible {
+  border-color: rgba(63, 81, 181, 0.28);
+  box-shadow: var(--sombra);
+  transform: translateY(-2px);
+}
+
+.benefit-list-card > .discount-tag,
+.ds-page .benefit-list-card > .discount-tag {
+  justify-self: start;
+  margin: 2px 0 0;
   white-space: nowrap;
 }
 
@@ -2529,7 +2552,7 @@ body {
 .benefit-list-body,
 .ds-page .benefit-list-body {
   display: grid;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
 }
 
@@ -2538,12 +2561,39 @@ body {
   font-size: 1.1rem;
   letter-spacing: 0;
   margin: 0;
+  font-weight: 900;
 }
 
 .benefit-list-body p,
 .ds-page .benefit-list-body p {
   font-size: 0.92rem;
   margin: 0;
+}
+
+.benefit-list-body .discount-tag,
+.ds-page .benefit-list-body .discount-tag {
+  background-image: var(--grain), linear-gradient(135deg, var(--amarillo-dark) 0 24%, var(--amarillo) 48% 100%);
+  border-radius: 999px;
+  box-shadow: 0 10px 22px rgba(23, 32, 59, 0.12);
+  color: #2d2606;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.76rem;
+  letter-spacing: 0.05em;
+  min-height: 32px;
+  padding: 6px 10px;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.benefit-modal-card .discount-tag,
+.ds-page .benefit-modal-card .discount-tag {
+  background-image: var(--grain), linear-gradient(135deg, var(--amarillo-dark) 0 24%, var(--amarillo) 48% 100%);
+  border-radius: 999px;
+  box-shadow: 0 10px 22px rgba(23, 32, 59, 0.12);
+  color: #2d2606;
+  display: inline-flex;
+  align-items: center;
 }
 
 .benefit-meta,
@@ -3242,6 +3292,25 @@ body {
 
   .benefit-mix-card {
     flex-basis: clamp(230px, 72vw, 280px);
+  }
+
+  .benefit-list-card,
+  .ds-page .benefit-list-card {
+    gap: 14px;
+    grid-template-columns: 52px minmax(0, 1fr);
+    padding: 14px;
+  }
+
+  .benefit-list-logo,
+  .ds-page .benefit-list-logo {
+    height: 52px;
+    width: 52px;
+  }
+
+  .benefit-list-body .discount-tag,
+  .ds-page .benefit-list-body .discount-tag {
+    font-size: 0.7rem;
+    padding: 6px 9px;
   }
 
   .uni2-benefit-logo {

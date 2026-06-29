@@ -86,6 +86,8 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "style2.css" not in content
     assert "assets/logos/" not in content
     assert "uni2-theme.js" not in content
+    assert "benefit-list-body" in content
+    assert "discount-tag" in content
 
 
 @pytest.mark.django_db
@@ -526,12 +528,15 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     assert response.context["actividad_comercial"].nombre == "Gastronomía"
     contenido = response.content.decode()
     assert "Gastronomía" in contenido
-    assert "benefit-page" in contenido
+    assert '<section class="benefit-page"' not in contenido
     assert contenido.count("benefit-list-card") == 2
     assert contenido.count("benefit-list-logo") >= 2
     assert "benefit-list-body" in contenido
     assert "benefit-meta" in contenido
     assert "discount-tag" in contenido
+    assert "benefit-back" not in contenido
+    assert "Actividad comercial" not in contenido
+    assert "breadcrumb-item" not in contenido
     assert "Parrilla Don Pancho" in contenido
     assert "10% de descuento" in contenido
     assert "Lo de Carlitos" in contenido

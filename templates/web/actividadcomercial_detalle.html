@@ -4,21 +4,17 @@
 
 {% block body_class %} detail-page{% endblock %}
 
+{% block extra_head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
 {% block content %}
-<section class="benefit-page" aria-labelledby="actividad-title">
-  <div class="container py-4">
+<section aria-labelledby="actividad-title">
+  <div class="container py-4 d-grid gap-3">
     <div class="benefit-page-header">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-          <li class="breadcrumb-item"><a href="{% url 'web:home' %}">Inicio</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'web:comercios' %}">Comercios</a></li>
-          <li class="breadcrumb-item active" aria-current="page">{{ actividad_comercial.nombre }}</li>
-        </ol>
-      </nav>
-      <span class="uni2-eyebrow">Actividad comercial</span>
       <h1 id="actividad-title">{{ actividad_comercial.nombre }}</h1>
       <p>Comercios adheridos en esta categoría.</p>
-      <a class="benefit-back" href="{% url 'web:comercios' %}">Volver a comercios</a>
     </div>
 
     <div class="benefit-list" aria-label="Comercios adheridos">
@@ -34,7 +30,7 @@
           <span class="benefit-list-body">
             <h2>{{ comercio.nombre }}</h2>
             {% if comercio.beneficio_texto %}
-              <p>{{ comercio.beneficio_texto }}</p>
+              <strong class="discount-tag">{{ comercio.beneficio_texto }}</strong>
             {% endif %}
             <span class="benefit-meta">
               <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {{ comercio.direccion }}</span>
@@ -46,9 +42,6 @@
               {% endif %}
             </span>
           </span>
-          {% if comercio.beneficio_texto %}
-            <strong class="discount-tag">{{ comercio.beneficio_texto }}</strong>
-          {% endif %}
         </a>
       {% empty %}
         <p>No hay comercios adheridos en esta categoría.</p>
