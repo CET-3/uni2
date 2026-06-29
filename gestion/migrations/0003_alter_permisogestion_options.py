@@ -54,6 +54,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("auth", "0012_alter_user_first_name_max_length"),
         ("gestion", "0002_alter_permisogestion_options"),
+        ("usuarios", "0002_crear_grupos_y_permisos"),
     ]
 
     operations = [
