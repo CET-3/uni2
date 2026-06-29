@@ -110,6 +110,42 @@ def test_create_missing_users_for_asociados_crea_usuarios_faltantes_y_es_idempot
 
 
 @pytest.mark.django_db
+def test_create_missing_users_for_asociados_en_lotes():
+    ensure_default_groups()
+    primero = Asociado.objects.create(
+        nombre="Lena",
+        apellido="Leyes",
+        dni="52328996",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+    )
+    segundo = Asociado.objects.create(
+        nombre="Joaquin",
+        apellido="Darosa",
+        dni="52536191",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+    )
+
+    resultado_1 = create_missing_users_for_asociados(batch_size=1)
+    resultado_2 = create_missing_users_for_asociados(batch_size=1, after_id=resultado_1.siguiente_cursor)
+
+    primero.refresh_from_db()
+    segundo.refresh_from_db()
+    assert resultado_1.procesados == 1
+    assert resultado_1.hay_mas is True
+    assert resultado_1.restantes == 1
+    assert resultado_1.siguiente_cursor == primero.id
+    assert resultado_2.procesados == 1
+    assert resultado_2.hay_mas is False
+    assert resultado_2.restantes == 0
+    assert primero.usuario is not None
+    assert segundo.usuario is not None
+
+
+@pytest.mark.django_db
 def test_create_missing_users_for_asociados_vincula_usuario_existente_sin_asociado():
     ensure_default_groups()
     user_model = get_user_model()

@@ -21,6 +21,10 @@ class MissingAsociadoUsersResult:
     creados: int = 0
     vinculados: int = 0
     omitidos: int = 0
+    procesados: int = 0
+    restantes: int = 0
+    siguiente_cursor: int | None = None
+    hay_mas: bool = False
     errores: list[str] = field(default_factory=list)
 
 
@@ -84,22 +88,33 @@ def create_user_for_asociado(asociado: Asociado, password: str, email: str | Non
     return user
 
 
-def create_missing_users_for_asociados() -> MissingAsociadoUsersResult:
+def create_missing_users_for_asociados(batch_size: int | None = None, after_id: int = 0) -> MissingAsociadoUsersResult:
     result = MissingAsociadoUsersResult()
     result.omitidos = Asociado.objects.filter(usuario__isnull=False).count()
-    asociados = Asociado.objects.filter(usuario__isnull=True).order_by("apellido", "nombre", "id")
+    asociados_qs = Asociado.objects.filter(usuario__isnull=True, id__gt=after_id).order_by("id")
+    total_pendientes = asociados_qs.count()
+    asociados = list(asociados_qs if batch_size is None else asociados_qs[:batch_size])
+    result.procesados = len(asociados)
+    result.restantes = max(total_pendientes - result.procesados, 0)
+    result.hay_mas = result.restantes > 0
+    if not asociados:
+        return result
+
     user_model = get_user_model()
+    asociado_group = Group.objects.get(name=ASOCIADO_GROUP)
+    usuarios_existentes = user_model.objects.filter(username__in=[str(asociado.dni) for asociado in asociados])
+    usuarios_existentes = {user.username: user for user in usuarios_existentes}
 
     for asociado in asociados:
         username = str(asociado.dni)
-        existing_user = user_model.objects.filter(username=username).first()
+        existing_user = usuarios_existentes.get(username)
         if existing_user is not None:
             if hasattr(existing_user, "asociado"):
                 result.errores.append(f"Asociado {asociado.dni}: el usuario existente ya está vinculado a otro asociado.")
                 continue
             asociado.usuario = existing_user
             asociado.save(update_fields=["usuario"])
-            existing_user.groups.add(Group.objects.get(name=ASOCIADO_GROUP))
+            existing_user.groups.add(asociado_group)
             result.vinculados += 1
             continue
 
@@ -110,6 +125,8 @@ def create_missing_users_for_asociados() -> MissingAsociadoUsersResult:
         else:
             result.creados += 1
 
+    if asociados and result.hay_mas:
+        result.siguiente_cursor = asociados[-1].id
     return result
 
 
