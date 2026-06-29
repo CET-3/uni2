@@ -3,6 +3,11 @@
 
 {% block title %}Inicio | Uni2{% endblock %}
 
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/beneficios.css' %}?v=20260629-2">
+{% endblock %}
+
 {% block content %}
 
 <!-- HERO -->
