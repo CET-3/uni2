@@ -7,6 +7,7 @@ from .views import (
     GestionAsociadoNuevoView,
     GestionAsociadosView,
     GestionCobrosView,
+    GestionCrearUsuariosAsociadosFaltantesView,
     GestionCrearUsuarioAsociadoView,
     GestionDashboardView,
     GestionDeudoresView,
@@ -27,6 +28,11 @@ urlpatterns = [
     path("gestion/asociados/nuevo/", GestionAsociadoNuevoView.as_view(), name="asociado_nuevo"),
     path("gestion/asociados/exportar.xlsx", GestionExportarAsociadosView.as_view(), name="exportar_asociados"),
     path("gestion/asociados/importar/", GestionImportarAsociadosView.as_view(), name="importar_asociados"),
+    path(
+        "gestion/asociados/crear-usuarios-faltantes/",
+        GestionCrearUsuariosAsociadosFaltantesView.as_view(),
+        name="crear_usuarios_asociados_faltantes",
+    ),
     path(
         "gestion/asociados/importar/revisar.xlsx",
         GestionDescargarAsociadosRevisarView.as_view(),

@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from asociados.admin import AsociadoAdminForm
+from asociados.admin import AsociadoAdmin, AsociadoAdminForm
 from asociados.models import Asociado, Curso
 
 
@@ -34,3 +34,7 @@ def test_admin_form_calcula_fecha_inicio_cobro(curso):
 
     assert form.is_valid(), form.errors
     assert form.cleaned_data["fecha_inicio_cobro"] == date(2026, 6, 1)
+
+
+def test_asociado_admin_usa_autocomplete_para_usuario():
+    assert AsociadoAdmin.autocomplete_fields == ("usuario",)

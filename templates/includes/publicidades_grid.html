@@ -1,0 +1,38 @@
+{% if publicidades %}
+{% with carousel_id="publicidades-carousel" %}
+<section aria-labelledby="publicidad-title">
+    <div class="uni2-section-heading">
+        <div>
+            <h2 id="publicidad-title">Nuestros favoritos</h2>
+        </div>
+        <div class="btn-group" role="group" aria-label="Controles del carrusel Nuestros favoritos">
+            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="{{ carousel_id }}" aria-label="Ver favorito anterior"><i class="bi bi-chevron-left"></i></button>
+            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="{{ carousel_id }}" aria-label="Ver favorito siguiente"><i class="bi bi-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <div class="uni2-carousel js-auto-slider" id="{{ carousel_id }}" aria-label="Carrusel de publicidades">
+        {% for publicidad in publicidades %}
+            <article
+                class="uni2-ad-card{% if not publicidad.foto %} uni2-ad-card-sin-foto{% endif %}"
+                {% if publicidad.foto %}style="--ad-image: url('{{ publicidad.foto.url }}');"{% endif %}
+            >
+                <span class="uni2-badge">{{ publicidad.etiqueta_principal }}</span>
+                <h3>{{ publicidad.titulo }}</h3>
+                <strong class="uni2-discount">{{ publicidad.etiqueta_secundaria }}</strong>
+                <p>{{ publicidad.descripcion }}</p>
+                {% if publicidad.get_absolute_url %}
+                    <a class="link" href="{{ publicidad.get_absolute_url }}">Conocer más</a>
+                {% endif %}
+            </article>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-center gap-2" data-slider-dots="{{ carousel_id }}" aria-label="Indicadores del carrusel Nuestros favoritos">
+        {% for publicidad in publicidades %}
+            <button class="btn btn-sm {% if forloop.first %}btn-primary{% else %}btn-outline-primary{% endif %} rounded-circle p-0" style="width: 12px; height: 12px;" type="button" data-slide-index="{{ forloop.counter0 }}" aria-label="Ir a favorito {{ forloop.counter }}"></button>
+        {% endfor %}
+    </div>
+</section>
+{% endwith %}
+{% endif %}

@@ -62,8 +62,38 @@ El sistema define tres grupos base: `asociado`, `comercio` y `gestion`. La data 
 
 ## USUARIO-014
 
-El `GestionPermissionRequiredMixin` usa `UserPassesTestMixin` con `raise_exception = True` para rechazar con 403 en lugar de redirigir al login. Las vistas deben declarar su lógica en métodos `get()`/`post()` y no en `dispatch()` para que el permiso se evalúe antes.
+`GestionCrearUsuariosAsociadosFaltantesView` en `gestion/views.py` permite a un usuario con permiso `importar_asociados` crear usuarios para todos los asociados sin usuario vinculado desde la pantalla de importación de padrón. Usa el DNI como username y contraseña inicial. Si ya existe un usuario con username igual al DNI y no está vinculado a otro asociado, lo vincula al asociado. Si un asociado falla, registra el error y sigue con los demás. La acción es idempotente: si se ejecuta otra vez, no duplica usuarios ya vinculados.
 
 ## USUARIO-015
 
+El `GestionPermissionRequiredMixin` usa `UserPassesTestMixin` con `raise_exception = True` para rechazar con 403 en lugar de redirigir al login. Las vistas deben declarar su lógica en métodos `get()`/`post()` y no en `dispatch()` para que el permiso se evalúe antes.
+
+## USUARIO-016
+
 La especificación del proyecto se sirve en `/especificacion/` y requiere el permiso `gestion.ver_especificacion`. Usa un mixin propio `VerEspecificacionRequiredMixin` que verifica ese permiso. En la carga inicial, el permiso se asigna al grupo `Atención de mutual` y a `Administradores` (estos reciben todos los permisos de gestión).
+
+## USUARIO-017
+
+El design system del proyecto se sirve en `/design-system/` y requiere el permiso `gestion.ver_design_system`. El enlace "Design system" aparece en el menú de usuario solo cuando la persona tiene ese permiso. Este permiso está separado de `gestion.ver_especificacion`: una cosa es leer la especificación funcional y otra consultar la referencia visual para construir pantallas.
+
+## USUARIO-018 — Inicio inteligente
+
+La raíz del sitio (`/`) funciona como inicio inteligente: en lugar de servir siempre la home pública, evalúa la sesión actual y redirige al destino más útil.
+
+| Situación | Destino |
+|---|---|
+| Visitante sin sesión | Home pública (`web:home`) |
+| Usuario autenticado con 1 experiencia (asociado, gestión o comercio) | Home de esa experiencia |
+| Usuario autenticado con 2+ experiencias | Pantalla Elegir panel |
+| Usuario autenticado sin ninguna experiencia (solo tiene usuario pero sin vínculos) | Home pública (`web:home`) |
+
+Las experiencias se determinan así:
+- **Asociado**: el usuario tiene un `Asociado` vinculado y pertenece al grupo `asociado`.
+- **Gestión**: el usuario tiene el permiso `gestion.ver_dashboard_gestion`.
+- **Comercio**: el usuario tiene un `Comercio` vinculado y pertenece al grupo `comercio`.
+
+El logo de la aplicación (arriba a la izquierda) enlaza a `/`, respetando el mismo criterio de inicio inteligente.
+
+El enlace "Sitio público" está disponible en el menú de usuario autenticado para acceder a la home pública en cualquier momento.
+
+En el MVP el sistema no recuerda el último panel elegido. Cada visita a `/` o al logo vuelve a evaluar las experiencias disponibles.

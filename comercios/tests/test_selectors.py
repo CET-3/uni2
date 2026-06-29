@@ -54,3 +54,26 @@ def test_rubro_con_menos_de_3_comercios_con_foto(rubro, foto):
     qs = get_rubros_con_comercios()
     rubro_result = qs.get(nombre="Gastronomía")
     assert len(rubro_result.comercios_con_foto) == 1
+
+
+@pytest.mark.django_db
+def test_cada_rubro_recibe_sus_tres_comercios_con_foto(foto):
+    gastronomia = ActividadComercial.objects.create(nombre="Gastronomía")
+    libreria = ActividadComercial.objects.create(nombre="Librería")
+
+    for orden, rubro in enumerate([gastronomia, libreria], start=1):
+        for numero in range(3):
+            Comercio.objects.create(
+                nombre=f"{rubro.nombre} {numero}",
+                actividad_comercial=rubro,
+                beneficio_texto="10% off",
+                estado=Comercio.ESTADO_FIRMADO,
+                orden=orden * 10 + numero,
+                direccion=f"Calle {orden}-{numero}",
+                foto=foto,
+            )
+
+    qs = get_rubros_con_comercios()
+
+    assert len(qs.get(nombre="Gastronomía").comercios_con_foto) == 3
+    assert len(qs.get(nombre="Librería").comercios_con_foto) == 3
