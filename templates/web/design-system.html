@@ -27,12 +27,14 @@
                 <a class="ds-nav-secondary" href="#beneficios">Beneficios</a>
                 <a class="ds-nav-primary" href="#operaciones">Operaciones</a>
                 <a class="ds-nav-primary" href="#django">Django</a>
+                <a class="ds-nav-secondary" href="{% url 'web:design-system-estructura' %}">Estructura</a>
                 <a class="ds-nav-secondary" href="{% url 'web:inicio' %}">Ver sitio</a>
             </nav>
             <nav class="ds-more-nav" aria-label="Más opciones del design system">
                 <a href="#componentes">Componentes</a>
                 <a href="#servicios">Servicios</a>
                 <a href="#beneficios">Beneficios</a>
+                <a href="{% url 'web:design-system-estructura' %}">Estructura</a>
                 <a href="{% url 'web:inicio' %}">Ver sitio</a>
             </nav>
             <a class="cta secondary service-topbar-cta" href="{% url 'web:inicio' %}">Ver sitio</a>
@@ -183,52 +185,51 @@
                     <div class="uni2-section-heading compact-heading">
                         <div><h2>Servicios que suman</h2></div>
                     </div>
-                    <div class="uni2-service-grid" aria-label="Servicios de la mutual">
-                        <article class="uni2-service-card uni2-service-card-blue" data-href="#servicios">
-                            <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="copy"></i></span>
+                    <div class="service-grid" aria-label="Servicios de la mutual">
+                        <article class="service-card service-card-blue" data-href="#servicios">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="copy"></i></span>
                             <div><h3>Fotocopias</h3><p>Fotocopias rápidas y de excelente calidad.</p></div>
                             <a class="link" href="#servicios">Ver más</a>
                         </article>
-                        <article class="uni2-service-card uni2-service-card-yellow" data-href="#servicios">
-                            <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="shirt"></i></span>
+                        <article class="service-card service-card-yellow" data-href="#servicios">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="shirt"></i></span>
                             <div><h3>Uniformes</h3><p>Calidad y comodidad para acompa&ntilde;arte todo el a&ntilde;o.</p></div>
                             <a class="link" href="#servicios">Ver más</a>
                         </article>
-                        <article class="uni2-service-card uni2-service-card-green" data-href="#servicios">
-                            <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="bike"></i></span>
+                        <article class="service-card service-card-green" data-href="#servicios">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="bike"></i></span>
                             <div><h3>Bicicleta Solidaria</h3><p>Una forma práctica y sustentable de moverte.</p></div>
                             <a class="link" href="#servicios">Ver más</a>
                         </article>
-                        <article class="uni2-service-card uni2-service-card-red" data-href="#servicios">
-                            <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="notebook-tabs"></i></span>
+                        <article class="service-card service-card-red" data-href="#servicios">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="notebook-tabs"></i></span>
                             <div><h3>Cuadernillos</h3><p>Todo el material que necesitás para cada materia.</p></div>
                             <a class="link" href="#servicios">Ver más</a>
                         </article>
+                        <article class="service-card service-card-purple">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="paperclip"></i></span>
+                            <div><h3>Anillado</h3><p>Cuidá tu material de estudio con un acabado profesional.</p></div>
+                        </article>
                     </div>
 
-                    <aside aria-labelledby="beneficios-home-title">
-                        <div class="uni2-section-heading">
-                            <div>
-                                <span class="uni2-section-kicker">Club de Beneficios</span>
-                                <h2 id="beneficios-home-title">Beneficios para vos</h2>
-                            </div>
-                        </div>
-                        <nav class="uni2-benefit-grid" aria-label="Rubros con beneficios">
-                            <a class="uni2-benefit-card uni2-benefit-card-0" href="#beneficios">
-                                <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo uni2-benefit-logo-left"><span>AD</span></span><span class="uni2-benefit-logo uni2-benefit-logo-main"><span>BM</span></span><span class="uni2-benefit-logo uni2-benefit-logo-right"><span>LC</span></span></span>
-                                <span class="uni2-benefit-rubric">Gastronomía y kioscos</span>
+                    <aside class="benefit-band" aria-labelledby="beneficios-home-title">
+                        <div class="benefit-intro"><h2 id="beneficios-home-title">Club de Beneficios</h2></div>
+                        <nav class="benefit-links js-auto-slider" aria-label="Rubros con beneficios">
+                            <a class="benefit-mix-card benefit-food" href="#beneficios">
+                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>AD</span></span><span class="logo-dot logo-dot-main"><span>BM</span></span><span class="logo-dot logo-dot-right"><span>LC</span></span></span>
+                                <span class="benefit-rubric">Gastronomía y kioscos</span>
                             </a>
-                            <a class="uni2-benefit-card uni2-benefit-card-1" href="#beneficios">
-                                <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo uni2-benefit-logo-left"><span>AG</span></span><span class="uni2-benefit-logo uni2-benefit-logo-main"><span>AC</span></span><span class="uni2-benefit-logo uni2-benefit-logo-right"><span>ER</span></span></span>
-                                <span class="uni2-benefit-rubric">Gym y deportes</span>
+                            <a class="benefit-mix-card benefit-sport" href="#beneficios">
+                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>AG</span></span><span class="logo-dot logo-dot-main"><span>AC</span></span><span class="logo-dot logo-dot-right"><span>ER</span></span></span>
+                                <span class="benefit-rubric">Gym y deportes</span>
                             </a>
-                            <a class="uni2-benefit-card uni2-benefit-card-2" href="#beneficios">
-                                <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo uni2-benefit-logo-left"><span>AS</span></span><span class="uni2-benefit-logo uni2-benefit-logo-main"><span>AM</span></span><span class="uni2-benefit-logo uni2-benefit-logo-right"><span>OM</span></span></span>
-                                <span class="uni2-benefit-rubric">Belleza y Bienestar</span>
+                            <a class="benefit-mix-card benefit-beauty" href="#beneficios">
+                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>AS</span></span><span class="logo-dot logo-dot-main"><span>AM</span></span><span class="logo-dot logo-dot-right"><span>OM</span></span></span>
+                                <span class="benefit-rubric">Belleza y Bienestar</span>
                             </a>
-                            <a class="uni2-benefit-card uni2-benefit-card-3" href="#beneficios">
-                                <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo uni2-benefit-logo-left"><span>CC</span></span><span class="uni2-benefit-logo uni2-benefit-logo-main"><span>GC</span></span><span class="uni2-benefit-logo uni2-benefit-logo-right"><span>JD</span></span></span>
-                                <span class="uni2-benefit-rubric">Indumentaria</span>
+                            <a class="benefit-mix-card benefit-fashion" href="#beneficios">
+                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>CC</span></span><span class="logo-dot logo-dot-main"><span>GC</span></span><span class="logo-dot logo-dot-right"><span>JD</span></span></span>
+                                <span class="benefit-rubric">Indumentaria</span>
                             </a>
                         </nav>
                     </aside>

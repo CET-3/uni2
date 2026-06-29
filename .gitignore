@@ -1,14 +1,6 @@
-.env
-.env.prod
-.env.production
-.venv/
-.venv_tests/
-__pycache__/
-.pytest_cache/
-*.py[cod]
-*.sqlite3
-media/
-staticfiles/
-.~lock.*#
-.vercel
-public/
+*.swp
+.superpowers/
+docs/superpowers/
+data/chico2.xls
+data/chico2.xlsx
+data/padron completooo.xlsx

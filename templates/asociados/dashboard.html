@@ -1,66 +1,69 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Panel de asociado | Uni2{% endblock %}
 
+{% block body_class %} dashboard-page{% endblock %}
+
 {% block content %}
-<div class="app-panel-shell">
-    <section class="dashboard-hero card">
-        <div class="card-body">
-            <div class="dashboard-eyebrow">Mi panel</div>
-            <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
-                <div class="col-lg-7 p-0">
-                    <h1 class="display-6 fw-semibold mb-2">Hola, {{ asociado.nombre }}.</h1>
-                    <p class="mb-3 fs-5">Desde acá podés entrar a las pantallas principales de asociado.</p>
-                    <div class="pill-row">
-                        <span class="dashboard-pill">N° {{ asociado.numero_asociado }}</span>
-                        <span class="dashboard-pill">{{ asociado.get_estado_display }}</span>
+
+<section class="uni2-hero" aria-labelledby="hero-title">
+    <div class="container uni2-hero-layout">
+        <div>
+            <span class="uni2-eyebrow">Mi panel</span>
+            <h1 id="hero-title">Hola, {{ asociado.nombre }}.</h1>
+            <p>Desde acá podés entrar a las pantallas principales de asociado.</p>
+            <div class="pill-row">
+                <span class="dashboard-pill">N° {{ asociado.numero_asociado }}</span>
+                <span class="dashboard-pill">{{ asociado.get_estado_display }}</span>
+            </div>
+            <div class="uni2-hero-actions">
+                <a class="uni2-cta" href="{% url 'asociados:credencial' %}">Mi credencial</a>
+                <a class="uni2-cta uni2-cta-secondary" href="{% url 'asociados:cuotas' %}">Mis cuotas</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+
+    <section aria-labelledby="accesos-title">
+        <div class="uni2-section-heading">
+            <div>
+                <h2 id="accesos-title">Qué podés consultar</h2>
+            </div>
+        </div>
+        <div class="row g-3" aria-label="Accesos del panel">
+            <div class="col-md-6">
+                <a class="uni2-service-card uni2-service-card-blue" href="{% url 'asociados:credencial' %}">
+                    <div>
+                        <h3>Mi credencial</h3>
+                        <p>Ver la credencial digital para validar tu condición de asociado.</p>
                     </div>
-                </div>
-                <div class="col-lg-4 p-0">
-                    <div class="dashboard-actions-grid">
-                        <a class="btn btn-light btn-lg" href="{% url 'asociados:credencial' %}">Mi credencial</a>
-                        <a class="btn btn-outline-light btn-lg" href="{% url 'asociados:cuotas' %}">Mis cuotas</a>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a class="uni2-service-card uni2-service-card-green" href="{% url 'asociados:cuotas' %}">
+                    <div>
+                        <h3>Mis cuotas</h3>
+                        <p>Consultar cuotas, estados y pagos registrados.</p>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
 
-    <section class="section-card card">
-        <div class="card-body">
-            <div class="section-title-row">
-                <div>
-                    <div class="muted-kicker">Accesos</div>
-                    <h2 class="h4 mb-0">Qué podés consultar</h2>
-                </div>
-            </div>
-            <div class="module-card-grid">
-                <a class="module-link-item" href="{% url 'asociados:credencial' %}">
-                    <div class="module-link-copy">
-                        <strong>Mi credencial</strong>
-                        <span>Ver la credencial digital para validar tu condición de asociado.</span>
-                    </div>
-                </a>
-                <a class="module-link-item" href="{% url 'asociados:cuotas' %}">
-                    <div class="module-link-copy">
-                        <strong>Mis cuotas</strong>
-                        <span>Consultar cuotas, estados y pagos registrados.</span>
-                    </div>
-                </a>
-                <a class="module-link-item" href="{% url 'web:productos_servicios' %}">
-                    <div class="module-link-copy">
-                        <strong>Productos y servicios</strong>
-                        <span>Ver productos y servicios publicados.</span>
-                    </div>
-                </a>
-                <a class="module-link-item" href="{% url 'web:comercios' %}">
-                    <div class="module-link-copy">
-                        <strong>Comercios adheridos</strong>
-                        <span>Consultar comercios con convenio vigente.</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
+    <hr class="my-4">
+
+    <div class="mb-5">
+        {% include 'includes/servicios_grid.html' %}
+    </div>
+    <div class="mb-5">
+        {% include 'includes/beneficios_grid.html' %}
+    </div>
+    <div>
+        {% include 'includes/publicidades_grid.html' %}
+    </div>
+
 </div>
 {% endblock %}

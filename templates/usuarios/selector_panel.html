@@ -2,49 +2,61 @@
 
 {% block title %}Elegir panel | Uni2{% endblock %}
 
+{% block body_class %} dashboard-page{% endblock %}
+
 {% block content %}
-<div class="app-panel-shell">
-    <section class="dashboard-hero card">
-        <div class="card-body">
-            <div class="dashboard-eyebrow">Acceso</div>
-            <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
-                <div class="col-lg-7 p-0">
-                    <h1 class="display-6 fw-semibold mb-3">Elegí cómo querés entrar</h1>
-                    <p class="mb-0 fs-5">Tu usuario tiene más de una experiencia disponible.</p>
-                </div>
+
+<section class="uni2-hero" aria-labelledby="hero-title">
+    <div class="container uni2-hero-layout">
+        <div>
+            <span class="uni2-eyebrow">Acceso</span>
+            <h1 id="hero-title">Elegí cómo querés entrar</h1>
+            <p>Tu usuario tiene más de una experiencia disponible.</p>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+
+    <section aria-labelledby="paneles-title">
+        <div class="uni2-section-heading">
+            <div>
+                <h2 id="paneles-title">Tus paneles disponibles</h2>
             </div>
+        </div>
+        <div class="row g-3">
+            {% if mostrar_asociado %}
+            <div class="col-md-4">
+                <a class="uni2-service-card uni2-service-card-blue" href="{% url 'asociados:dashboard' %}">
+                    <div>
+                        <h3>Mi cuenta de asociado</h3>
+                        <p>Credencial, cuotas, productos y servicios.</p>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            {% if mostrar_gestion %}
+            <div class="col-md-4">
+                <a class="uni2-service-card uni2-service-card-yellow" href="{% url 'gestion:dashboard' %}">
+                    <div>
+                        <h3>Gestión</h3>
+                        <p>Tareas operativas de la mutual.</p>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            {% if mostrar_comercio %}
+            <div class="col-md-4">
+                <a class="uni2-service-card uni2-service-card-green" href="{% url 'comercios:dashboard' %}">
+                    <div>
+                        <h3>Mi comercio</h3>
+                        <p>Validación de credenciales.</p>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
         </div>
     </section>
 
-    <section class="section-card card">
-        <div class="card-body">
-            <div class="module-card-grid">
-                {% if mostrar_asociado %}
-                    <a class="module-link-item" href="{% url 'asociados:dashboard' %}">
-                        <div class="module-link-copy">
-                            <strong>Mi cuenta de asociado</strong>
-                            <span>Credencial, cuotas, productos y servicios.</span>
-                        </div>
-                    </a>
-                {% endif %}
-                {% if mostrar_gestion %}
-                    <a class="module-link-item" href="{% url 'gestion:dashboard' %}">
-                        <div class="module-link-copy">
-                            <strong>Gestión</strong>
-                            <span>Tareas operativas de la mutual.</span>
-                        </div>
-                    </a>
-                {% endif %}
-                {% if mostrar_comercio %}
-                    <a class="module-link-item" href="{% url 'comercios:dashboard' %}">
-                        <div class="module-link-copy">
-                            <strong>Mi comercio</strong>
-                            <span>Validación de credenciales.</span>
-                        </div>
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-    </section>
 </div>
 {% endblock %}
