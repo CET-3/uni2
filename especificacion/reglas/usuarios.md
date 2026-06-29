@@ -62,8 +62,12 @@ El sistema define tres grupos base: `asociado`, `comercio` y `gestion`. La data 
 
 ## USUARIO-014
 
-El `GestionPermissionRequiredMixin` usa `UserPassesTestMixin` con `raise_exception = True` para rechazar con 403 en lugar de redirigir al login. Las vistas deben declarar su lógica en métodos `get()`/`post()` y no en `dispatch()` para que el permiso se evalúe antes.
+`GestionCrearUsuariosAsociadosFaltantesView` en `gestion/views.py` permite a un usuario con permiso `importar_asociados` crear usuarios para todos los asociados sin usuario vinculado desde la pantalla de importación de padrón. Usa el DNI como username y contraseña inicial. Si ya existe un usuario con username igual al DNI y no está vinculado a otro asociado, lo vincula al asociado. Si un asociado falla, registra el error y sigue con los demás. La acción es idempotente: si se ejecuta otra vez, no duplica usuarios ya vinculados.
 
 ## USUARIO-015
+
+El `GestionPermissionRequiredMixin` usa `UserPassesTestMixin` con `raise_exception = True` para rechazar con 403 en lugar de redirigir al login. Las vistas deben declarar su lógica en métodos `get()`/`post()` y no en `dispatch()` para que el permiso se evalúe antes.
+
+## USUARIO-016
 
 La especificación del proyecto se sirve en `/especificacion/` y requiere el permiso `gestion.ver_especificacion`. Usa un mixin propio `VerEspecificacionRequiredMixin` que verifica ese permiso. En la carga inicial, el permiso se asigna al grupo `Atención de mutual` y a `Administradores` (estos reciben todos los permisos de gestión).

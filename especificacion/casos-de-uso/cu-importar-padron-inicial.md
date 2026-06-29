@@ -36,7 +36,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Fechas:** `fecha_alta` se carga automáticamente con la fecha del día de la importación. `fecha_inicio_cobro` se carga automáticamente con el 1 de marzo de 2026 para todos los asociados importados desde el padrón inicial.
 
-**Usuarios de asociados:** al confirmar la importación, por cada asociado importado que no tenga usuario vinculado, el sistema crea un `User` de Django, lo vincula con el asociado y lo agrega al grupo `Asociados`. El `username` inicial y la contraseña inicial son el DNI del asociado. Si el asociado ya tenía usuario vinculado, el sistema conserva ese usuario y no lo reemplaza.
+**Usuarios de asociados:** la importación no crea usuarios de acceso. Esto mantiene la confirmación del padrón dentro de un tiempo razonable para entornos con timeout, como Vercel. Después de importar, el administrador puede usar la acción masiva `Crear usuarios faltantes` desde la pantalla de importación para crear los `User` de Django de asociados que todavía no tengan usuario vinculado.
 
 **Duplicados de DNI:** si dos filas tienen el mismo DNI y el mismo nombre completo, se considera una repetición involuntaria en la planilla: solo se importa la primera fila y las siguientes se descartan. Si tienen el mismo DNI pero distinto nombre, la fila queda para revisar por DNI duplicado real.
 
@@ -44,4 +44,4 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Situaciones especiales:** curso incompleto, asociado ya existente, email faltante, teléfono faltante, tipo inválido.
 
-**Modelos afectados:** Asociado, Curso, User.
+**Modelos afectados:** Asociado, Curso.

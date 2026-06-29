@@ -11,7 +11,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Dashboard simple con accesos a las tareas del MVP permitidas para el usuario.
 - Consulta de asociados con búsqueda y filtros.
 - Nuevo asociado desde pantalla propia de `gestion`, sin depender del admin técnico. Al guardar, genera cuotas iniciales para períodos existentes y, si el usuario tiene permiso para cobrar, continúa en la pantalla de cobro con el asociado preseleccionado.
-- Importar padrón inicial desde planilla heredada con previsualización.
+- Importar padrón inicial desde planilla heredada con previsualización. El dashboard de gestión y la pantalla de importación incluyen la acción `Crear usuarios faltantes` para crear usuarios de acceso de asociados después de importar el padrón.
 - Importar cuotas históricas desde planilla heredada con previsualización.
 - Exportar asociados en formato Uni2 desde la consulta de asociados.
 - Detalle de asociado.
