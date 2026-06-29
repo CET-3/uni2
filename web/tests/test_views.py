@@ -256,9 +256,24 @@ def test_home_usa_el_mismo_formato_visual_que_el_design_system(client):
     content = response.content.decode()
     assert response.status_code == 200
     assert "uni2-service-grid" in content
+    assert "uni2-section-heading" in content
     assert "benefit-band" in content
     assert "benefit-mix-card" in content
+    assert "js-home-benefits-slider" in content
+    assert "uni2-hours-mobile" in content
     assert 'class="service-grid"' not in content
+
+
+@pytest.mark.django_db
+def test_home_muestra_horarios_en_formato_movil_compacto(client):
+    response = client.get(reverse("web:home"))
+
+    content = response.content.decode()
+    assert response.status_code == 200
+    assert "uni2-hours-mobile" in content
+    assert "uni2-hours-day" in content
+    assert "uni2-hours-chip-blue" in content
+    assert "uni2-hours-chip-muted" in content
 
 
 @pytest.mark.django_db

@@ -1,5 +1,5 @@
 (function() {
-  var sliders = document.querySelectorAll(".uni2-carousel.js-auto-slider");
+  var sliders = document.querySelectorAll(".uni2-carousel.js-auto-slider, .js-home-benefits-slider");
 
   sliders.forEach(function(slider) {
     var paused = false;
