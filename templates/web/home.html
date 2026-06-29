@@ -5,197 +5,108 @@
 
 {% block content %}
 
-<section class="py-5" id="inicio" aria-labelledby="hero-title">
-    <div class="text-center">
-        <p class="text-uppercase text-secondary small fw-semibold mb-1">Mutual Escolar UNI2</p>
-        <h1 id="hero-title" class="display-5 fw-bold">Tu mutual, más cerca que nunca</h1>
-        <p class="lead text-secondary mx-auto" style="max-width: 600px;">Una comunidad comprometida con sus asociados, ofreciendo beneficios, servicios y oportunidades.</p>
-        <div class="mt-4 d-flex gap-3 justify-content-center">
-            <a class="btn btn-primary btn-lg" href="#como-asociarse">Asociate</a>
-            <a class="btn btn-outline-primary btn-lg" href="{% url 'usuarios:login' %}">Iniciar sesión</a>
-        </div>
-    </div>
-</section>
-
-<section class="py-5 bg-white rounded-3 shadow-sm mb-4" id="servicios" aria-labelledby="servicios-title">
-    <div class="d-flex align-items-end justify-content-between gap-3 mb-4">
+<section class="uni2-hero px-0" id="inicio" aria-labelledby="hero-title">
+    <div class="container uni2-hero-layout">
         <div>
-            <p class="text-uppercase text-secondary small fw-semibold mb-1">Servicios</p>
-            <h2 id="servicios-title" class="h3 mb-0">Nuestros servicios</h2>
+            <span class="uni2-eyebrow">Mutual Escolar UNI2</span>
+            <h1 id="hero-title">Tu mutual, más cerca que nunca</h1>
+            <p>Una comunidad comprometida con vos, con beneficios para cada momento</p>
+            <div class="uni2-hero-actions">
+                <a class="uni2-cta" href="#como-asociarse">Sumate</a>
+                <a class="uni2-cta uni2-cta-secondary" href="{% url 'usuarios:login' %}">Iniciar sesión</a>
+            </div>
         </div>
     </div>
-
-    <div class="row g-4">
-        {% for categoria in categorias_productos_servicios %}
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <h3 class="h5">{{ categoria.nombre }}</h3>
-                        {% if categoria.descripcion %}
-                            <p class="card-text text-secondary small flex-grow-1">{{ categoria.descripcion }}</p>
-                        {% endif %}
-                        <a href="{% url 'web:categoria_detalle' categoria.pk %}" class="btn btn-outline-primary btn-sm mt-2">
-                            Ver más
-                        </a>
-                    </div>
-                </div>
-            </div>
-        {% empty %}
-            <div class="col-12">
-                <p class="text-secondary">Sin servicios cargados por ahora.</p>
-            </div>
-        {% endfor %}
-    </div>
-
-    {% if rubros_beneficio %}
-        <aside class="mt-5" id="beneficios" aria-labelledby="beneficios-title">
-            <div class="mb-4">
-                <p class="text-uppercase text-secondary small fw-semibold mb-1">Beneficios</p>
-                <h2 id="beneficios-title" class="h3">Beneficios para vos</h2>
-            </div>
-
-            <div class="benefit-grid">
-                {% for rubro in rubros_beneficio %}
-                    <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="benefit-mix-card benefit-mix-card-{{ forloop.counter0 }}">
-                        <span class="logo-cloud">
-                            {% for comercio in rubro.comercios_con_foto|slice:":3" %}
-                                {% if comercio.foto %}
-                                <span class="logo-dot 
-                                    {% if forloop.counter == 1 %}logo-dot-left
-                                    {% elif forloop.counter == 2 %}logo-dot-main
-                                    {% else %}logo-dot-right{% endif %}">
-                                    <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
-                                </span>
-                                {% endif %}
-                            {% endfor %}
-                        </span>
-                        <span class="benefit-rubric">{{ rubro.nombre }}</span>
-                    </a>
-                {% endfor %}
-            </div>
-        </aside>
-    {% endif %}
 </section>
 
-{% if publicidades %}
-    <section class="py-5 mb-4" aria-labelledby="publicidad-title">
-        <div class="d-flex align-items-end justify-content-between gap-3 mb-4">
+<div class="container py-5">
+
+    <!-- SERVICIOS + BENEFICIOS -->
+    <section class="mb-5" id="servicios" aria-labelledby="servicios-title">
+        <div class="section-heading compact-heading">
             <div>
-                <p class="text-uppercase text-secondary small fw-semibold mb-1">Promos destacadas</p>
-                <h2 id="publicidad-title" class="h3 mb-0">Nuestros favoritos</h2>
+                <h2 id="servicios-title">Servicios que suman</h2>
             </div>
         </div>
 
-        <div class="row g-4">
-            {% for publicidad in publicidades %}
-                <div class="col-md-6 col-lg-3">
-                    <article class="card h-100">
-                        <div class="card-body d-flex flex-column">
-                            {% if publicidad.foto %}
-                                <img src="{{ publicidad.foto.url }}" alt="{{ publicidad.titulo }}" class="card-img-top mb-3" style="height: 160px; object-fit: cover;">
-                            {% endif %}
-                            <span class="badge bg-light text-dark align-self-start mb-2">{{ publicidad.etiqueta_principal }}</span>
-                            <h3 class="h5">{{ publicidad.titulo }}</h3>
-                            <strong class="h4 text-primary">{{ publicidad.etiqueta_secundaria }}</strong>
-                            <p class="card-text text-secondary small flex-grow-1 mt-2">{{ publicidad.descripcion }}</p>
-                            {% if publicidad.get_absolute_url %}
-                                <a href="{{ publicidad.get_absolute_url }}" class="btn btn-outline-primary btn-sm mt-auto">Conocer más</a>
-                            {% endif %}
-                        </div>
-                    </article>
-                </div>
-            {% endfor %}
+        <div class="mb-5">
+            {% include 'includes/servicios_grid.html' %}
+        </div>
+
+        <div class="mb-5">
+            {% include 'includes/beneficios_grid.html' %}
         </div>
     </section>
-{% endif %}
 
-<section class="py-5 bg-white rounded-3 shadow-sm" id="como-asociarse" aria-labelledby="asociarse-title">
-    <p class="text-uppercase text-secondary small fw-semibold mb-1">Asociate en cuatro pasos</p>
-    <h2 id="asociarse-title" class="h3 mb-4">Cómo ser parte de UNI2</h2>
-
-    <div class="row g-4 mb-5">
-        <div class="col-md-6 col-lg-3">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="h1 fw-bold text-primary">1</div>
-                    <h3 class="h6">Acércate a la mutual</h3>
-                    <p class="small text-secondary mb-0">Visitá UNI2 durante nuestros horarios de atención.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="h1 fw-bold text-primary">2</div>
-                    <h3 class="h6">Completá tu inscripción</h3>
-                    <p class="small text-secondary mb-0">Registrá tus datos de forma rápida y sencilla.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="h1 fw-bold text-primary">3</div>
-                    <h3 class="h6">Sumate a la comunidad</h3>
-                    <p class="small text-secondary mb-0">Con una cuota social de solo $700 por mes, ya sos asociado.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="h1 fw-bold text-primary">4</div>
-                    <h3 class="h6">Disfrutá tus beneficios</h3>
-                    <p class="small text-secondary mb-0">Accedé a servicios, descuentos y oportunidades exclusivas.</p>
-                </div>
-            </div>
-        </div>
+    <!-- PUBLICIDADES -->
+    <div class="mb-5">
+        {% include 'includes/publicidades_grid.html' %}
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="h6">Asociación</h3>
-                    <p class="small text-secondary mb-0">Presencial en la mutual.</p>
-                </div>
+    <!-- CÓMO ASOCIARSE (pasos + info) -->
+    <section class="mb-5" id="como-asociarse" aria-labelledby="asociarse-title">
+        <div class="uni2-section-heading">
+            <div>
+                <h2 id="asociarse-title">Cómo ser parte de nuestra comunidad</h2>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="h6">Cuota social</h3>
-                    <p class="small text-secondary mb-0">$700 mensuales.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 mt-3">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="h6 mb-3">Horarios de atención</h3>
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Día</th>
-                                    <th>Horario 1</th>
-                                    <th>Horario 2</th>
-                                    <th>Horario 3</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Lunes</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
-                                <tr><td>Martes</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
-                                <tr><td>Miércoles</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
-                                <tr><td>Jueves</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
-                                <tr><td>Viernes</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>—</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
+        <div class="uni2-steps mb-5">
+            <article class="uni2-step-card uni2-step-card-blue">
+                <strong class="uni2-step-number">1</strong>
+                <h3>Acércate a la mutual</h3>
+                <p>Visitá UNI2 durante nuestros horarios de atención.</p>
+            </article>
+            <article class="uni2-step-card uni2-step-card-yellow">
+                <strong class="uni2-step-number">2</strong>
+                <h3>Completá tu inscripción</h3>
+                <p>Registrá tus datos de forma rápida y sencilla.</p>
+            </article>
+            <article class="uni2-step-card uni2-step-card-green">
+                <strong class="uni2-step-number">3</strong>
+                <h3>Sumate a la comunidad</h3>
+                <p>Con una cuota social de solo $700 por mes, ya sos asociado.</p>
+            </article>
+            <article class="uni2-step-card uni2-step-card-red">
+                <strong class="uni2-step-number">4</strong>
+                <h3>Disfrutá tus beneficios</h3>
+                <p>Accedé a servicios, descuentos y oportunidades exclusivas.</p>
+            </article>
+        </div>
+
+        <div class="uni2-info-box" aria-label="Información importante para asociarse">
+            <div>
+                <h3>Asociación</h3>
+                <p>Presencial en la mutual.</p>
+            </div>
+            <div>
+                <h3>Cuota social</h3>
+                <p>$700 mensuales.</p>
+            </div>
+            <div class="uni2-schedule-card">
+                <h3>Horarios de atención</h3>
+                <div class="table-responsive">
+                    <table class="uni2-hours-table">
+                        <thead>
+                            <tr>
+                                <th>Día</th>
+                                <th>Horario 1</th>
+                                <th>Horario 2</th>
+                                <th>Horario 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Lunes</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
+                            <tr><td>Martes</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
+                            <tr><td>Miércoles</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
+                            <tr><td>Jueves</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>13:30 - 16:30</td></tr>
+                            <tr><td>Viernes</td><td>08:50 - 09:00</td><td>10:20 - 10:30</td><td>-</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div> <!-- /container -->
 {% endblock %}

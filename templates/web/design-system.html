@@ -1,0 +1,739 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Design System | Uni2{% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="page ds-page" id="arriba">
+        <header class="topbar">
+            <a class="brand" href="#arriba" aria-label="Volver al inicio del design system">
+                <img src="{% static 'img/LOJO_UNI2.png' %}" alt="Logo UNI2">
+                <span>UNI2 DS</span>
+            </a>
+
+            <input class="menu-toggle" type="checkbox" id="ds-menu-toggle" aria-label="Abrir menú">
+            <label class="menu-button" for="ds-menu-toggle" aria-hidden="true"><span></span></label>
+
+            <nav class="nav" aria-label="Navegación del design system">
+                <a class="ds-nav-primary" href="#fundamentos">Fundamentos</a>
+                <a class="ds-nav-secondary" href="#componentes">Componentes</a>
+                <a class="ds-nav-primary" href="#home">Home</a>
+                <a class="ds-nav-secondary" href="#servicios">Servicios</a>
+                <a class="ds-nav-secondary" href="#beneficios">Beneficios</a>
+                <a class="ds-nav-primary" href="#operaciones">Operaciones</a>
+                <a class="ds-nav-primary" href="#django">Django</a>
+                <a class="ds-nav-secondary" href="{% url 'web:design-system-estructura' %}">Estructura</a>
+                <a class="ds-nav-secondary" href="{% url 'web:inicio' %}">Ver sitio</a>
+            </nav>
+            <nav class="ds-more-nav" aria-label="Más opciones del design system">
+                <a href="#componentes">Componentes</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#beneficios">Beneficios</a>
+                <a href="{% url 'web:design-system-estructura' %}">Estructura</a>
+                <a href="{% url 'web:inicio' %}">Ver sitio</a>
+            </nav>
+            <a class="cta secondary service-topbar-cta" href="{% url 'web:inicio' %}">Ver sitio</a>
+        </header>
+
+        <main>
+            <section class="ds-section" id="fundamentos" aria-labelledby="fundamentos-title">
+                <div class="section-inner">
+                    <div class="ds-heading">
+                        <span class="ds-kicker">Fundamentos</span>
+                        <h1 id="fundamentos-title">Sistema visual UNI2</h1>
+                        <p>Referencia de tokens, tipografía y controles base para mantener consistencia en HTML estático y en la futura app Django + Bootstrap.</p>
+                    </div>
+
+                    <div class="row g-3" aria-label="Tokens de color">
+                        <div class="col-12 col-sm-6 col-lg-3"><article class="ds-swatch h-100" style="--swatch: var(--azul);"><div class="ds-swatch-color"></div><div class="ds-swatch-body"><strong>Azul</strong><code>--azul</code></div></article></div>
+                        <div class="col-12 col-sm-6 col-lg-3"><article class="ds-swatch h-100" style="--swatch: var(--amarillo);"><div class="ds-swatch-color"></div><div class="ds-swatch-body"><strong>Amarillo</strong><code>--amarillo</code></div></article></div>
+                        <div class="col-12 col-sm-6 col-lg-3"><article class="ds-swatch h-100" style="--swatch: var(--verde);"><div class="ds-swatch-color"></div><div class="ds-swatch-body"><strong>Verde</strong><code>--verde</code></div></article></div>
+                        <div class="col-12 col-sm-6 col-lg-3"><article class="ds-swatch h-100" style="--swatch: var(--rojo);"><div class="ds-swatch-color"></div><div class="ds-swatch-body"><strong>Rojo</strong><code>--rojo</code></div></article></div>
+                    </div>
+
+                    <div class="row g-3" style="margin-top:18px">
+                        <div class="col-12 col-lg-6">
+                            <article class="ds-card h-100">
+                                <span class="ds-component-label">Tipografía</span>
+                                <span class="eyebrow">Mutual Escolar UNI2</span>
+                                <h2>Titular de sección</h2>
+                                <h3>Subtítulo de componente</h3>
+                                <p>Texto de apoyo para cards, secciones y páginas internas.</p>
+                            </article>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <article class="ds-card h-100">
+                                <span class="ds-component-label">Acciones y estados</span>
+                                <div class="ds-inline-stack">
+                                    <a class="cta" href="#home">Acción principal</a>
+                                    <a class="cta secondary" href="#componentes">Acción secundaria</a>
+                                    <span class="badge">Badge</span>
+                                    <strong class="discount">10% OFF</strong>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <div class="ds-card" style="margin-top:18px">
+                        <span class="ds-component-label">Bootstrap 5.3.8 incluido</span>
+                        <div class="row g-3">
+                            <div class="col-12 col-lg-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h3 class="card-title h5">Grid</h3>
+                                        <p class="card-text">Ejemplo con <code>.row</code>, <code>.col-12</code> y <code>.col-lg-4</code>.</p>
+                                        <a class="btn btn-primary" href="#django">Ver templates</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4">
+                                <ul class="list-group h-100">
+                                    <li class="list-group-item active" aria-current="true">Componentes Bootstrap</li>
+                                    <li class="list-group-item">Cards</li>
+                                    <li class="list-group-item">List groups</li>
+                                    <li class="list-group-item">Tablas responsive</li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-lg-4">
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle mb-0">
+                                        <thead><tr><th>Clase</th><th>Uso</th></tr></thead>
+                                        <tbody><tr><td><code>.btn</code></td><td>Acciones base</td></tr><tr><td><code>.card</code></td><td>Contenedores</td></tr></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ds-section" id="componentes" aria-labelledby="componentes-title">
+                <div class="section-inner">
+                    <div class="ds-heading">
+                        <span class="ds-kicker">Componentes globales</span>
+                        <h2 id="componentes-title">Piezas compartidas</h2>
+                        <p>Elementos que aparecen en varias páginas: navegación, modal, contacto, footer y estados interactivos.</p>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-6">
+                            <article class="soon-card ds-soon-preview h-100">
+                                <span class="soon-icon" aria-hidden="true"><i data-lucide="clock-3"></i></span>
+                                <h2>Próximamente</h2>
+                                <p>Modal por hash para comunicar funciones no disponibles.</p>
+                                <a class="cta" href="#soon-preview">Abrir modal</a>
+                            </article>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <article class="print-contact h-100">
+                                <span class="print-icon" aria-hidden="true"><i data-lucide="send"></i></span>
+                                <div>
+                                    <h3>Bloque de contacto</h3>
+                                    <div class="contact-links">
+                                        <a href="mailto:unidosatencionalcliente@gmail.com">unidosatencionalcliente@gmail.com</a>
+                                        <span class="contact-separator">o</span>
+                                        <a class="whatsapp-link" href="https://wa.me/5492984210672" target="_blank" rel="noopener">whatsapp</a>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <footer class="custom-footer" id="footer-preview" style="margin-top:24px">
+                        <div class="footer-container">
+                            <div class="footer-actions" aria-label="Contacto de la mutual">
+                                <a class="footer-icon footer-icon-mail" href="mailto:unidosatencionalcliente@gmail.com" aria-label="Enviar mail a la mutual"><i class="fa-solid fa-envelope"></i></a>
+                                <a class="footer-icon footer-icon-whatsapp" href="https://wa.me/5492984210672" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                                <a class="footer-icon footer-icon-instagram" href="https://www.instagram.com/unidos.cet3" target="_blank" rel="noopener" aria-label="Abrir Instagram de la mutual"><i class="fa-brands fa-instagram"></i></a>
+                            </div>
+                            <div class="footer-location"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>Chacabuco 1050 &middot; General Roca, Río Negro</span></div>
+                            <p class="footer-copy">&copy; 2026 Mutual UNI2 &middot; CET N&deg;3</p>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+
+            <section class="ds-section" id="home" aria-labelledby="home-title">
+                <div class="section-inner">
+                    <div class="ds-heading">
+                        <span class="ds-kicker">Home</span>
+                        <h2 id="home-title">Secciones principales</h2>
+                        <p>La home se conserva como patrón completo: hero, servicios, club de beneficios, slider y pasos de asociación.</p>
+                    </div>
+                </div>
+
+                <section class="uni2-hero ds-mini-hero" aria-labelledby="ds-hero-title">
+                    <div class="uni2-section-inner uni2-hero-layout">
+                        <div>
+                            <span class="uni2-eyebrow">Mutual Escolar UNI2</span>
+                            <h1 id="ds-hero-title">Tu mutual, más cerca que nunca</h1>
+                            <p>Una comunidad comprometida con vos, con beneficios para cada momento</p>
+                            <div class="uni2-hero-actions">
+                                <a class="uni2-cta" href="#django">Sumate</a>
+                                <a class="uni2-cta uni2-cta-secondary" href="#componentes">Iniciar sesión</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="section-inner ds-preview" style="margin-top:28px">
+                    <div class="uni2-section-heading compact-heading">
+                        <div><h2>Servicios que suman</h2></div>
+                    </div>
+                    <div class="service-grid" aria-label="Servicios de la mutual">
+                        <article class="service-card service-card-blue" data-href="#servicios">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="copy"></i></span>
+                            <div><h3>Fotocopias</h3><p>Fotocopias rápidas y de excelente calidad.</p></div>
+                            <a class="link" href="#servicios">Ver más</a>
+                        </article>
+                        <article class="service-card service-card-yellow" data-href="#servicios">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="shirt"></i></span>
+                            <div><h3>Uniformes</h3><p>Calidad y comodidad para acompa&ntilde;arte todo el a&ntilde;o.</p></div>
+                            <a class="link" href="#servicios">Ver más</a>
+                        </article>
+                        <article class="service-card service-card-green" data-href="#servicios">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="bike"></i></span>
+                            <div><h3>Bicicleta Solidaria</h3><p>Una forma práctica y sustentable de moverte.</p></div>
+                            <a class="link" href="#servicios">Ver más</a>
+                        </article>
+                        <article class="service-card service-card-red" data-href="#servicios">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="notebook-tabs"></i></span>
+                            <div><h3>Cuadernillos</h3><p>Todo el material que necesitás para cada materia.</p></div>
+                            <a class="link" href="#servicios">Ver más</a>
+                        </article>
+                        <article class="service-card service-card-purple">
+                            <span class="service-icon" aria-hidden="true"><i data-lucide="paperclip"></i></span>
+                            <div><h3>Anillado</h3><p>Cuidá tu material de estudio con un acabado profesional.</p></div>
+                        </article>
+                    </div>
+
+                    <aside class="benefit-band" aria-labelledby="beneficios-home-title">
+                        <div class="benefit-intro"><h2 id="beneficios-home-title">Club de Beneficios</h2></div>
+                        <nav class="benefit-links js-auto-slider" aria-label="Rubros con beneficios">
+                            <a class="benefit-mix-card benefit-food" href="#beneficios">
+                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>AD</span></span><span class="logo-dot logo-dot-main"><span>BM</span></span><span class="logo-dot logo-dot-right"><span>LC</span></span></span>
+                                <span class="benefit-rubric">Gastronomía y kioscos</span>
+                            </a>
+                            <a class="benefit-mix-card benefit-sport" href="#beneficios">
+                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>AG</span></span><span class="logo-dot logo-dot-main"><span>AC</span></span><span class="logo-dot logo-dot-right"><span>ER</span></span></span>
+                                <span class="benefit-rubric">Gym y deportes</span>
+                            </a>
+                            <a class="benefit-mix-card benefit-beauty" href="#beneficios">
+                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>AS</span></span><span class="logo-dot logo-dot-main"><span>AM</span></span><span class="logo-dot logo-dot-right"><span>OM</span></span></span>
+                                <span class="benefit-rubric">Belleza y Bienestar</span>
+                            </a>
+                            <a class="benefit-mix-card benefit-fashion" href="#beneficios">
+                                <span class="logo-cloud" aria-hidden="true"><span class="logo-dot logo-dot-left"><span>CC</span></span><span class="logo-dot logo-dot-main"><span>GC</span></span><span class="logo-dot logo-dot-right"><span>JD</span></span></span>
+                                <span class="benefit-rubric">Indumentaria</span>
+                            </a>
+                        </nav>
+                    </aside>
+
+                    <div class="section-heading">
+                        <div><h2>Los m&aacute;s elegidos</h2></div>
+                        <div class="btn-group" role="group" aria-label="Controles del carrusel Los más elegidos">
+                            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="ds-ad-carousel" aria-label="Ver publicidad anterior"><i data-lucide="chevron-left"></i></button>
+                            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="ds-ad-carousel" aria-label="Ver publicidad siguiente"><i data-lucide="chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="carousel js-auto-slider" id="ds-ad-carousel" aria-label="Carrusel de publicidades">
+                        <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1100&q=80');">
+                            <span class="uni2-badge">Alimentos</span><h3>Alto Drugstore</h3><strong class="uni2-discount">10% OFF</strong><p>Kiosco y drugstore con snacks, bebidas y productos para resolver compras rápidas.</p><a class="link" href="#beneficios">Conocer más</a>
+                        </article>
+                        <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1100&q=80');">
+                            <span class="uni2-badge">Librería</span><h3>Librería Mu&ntilde;oz</h3><strong class="uni2-discount">10% OFF</strong><p>Útiles escolares, carpetas, hojas y materiales para la cursada.</p><a class="link" href="#beneficios">Conocer más</a>
+                        </article>
+                        <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1100&q=80');">
+                            <span class="uni2-badge">Actividad física</span><h3>Atenas Gimnasio</h3><strong class="uni2-discount">10% OFF</strong><p>Gimnasio de musculación y entrenamiento para sumar actividad física.</p><a class="link" href="#beneficios">Conocer más</a>
+                        </article>
+                    </div>
+                    <div class="d-flex justify-content-center gap-2" data-slider-dots="ds-ad-carousel" aria-label="Indicadores del carrusel Los más elegidos">
+                        <button class="btn btn-sm btn-primary rounded-circle p-0" style="width: 12px; height: 12px;" type="button" data-slide-index="0" aria-label="Ir a publicidad 1"></button>
+                        <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width: 12px; height: 12px;" type="button" data-slide-index="1" aria-label="Ir a publicidad 2"></button>
+                        <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width: 12px; height: 12px;" type="button" data-slide-index="2" aria-label="Ir a publicidad 3"></button>
+                    </div>
+
+                    <div>
+                        <h2>C&oacute;mo ser parte de nuestra comunidad</h2>
+                        <div class="uni2-steps">
+                            <article class="uni2-step-card uni2-step-card-blue"><strong class="uni2-step-number">1</strong><h3>Acércate a la mutual</h3><p>Visitá UNI2 durante nuestros horarios de atención.</p></article>
+                            <article class="uni2-step-card uni2-step-card-yellow"><strong class="uni2-step-number">2</strong><h3>Completá tu inscripción</h3><p>Registrá tus datos de forma rápida y sencilla.</p></article>
+                            <article class="uni2-step-card uni2-step-card-green"><strong class="uni2-step-number">3</strong><h3>Sumate a la comunidad</h3><p>Con una cuota social de solo $800 por mes, ya sos asociado.</p></article>
+                            <article class="uni2-step-card uni2-step-card-red"><strong class="uni2-step-number">4</strong><h3>Disfrutá tus beneficios</h3><p>Accedé a servicios, descuentos y oportunidades exclusivas.</p></article>
+                        </div>
+                        <div class="uni2-info-box" aria-label="Información importante">
+                            <div><h3>Asociación</h3><p>Presencial en la mutual.</p></div>
+                            <div><h3>Cuota social</h3><p>$800 mensuales.</p></div>
+                            <div class="uni2-schedule-card">
+                                <h3>Horarios de atención</h3>
+                                <table class="uni2-hours-table uni2-hours-table-compact" style="display:table" aria-label="Horarios de atención resumidos">
+                                    <thead><tr><th>Día</th><th>Horarios de atención</th></tr></thead>
+                                    <tbody><tr><th>Lunes a Jueves</th><td><span class="uni2-hours-chip uni2-hours-chip-blue">08:50-09:00</span><span class="uni2-hours-chip uni2-hours-chip-yellow">10:20-10:30</span><span class="uni2-hours-chip uni2-hours-chip-green">13:30-17:30</span></td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ds-section" id="servicios" aria-labelledby="servicios-ds-title">
+                <div class="section-inner">
+                    <div class="ds-heading">
+                        <span class="ds-kicker">Servicios</span>
+                        <h2 id="servicios-ds-title">Patrones de páginas internas</h2>
+                        <p>Componentes para servicios con precios, productos, tablas agrupadas y contacto.</p>
+                    </div>
+
+                    <div class="detail-panel">
+                        <h2>Tabla de precios</h2>
+                        <div class="price-table-wrap">
+                            <table class="price-table price-table-compact" aria-label="Precios de ejemplo">
+                                <thead><tr><th>Producto</th><th>Asociado</th><th>No asociado</th></tr></thead>
+                                <tbody><tr><th>Fotocopia simple</th><td>$120</td><td>$150</td></tr><tr><th>Fotocopia doble faz</th><td>$150</td><td>$200</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="detail-panel" style="margin-top:18px">
+                        <div class="product-price-grid" aria-label="Precios de uniformes">
+                            <article class="product-price-card">
+                                <div class="product-price-head"><span class="product-price-icon">R</span><div><h2>Remeras</h2><p>Talles XS a XL.</p></div></div>
+                                <div class="price-pair"><div class="price-pill"><span>Asociado</span><strong>$16.000</strong></div><div class="price-pill"><span>No asociado</span><strong>$20.000</strong></div></div>
+                            </article>
+                            <article class="product-price-card">
+                                <div class="product-price-head"><span class="product-price-icon">C</span><div><h2>Camperas</h2><p>Talles XS a XL.</p></div></div>
+                                <div class="price-pair"><div class="price-pill"><span>Asociado</span><strong>$30.000</strong></div><div class="price-pill"><span>No asociado</span><strong>$40.000</strong></div></div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <div class="detail-panel booklet-panel" style="margin-top:18px">
+                        <div class="detail-title-row"><h1>Cuadernillos</h1><p>Tabla agrupada para materiales por ciclo.</p></div>
+                        <div class="cycle-wrap">
+                            <div class="cycle-toggle" aria-hidden="false">
+                                <button type="button" class="cycle-toggle-btn" data-target="cb">Ciclo Básico</button>
+                                <button type="button" class="cycle-toggle-btn" data-target="cs">Ciclo Superior</button>
+                            </div>
+                            <article class="cycle-card cycle-card--cb">
+                                <div class="cycle-head"><span class="cycle-code">C.B</span><div><h2>CICLO BASICO</h2></div></div>
+                                <div class="price-table-wrap">
+                                    <table class="price-table booklet-table">
+                                        <thead><tr><th>Cuadernillo</th><th>Asociado</th><th>No asociado</th></tr></thead>
+                                        <tbody><tr class="table-group-row"><th colspan="3">1 C.B</th></tr><tr><th>Matemática</th><td><span class="exclusive">$4.050</span></td><td>$5.400</td></tr></tbody>
+                                    </table>
+                                </div>
+                            </article>
+                            <article class="cycle-card cycle-card--cs">
+                                <div class="cycle-head"><span class="cycle-code">C.S</span><div><h2>CICLO SUPERIOR</h2></div></div>
+                                <div class="price-table-wrap">
+                                    <table class="price-table booklet-table">
+                                        <thead><tr><th>Cuadernillo</th><th>Asociado</th><th>No asociado</th></tr></thead>
+                                        <tbody><tr class="table-group-row"><th colspan="3">2 C.S</th></tr><tr><th>Microeconomía</th><td><span class="exclusive">$4.650</span></td><td>$6.200</td></tr></tbody>
+                                    </table>
+                                </div>
+                            </article>
+                        </div>
+                        <aside class="print-contact">
+                            <span class="print-icon" aria-hidden="true"><i data-lucide="notebook-tabs"></i></span>
+                            <div><h3>Reservá tu material en la mutual a</h3><div class="contact-links"><a href="mailto:unidosatencionalcliente@gmail.com">unidosatencionalcliente@gmail.com</a><span class="contact-separator">o</span><a class="whatsapp-link" href="https://wa.me/5492984210672" target="_blank" rel="noopener">whatsapp</a></div></div>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ds-section benefit-page" id="beneficios" aria-labelledby="beneficios-ds-title">
+                <div class="section-inner">
+                    <div class="benefit-page-header">
+                        <a class="benefit-back" href="#home">Volver a home</a>
+                        <h1 id="beneficios-ds-title">Listas de beneficios</h1>
+                        <p>Patrón para categorías del club de beneficios: lista compacta, logo circular, metadata y descuento visible.</p>
+                    </div>
+
+                    <div class="benefit-list">
+                        <a class="benefit-list-card" href="#ds-alto-drugstore" aria-label="Ver beneficio de Alto Drugstore">
+                            <span class="benefit-list-logo benefit-list-initials">AD</span>
+                            <span class="benefit-list-body"><h2>Alto Drugstore y Le Bon Break Store</h2><p>Todo lo que necesitás en un solo lugar: bebidas, alimentos, snacks y productos de uso diario.</p><span class="benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Alsina 189 / Hipólito Yrigoyen 731 / Alsina 256 / Mitre 580 &middot; @altodrugstoreroca</span></span></span>
+                            <strong class="discount-tag">10% OFF</strong>
+                        </a>
+                        <a class="benefit-list-card" href="#ds-latte" aria-label="Ver beneficio de Latte Cafetería">
+                            <span class="benefit-list-logo benefit-list-initials">LC</span>
+                            <span class="benefit-list-body"><h2>Latte Cafetería</h2><p>El lugar perfecto para disfrutar un buen café y compartir momentos especiales.</p><span class="benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span></span>
+                            <strong class="discount-tag">15% OFF</strong>
+                        </a>
+                    </div>
+
+                    <article class="benefit-modal" id="ds-alto-drugstore" aria-label="Beneficio de Alto Drugstore">
+                        <a class="benefit-modal-backdrop" href="#beneficios" aria-label="Cerrar detalle"></a>
+                        <div class="benefit-modal-card">
+                            <span class="benefit-list-logo benefit-list-initials">AD</span>
+                            <strong class="discount-tag">10% OFF</strong>
+                            <h2>Alto Drugstore y Le Bon Break Store</h2>
+                            <p>Ejemplo de modal por hash para mostrar el detalle de un comercio adherido.</p>
+                            <span class="benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> General Roca &middot; @altodrugstoreroca</span></span>
+                        </div>
+                    </article>
+                    <article class="benefit-modal" id="ds-latte" aria-label="Beneficio de Latte Cafetería">
+                        <a class="benefit-modal-backdrop" href="#beneficios" aria-label="Cerrar detalle"></a>
+                        <div class="benefit-modal-card">
+                            <span class="benefit-list-logo benefit-list-initials">LC</span>
+                            <strong class="discount-tag">15% OFF</strong>
+                            <h2>Latte Cafetería</h2>
+                            <p>Detalle reutilizable para comercios del club de beneficios.</p>
+                            <span class="benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="ds-section" id="operaciones" aria-labelledby="operaciones-title">
+                <div class="section-inner">
+                    <div class="ds-heading">
+                        <span class="ds-kicker">Operaciones</span>
+                        <h2 id="operaciones-title">Formularios, filtros y dashboards</h2>
+                        <p>Patrones para las futuras vistas internas de Django: alta de datos, búsquedas filtradas e indicadores de gestión.</p>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-xl-8">
+                            <article class="ds-card h-100">
+                                <span class="ds-component-label">Formulario de asociado</span>
+                                <form action="#" method="get">
+                                    <div class="row g-3">
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label" for="ds-nombre">Nombre y apellido</label>
+                                            <input class="form-control" type="text" id="ds-nombre" name="nombre" placeholder="Ej. Martina Pérez">
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label" for="ds-dni">DNI</label>
+                                            <input class="form-control" type="text" id="ds-dni" name="dni" placeholder="Sin puntos">
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label" for="ds-email">Email</label>
+                                            <input class="form-control" type="email" id="ds-email" name="email" placeholder="nombre@email.com">
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label" for="ds-curso">Curso</label>
+                                            <select class="form-select" id="ds-curso" name="curso">
+                                                <option selected>Seleccionar curso</option>
+                                                <option>1 C.B</option>
+                                                <option>2 C.B</option>
+                                                <option>1 C.S</option>
+                                                <option>2 C.S</option>
+                                                <option>3 C.S</option>
+                                                <option>4 C.S</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label" for="ds-observaciones">Observaciones</label>
+                                            <textarea class="form-control" id="ds-observaciones" name="observaciones" rows="3" placeholder="Alergias, autorizaciones o notas internas"></textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="1" id="ds-autorizacion">
+                                                <label class="form-check-label" for="ds-autorizacion">Autorización familiar registrada</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ds-inline-stack" style="margin-top:16px">
+                                        <button class="cta" type="button">Guardar asociado</button>
+                                        <button class="cta secondary" type="reset">Limpiar</button>
+                                    </div>
+                                </form>
+                            </article>
+                        </div>
+
+                        <div class="col-12 col-xl-4">
+                            <article class="ds-card h-100">
+                                <span class="ds-component-label">Estados de formulario</span>
+                                <label class="form-label" for="ds-valid">Campo validado</label>
+                                <input class="form-control is-valid" type="text" id="ds-valid" value="Datos completos">
+                                <div class="valid-feedback">Listo para guardar.</div>
+
+                                <label class="form-label mt-3" for="ds-invalid">Campo con error</label>
+                                <input class="form-control is-invalid" type="text" id="ds-invalid" value="">
+                                <div class="invalid-feedback">Este dato es obligatorio.</div>
+
+                                <div class="ds-note" style="margin-top:16px">
+                                    <p>Usar validaciones visuales de Bootstrap y mensajes breves. La lógica real queda para Django forms.</p>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <article class="ds-card" style="margin-top:18px">
+                        <span class="ds-component-label">Filtros de búsqueda</span>
+                        <form class="ds-filter-bar" action="#" method="get">
+                            <div>
+                                <label class="form-label" for="ds-buscar">Buscar</label>
+                                <input class="form-control" type="search" id="ds-buscar" name="q" placeholder="Nombre, DNI, comercio o servicio">
+                            </div>
+                            <div>
+                                <label class="form-label" for="ds-categoria">Categoría</label>
+                                <select class="form-select" id="ds-categoria" name="categoria">
+                                    <option selected>Todas</option>
+                                    <option>Servicios</option>
+                                    <option>Beneficios</option>
+                                    <option>Asociados</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label" for="ds-estado">Estado</label>
+                                <select class="form-select" id="ds-estado" name="estado">
+                                    <option selected>Activos</option>
+                                    <option>Pendientes</option>
+                                    <option>Inactivos</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label" for="ds-fecha">Desde</label>
+                                <input class="form-control" type="date" id="ds-fecha" name="desde">
+                            </div>
+                            <button class="cta" type="button">Filtrar</button>
+                        </form>
+                        <div class="ds-chip-row" aria-label="Filtros activos">
+                            <span class="ds-filter-chip"><i data-lucide="search"></i> "cuadernillos"</span>
+                            <span class="ds-filter-chip"><i data-lucide="tag"></i> Servicios</span>
+                            <span class="ds-filter-chip"><i data-lucide="check-circle"></i> Activos</span>
+                            <button class="btn btn-sm btn-outline-secondary" type="button">Limpiar filtros</button>
+                        </div>
+                    </article>
+
+                    <div class="ds-metric-grid" style="margin-top:18px" aria-label="Indicadores principales">
+                        <article class="ds-metric ds-metric-blue"><span>Asociados activos</span><strong>248</strong><p>+18 altas este mes</p></article>
+                        <article class="ds-metric ds-metric-yellow"><span>Cuotas al día</span><strong>82%</strong><p>Meta operativa: 90%</p></article>
+                        <article class="ds-metric ds-metric-green"><span>Beneficios vigentes</span><strong>37</strong><p>6 rubros publicados</p></article>
+                        <article class="ds-metric ds-metric-red"><span>Servicios usados</span><strong>1.284</strong><p>Fotocopias y cuadernillos</p></article>
+                    </div>
+
+                    <article class="ds-card" style="margin-top:18px">
+                        <span class="ds-component-label">Indicadores compactos con tendencia</span>
+                        <div class="ds-compact-metric-grid" aria-label="Indicadores compactos">
+                            <article class="ds-compact-metric ds-compact-blue">
+                                <span class="ds-compact-icon" aria-hidden="true"><i data-lucide="users"></i></span>
+                                <div class="ds-compact-body"><span>Asociados</span><strong>248</strong></div>
+                                <strong class="ds-trend">+7%</strong>
+                                <div class="ds-progress" aria-hidden="true"><span style="--progress: 72%"></span></div>
+                            </article>
+                            <article class="ds-compact-metric ds-compact-yellow">
+                                <span class="ds-compact-icon" aria-hidden="true"><i data-lucide="wallet-cards"></i></span>
+                                <div class="ds-compact-body"><span>Cuotas al día</span><strong>82%</strong></div>
+                                <strong class="ds-trend-muted">estable</strong>
+                                <div class="ds-progress" aria-hidden="true"><span style="--progress: 82%"></span></div>
+                            </article>
+                            <article class="ds-compact-metric ds-compact-green">
+                                <span class="ds-compact-icon" aria-hidden="true"><i data-lucide="badge-percent"></i></span>
+                                <div class="ds-compact-body"><span>Beneficios</span><strong>37</strong></div>
+                                <strong class="ds-trend">+4</strong>
+                                <div class="ds-progress" aria-hidden="true"><span style="--progress: 64%"></span></div>
+                            </article>
+                            <article class="ds-compact-metric ds-compact-red">
+                                <span class="ds-compact-icon" aria-hidden="true"><i data-lucide="activity"></i></span>
+                                <div class="ds-compact-body"><span>Consultas</span><strong>126</strong></div>
+                                <strong class="ds-trend-down">-3%</strong>
+                                <div class="ds-progress" aria-hidden="true"><span style="--progress: 46%"></span></div>
+                            </article>
+                        </div>
+                    </article>
+
+                    <div class="row g-3" style="margin-top:18px">
+                        <div class="col-12 col-xl-8">
+                            <article class="ds-card h-100">
+                                <span class="ds-component-label">Tabla de gestión</span>
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead>
+                                            <tr><th>Registro</th><th>Tipo</th><th>Estado</th><th>Última actividad</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>Fotocopias</td><td>Servicio</td><td><span class="ds-status ds-status-active">Activo</span></td><td>Hoy 10:20</td></tr>
+                                            <tr><td>Bicicleta solidaria</td><td>Servicio</td><td><span class="ds-status ds-status-inactive">Inactivo</span></td><td>15 Jun 2026</td></tr>
+                                            <tr><td>Cuota Martina Pérez</td><td>Cuota</td><td><span class="ds-status ds-status-pending">Pendiente</span></td><td>Hoy 09:05</td></tr>
+                                            <tr><td>Cuota Juan López</td><td>Cuota</td><td><span class="ds-status ds-status-overdue">Vencida</span></td><td>10 Jun 2026</td></tr>
+                                            <tr><td>Cuota Sofía Gómez</td><td>Cuota</td><td><span class="ds-status ds-status-paid">Pagada</span></td><td>Ayer 16:30</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </article>
+                        </div>
+
+                        <div class="col-12 col-xl-4">
+                            <aside class="ds-card h-100">
+                                <span class="ds-component-label">Actividad reciente</span>
+                                <div class="ds-activity-list">
+                                    <div class="ds-activity-item"><span class="ds-activity-icon"><i data-lucide="user-plus"></i></span><div><h3>Alta registrada</h3><p>Se agregó un asociado de 2 C.B.</p></div></div>
+                                    <div class="ds-activity-item"><span class="ds-activity-icon"><i data-lucide="badge-percent"></i></span><div><h3>Beneficio actualizado</h3><p>Latte Cafetería cambió su descuento.</p></div></div>
+                                    <div class="ds-activity-item"><span class="ds-activity-icon"><i data-lucide="printer"></i></span><div><h3>Servicio consultado</h3><p>Cuadernillos recibió nuevas reservas.</p></div></div>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ds-section" id="django" aria-labelledby="django-title">
+                <div class="section-inner">
+                    <div class="ds-heading">
+                        <span class="ds-kicker">Django + Bootstrap</span>
+                        <h2 id="django-title">Partición sugerida</h2>
+                        <p>Mapa para convertir esta guía en templates y componentes reutilizables sin perder la identidad visual actual.</p>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-xl-8">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>base.html</h3><p>Head, fuentes, `uni2-design-system.css`, script de tema, topbar, bloque main, footer y scripts comunes.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>includes/topbar.html</h3><p>Marca, navegación, CTAs y versión responsive.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>includes/footer.html</h3><p>Íconos de contacto, ubicación y texto institucional.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/media_list_item.html</h3><p>Imagen o logo, título, descripción, metadata y etiqueta destacada para listados.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/action_card.html</h3><p>Ícono, título, descripción y link para accesos principales.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/comparison_table.html</h3><p>Tabla para comparar columnas de valores, estados o condiciones.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/filter_bar.html</h3><p>Búsqueda, selects, rango de fecha, chips activos y acción de limpiar.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/metric_card.html</h3><p>Indicadores de dashboard con número, contexto y color semántico.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>forms/entity_form.html</h3><p>Formulario Django renderizado con clases Bootstrap y mensajes de validación.</p></article></div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-xl-4"><pre class="ds-snippet h-100"><code>{% verbatim %}{% extends "base.html" %}
+{% block content %}
+  {% include "sections/hero.html" %}
+  {% include "sections/action_grid.html" %}
+  {% include "sections/feature_strip.html" %}
+{% endblock %}{% endverbatim %}</code></pre></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="soon-modal" id="soon-preview" role="dialog" aria-labelledby="soon-preview-title" aria-modal="true">
+            <a class="soon-backdrop" href="#componentes" aria-label="Cerrar"></a>
+            <article class="soon-card">
+                <a class="soon-close" href="#componentes" aria-label="Cerrar">x</a>
+                <span class="soon-icon" aria-hidden="true"><i data-lucide="clock-3"></i></span>
+                <h2 id="soon-preview-title">Próximamente</h2>
+                <p>Patrón de modal compartido para acciones futuras.</p>
+                <a class="cta" href="#django">Ver partición</a>
+            </article>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ block.super }}
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        if (window.lucide) lucide.createIcons();
+
+        const menuToggle = document.getElementById("ds-menu-toggle");
+        document.querySelectorAll(".ds-page .topbar .nav a, .ds-page .topbar .ds-more-nav a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (menuToggle) menuToggle.checked = false;
+            });
+        });
+
+        const sliders = document.querySelectorAll(".ds-page .js-auto-slider");
+
+        sliders.forEach((slider) => {
+            let paused = false;
+            let resumeTimer = null;
+
+            const getStep = () => {
+                const first = slider.children[0];
+                if (!first) return 280;
+                const gap = parseFloat(getComputedStyle(slider).columnGap || 16);
+                return first.getBoundingClientRect().width + gap;
+            };
+
+            const pauseTemporarily = () => {
+                paused = true;
+                window.clearTimeout(resumeTimer);
+                resumeTimer = window.setTimeout(() => { paused = false; }, 2600);
+            };
+
+            const updateDots = () => {
+                if (!slider.id) return;
+                const dots = document.querySelectorAll(`[data-slider-dots="${slider.id}"] [data-slide-index]`);
+                if (!dots.length) return;
+                const step = getStep();
+                const active = Math.min(dots.length - 1, Math.max(0, Math.round(slider.scrollLeft / step)));
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle("btn-primary", index === active);
+                    dot.classList.toggle("btn-outline-primary", index !== active);
+                    dot.setAttribute("aria-current", index === active ? "true" : "false");
+                });
+            };
+
+            const scrollToIndex = (index) => {
+                slider.scrollTo({ left: getStep() * index, behavior: "smooth" });
+                pauseTemporarily();
+                window.setTimeout(updateDots, 350);
+            };
+
+            const advance = () => {
+                if (paused || slider.scrollWidth <= slider.clientWidth + 4) return;
+                const maxScroll = slider.scrollWidth - slider.clientWidth;
+                if (slider.scrollLeft >= maxScroll - 10) {
+                    slider.scrollTo({ left: 0, behavior: "smooth" });
+                    window.setTimeout(updateDots, 350);
+                    return;
+                }
+                slider.scrollBy({ left: getStep(), behavior: "smooth" });
+                window.setTimeout(updateDots, 350);
+            };
+
+            slider.addEventListener("pointerenter", () => { paused = true; });
+            slider.addEventListener("pointerleave", () => { paused = false; });
+            slider.addEventListener("touchstart", () => { paused = true; }, { passive: true });
+            slider.addEventListener("touchend", () => {
+                window.setTimeout(() => { paused = false; }, 1800);
+            }, { passive: true });
+            slider.addEventListener("scroll", () => window.requestAnimationFrame(updateDots), { passive: true });
+
+            if (slider.id) {
+                document.querySelectorAll(`[data-slider-prev="${slider.id}"]`).forEach((button) => {
+                    button.addEventListener("click", () => {
+                        const step = getStep();
+                        const current = Math.round(slider.scrollLeft / step);
+                        scrollToIndex(Math.max(0, current - 1));
+                    });
+                });
+
+                document.querySelectorAll(`[data-slider-next="${slider.id}"]`).forEach((button) => {
+                    button.addEventListener("click", () => {
+                        const step = getStep();
+                        const current = Math.round(slider.scrollLeft / step);
+                        scrollToIndex(Math.min(slider.children.length - 1, current + 1));
+                    });
+                });
+
+                document.querySelectorAll(`[data-slider-dots="${slider.id}"] [data-slide-index]`).forEach((button) => {
+                    button.addEventListener("click", () => scrollToIndex(Number(button.dataset.slideIndex)));
+                });
+            }
+
+            updateDots();
+            window.setInterval(advance, 3400);
+        });
+
+        document.querySelectorAll(".ds-page [data-href]").forEach((card) => {
+            card.addEventListener("click", (event) => {
+                if (event.target.closest("a")) return;
+                window.location.href = card.dataset.href;
+            });
+        });
+
+        const cycleToggle = document.querySelector(".ds-page .cycle-toggle");
+        if (cycleToggle) {
+            cycleToggle.addEventListener("click", (event) => {
+                const button = event.target.closest(".cycle-toggle-btn");
+                if (!button) return;
+                cycleToggle.querySelectorAll(".cycle-toggle-btn").forEach((item) => {
+                    item.classList.toggle("is-active", item === button);
+                });
+            });
+        }
+    </script>
+{% endblock %}

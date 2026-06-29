@@ -1,4 +1,7 @@
 import pytest
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 from comercios.models import ActividadComercial, Comercio
@@ -23,6 +26,66 @@ def test_url_beneficios_no_se_mantiene(client):
     response = client.get("/beneficios/")
 
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_design_system_requiere_login(client):
+    response = client.get(reverse("web:design-system"))
+
+    assert response.status_code == 302
+    assert response.url.startswith("/usuarios/login/")
+
+
+@pytest.mark.django_db
+def test_design_system_requiere_permiso(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="sin_design_system", password="secreto123")
+    client.force_login(user)
+
+    response = client.get(reverse("web:design-system"))
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_design_system_con_permiso_responde(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="con_design_system", password="secreto123")
+    permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_design_system")
+    user.user_permissions.add(permiso)
+    client.force_login(user)
+
+    response = client.get(reverse("web:design-system"))
+
+    assert response.status_code == 200
+    assert "Sistema visual UNI2" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_design_system_porta_secciones_del_showcase(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="showcase_completo", password="secreto123")
+    permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_design_system")
+    user.user_permissions.add(permiso)
+    client.force_login(user)
+
+    response = client.get(reverse("web:design-system"))
+
+    content = response.content.decode()
+    assert response.status_code == 200
+    assert "Sistema visual UNI2" in content
+    assert "Componentes globales" in content
+    assert "Home" in content
+    assert "Servicios que suman" in content
+    assert "Club de Beneficios" in content
+    assert "Operaciones" in content
+    assert "Django" in content
+    assert "ds-page" in content
+    assert "uni2-navbar" not in content
+    assert "uni2-footer" not in content
+    assert "style2.css" not in content
+    assert "assets/logos/" not in content
+    assert "uni2-theme.js" not in content
 
 
 @pytest.mark.django_db
@@ -147,6 +210,120 @@ def test_home_muestra_publicidades_activas_con_foto_y_links(client):
     assert "publicidades/anillado.webp" in contenido
     assert reverse("web:producto_servicio_detalle", args=[producto.id]) in contenido
     assert reverse("web:comercio_detalle", args=[comercio.id]) in contenido
+
+
+@pytest.mark.django_db
+def test_home_muestra_publicidad_sin_foto_sin_error(client):
+    Publicidad.objects.create(
+        titulo="Bicicleta solidaria",
+        descripcion="Préstamo gratuito de bicicletas.",
+        etiqueta_principal="Programa",
+        etiqueta_secundaria="Gratuito",
+        activa=True,
+        orden=1,
+    )
+
+    response = client.get(reverse("web:home"))
+
+    contenido = response.content.decode()
+    assert response.status_code == 200
+    assert "Bicicleta solidaria" in contenido
+    assert "Préstamo gratuito de bicicletas." in contenido
+
+
+@pytest.mark.django_db
+def test_home_usa_el_mismo_formato_visual_que_el_design_system(client):
+    categoria = CategoriaProductoServicio.objects.create(nombre="Impresiones", descripcion="Servicios")
+    ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Anillado",
+        descripcion="Anillado simple",
+        precio_asociados=600,
+        precio_no_asociados=900,
+    )
+    actividad = ActividadComercial.objects.create(nombre="Librería")
+    Comercio.objects.create(
+        nombre="Librería Sur",
+        direccion="Mitre 123",
+        actividad_comercial=actividad,
+        beneficio_texto="10% en útiles",
+        estado=Comercio.ESTADO_FIRMADO,
+        foto=SimpleUploadedFile("libreria.jpg", b"content", content_type="image/jpeg"),
+    )
+
+    response = client.get(reverse("web:home"))
+
+    content = response.content.decode()
+    assert response.status_code == 200
+    assert "uni2-service-grid" in content
+    assert "benefit-band" in content
+    assert "benefit-mix-card" in content
+    assert 'class="service-grid"' not in content
+
+
+@pytest.mark.django_db
+def test_home_muestra_beneficios_con_fotos_de_cada_rubro(client):
+    foto_1 = SimpleUploadedFile("gastronomia-1.jpg", b"content", content_type="image/jpeg")
+    foto_2 = SimpleUploadedFile("gastronomia-2.jpg", b"content", content_type="image/jpeg")
+    foto_3 = SimpleUploadedFile("gastronomia-3.jpg", b"content", content_type="image/jpeg")
+    foto_4 = SimpleUploadedFile("libreria-1.jpg", b"content", content_type="image/jpeg")
+    foto_5 = SimpleUploadedFile("libreria-2.jpg", b"content", content_type="image/jpeg")
+    foto_6 = SimpleUploadedFile("libreria-3.jpg", b"content", content_type="image/jpeg")
+
+    gastronomia = ActividadComercial.objects.create(nombre="Gastronomía")
+    libreria = ActividadComercial.objects.create(nombre="Librería")
+
+    for orden, foto in enumerate([foto_1, foto_2, foto_3], start=1):
+        Comercio.objects.create(
+            nombre=f"Gastronomía {orden}",
+            actividad_comercial=gastronomia,
+            beneficio_texto="10% off",
+            estado=Comercio.ESTADO_FIRMADO,
+            orden=orden,
+            direccion=f"Calle {orden}",
+            foto=foto,
+        )
+
+    for orden, foto in enumerate([foto_4, foto_5, foto_6], start=1):
+        Comercio.objects.create(
+            nombre=f"Librería {orden}",
+            actividad_comercial=libreria,
+            beneficio_texto="15% off",
+            estado=Comercio.ESTADO_FIRMADO,
+            orden=orden,
+            direccion=f"Avenida {orden}",
+            foto=foto,
+        )
+
+    response = client.get(reverse("web:home"))
+
+    contenido = response.content.decode()
+    assert response.status_code == 200
+    assert "Gastronomía" in contenido
+    assert "Librería" in contenido
+    assert 'alt="Gastronomía 1"' in contenido
+    assert 'alt="Librería 1"' in contenido
+
+
+@pytest.mark.django_db
+def test_home_centra_un_solo_logo_en_beneficios(client):
+    foto = SimpleUploadedFile("gastronomia-unica.jpg", b"content", content_type="image/jpeg")
+    rubro = ActividadComercial.objects.create(nombre="Gastronomía")
+    Comercio.objects.create(
+        nombre="Gastronomía Central",
+        actividad_comercial=rubro,
+        beneficio_texto="10% off",
+        estado=Comercio.ESTADO_FIRMADO,
+        orden=1,
+        direccion="Calle 1",
+        foto=foto,
+    )
+
+    response = client.get(reverse("web:home"))
+
+    contenido = response.content.decode()
+    assert response.status_code == 200
+    assert "logo-dot-main" in contenido
 
 
 @pytest.mark.django_db
@@ -300,13 +477,14 @@ def test_categoria_detalle_404_si_inactiva_o_inexistente(client):
 @pytest.mark.django_db
 def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     actividad = ActividadComercial.objects.create(nombre="Gastronomía")
-    Comercio.objects.create(
+    parrilla = Comercio.objects.create(
         nombre="Parrilla Don Pancho",
         direccion="Mitre 100",
         actividad_comercial=actividad,
         beneficio_texto="10% de descuento",
         estado=Comercio.ESTADO_FIRMADO,
         orden=1,
+        foto=SimpleUploadedFile("parrilla.jpg", b"content", content_type="image/jpeg"),
     )
     Comercio.objects.create(
         nombre="Lo de Carlitos",
@@ -333,9 +511,16 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     assert response.context["actividad_comercial"].nombre == "Gastronomía"
     contenido = response.content.decode()
     assert "Gastronomía" in contenido
+    assert "benefit-page" in contenido
+    assert contenido.count("benefit-list-card") == 2
+    assert contenido.count("benefit-list-logo") >= 2
+    assert "benefit-list-body" in contenido
+    assert "benefit-meta" in contenido
+    assert "discount-tag" in contenido
     assert "Parrilla Don Pancho" in contenido
     assert "10% de descuento" in contenido
     assert "Lo de Carlitos" in contenido
+    assert reverse("web:comercio_detalle", args=[parrilla.pk]) in contenido
     assert "No Visible" not in contenido
 
 

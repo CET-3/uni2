@@ -18,8 +18,10 @@ timestamp: 2026-06-22T00:00:00-03:00
 4.  Lo vincula con `Asociado`.
 5.  Lo agrega al grupo Asociados.
 
+**Creación masiva desde importación:** desde la pantalla `Importar padrón inicial`, el administrador puede ejecutar `Crear usuarios faltantes`. Esta acción crea usuarios para todos los asociados sin usuario vinculado. El `username` inicial y la contraseña inicial son el DNI del asociado. Si ya existe un `User` con ese username y no está vinculado a otro asociado, el sistema lo vincula al asociado en lugar de crear uno nuevo. Si el usuario existente ya pertenece a otro asociado, registra el error y continúa con el resto. La acción informa cuántos usuarios creó, cuántos usuarios existentes vinculó y cuántos asociados ya tenían usuario antes de ejecutarla.
+
 **Reglas relacionadas:** [Usuarios](../reglas/usuarios.md).
 
-**Situaciones especiales:** asociado ya posee usuario, DNI inexistente, username duplicado, email vacío.
+**Situaciones especiales:** asociado ya posee usuario, DNI inexistente, username duplicado vinculado a otro asociado, email vacío, creación masiva con errores parciales.
 
 **Modelos afectados:** User, Asociado.

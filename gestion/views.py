@@ -55,7 +55,7 @@ from .permissions import (
     user_has_any_gestion_permission,
 )
 from .selectors import get_asociados_deudores
-from usuarios.services import create_user_for_asociado
+from usuarios.services import create_missing_users_for_asociados, create_user_for_asociado
 
 
 class GestionPermissionRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -228,7 +228,35 @@ class GestionImportarAsociadosView(GestionPermissionRequiredMixin, TemplateView)
         context["form"] = getattr(self.request, "_import_form", ImportarPadronAsociadosForm())
         context["preview"] = self.request.session.get(PADRON_IMPORT_SESSION_KEY)
         context["result"] = getattr(self.request, "_import_result", None)
+        context["usuarios_faltantes_errores"] = self.request.session.pop(
+            "usuarios_asociados_faltantes_errores",
+            [],
+        )
         return context
+
+
+class GestionCrearUsuariosAsociadosFaltantesView(GestionPermissionRequiredMixin, TemplateView):
+    permission_required = GESTION_IMPORTAR_ASOCIADOS
+
+    def post(self, request, *args, **kwargs):
+        result = create_missing_users_for_asociados()
+        messages.success(
+            request,
+            (
+                f"Usuarios de asociados creados: {result.creados}. "
+                f"Usuarios existentes vinculados: {result.vinculados}. "
+                f"Ya tenían usuario: {result.omitidos}."
+            ),
+        )
+        if result.errores:
+            messages.warning(request, f"No se pudieron crear {len(result.errores)} usuarios de asociados.")
+            request.session["usuarios_asociados_faltantes_errores"] = result.errores
+        else:
+            request.session.pop("usuarios_asociados_faltantes_errores", None)
+        return redirect("gestion:importar_asociados")
+
+    def get(self, request, *args, **kwargs):
+        return redirect("gestion:importar_asociados")
 
 
 class GestionDescargarAsociadosRevisarView(GestionPermissionRequiredMixin, TemplateView):
