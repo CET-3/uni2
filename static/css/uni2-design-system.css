@@ -11,9 +11,9 @@
   --verde: #4ccb4a;
   --verde-dark: #3db83b;
   --bg: #ffffff;
-  --bg-alt: #f0f2f5;
+  --bg-alt: #f7f9fc;
   --text: #1a1a2e;
-  --text-secondary: #6c757d;
+  --text-secondary: #3f485d;
   --border: #e0e0e0;
   --shadow-sm: 0 1px 3px rgba(26, 26, 46, 0.08);
   --shadow-md: 0 4px 12px rgba(26, 26, 46, 0.1);
@@ -980,6 +980,24 @@ body {
   padding: 8px 13px;
 }
 
+.ds-page .discount {
+  align-items: center;
+  margin-top: 14px;
+  min-height: 40px;
+}
+
+.ds-page .exclusive {
+  background-image: var(--grain), linear-gradient(135deg, var(--amarillo-dark) 0 24%, var(--amarillo) 48% 100%);
+  color: #2d2606;
+  font-size: 0.84rem;
+  padding: 6px 10px;
+}
+
+.ds-page .discount-tag {
+  background-image: var(--grain), linear-gradient(135deg, var(--amarillo-dark) 0 24%, var(--amarillo) 48% 100%);
+  color: #2d2606;
+}
+
 .ds-page .ds-heading {
   display: grid;
   gap: 14px;
@@ -1015,6 +1033,13 @@ body {
   display: grid;
   gap: 12px;
   padding: 18px;
+}
+
+.ds-page .ds-note {
+  background: rgba(63, 81, 181, 0.08);
+  border-left: 6px solid var(--azul);
+  border-radius: 12px;
+  padding: 16px;
 }
 
 .ds-page .ds-component-label {
@@ -1053,6 +1078,19 @@ body {
   display: grid;
   gap: 4px;
   padding: 12px;
+}
+
+.ds-page .ds-swatch-body strong {
+  color: var(--texto);
+  font-size: 0.92rem;
+}
+
+.ds-page .ds-swatch-body code {
+  background: transparent;
+  color: var(--suave);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  padding: 0;
 }
 
 .ds-page .ds-preview {
@@ -1276,6 +1314,7 @@ body {
   font-size: clamp(1.6rem, 4vw, 2.4rem);
   font-weight: 950;
   left: 8%;
+  letter-spacing: -0.04em;
   line-height: 0.92;
   position: absolute;
   right: 8%;
@@ -1341,18 +1380,30 @@ body {
 .ds-page .ad-card h3 {
   color: var(--blanco);
   font-size: clamp(2.1rem, 5vw, 4rem);
+  line-height: 0.92;
+  margin-bottom: 0;
   margin-top: 14px;
   max-width: 390px;
 }
 
+.ds-page .ad-card h3,
+.ds-page .ad-card p,
+.ds-page .ad-card .link {
+  position: relative;
+  z-index: 1;
+}
+
 .ds-page .ad-card p {
   color: rgba(255, 255, 255, 0.86);
+  margin-bottom: 0;
+  margin-top: 10px;
   max-width: 420px;
 }
 
 .ds-page .ad-card .link {
   color: var(--amarillo);
   font-weight: 900;
+  margin-top: 1rem;
 }
 
 .ds-page .steps {
@@ -1457,6 +1508,10 @@ body {
   width: min(430px, 100%);
 }
 
+.ds-page .soon-card h2 {
+  font-size: clamp(2.3rem, 9vw, 3.6rem);
+}
+
 .ds-page .ds-soon-preview {
   width: 100%;
 }
@@ -1482,6 +1537,26 @@ body {
 
 .ds-page .soon-modal:target {
   display: grid;
+}
+
+.ds-page .soon-modal .soon-card {
+  padding-inline: clamp(22px, 5vw, 28px);
+  width: min(430px, calc(100vw - 36px));
+}
+
+.ds-page .soon-modal .soon-card h2 {
+  font-size: clamp(2.25rem, 6.5vw, 3rem);
+  line-height: 1.05;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ds-page .soon-modal .soon-card p {
+  margin: 0;
+}
+
+.ds-page .soon-modal .soon-card .cta {
+  width: 100%;
 }
 
 .ds-page .soon-backdrop,
@@ -1519,6 +1594,10 @@ body {
   padding: clamp(22px, 4vw, 34px);
 }
 
+.ds-page .detail-panel h2 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
 .ds-page .price-table-wrap {
   overflow-x: auto;
   width: 100%;
@@ -1535,6 +1614,21 @@ body {
   width: 100%;
 }
 
+.ds-page .price-table-compact {
+  min-width: 0;
+}
+
+.ds-page .booklet-table {
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  min-width: 0;
+}
+
+.ds-page .booklet-table thead th {
+  border-top: 0;
+}
+
 .ds-page .price-table th,
 .ds-page .price-table td {
   border-bottom: 1px solid rgba(63, 81, 181, 0.1);
@@ -1542,14 +1636,36 @@ body {
   text-align: left;
 }
 
-.ds-page .price-table thead th,
-.ds-page .price-table .table-group-row th {
+.ds-page .price-table tr:last-child th,
+.ds-page .price-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.ds-page .price-table thead th {
   background: rgba(63, 81, 181, 0.09);
   color: var(--azul);
   font-size: 0.78rem;
   font-weight: 900;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.ds-page .price-table .table-group-row th {
+  background: rgba(63, 81, 181, 0.1);
+  color: var(--azul);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ds-page .price-table tbody th {
+  color: var(--texto);
+  font-weight: 900;
+}
+
+.ds-page .price-table tbody td {
+  color: var(--texto);
+  font-weight: 800;
 }
 
 .ds-page .product-price-grid,
@@ -1594,6 +1710,16 @@ body {
   width: 58px;
 }
 
+.ds-page .product-price-card h2,
+.ds-page .product-price-card h3 {
+  margin: 0;
+}
+
+.ds-page .product-price-card p {
+  color: var(--suave);
+  margin: 4px 0 0;
+}
+
 .ds-page .price-pill {
   background: var(--surface-muted);
   border-radius: 14px;
@@ -1618,6 +1744,21 @@ body {
   display: none;
 }
 
+.ds-page .cycle-toggle-btn {
+  border: 1px solid var(--linea);
+  background: var(--surface-solid);
+  color: var(--texto);
+  padding: 12px 14px;
+  border-radius: 999px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.ds-page .cycle-toggle-btn:hover {
+  border-color: rgba(63, 81, 181, 0.35);
+  color: var(--azul);
+}
+
 .ds-page .cycle-head {
   background: linear-gradient(135deg, rgba(63, 81, 181, 0.12), rgba(76, 203, 74, 0.10)), var(--surface-muted);
   padding: 18px;
@@ -1629,6 +1770,10 @@ body {
 
 .ds-page .cycle-card--cs .cycle-code {
   background-image: var(--grain), linear-gradient(135deg, var(--verde-dark) 0 24%, var(--verde) 48% 100%);
+}
+
+.ds-page .cycle-head h2 {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
 }
 
 .ds-page .booklet-panel .print-contact {
@@ -1686,6 +1831,12 @@ body {
   width: 100%;
 }
 
+.ds-page .benefit-list-card .discount-tag {
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
 .ds-page .benefit-list-logo {
   background: #fff;
   border: 3px solid var(--blanco);
@@ -1726,6 +1877,10 @@ body {
   gap: 6px 12px;
 }
 
+.ds-page .benefit-meta i {
+  color: var(--azul);
+}
+
 .ds-page .benefit-modal {
   display: none;
   inset: 0;
@@ -1750,6 +1905,22 @@ body {
   position: relative;
   text-align: center;
   width: min(520px, 100%);
+}
+
+.ds-page .benefit-modal-card h2 {
+  font-size: clamp(1.7rem, 5vw, 2.4rem);
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+.ds-page .benefit-modal-card p {
+  color: var(--suave);
+  margin: 0;
+}
+
+.ds-page .benefit-modal-card .discount-tag {
+  margin: 0 auto;
+  font-size: 1rem;
 }
 
 .ds-page .ds-filter-bar {
@@ -1800,9 +1971,21 @@ body {
   color: var(--texto);
   font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 950;
+  line-height: 0.95;
 }
 
-.ds-page .ds-metric span,
+.ds-page .ds-metric span {
+  color: var(--suave);
+  font-size: 0.84rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.ds-page .ds-metric p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 .ds-page .ds-compact-body span {
   color: var(--suave);
   font-size: 0.78rem;
@@ -1992,6 +2175,10 @@ body {
   justify-content: center;
 }
 
+.ds-page .footer-location i {
+  color: var(--rojo);
+}
+
 .ds-page .footer-copy {
   color: var(--suave);
   font-size: 0.94rem;
@@ -2117,11 +2304,30 @@ body {
   }
 
   .ds-page .benefit-links {
+    gap: 10px;
     grid-auto-columns: calc((100% - 10px) / 2);
     grid-auto-flow: column;
     grid-template-columns: none;
     overflow-x: auto;
+    padding: 2px 2px 14px;
     scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .ds-page .benefit-mix-card {
+    border-radius: 14px;
+    scroll-snap-align: start;
+  }
+
+  .ds-page .benefit-rubric {
+    bottom: 7%;
+    font-size: clamp(0.9rem, 4.4vw, 1.18rem);
+    left: 7%;
+    right: 7%;
+  }
+
+  .ds-page .logo-dot {
+    border-width: 3px;
   }
 
   .ds-page .steps,
@@ -2131,6 +2337,28 @@ body {
   .ds-page .ds-compact-metric-grid,
   .ds-page .ds-metric-grid {
     grid-template-columns: 1fr;
+  }
+
+  .ds-page .cycle-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    grid-column: 1 / -1;
+  }
+
+  .ds-page .cycle-card {
+    display: none;
+  }
+
+  .ds-page .cycle-card--cb,
+  .ds-page .cycle-card--cs {
+    display: block;
+  }
+
+  .ds-page .cycle-card--cb[style],
+  .ds-page .cycle-card--cs[style] {
+    display: block;
   }
 
   .ds-page .print-contact {
