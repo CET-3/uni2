@@ -40,7 +40,7 @@ Cuando el catálogo muestra un componente que también existe en producción, de
 
 Las clases genéricas sin prefijo, como `hero`, `cta`, `step`, `info-box`, `ad-card`, `benefit-card` o `section-inner`, no deben usarse en pantallas productivas nuevas. Si el catálogo conserva nombres genéricos para ejemplos internos, esos estilos deben estar acotados por `.ds-page`.
 
-Algunos patrones históricos del catálogo, como la lista de beneficios con logo circular, metadata y descuento, pueden compartirse con pantallas productivas siempre que se les expongan selectores globales equivalentes. En esos casos la vista interna sigue siendo la referencia visual, pero la implementación real no depende de `.ds-page` para renderizar correctamente.
+Algunos patrones históricos del catálogo, como la lista de beneficios con logo circular, metadata y descuento en un único badge visible, pueden compartirse con pantallas productivas siempre que se les expongan selectores globales equivalentes. En esos casos la vista interna sigue siendo la referencia visual, pero la implementación real no depende de `.ds-page` para renderizar correctamente. El listado compartido conserva una respuesta de hover/foco consistente: borde más marcado, elevación leve y sombra reforzada para indicar que cada fila es clickeable.
 
 Ejemplos de nombres esperados:
 
