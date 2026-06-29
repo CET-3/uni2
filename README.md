@@ -27,6 +27,18 @@ uv run python manage.py carga_inicial
 uv run python manage.py runserver
 ```
 
+Para probar desde un teléfono conectado a la misma red Wi-Fi que la computadora:
+
+```bash
+uv run python manage.py runserver 0.0.0.0:8000
+```
+
+Después abrir desde el teléfono:
+
+```text
+http://192.168.18.138:8000
+```
+
 Usuarios iniciales:
 
 - Gestión/admin técnico: `admin` / `admin1234`
@@ -35,6 +47,8 @@ Usuarios iniciales:
 - Comercio de prueba: `comercio` / `comercio1234`
 
 La app corre en http://127.0.0.1:8000
+
+También queda habilitada para desarrollo local desde `http://192.168.18.138:8000`.
 
 ## Tests
 
