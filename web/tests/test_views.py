@@ -79,6 +79,9 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "Club de Beneficios" in content
     assert "Operaciones" in content
     assert "Django" in content
+    assert "ds-page" in content
+    assert "uni2-navbar" not in content
+    assert "uni2-footer" not in content
     assert "style2.css" not in content
     assert "assets/logos/" not in content
 
