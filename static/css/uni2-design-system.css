@@ -1636,12 +1636,28 @@ body {
 
 .benefit-intro h2 {
   color: var(--texto);
-  font-size: clamp(2.4rem, 5vw, 4.5rem);
-  margin-top: 18px;
+  font-size: clamp(2.35rem, 6vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0;
 }
 
 .benefit-links {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 18px;
+  min-width: 0;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.benefit-links::-webkit-scrollbar {
+  display: none;
 }
 
 .uni2-benefit-card {
@@ -1781,8 +1797,11 @@ body {
   box-shadow: 0 22px 52px rgba(23, 32, 59, 0.14);
   display: grid;
   min-height: 0;
+  min-width: 0;
+  flex: 0 0 clamp(260px, 24vw, 320px);
   overflow: hidden;
   position: relative;
+  scroll-snap-align: start;
 }
 
 .logo-cloud {
@@ -1890,6 +1909,39 @@ body {
   font-weight: 950;
   line-height: 0.95;
   text-align: center;
+}
+
+.uni2-hours-mobile {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.uni2-hours-day {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+}
+
+.uni2-hours-day h4 {
+  color: var(--amarillo);
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.uni2-hours-day .uni2-hours-chip {
+  margin: 0;
+}
+
+.uni2-hours-chip-muted {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .uni2-carousel,
@@ -3181,13 +3233,15 @@ body {
 
   .benefit-links {
     gap: 10px;
-    grid-auto-columns: calc((100% - 10px) / 2);
-    grid-auto-flow: column;
-    grid-template-columns: none;
+    width: 100%;
     overflow-x: auto;
     padding: 2px 2px 14px;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+  }
+
+  .benefit-mix-card {
+    flex-basis: clamp(230px, 72vw, 280px);
   }
 
   .uni2-benefit-logo {
