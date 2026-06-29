@@ -71,3 +71,7 @@ El `GestionPermissionRequiredMixin` usa `UserPassesTestMixin` con `raise_excepti
 ## USUARIO-016
 
 La especificación del proyecto se sirve en `/especificacion/` y requiere el permiso `gestion.ver_especificacion`. Usa un mixin propio `VerEspecificacionRequiredMixin` que verifica ese permiso. En la carga inicial, el permiso se asigna al grupo `Atención de mutual` y a `Administradores` (estos reciben todos los permisos de gestión).
+
+## USUARIO-017
+
+El design system del proyecto se sirve en `/design-system/` y requiere el permiso `gestion.ver_design_system`. El enlace "Design system" aparece en el menú de usuario solo cuando la persona tiene ese permiso. Este permiso está separado de `gestion.ver_especificacion`: una cosa es leer la especificación funcional y otra consultar la referencia visual para construir pantallas.
