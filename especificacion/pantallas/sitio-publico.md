@@ -17,7 +17,7 @@ timestamp: 2026-06-24T00:00:00-03:00
   - Footer: enlaces de contacto, ubicación y texto institucional. En mobile se apila en una columna compacta, sin reservar espacio para barras flotantes que no existen en la implementación Django.
 - Productos y servicios.
   - Categoría detalle (`/servicios/<pk>/`): muestra nombre, ícono y descripción de la categoría, grilla de productos/servicios activos con precios diferenciados para asociados y no asociados, y texto CTA configurable. Incluye breadcrumb (Inicio > Productos y servicios > {categoría}).
-  - Actividad comercial detalle (`/actividades-comerciales/<pk>/`): breadcrumb Inicio > Comercios > {actividad comercial}, nombre de la actividad y listado de comercios firmados en formato de lista de beneficios compartida con el design system. Cada card muestra logo o foto circular, nombre, beneficio, dirección, teléfono y presencia web cuando existen. Botón "← Todos los comercios".
+  - Actividad comercial detalle (`/actividades-comerciales/<pk>/`): nombre de la actividad y listado de comercios firmados en formato de lista de beneficios compartida con el design system. Cada card muestra logo o foto circular, nombre, beneficio en un badge único, dirección, teléfono y presencia web cuando existen. No muestra breadcrumb, botón de retorno ni rótulo intermedio en el encabezado.
 - Comercios: listado público vertical de comercios con estado `Firmado`, ordenado por `orden`.
   - Comercio detalle (`/comercios/<pk>/`): muestra nombre, actividad comercial, dirección, beneficio, teléfono, email y presencia web si el comercio está `Firmado`. Si el comercio no está firmado, muestra mensaje "Este comercio estará disponible próximamente" con enlace "Ver comercios adheridos".
 - Login.
