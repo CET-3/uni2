@@ -61,6 +61,29 @@ def test_design_system_con_permiso_responde(client):
 
 
 @pytest.mark.django_db
+def test_design_system_porta_secciones_del_showcase(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="showcase_completo", password="secreto123")
+    permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_design_system")
+    user.user_permissions.add(permiso)
+    client.force_login(user)
+
+    response = client.get(reverse("web:design-system"))
+
+    content = response.content.decode()
+    assert response.status_code == 200
+    assert "Sistema visual UNI2" in content
+    assert "Componentes globales" in content
+    assert "Home" in content
+    assert "Servicios que suman" in content
+    assert "Club de Beneficios" in content
+    assert "Operaciones" in content
+    assert "Django" in content
+    assert "style2.css" not in content
+    assert "assets/logos/" not in content
+
+
+@pytest.mark.django_db
 def test_productos_servicios_publicos_muestran_activos_ordenados_y_cta_linkeable(client):
     categoria = CategoriaProductoServicio.objects.create(
         nombre="Impresiones",
