@@ -6,7 +6,7 @@ from django.core.management import call_command
 from asociados.models import Asociado
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
-from gestion.permissions import GESTION_COBRAR_CUOTAS, GESTION_IMPORTAR_ASOCIADOS
+from gestion.permissions import GESTION_COBRAR_CUOTAS, GESTION_IMPORTAR_ASOCIADOS, GESTION_VER_DESIGN_SYSTEM
 
 
 SERVICIOS_VERCEL = {"Fotocopias", "Uniformes", "Bicicleta solidaria", "Cuadernillos y anillado"}
@@ -29,6 +29,8 @@ def test_carga_inicial_crea_usuarios_de_prueba():
     assert atencion_user.groups.filter(name="Atención de mutual").exists()
     assert atencion_user.groups.filter(name="Asociados").exists()
     assert atencion_user.has_perm(GESTION_COBRAR_CUOTAS)
+    assert atencion_user.has_perm(GESTION_VER_DESIGN_SYSTEM)
+    assert admin.has_perm(GESTION_VER_DESIGN_SYSTEM)
     assert not atencion_user.has_perm(GESTION_IMPORTAR_ASOCIADOS)
     assert asociado_user.groups.filter(name="Asociados").exists()
     assert comercio_user.groups.filter(name="Comercios").exists()

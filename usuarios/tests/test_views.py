@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from asociados.services import create_asociado
 from comercios.models import ActividadComercial, Comercio
-from gestion.permissions import GESTION_COBRAR_CUOTAS
+from gestion.permissions import GESTION_COBRAR_CUOTAS, GESTION_VER_DESIGN_SYSTEM
 from usuarios.services import COMERCIO_GROUP
 
 
@@ -203,3 +203,34 @@ def test_navbar_muestra_cambiar_panel_si_hay_mas_de_una_experiencia(client):
     assert "Mi panel" in content
     assert "Panel de gestión" in content
     assert "Cambiar panel" not in content
+
+
+@pytest.mark.django_db
+def test_navbar_muestra_design_system_si_tiene_permiso(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="doc_visual", password="secreto123")
+    permiso = Permission.objects.get(
+        content_type__app_label="gestion",
+        codename=GESTION_VER_DESIGN_SYSTEM.split(".", 1)[1],
+    )
+    user.user_permissions.add(permiso)
+
+    client.force_login(user)
+    response = client.get(reverse("web:home"))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Design system" in content
+    assert reverse("web:design-system") in content
+
+
+@pytest.mark.django_db
+def test_navbar_no_muestra_design_system_sin_permiso(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="sin_doc_visual", password="secreto123")
+
+    client.force_login(user)
+    response = client.get(reverse("web:home"))
+
+    assert response.status_code == 200
+    assert "Design system" not in response.content.decode()
