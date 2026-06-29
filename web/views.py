@@ -107,4 +107,5 @@ class DesignSystemView(VerDesignSystemRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["show_site_chrome"] = False
+        context["load_theme_script"] = False
         return context

@@ -1,7 +1,5 @@
 /* uni2-design-system.css — Design System Unificado Uni2 + PAGINA-WEB */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 :root {
   /* Paleta PAGINA-WEB (réplica exacta de style2.css) */
   --primary: #3f51b5;
@@ -22,10 +20,10 @@
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 20px;
-  --topbar-bg: #1a1a2e;
-  --topbar-text: rgba(255, 255, 255, 0.85);
+  --topbar-bg: rgba(255, 255, 255, 0.82);
+  --topbar-text: #34405f;
   --nav-bg: #ffffff;
-  --nav-link: #555;
+  --nav-link: #34405f;
   --nav-link-hover: #3f51b5;
   --footer-bg: #1a1a2e;
   --footer-text: rgba(255, 255, 255, 0.75);
@@ -86,9 +84,12 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  font-family: "Inter", Arial, sans-serif;
+  line-height: 1.55;
+  min-height: 100vh;
+  background: var(--fondo);
+  color: var(--texto);
+  transition: background-color 280ms ease, color 280ms ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -753,7 +754,6 @@ body {
 .ds-page {
   background: var(--fondo);
   color: var(--texto);
-  margin-top: -1.5rem;
   min-height: 100vh;
   overflow: hidden;
   padding-top: 84px;
@@ -769,19 +769,39 @@ body {
 .ds-page h2,
 .ds-page h3 {
   color: var(--texto);
+  letter-spacing: -0.04em;
   line-height: 1;
+}
+
+.ds-page h1 {
+  max-width: 760px;
+  margin-top: 18px;
+  font-size: clamp(3.2rem, 8vw, 6.6rem);
+  font-weight: 900;
+}
+
+.ds-page h2 {
+  font-size: clamp(2.35rem, 6vw, 4.8rem);
+  font-weight: 900;
+}
+
+.ds-page h3 {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-weight: 850;
+  line-height: 1.08;
 }
 
 .ds-page p {
   color: var(--suave);
   font-weight: 500;
+  line-height: 1.55;
 }
 
 .ds-page .topbar {
   align-items: center;
   backdrop-filter: blur(14px);
-  background: var(--topbar-bg);
-  border-bottom: 1px solid var(--linea);
+  background: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid rgba(63, 81, 181, 0.12);
   display: flex;
   gap: 20px;
   justify-content: space-between;
@@ -811,6 +831,7 @@ body {
 .ds-page .brand span {
   color: var(--texto);
   font-size: 1.28rem;
+  letter-spacing: -0.02em;
 }
 
 .ds-page .menu-toggle {
@@ -863,7 +884,7 @@ body {
 .ds-page .nav a,
 .ds-page .ds-more-nav a {
   border-radius: 999px;
-  color: var(--nav-link);
+  color: #34405f;
   font-size: 0.92rem;
   font-weight: 800;
   min-height: 42px;

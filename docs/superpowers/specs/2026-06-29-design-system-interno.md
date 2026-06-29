@@ -65,6 +65,7 @@ El template destino conserva el contenido visual completo, pero adapta lo necesa
 - Cambia enlaces a páginas estáticas `.html` por URLs Django existentes o por anclas internas cuando sean solo referencia.
 - Evita que imágenes inexistentes de `assets/logos/...` rompan la experiencia; si no existen en este repo, se reemplazan por placeholders visuales o se documenta que son ejemplos.
 - Mantiene Bootstrap 5 como base.
+- La vista interna se renderiza sin el chrome público del sitio y en tema claro fijo, para conservar la cabecera blanca y la tipografía del original.
 
 ## Permisos y grupos iniciales
 
