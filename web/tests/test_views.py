@@ -150,6 +150,25 @@ def test_home_muestra_publicidades_activas_con_foto_y_links(client):
 
 
 @pytest.mark.django_db
+def test_home_muestra_publicidad_sin_foto_sin_error(client):
+    Publicidad.objects.create(
+        titulo="Bicicleta solidaria",
+        descripcion="Préstamo gratuito de bicicletas.",
+        etiqueta_principal="Programa",
+        etiqueta_secundaria="Gratuito",
+        activa=True,
+        orden=1,
+    )
+
+    response = client.get(reverse("web:home"))
+
+    contenido = response.content.decode()
+    assert response.status_code == 200
+    assert "Bicicleta solidaria" in contenido
+    assert "Préstamo gratuito de bicicletas." in contenido
+
+
+@pytest.mark.django_db
 def test_detalle_producto_servicio_publico_muestra_producto_activo(client):
     categoria = CategoriaProductoServicio.objects.create(nombre="Impresiones", descripcion="Servicios")
     producto = ProductoServicio.objects.create(

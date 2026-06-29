@@ -166,6 +166,8 @@ def test_dashboard_separa_importaciones_iniciales(client):
     content = response.content.decode()
     assert "Puesta en marcha" in content
     assert "Importar padrón inicial" in content
+    assert "Crear usuarios faltantes" in content
+    assert reverse("gestion:crear_usuarios_asociados_faltantes") in content
     assert "Importar cuotas históricas" in content
 
 
@@ -355,12 +357,33 @@ def test_importar_asociados_confirma_desde_sesion(client):
     assert asociado.direccion == "Calle 1"
     assert asociado.fecha_alta == timezone.localdate()
     assert asociado.fecha_inicio_cobro == date(2026, 3, 1)
+    assert asociado.usuario is None
+    assert not Asociado.objects.filter(dni="52536191").exists()
+    assert "1 creados" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_crear_usuarios_faltantes_asociados_desde_importacion(client):
+    staff = crear_usuario_gestion("staff_usuarios_faltantes", permisos=[GESTION_IMPORTAR_ASOCIADOS])
+    asociado = Asociado.objects.create(
+        nombre="Lena",
+        apellido="Leyes",
+        dni="52328996",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-03-01",
+        fecha_inicio_cobro="2026-03-01",
+    )
+
+    client.force_login(staff)
+    response = client.post(reverse("gestion:crear_usuarios_asociados_faltantes"), follow=True)
+
+    asociado.refresh_from_db()
+    assert response.status_code == 200
     assert asociado.usuario is not None
     assert asociado.usuario.username == "52328996"
     assert asociado.usuario.check_password("52328996")
     assert Group.objects.get(name=ASOCIADO_GROUP) in asociado.usuario.groups.all()
-    assert not Asociado.objects.filter(dni="52536191").exists()
-    assert "1 creados" in response.content.decode()
+    assert "Usuarios de asociados creados: 1" in response.content.decode()
 
 
 @pytest.mark.django_db
