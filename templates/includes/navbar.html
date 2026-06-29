@@ -1,61 +1,110 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg uni2-navbar">
-    <div class="container">
+    <div class="uni2-navbar-inner">
         <a class="navbar-brand" href="{% url 'web:home' %}">
             <img src="{% static 'img/LOJO_UNI2.png' %}" alt="Uni2">
+            <span>UNI2</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUni2" aria-controls="navbarUni2" aria-expanded="false">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler uni2-menu-button" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUni2" aria-controls="navbarUni2" aria-expanded="false" aria-label="Abrir menú">
+            <span aria-hidden="true"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarUni2">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav uni2-navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="{% url 'web:productos_servicios' %}">Productos y servicios</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'web:comercios' %}">Comercios</a></li>
+                {% if user.is_authenticated %}
+                    {% if cantidad_experiencias > 1 %}
+                        {% if tiene_perfil_asociado %}
+                            <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'asociados:dashboard' %}">Mi panel</a></li>
+                        {% endif %}
+                        {% if tiene_gestion %}
+                            <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'gestion:dashboard' %}">Panel de gestión</a></li>
+                        {% endif %}
+                        {% if tiene_perfil_comercio %}
+                            <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'comercios:dashboard' %}">Mi comercio</a></li>
+                        {% endif %}
+                    {% elif tiene_gestion %}
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'gestion:dashboard' %}">Panel de gestión</a></li>
+                    {% elif tiene_perfil_asociado %}
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'asociados:dashboard' %}">Mi panel</a></li>
+                    {% elif tiene_perfil_comercio %}
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'comercios:dashboard' %}">Mi comercio</a></li>
+                    {% endif %}
+                    {% if es_staff %}
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'admin:index' %}">Admin técnico</a></li>
+                    {% endif %}
+                    {% if perms.gestion.ver_especificacion %}
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'especificacion:indice' %}">Especificación</a></li>
+                    {% endif %}
+                    {% if perms.gestion.ver_design_system %}
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:design-system' %}">Design system</a></li>
+                    {% endif %}
+                    <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:inicio' %}">Sitio público</a></li>
+                    <li class="nav-item d-lg-none">
+                        <form method="post" action="{% url 'usuarios:logout' %}">
+                            {% csrf_token %}
+                            <button class="nav-link uni2-mobile-nav-button" type="submit">Salir</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'usuarios:login' %}">Ingresar</a></li>
+                {% endif %}
             </ul>
-            <div class="d-flex align-items-center gap-2 flex-wrap">
+            <div class="d-none d-lg-flex align-items-center gap-2 flex-wrap">
                 {% if user.is_authenticated %}
                     <div class="dropdown">
-                        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-outline-primary dropdown-toggle uni2-user-menu-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ nombre_usuario }}
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            {% if cantidad_experiencias > 1 %}
-                                {% if tiene_perfil_asociado %}
-                                    <li><a class="dropdown-item" href="{% url 'asociados:dashboard' %}">Mi panel</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end uni2-user-menu">
+                            <li class="uni2-user-menu-section">
+                                <span class="uni2-user-menu-label">Paneles</span>
+                                {% if cantidad_experiencias > 1 %}
+                                    {% if tiene_perfil_asociado %}
+                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'asociados:dashboard' %}"><i class="bi bi-person-badge" aria-hidden="true"></i><span>Mi panel</span></a>
+                                    {% endif %}
+                                    {% if tiene_gestion %}
+                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'gestion:dashboard' %}"><i class="bi bi-speedometer2" aria-hidden="true"></i><span>Panel de gestión</span></a>
+                                    {% endif %}
+                                    {% if tiene_perfil_comercio %}
+                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'comercios:dashboard' %}"><i class="bi bi-shop" aria-hidden="true"></i><span>Mi comercio</span></a>
+                                    {% endif %}
+                                {% elif tiene_gestion %}
+                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'gestion:dashboard' %}"><i class="bi bi-speedometer2" aria-hidden="true"></i><span>Panel de gestión</span></a>
+                                {% elif tiene_perfil_asociado %}
+                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'asociados:dashboard' %}"><i class="bi bi-person-badge" aria-hidden="true"></i><span>Mi panel</span></a>
+                                {% elif tiene_perfil_comercio %}
+                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'comercios:dashboard' %}"><i class="bi bi-shop" aria-hidden="true"></i><span>Mi comercio</span></a>
                                 {% endif %}
-                                {% if tiene_gestion %}
-                                    <li><a class="dropdown-item" href="{% url 'gestion:dashboard' %}">Panel de gestión</a></li>
-                                {% endif %}
-                                {% if tiene_perfil_comercio %}
-                                    <li><a class="dropdown-item" href="{% url 'comercios:dashboard' %}">Mi comercio</a></li>
-                                {% endif %}
-                            {% elif tiene_gestion %}
-                                <li><a class="dropdown-item" href="{% url 'gestion:dashboard' %}">Panel de gestión</a></li>
-                            {% elif tiene_perfil_asociado %}
-                                <li><a class="dropdown-item" href="{% url 'asociados:dashboard' %}">Mi panel</a></li>
-                            {% elif tiene_perfil_comercio %}
-                                <li><a class="dropdown-item" href="{% url 'comercios:dashboard' %}">Mi comercio</a></li>
-                            {% endif %}
-                            {% if es_staff %}
-                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin técnico</a></li>
-                            {% endif %}
-                            {% if perms.gestion.ver_especificacion %}
-                                <li><a class="dropdown-item" href="{% url 'especificacion:indice' %}">Especificación</a></li>
-                            {% endif %}
-                            {% if perms.gestion.ver_design_system %}
-                                <li><a class="dropdown-item" href="{% url 'web:design-system' %}">Design system</a></li>
+                            </li>
+                            {% if es_staff or perms.gestion.ver_especificacion or perms.gestion.ver_design_system %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="uni2-user-menu-section">
+                                    <span class="uni2-user-menu-label">Herramientas</span>
+                                    {% if es_staff %}
+                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'admin:index' %}"><i class="bi bi-tools" aria-hidden="true"></i><span>Admin técnico</span></a>
+                                    {% endif %}
+                                    {% if perms.gestion.ver_especificacion %}
+                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'especificacion:indice' %}"><i class="bi bi-file-earmark-text" aria-hidden="true"></i><span>Especificación</span></a>
+                                    {% endif %}
+                                    {% if perms.gestion.ver_design_system %}
+                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:design-system' %}"><i class="bi bi-palette" aria-hidden="true"></i><span>Design system</span></a>
+                                    {% endif %}
+                                </li>
                             {% endif %}
                             <li><hr class="dropdown-divider"></li>
-                            <li>
+                            <li class="uni2-user-menu-section">
+                                <span class="uni2-user-menu-label">Cuenta</span>
+                                <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:inicio' %}"><i class="bi bi-globe" aria-hidden="true"></i><span>Sitio público</span></a>
                                 <form method="post" action="{% url 'usuarios:logout' %}">
                                     {% csrf_token %}
-                                    <button class="dropdown-item" type="submit">Salir</button>
+                                    <button class="dropdown-item uni2-user-menu-link uni2-user-menu-logout" type="submit"><i class="bi bi-box-arrow-right" aria-hidden="true"></i><span>Salir</span></button>
                                 </form>
                             </li>
                         </ul>
                     </div>
                 {% else %}
-                    <a class="btn btn-primary btn-sm" href="{% url 'usuarios:login' %}">Ingresar</a>
+                    <a class="btn btn-primary uni2-login-button" href="{% url 'usuarios:login' %}">Ingresar</a>
                 {% endif %}
             </div>
         </div>
