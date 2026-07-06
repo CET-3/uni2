@@ -1472,7 +1472,6 @@ html {
 
 .uni2-service-grid,
 .uni2-steps,
-.service-grid,
 .uni2-benefit-links,
 .steps,
 .uni2-metric-grid {
@@ -1481,10 +1480,6 @@ html {
 }
 
 .uni2-service-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.service-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
@@ -1504,14 +1499,6 @@ html {
   padding: 26px 24px;
   position: relative;
   transition: transform 180ms ease, box-shadow 180ms ease;
-}
-
-.service-card,
-.step,
-.info-box {
-  background: var(--surface-solid);
-  border: 1px solid var(--linea);
-  box-shadow: var(--sombra);
 }
 
 .uni2-step-card,
@@ -1587,32 +1574,11 @@ html {
   line-height: 1;
 }
 
-.service-icon {
-  background-blend-mode: soft-light, normal;
-  background-image: var(--grain), linear-gradient(135deg, var(--card-dark) 0 24%, var(--card-color) 48% 100%);
-  border-radius: 50%;
-  color: var(--card-text, var(--texto));
-  height: 64px;
-  width: 64px;
-}
-
-.service-icon svg {
-  height: 30px;
-  stroke-width: 2.2;
-  width: 30px;
-}
-
 .uni2-service-card-blue { --card-color: var(--azul); --card-dark: var(--azul-dark); }
 .uni2-service-card-yellow { --card-color: var(--amarillo); --card-dark: var(--amarillo-dark); }
 .uni2-service-card-green { --card-color: var(--verde); --card-dark: var(--verde-dark); }
 .uni2-service-card-red { --card-color: var(--rojo); --card-dark: var(--rojo-dark); }
 .uni2-service-card-purple { --card-color: var(--rojo); --card-dark: var(--rojo-dark); }
-
-.service-card-blue { --card-color: var(--azul); --card-dark: var(--azul-dark); }
-.service-card-yellow { --card-color: var(--amarillo); --card-dark: var(--amarillo-dark); }
-.service-card-green { --card-color: var(--verde); --card-dark: var(--verde-dark); }
-.service-card-red { --card-color: var(--rojo); --card-dark: var(--rojo-dark); }
-.service-card-purple { --card-color: var(--rojo); --card-dark: var(--rojo-dark); }
 
 
 .uni2-benefit-band {
@@ -3054,7 +3020,6 @@ html {
 
 @media (max-width: 1080px) {
   .uni2-service-grid,
-  .service-grid,
   .uni2-benefit-links,
   .uni2-steps,
   .steps {
@@ -3182,18 +3147,7 @@ html {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .service-grid {
-    gap: 10px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .uni2-service-card {
-    gap: 14px;
-    min-height: 235px;
-    padding: 16px 14px;
-  }
-
-  .service-card {
     gap: 14px;
     min-height: 235px;
     padding: 16px 14px;
@@ -3203,12 +3157,6 @@ html {
     height: 50px;
     width: 50px;
   }
-
-  .service-icon {
-    height: 50px;
-    width: 50px;
-  }
-
 
   .uni2-benefit-links {
     gap: 10px;
