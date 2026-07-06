@@ -1465,14 +1465,6 @@ html {
   text-transform: uppercase;
 }
 
-.uni2-section-copy {
-  color: var(--suave);
-  font-size: 0.98rem;
-  font-weight: 500;
-  line-height: 1.45;
-  margin: 10px 0 0;
-  max-width: 58ch;
-}
 
 #como-asociarse {
   scroll-margin-top: 92px;
@@ -1622,12 +1614,6 @@ html {
 .service-card-red { --card-color: var(--rojo); --card-dark: var(--rojo-dark); }
 .service-card-purple { --card-color: var(--rojo); --card-dark: var(--rojo-dark); }
 
-.uni2-benefit-grid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  margin-top: 1.5rem;
-}
 
 .benefit-band {
   background: transparent;
@@ -1657,134 +1643,21 @@ html {
   padding-bottom: 0;
 }
 
-.uni2-benefit-card {
-  align-items: center;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(235, 240, 255, 0.94)),
-    linear-gradient(135deg, var(--accent-color, #4361ee), rgba(255, 255, 255, 0) 72%);
-  border: 1px solid rgba(67, 97, 238, 0.12);
-  border-radius: 1rem;
-  color: inherit;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: 160px;
-  overflow: hidden;
-  padding: 1.25rem 0.75rem 0.75rem;
-  position: relative;
-  text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
 
-[data-theme="dark"] .uni2-benefit-card {
-  background: linear-gradient(135deg, var(--bg-alt), rgba(22, 33, 62, 0.92));
-}
 
-[data-theme="dark"] .uni2-benefit-card::before {
-  opacity: 0.15;
-}
 
-[data-theme="dark"] .uni2-benefit-logo {
-  background: var(--bg-alt);
-  border-color: var(--border);
-}
 
-[data-theme="dark"] .uni2-benefit-logo span {
-  color: var(--text);
-}
 
-.uni2-benefit-card::before {
-  background: radial-gradient(ellipse at 50% 0%, var(--accent-color, #4361ee) 0%, transparent 70%);
-  content: "";
-  inset: 0;
-  opacity: 0.14;
-  pointer-events: none;
-  position: absolute;
-}
 
-.uni2-benefit-card:hover {
-  box-shadow: 0 14px 28px rgba(47, 63, 146, 0.14);
-  color: inherit;
-  transform: translateY(-4px);
-}
 
-.uni2-benefit-card-0 { --accent-color: #4361ee; }
-.uni2-benefit-card-1 { --accent-color: #f72585; }
-.uni2-benefit-card-2 { --accent-color: #06d6a0; }
-.uni2-benefit-card-3 { --accent-color: #ffb703; }
-.uni2-benefit-card-4 { --accent-color: #e36414; }
-.uni2-benefit-card-5 { --accent-color: #7209b7; }
 
-.uni2-benefit-logo-cloud {
-  align-items: center;
-  display: flex;
-  height: 90px;
-  justify-content: center;
-  margin-bottom: 0.75rem;
-  position: relative;
-  width: 100%;
-}
 
-.uni2-benefit-logo {
-  align-items: center;
-  background: var(--bs-light, #f8f9fa);
-  border: 3px solid #ffffff;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  display: grid;
-  height: 64px;
-  overflow: hidden;
-  place-items: center;
-  position: absolute;
-  transition: transform 0.2s ease;
-  width: 64px;
-}
 
-.uni2-benefit-logo img {
-  display: block;
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
 
-.uni2-benefit-logo span {
-  color: var(--accent-color, var(--azul));
-  font-size: 0.78rem;
-  font-weight: 950;
-  line-height: 0.95;
-  text-align: center;
-}
 
-.uni2-benefit-logo-left {
-  height: 56px;
-  left: 5%;
-  width: 56px;
-  z-index: 1;
-}
 
-.uni2-benefit-logo-main {
-  height: 72px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 72px;
-  z-index: 2;
-}
 
-.uni2-benefit-logo-right {
-  height: 56px;
-  right: 5%;
-  width: 56px;
-  z-index: 1;
-}
 
-.uni2-benefit-rubric {
-  color: var(--uni2-dark);
-  font-size: 0.94rem;
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  text-align: center;
-}
 
 .benefit-mix-card {
   aspect-ratio: 1 / 1;
@@ -3336,10 +3209,6 @@ html {
     width: 50px;
   }
 
-  .uni2-benefit-grid {
-    gap: 1rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .benefit-links {
     gap: 10px;
@@ -3369,15 +3238,7 @@ html {
     padding: 6px 9px;
   }
 
-  .uni2-benefit-logo {
-    height: 48px;
-    width: 48px;
-  }
 
-  .uni2-benefit-logo-main {
-    height: 56px;
-    width: 56px;
-  }
 
   .benefit-mix-card {
     border-radius: 14px;
