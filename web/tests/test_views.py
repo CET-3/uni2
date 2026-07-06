@@ -92,6 +92,9 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "uni2-status" in content
     assert "ds-metric" not in content
     assert "ds-status" not in content
+    assert "uni2-service-grid" in content
+    assert 'class="service-grid"' not in content
+    assert 'class="cta"' not in content
 
 
 @pytest.mark.django_db
