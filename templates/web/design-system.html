@@ -16,21 +16,21 @@
                 <span>UNI2 DS</span>
             </a>
 
-            <input class="menu-toggle" type="checkbox" id="ds-menu-toggle" aria-label="Abrir menú">
-            <label class="menu-button" for="ds-menu-toggle" aria-hidden="true"><span></span></label>
+            <input class="menu-toggle" type="checkbox" id="menu-toggle" aria-label="Abrir menú">
+            <label class="menu-button" for="menu-toggle" aria-hidden="true"><span></span></label>
 
-            <nav class="nav" aria-label="Navegación del design system">
-                <a class="ds-nav-primary" href="#fundamentos">Fundamentos</a>
-                <a class="ds-nav-secondary" href="#componentes">Componentes</a>
-                <a class="ds-nav-primary" href="#home">Home</a>
-                <a class="ds-nav-secondary" href="#servicios">Servicios</a>
-                <a class="ds-nav-secondary" href="#beneficios">Beneficios</a>
-                <a class="ds-nav-primary" href="#operaciones">Operaciones</a>
-                <a class="ds-nav-primary" href="#django">Django</a>
-                <a class="ds-nav-secondary" href="{% url 'web:design-system-estructura' %}">Estructura</a>
-                <a class="ds-nav-secondary" href="{% url 'web:inicio' %}">Ver sitio</a>
+            <nav class="nav nav-pills flex-wrap gap-2" aria-label="Navegación del design system">
+                <a class="nav-link" href="#fundamentos">Fundamentos</a>
+                <a class="nav-link d-xl-none" href="#componentes">Componentes</a>
+                <a class="nav-link" href="#home">Home</a>
+                <a class="nav-link d-xl-none" href="#servicios">Servicios</a>
+                <a class="nav-link d-xl-none" href="#beneficios">Beneficios</a>
+                <a class="nav-link" href="#operaciones">Operaciones</a>
+                <a class="nav-link" href="#django">Django</a>
+                <a class="nav-link d-xl-none" href="{% url 'web:design-system-estructura' %}">Estructura</a>
+                <a class="nav-link d-xl-none" href="{% url 'web:inicio' %}">Ver sitio</a>
             </nav>
-            <nav class="ds-more-nav" aria-label="Más opciones del design system">
+            <nav class="list-group list-group-flush" aria-label="Más opciones del design system">
                 <a href="#componentes">Componentes</a>
                 <a href="#servicios">Servicios</a>
                 <a href="#beneficios">Beneficios</a>
@@ -41,25 +41,25 @@
         </header>
 
         <main>
-            <section class="ds-section" id="fundamentos" aria-labelledby="fundamentos-title">
+            <section class="mb-5" id="fundamentos" aria-labelledby="fundamentos-title">
                 <div class="section-inner">
-                    <div class="ds-heading">
-                        <span class="ds-kicker">Fundamentos</span>
+                    <div class="mb-4">
+                        <p class="h6 text-muted mb-3">Fundamentos</p>
                         <h1 id="fundamentos-title">Sistema visual UNI2</h1>
                         <p>Referencia de tokens, tipografía y controles base para mantener consistencia en HTML estático y en la futura app Django + Bootstrap.</p>
                     </div>
 
                     <div class="row g-3" aria-label="Tokens de color">
-                        <div class="col-12 col-sm-6 col-lg-3"><article class="ds-swatch h-100" style="--swatch: var(--azul);"><div class="ds-swatch-color"></div><div class="ds-swatch-body"><strong>Azul</strong><code>--azul</code></div></article></div>
-                        <div class="col-12 col-sm-6 col-lg-3"><article class="ds-swatch h-100" style="--swatch: var(--amarillo);"><div class="ds-swatch-color"></div><div class="ds-swatch-body"><strong>Amarillo</strong><code>--amarillo</code></div></article></div>
-                        <div class="col-12 col-sm-6 col-lg-3"><article class="ds-swatch h-100" style="--swatch: var(--verde);"><div class="ds-swatch-color"></div><div class="ds-swatch-body"><strong>Verde</strong><code>--verde</code></div></article></div>
-                        <div class="col-12 col-sm-6 col-lg-3"><article class="ds-swatch h-100" style="--swatch: var(--rojo);"><div class="ds-swatch-color"></div><div class="ds-swatch-body"><strong>Rojo</strong><code>--rojo</code></div></article></div>
+                        <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden" style="--swatch: var(--azul);"><div class="card-img-top bg-body-secondary"></div><div class="card-body"><strong>Azul</strong><code>--azul</code></div></article></div>
+                        <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden" style="--swatch: var(--amarillo);"><div class="card-img-top bg-body-secondary"></div><div class="card-body"><strong>Amarillo</strong><code>--amarillo</code></div></article></div>
+                        <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden" style="--swatch: var(--verde);"><div class="card-img-top bg-body-secondary"></div><div class="card-body"><strong>Verde</strong><code>--verde</code></div></article></div>
+                        <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden" style="--swatch: var(--rojo);"><div class="card-img-top bg-body-secondary"></div><div class="card-body"><strong>Rojo</strong><code>--rojo</code></div></article></div>
                     </div>
 
                     <div class="row g-3" style="margin-top:18px">
                         <div class="col-12 col-lg-6">
-                            <article class="ds-card h-100">
-                                <span class="ds-component-label">Tipografía</span>
+                            <article class="card h-100">
+                                <span class="badge text-bg-light border">Tipografía</span>
                                 <span class="uni2-eyebrow">Mutual Escolar UNI2</span>
                                 <h2>Titular de sección</h2>
                                 <h3>Subtítulo de componente</h3>
@@ -67,8 +67,8 @@
                             </article>
                         </div>
                         <div class="col-12 col-lg-6">
-                            <article class="ds-card h-100">
-                                <span class="ds-component-label">Acciones y estados</span>
+                            <article class="card h-100">
+                                <span class="badge text-bg-light border">Acciones y estados</span>
                                 <div class="uni2-inline-stack">
                                     <a class="uni2-cta" href="#home">Acción principal</a>
                                     <a class="uni2-cta uni2-cta-secondary" href="#componentes">Acción secundaria</a>
@@ -79,8 +79,8 @@
                         </div>
                     </div>
 
-                    <div class="ds-card" style="margin-top:18px">
-                        <span class="ds-component-label">Bootstrap 5.3.8 incluido</span>
+                    <div class="card" style="margin-top:18px">
+                        <span class="badge text-bg-light border">Bootstrap 5.3.8 incluido</span>
                         <div class="row g-3">
                             <div class="col-12 col-lg-4">
                                 <div class="card h-100">
@@ -112,17 +112,17 @@
                 </div>
             </section>
 
-            <section class="ds-section" id="componentes" aria-labelledby="componentes-title">
+            <section class="mb-5" id="componentes" aria-labelledby="componentes-title">
                 <div class="section-inner">
-                    <div class="ds-heading">
-                        <span class="ds-kicker">Componentes globales</span>
+                    <div class="mb-4">
+                        <p class="h6 text-muted mb-3">Componentes globales</p>
                         <h2 id="componentes-title">Piezas compartidas</h2>
                         <p>Elementos que aparecen en varias páginas: navegación, modal, contacto, footer y estados interactivos.</p>
                     </div>
 
                     <div class="row g-3">
                         <div class="col-12 col-lg-6">
-                            <article class="soon-card ds-soon-preview h-100">
+                            <article class="soon-card border rounded-3 p-3 bg-body-tertiary h-100">
                                 <span class="soon-icon" aria-hidden="true"><i data-lucide="clock-3"></i></span>
                                 <h2>Próximamente</h2>
                                 <p>Modal por hash para comunicar funciones no disponibles.</p>
@@ -158,20 +158,20 @@
                 </div>
             </section>
 
-            <section class="ds-section" id="home" aria-labelledby="home-title">
+            <section class="mb-5" id="home" aria-labelledby="home-title">
                 <div class="section-inner">
-                    <div class="ds-heading">
-                        <span class="ds-kicker">Home</span>
+                    <div class="mb-4">
+                        <p class="h6 text-muted mb-3">Home</p>
                         <h2 id="home-title">Secciones principales</h2>
                         <p>La home se conserva como patrón completo: hero, servicios, club de beneficios, slider y pasos de asociación.</p>
                     </div>
                 </div>
 
-                <section class="uni2-hero uni2-mini-hero" aria-labelledby="ds-hero-title">
+                <section class="uni2-hero uni2-mini-hero" aria-labelledby="hero-title">
                     <div class="uni2-section-inner uni2-hero-layout">
                         <div>
                             <span class="uni2-eyebrow">Mutual Escolar UNI2</span>
-                            <h1 id="ds-hero-title">Tu mutual, más cerca que nunca</h1>
+                            <h1 id="hero-title">Tu mutual, más cerca que nunca</h1>
                             <p>Una comunidad comprometida con vos, con beneficios para cada momento</p>
                             <div class="uni2-hero-actions">
                                 <a class="uni2-cta" href="#django">Sumate</a>
@@ -181,7 +181,7 @@
                     </div>
                 </section>
 
-                <div class="section-inner ds-preview" style="margin-top:28px">
+                <div class="section-inner border rounded-3 p-3 bg-body-tertiary" style="margin-top:28px">
                     <div class="uni2-section-heading compact-heading">
                         <div><h2>Servicios que suman</h2></div>
                     </div>
@@ -237,11 +237,11 @@
                     <div class="section-heading">
                         <div><h2>Los m&aacute;s elegidos</h2></div>
                         <div class="btn-group" role="group" aria-label="Controles del carrusel Los más elegidos">
-                            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="ds-ad-carousel" aria-label="Ver publicidad anterior"><i data-lucide="chevron-left"></i></button>
-                            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="ds-ad-carousel" aria-label="Ver publicidad siguiente"><i data-lucide="chevron-right"></i></button>
+                            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="showcase-carousel" aria-label="Ver publicidad anterior"><i data-lucide="chevron-left"></i></button>
+                            <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="showcase-carousel" aria-label="Ver publicidad siguiente"><i data-lucide="chevron-right"></i></button>
                         </div>
                     </div>
-                    <div class="carousel js-auto-slider" id="ds-ad-carousel" aria-label="Carrusel de publicidades">
+                    <div class="carousel js-auto-slider" id="showcase-carousel" aria-label="Carrusel de publicidades">
                         <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1100&q=80');">
                             <span class="uni2-badge">Alimentos</span><h3>Alto Drugstore</h3><strong class="uni2-discount">10% OFF</strong><p>Kiosco y drugstore con snacks, bebidas y productos para resolver compras rápidas.</p><a class="link" href="#beneficios">Conocer más</a>
                         </article>
@@ -252,7 +252,7 @@
                             <span class="uni2-badge">Actividad física</span><h3>Atenas Gimnasio</h3><strong class="uni2-discount">10% OFF</strong><p>Gimnasio de musculación y entrenamiento para sumar actividad física.</p><a class="link" href="#beneficios">Conocer más</a>
                         </article>
                     </div>
-                    <div class="d-flex justify-content-center gap-2" data-slider-dots="ds-ad-carousel" aria-label="Indicadores del carrusel Los más elegidos">
+                    <div class="d-flex justify-content-center gap-2" data-slider-dots="showcase-carousel" aria-label="Indicadores del carrusel Los más elegidos">
                         <button class="btn btn-sm btn-primary rounded-circle p-0" style="width: 12px; height: 12px;" type="button" data-slide-index="0" aria-label="Ir a publicidad 1"></button>
                         <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width: 12px; height: 12px;" type="button" data-slide-index="1" aria-label="Ir a publicidad 2"></button>
                         <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width: 12px; height: 12px;" type="button" data-slide-index="2" aria-label="Ir a publicidad 3"></button>
@@ -281,11 +281,11 @@
                 </div>
             </section>
 
-            <section class="ds-section" id="servicios" aria-labelledby="servicios-ds-title">
+            <section class="mb-5" id="servicios" aria-labelledby="servicios-title">
                 <div class="section-inner">
-                    <div class="ds-heading">
-                        <span class="ds-kicker">Servicios</span>
-                        <h2 id="servicios-ds-title">Patrones de páginas internas</h2>
+                    <div class="mb-4">
+                        <p class="h6 text-muted mb-3">Servicios</p>
+                        <h2 id="servicios-title">Patrones de páginas internas</h2>
                         <p>Componentes para servicios con precios, productos, tablas agrupadas y contacto.</p>
                     </div>
 
@@ -346,16 +346,16 @@
                 </div>
             </section>
 
-            <section class="ds-section benefit-page" id="beneficios" aria-labelledby="beneficios-ds-title">
+            <section class="benefit-page mb-5" id="beneficios" aria-labelledby="beneficios-title">
                 <div class="section-inner">
                     <div class="benefit-page-header">
                         <a class="benefit-back" href="#home">Volver a home</a>
-                        <h1 id="beneficios-ds-title">Listas de beneficios</h1>
+                        <h1 id="beneficios-title">Listas de beneficios</h1>
                         <p>Patrón para categorías del club de beneficios: lista compacta, logo circular, metadata y descuento visible.</p>
                     </div>
 
                     <div class="benefit-list">
-                        <a class="benefit-list-card" href="#ds-alto-drugstore" aria-label="Ver beneficio de Alto Drugstore">
+                        <a class="benefit-list-card" href="#detail-alto-drugstore" aria-label="Ver beneficio de Alto Drugstore">
                             <span class="benefit-list-logo benefit-list-initials">AD</span>
                             <span class="benefit-list-body">
                                 <h2>Alto Drugstore y Le Bon Break Store</h2>
@@ -364,7 +364,7 @@
                                 <span class="benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Alsina 189 / Hipólito Yrigoyen 731 / Alsina 256 / Mitre 580 &middot; @altodrugstoreroca</span></span>
                             </span>
                         </a>
-                        <a class="benefit-list-card" href="#ds-latte" aria-label="Ver beneficio de Latte Cafetería">
+                        <a class="benefit-list-card" href="#detail-latte" aria-label="Ver beneficio de Latte Cafetería">
                             <span class="benefit-list-logo benefit-list-initials">LC</span>
                             <span class="benefit-list-body">
                                 <h2>Latte Cafetería</h2>
@@ -375,7 +375,7 @@
                         </a>
                     </div>
 
-                    <article class="benefit-modal" id="ds-alto-drugstore" aria-label="Beneficio de Alto Drugstore">
+                    <article class="benefit-modal" id="detail-alto-drugstore" aria-label="Beneficio de Alto Drugstore">
                         <a class="benefit-modal-backdrop" href="#beneficios" aria-label="Cerrar detalle"></a>
                         <div class="benefit-modal-card">
                             <span class="benefit-list-logo benefit-list-initials">AD</span>
@@ -385,7 +385,7 @@
                             <span class="benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> General Roca &middot; @altodrugstoreroca</span></span>
                         </div>
                     </article>
-                    <article class="benefit-modal" id="ds-latte" aria-label="Beneficio de Latte Cafetería">
+                    <article class="benefit-modal" id="detail-latte" aria-label="Beneficio de Latte Cafetería">
                         <a class="benefit-modal-backdrop" href="#beneficios" aria-label="Cerrar detalle"></a>
                         <div class="benefit-modal-card">
                             <span class="benefit-list-logo benefit-list-initials">LC</span>
@@ -398,35 +398,35 @@
                 </div>
             </section>
 
-            <section class="ds-section" id="operaciones" aria-labelledby="operaciones-title">
+            <section class="mb-5" id="operaciones" aria-labelledby="operaciones-title">
                 <div class="section-inner">
-                    <div class="ds-heading">
-                        <span class="ds-kicker">Operaciones</span>
+                    <div class="mb-4">
+                        <p class="h6 text-muted mb-3">Operaciones</p>
                         <h2 id="operaciones-title">Formularios, filtros y dashboards</h2>
                         <p>Patrones para las futuras vistas internas de Django: alta de datos, búsquedas filtradas e indicadores de gestión.</p>
                     </div>
 
                     <div class="row g-3">
                         <div class="col-12 col-xl-8">
-                            <article class="ds-card h-100">
-                                <span class="ds-component-label">Formulario de asociado</span>
+                            <article class="card h-100">
+                                <span class="badge text-bg-light border">Formulario de asociado</span>
                                 <form action="#" method="get">
                                     <div class="row g-3">
                                         <div class="col-12 col-md-6">
-                                            <label class="form-label" for="ds-nombre">Nombre y apellido</label>
-                                            <input class="form-control" type="text" id="ds-nombre" name="nombre" placeholder="Ej. Martina Pérez">
+                                            <label class="form-label" for="nombre">Nombre y apellido</label>
+                                            <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Ej. Martina Pérez">
                                         </div>
                                         <div class="col-12 col-md-6">
-                                            <label class="form-label" for="ds-dni">DNI</label>
-                                            <input class="form-control" type="text" id="ds-dni" name="dni" placeholder="Sin puntos">
+                                            <label class="form-label" for="dni">DNI</label>
+                                            <input class="form-control" type="text" id="dni" name="dni" placeholder="Sin puntos">
                                         </div>
                                         <div class="col-12 col-md-6">
-                                            <label class="form-label" for="ds-email">Email</label>
-                                            <input class="form-control" type="email" id="ds-email" name="email" placeholder="nombre@email.com">
+                                            <label class="form-label" for="email">Email</label>
+                                            <input class="form-control" type="email" id="email" name="email" placeholder="nombre@email.com">
                                         </div>
                                         <div class="col-12 col-md-6">
-                                            <label class="form-label" for="ds-curso">Curso</label>
-                                            <select class="form-select" id="ds-curso" name="curso">
+                                            <label class="form-label" for="curso">Curso</label>
+                                            <select class="form-select" id="curso" name="curso">
                                                 <option selected>Seleccionar curso</option>
                                                 <option>1 C.B</option>
                                                 <option>2 C.B</option>
@@ -437,13 +437,13 @@
                                             </select>
                                         </div>
                                         <div class="col-12">
-                                            <label class="form-label" for="ds-observaciones">Observaciones</label>
-                                            <textarea class="form-control" id="ds-observaciones" name="observaciones" rows="3" placeholder="Alergias, autorizaciones o notas internas"></textarea>
+                                            <label class="form-label" for="observaciones">Observaciones</label>
+                                            <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Alergias, autorizaciones o notas internas"></textarea>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="1" id="ds-autorizacion">
-                                                <label class="form-check-label" for="ds-autorizacion">Autorización familiar registrada</label>
+                                                <input class="form-check-input" type="checkbox" value="1" id="autorizacion">
+                                                <label class="form-check-label" for="autorizacion">Autorización familiar registrada</label>
                                             </div>
                                         </div>
                                     </div>
@@ -456,33 +456,33 @@
                         </div>
 
                         <div class="col-12 col-xl-4">
-                            <article class="ds-card h-100">
-                                <span class="ds-component-label">Estados de formulario</span>
-                                <label class="form-label" for="ds-valid">Campo validado</label>
-                                <input class="form-control is-valid" type="text" id="ds-valid" value="Datos completos">
+                            <article class="card h-100">
+                                <span class="badge text-bg-light border">Estados de formulario</span>
+                                <label class="form-label" for="campo-valid">Campo validado</label>
+                                <input class="form-control is-valid" type="text" id="campo-valid" value="Datos completos">
                                 <div class="valid-feedback">Listo para guardar.</div>
 
-                                <label class="form-label mt-3" for="ds-invalid">Campo con error</label>
-                                <input class="form-control is-invalid" type="text" id="ds-invalid" value="">
+                                <label class="form-label mt-3" for="campo-invalid">Campo con error</label>
+                                <input class="form-control is-invalid" type="text" id="campo-invalid" value="">
                                 <div class="invalid-feedback">Este dato es obligatorio.</div>
 
-                                <div class="ds-note" style="margin-top:16px">
+                                <div class="alert alert-info" style="margin-top:16px">
                                     <p>Usar validaciones visuales de Bootstrap y mensajes breves. La lógica real queda para Django forms.</p>
                                 </div>
                             </article>
                         </div>
                     </div>
 
-                    <article class="ds-card" style="margin-top:18px">
-                        <span class="ds-component-label">Filtros de búsqueda</span>
+                    <article class="card" style="margin-top:18px">
+                        <span class="badge text-bg-light border">Filtros de búsqueda</span>
                         <form class="uni2-filter-bar" action="#" method="get">
                             <div>
-                                <label class="form-label" for="ds-buscar">Buscar</label>
-                                <input class="form-control" type="search" id="ds-buscar" name="q" placeholder="Nombre, DNI, comercio o servicio">
+                                <label class="form-label" for="buscar">Buscar</label>
+                                <input class="form-control" type="search" id="buscar" name="q" placeholder="Nombre, DNI, comercio o servicio">
                             </div>
                             <div>
-                                <label class="form-label" for="ds-categoria">Categoría</label>
-                                <select class="form-select" id="ds-categoria" name="categoria">
+                                <label class="form-label" for="categoria">Categoría</label>
+                                <select class="form-select" id="categoria" name="categoria">
                                     <option selected>Todas</option>
                                     <option>Servicios</option>
                                     <option>Beneficios</option>
@@ -490,16 +490,16 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="form-label" for="ds-estado">Estado</label>
-                                <select class="form-select" id="ds-estado" name="estado">
+                                <label class="form-label" for="estado">Estado</label>
+                                <select class="form-select" id="estado" name="estado">
                                     <option selected>Activos</option>
                                     <option>Pendientes</option>
                                     <option>Inactivos</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="form-label" for="ds-fecha">Desde</label>
-                                <input class="form-control" type="date" id="ds-fecha" name="desde">
+                                <label class="form-label" for="fecha">Desde</label>
+                                <input class="form-control" type="date" id="fecha" name="desde">
                             </div>
                             <button class="uni2-cta" type="button">Filtrar</button>
                         </form>
@@ -518,8 +518,8 @@
                         <article class="uni2-metric uni2-metric-red"><span>Servicios usados</span><strong>1.284</strong><p>Fotocopias y cuadernillos</p></article>
                     </div>
 
-                    <article class="ds-card" style="margin-top:18px">
-                        <span class="ds-component-label">Indicadores compactos con tendencia</span>
+                    <article class="card" style="margin-top:18px">
+                        <span class="badge text-bg-light border">Indicadores compactos con tendencia</span>
                         <div class="uni2-compact-metric-grid" aria-label="Indicadores compactos">
                             <article class="uni2-compact-metric uni2-compact-blue">
                                 <span class="uni2-compact-icon" aria-hidden="true"><i data-lucide="users"></i></span>
@@ -550,8 +550,8 @@
 
                     <div class="row g-3" style="margin-top:18px">
                         <div class="col-12 col-xl-8">
-                            <article class="ds-card h-100">
-                                <span class="ds-component-label">Tabla de gestión</span>
+                            <article class="card h-100">
+                                <span class="badge text-bg-light border">Tabla de gestión</span>
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle mb-0">
                                         <thead>
@@ -570,8 +570,8 @@
                         </div>
 
                         <div class="col-12 col-xl-4">
-                            <aside class="ds-card h-100">
-                                <span class="ds-component-label">Actividad reciente</span>
+                            <aside class="card h-100">
+                                <span class="badge text-bg-light border">Actividad reciente</span>
                                 <div class="uni2-activity-list">
                                     <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="user-plus"></i></span><div><h3>Alta registrada</h3><p>Se agregó un asociado de 2 C.B.</p></div></div>
                                     <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="badge-percent"></i></span><div><h3>Beneficio actualizado</h3><p>Latte Cafetería cambió su descuento.</p></div></div>
@@ -583,10 +583,10 @@
                 </div>
             </section>
 
-            <section class="ds-section" id="django" aria-labelledby="django-title">
+            <section class="mb-5" id="django" aria-labelledby="django-title">
                 <div class="section-inner">
-                    <div class="ds-heading">
-                        <span class="ds-kicker">Django + Bootstrap</span>
+                    <div class="mb-4">
+                        <p class="h6 text-muted mb-3">Django + Bootstrap</p>
                         <h2 id="django-title">Partición sugerida</h2>
                         <p>Mapa para convertir esta guía en templates y componentes reutilizables sin perder la identidad visual actual.</p>
                     </div>
@@ -594,18 +594,18 @@
                     <div class="row g-3">
                         <div class="col-12 col-xl-8">
                             <div class="row g-3">
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>base.html</h3><p>Head, fuentes, `uni2-design-system.css`, script de tema, topbar, bloque main, footer y scripts comunes.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>includes/topbar.html</h3><p>Marca, navegación, CTAs y versión responsive.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>includes/footer.html</h3><p>Íconos de contacto, ubicación y texto institucional.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/media_list_item.html</h3><p>Imagen o logo, título, descripción, metadata y etiqueta destacada para listados.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/action_card.html</h3><p>Ícono, título, descripción y link para accesos principales.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/comparison_table.html</h3><p>Tabla para comparar columnas de valores, estados o condiciones.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/filter_bar.html</h3><p>Búsqueda, selects, rango de fecha, chips activos y acción de limpiar.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>components/metric_card.html</h3><p>Indicadores de dashboard con número, contexto y color semántico.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="ds-card h-100"><h3>forms/entity_form.html</h3><p>Formulario Django renderizado con clases Bootstrap y mensajes de validación.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><h3>base.html</h3><p>Head, fuentes, `uni2-design-system.css`, script de tema, topbar, bloque main, footer y scripts comunes.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><h3>includes/topbar.html</h3><p>Marca, navegación, CTAs y versión responsive.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><h3>includes/footer.html</h3><p>Íconos de contacto, ubicación y texto institucional.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/media_list_item.html</h3><p>Imagen o logo, título, descripción, metadata y etiqueta destacada para listados.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/action_card.html</h3><p>Ícono, título, descripción y link para accesos principales.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/comparison_table.html</h3><p>Tabla para comparar columnas de valores, estados o condiciones.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/filter_bar.html</h3><p>Búsqueda, selects, rango de fecha, chips activos y acción de limpiar.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/metric_card.html</h3><p>Indicadores de dashboard con número, contexto y color semántico.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><h3>forms/entity_form.html</h3><p>Formulario Django renderizado con clases Bootstrap y mensajes de validación.</p></article></div>
                             </div>
                         </div>
-                        <div class="col-12 col-xl-4"><pre class="ds-snippet h-100"><code>{% verbatim %}{% extends "base.html" %}
+                        <div class="col-12 col-xl-4"><pre class="bg-body-tertiary border rounded p-3 small h-100"><code>{% verbatim %}{% extends "base.html" %}
 {% block content %}
   {% include "sections/hero.html" %}
   {% include "sections/action_grid.html" %}
@@ -635,8 +635,8 @@
     <script>
         if (window.lucide) lucide.createIcons();
 
-        const menuToggle = document.getElementById("ds-menu-toggle");
-        document.querySelectorAll(".ds-page .topbar .nav a, .ds-page .topbar .ds-more-nav a").forEach((link) => {
+        const menuToggle = document.getElementById("menu-toggle");
+        document.querySelectorAll(".ds-page .topbar .nav a, .ds-page .topbar .list-group a").forEach((link) => {
             link.addEventListener("click", () => {
                 if (menuToggle) menuToggle.checked = false;
             });

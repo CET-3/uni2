@@ -95,6 +95,9 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "uni2-service-grid" in content
     assert 'class="service-grid"' not in content
     assert 'class="cta"' not in content
+    import re
+    clases_ds = set(re.findall(r"ds-[a-z0-9-]+", content))
+    assert clases_ds == {"ds-page"}, f"clases ds-* inesperadas: {clases_ds - {'ds-page'}}"
 
 
 @pytest.mark.django_db
