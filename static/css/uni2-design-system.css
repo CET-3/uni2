@@ -1473,7 +1473,7 @@ html {
 .uni2-service-grid,
 .uni2-steps,
 .service-grid,
-.benefit-links,
+.uni2-benefit-links,
 .steps,
 .ds-metric-grid {
   display: grid;
@@ -1615,7 +1615,7 @@ html {
 .service-card-purple { --card-color: var(--rojo); --card-dark: var(--rojo-dark); }
 
 
-.benefit-band {
+.uni2-benefit-band {
   background: transparent;
   color: var(--texto);
   display: grid;
@@ -1624,7 +1624,7 @@ html {
   padding: 0;
 }
 
-.benefit-intro h2 {
+.uni2-benefit-intro h2 {
   color: var(--texto);
   font-size: clamp(2.35rem, 6vw, 4.8rem);
   font-weight: 900;
@@ -1633,7 +1633,7 @@ html {
   margin: 0;
 }
 
-.benefit-links {
+.uni2-benefit-links {
   display: grid;
   gap: 18px;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -1659,7 +1659,7 @@ html {
 
 
 
-.benefit-mix-card {
+.uni2-benefit-mix-card {
   aspect-ratio: 1 / 1;
   background-blend-mode: soft-light, normal;
   background-image: var(--grain), var(--mix-bg);
@@ -1672,14 +1672,14 @@ html {
   position: relative;
 }
 
-.logo-cloud {
+.uni2-benefit-logo-cloud {
   height: 62%;
   inset: 0 0 auto;
   position: absolute;
   z-index: 1;
 }
 
-.logo-dot {
+.uni2-benefit-logo-dot {
   background: #ffffff;
   border: 5px solid rgba(255, 255, 255, 0.82);
   border-radius: 50%;
@@ -1691,7 +1691,7 @@ html {
   position: absolute;
 }
 
-.logo-dot img {
+.uni2-benefit-logo-dot img {
   background: #ffffff;
   display: block;
   height: 100%;
@@ -1699,22 +1699,22 @@ html {
   width: 100%;
 }
 
-.logo-dot span,
+.uni2-benefit-logo-dot span,
 .benefit-list-initials {
   font-weight: 950;
   line-height: 0.95;
   text-align: center;
 }
 
-.logo-dot span {
+.uni2-benefit-logo-dot span {
   display: block;
   font-size: clamp(0.56rem, 0.92vw, 0.76rem);
   max-width: 68%;
   overflow-wrap: anywhere;
 }
 
-.logo-dot-left,
-.logo-dot-right {
+.uni2-benefit-logo-dot-left,
+.uni2-benefit-logo-dot-right {
   aspect-ratio: 1 / 1;
   opacity: 0.96;
   top: 23%;
@@ -1722,7 +1722,7 @@ html {
   z-index: 2;
 }
 
-.logo-dot-main {
+.uni2-benefit-logo-dot-main {
   aspect-ratio: 1 / 1;
   left: 50%;
   top: 14%;
@@ -1731,10 +1731,10 @@ html {
   z-index: 3;
 }
 
-.logo-dot-left { left: -13%; }
-.logo-dot-right { right: -13%; }
+.uni2-benefit-logo-dot-left { left: -13%; }
+.uni2-benefit-logo-dot-right { right: -13%; }
 
-.benefit-rubric {
+.uni2-benefit-rubric {
   bottom: 8%;
   color: var(--mix-copy);
   display: block;
@@ -1749,25 +1749,25 @@ html {
   z-index: 1;
 }
 
-.benefit-food {
+.uni2-benefit-food {
   --mix-bg: linear-gradient(135deg, var(--amarillo-dark) 0%, var(--amarillo) 42% 100%);
   --mix-copy: #2e1708;
   --mix-text: #9a6a00;
 }
 
-.benefit-sport {
+.uni2-benefit-sport {
   --mix-bg: linear-gradient(135deg, var(--verde-dark) 0%, var(--verde) 42% 100%);
   --mix-copy: #07230d;
   --mix-text: #177323;
 }
 
-.benefit-beauty {
+.uni2-benefit-beauty {
   --mix-bg: linear-gradient(135deg, var(--rojo-dark) 0%, var(--rojo) 42% 100%);
   --mix-copy: #ffffff;
   --mix-text: #b91624;
 }
 
-.benefit-fashion {
+.uni2-benefit-fashion {
   --mix-bg: linear-gradient(135deg, var(--azul-dark) 0%, var(--azul) 42% 100%);
   --mix-copy: #ffffff;
   --mix-text: #263796;
@@ -3055,7 +3055,7 @@ html {
 @media (max-width: 1080px) {
   .uni2-service-grid,
   .service-grid,
-  .benefit-links,
+  .uni2-benefit-links,
   .uni2-steps,
   .steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3210,12 +3210,12 @@ html {
   }
 
 
-  .benefit-links {
+  .uni2-benefit-links {
     gap: 10px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .benefit-mix-card {
+  .uni2-benefit-mix-card {
     border-radius: 14px;
   }
 
@@ -3240,18 +3240,18 @@ html {
 
 
 
-  .benefit-mix-card {
+  .uni2-benefit-mix-card {
     border-radius: 14px;
   }
 
-  .benefit-rubric {
+  .uni2-benefit-rubric {
     bottom: 7%;
     font-size: clamp(0.9rem, 4.4vw, 1.18rem);
     left: 7%;
     right: 7%;
   }
 
-  .logo-dot {
+  .uni2-benefit-logo-dot {
     border-width: 3px;
   }
 

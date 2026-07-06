@@ -1,25 +1,25 @@
 {% if rubros_beneficio %}
-<aside class="benefit-band" aria-labelledby="beneficios-title">
-    <div class="benefit-intro">
+<aside class="uni2-benefit-band" aria-labelledby="beneficios-title">
+    <div class="uni2-benefit-intro">
         <h2 id="beneficios-title">Club de Beneficios</h2>
     </div>
 
-    <nav class="benefit-links" aria-label="Rubros con beneficios">
+    <nav class="uni2-benefit-links" aria-label="Rubros con beneficios">
         {% for rubro in rubros_beneficio %}
-            <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="benefit-mix-card {% cycle 'benefit-food' 'benefit-sport' 'benefit-beauty' 'benefit-fashion' %}">
-                <span class="logo-cloud" aria-hidden="true">
+            <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="uni2-benefit-mix-card {% cycle 'uni2-benefit-food' 'uni2-benefit-sport' 'uni2-benefit-beauty' 'uni2-benefit-fashion' %}">
+                <span class="uni2-benefit-logo-cloud" aria-hidden="true">
                     {% for comercio in rubro.comercios_con_foto|slice:":3" %}
                         {% if comercio.foto %}
-                        <span class="logo-dot
-                            {% if forloop.counter == 1 %}logo-dot-left
-                            {% elif forloop.counter == 2 %}logo-dot-main
-                            {% else %}logo-dot-right{% endif %}">
+                        <span class="uni2-benefit-logo-dot
+                            {% if forloop.counter == 1 %}uni2-benefit-logo-dot-left
+                            {% elif forloop.counter == 2 %}uni2-benefit-logo-dot-main
+                            {% else %}uni2-benefit-logo-dot-right{% endif %}">
                             <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
                         </span>
                         {% endif %}
                     {% endfor %}
                 </span>
-                <span class="benefit-rubric">{{ rubro.nombre }}</span>
+                <span class="uni2-benefit-rubric">{{ rubro.nombre }}</span>
             </a>
         {% endfor %}
     </nav>
