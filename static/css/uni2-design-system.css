@@ -1323,9 +1323,9 @@ html {
   text-transform: uppercase;
 }
 
-.ds-page .ds-inline-stack,
+.ds-page .uni2-inline-stack,
 .ds-page .contact-links,
-.ds-page .ds-chip-row {
+.ds-page .uni2-chip-row {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
@@ -1396,7 +1396,7 @@ html {
   z-index: 0;
 }
 
-.ds-page .ds-mini-hero {
+.ds-page .uni2-mini-hero {
   border-radius: 22px;
   min-height: 520px;
 }
@@ -1475,7 +1475,7 @@ html {
 .service-grid,
 .uni2-benefit-links,
 .steps,
-.ds-metric-grid {
+.uni2-metric-grid {
   display: grid;
   gap: 18px;
 }
@@ -1560,8 +1560,8 @@ html {
 .product-price-icon,
 .ds-page .product-price-icon,
 .ds-page .cycle-code,
-.ds-page .ds-compact-icon,
-.ds-page .ds-activity-icon {
+.ds-page .uni2-compact-icon,
+.ds-page .uni2-activity-icon {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
@@ -2181,7 +2181,7 @@ html {
 .ds-page .product-price-grid,
 .ds-page .cycle-wrap,
 .ds-page .price-pair,
-.ds-page .ds-compact-metric-grid {
+.ds-page .uni2-compact-metric-grid {
   display: grid;
   gap: 18px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2322,7 +2322,7 @@ html {
 .ds-page .benefit-page-header,
 .benefit-list,
 .ds-page .benefit-list,
-.ds-page .ds-activity-list {
+.ds-page .uni2-activity-list {
   display: grid;
   gap: 14px;
 }
@@ -2540,14 +2540,14 @@ html {
   inset: 0;
 }
 
-.ds-page .ds-filter-bar {
+.ds-page .uni2-filter-bar {
   align-items: end;
   display: grid;
   gap: 12px;
   grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(150px, 1fr)) auto;
 }
 
-.ds-page .ds-filter-chip {
+.ds-page .uni2-filter-chip {
   align-items: center;
   background: var(--surface-solid);
   border: 1px solid var(--linea);
@@ -2561,17 +2561,17 @@ html {
   padding: 6px 10px;
 }
 
-.ds-page .ds-filter-chip i {
+.ds-page .uni2-filter-chip i {
   color: var(--azul);
   height: 15px;
   width: 15px;
 }
 
-.ds-page .ds-metric-grid {
+.ds-page .uni2-metric-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.ds-page .ds-metric {
+.ds-page .uni2-metric {
   background: var(--surface-solid);
   border: 1px solid var(--linea);
   border-radius: 12px;
@@ -2584,26 +2584,26 @@ html {
   padding: 18px;
 }
 
-.ds-page .ds-metric strong {
+.ds-page .uni2-metric strong {
   color: var(--texto);
   font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 950;
   line-height: 0.95;
 }
 
-.ds-page .ds-metric span {
+.ds-page .uni2-metric span {
   color: var(--suave);
   font-size: 0.84rem;
   font-weight: 850;
   text-transform: uppercase;
 }
 
-.ds-page .ds-metric p {
+.ds-page .uni2-metric p {
   font-size: 0.9rem;
   margin: 0;
 }
 
-.ds-page .ds-compact-body span {
+.ds-page .uni2-compact-body span {
   color: var(--suave);
   font-size: 0.78rem;
   font-weight: 900;
@@ -2611,16 +2611,16 @@ html {
   text-transform: uppercase;
 }
 
-.ds-page .ds-metric-blue,
-.ds-page .ds-compact-blue { --metric-color: var(--azul); --metric-dark: var(--azul-dark); }
-.ds-page .ds-metric-yellow,
-.ds-page .ds-compact-yellow { --metric-color: var(--amarillo); --metric-dark: var(--amarillo-dark); }
-.ds-page .ds-metric-green,
-.ds-page .ds-compact-green { --metric-color: var(--verde); --metric-dark: var(--verde-dark); }
-.ds-page .ds-metric-red,
-.ds-page .ds-compact-red { --metric-color: var(--rojo); --metric-dark: var(--rojo-dark); }
+.ds-page .uni2-metric-blue,
+.ds-page .uni2-compact-blue { --metric-color: var(--azul); --metric-dark: var(--azul-dark); }
+.ds-page .uni2-metric-yellow,
+.ds-page .uni2-compact-yellow { --metric-color: var(--amarillo); --metric-dark: var(--amarillo-dark); }
+.ds-page .uni2-metric-green,
+.ds-page .uni2-compact-green { --metric-color: var(--verde); --metric-dark: var(--verde-dark); }
+.ds-page .uni2-metric-red,
+.ds-page .uni2-compact-red { --metric-color: var(--rojo); --metric-dark: var(--rojo-dark); }
 
-.ds-page .ds-compact-metric {
+.ds-page .uni2-compact-metric {
   align-items: center;
   background: var(--surface-solid);
   border: 1px solid var(--linea);
@@ -2632,7 +2632,7 @@ html {
   padding: 16px;
 }
 
-.ds-page .ds-compact-icon {
+.ds-page .uni2-compact-icon {
   background-blend-mode: soft-light, normal;
   background-image: var(--grain), linear-gradient(135deg, var(--metric-dark, var(--azul-dark)) 0 24%, var(--metric-color, var(--azul)) 48% 100%);
   border-radius: 50%;
@@ -2641,22 +2641,22 @@ html {
   width: 46px;
 }
 
-.ds-page .ds-compact-body {
+.ds-page .uni2-compact-body {
   display: grid;
   gap: 5px;
   min-width: 0;
 }
 
-.ds-page .ds-compact-body strong {
+.ds-page .uni2-compact-body strong {
   color: var(--texto);
   font-size: 1.65rem;
   font-weight: 950;
   line-height: 1;
 }
 
-.ds-page .ds-trend,
-.ds-page .ds-trend-muted,
-.ds-page .ds-trend-down {
+.ds-page .uni2-trend,
+.ds-page .uni2-trend-muted,
+.ds-page .uni2-trend-down {
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 950;
@@ -2665,22 +2665,22 @@ html {
   white-space: nowrap;
 }
 
-.ds-page .ds-trend {
+.ds-page .uni2-trend {
   background: rgba(76, 203, 74, 0.14);
   color: var(--verde-dark);
 }
 
-.ds-page .ds-trend-muted {
+.ds-page .uni2-trend-muted {
   background: rgba(63, 81, 181, 0.1);
   color: var(--azul);
 }
 
-.ds-page .ds-trend-down {
+.ds-page .uni2-trend-down {
   background: rgba(255, 43, 43, 0.12);
   color: var(--rojo-dark);
 }
 
-.ds-page .ds-progress {
+.ds-page .uni2-progress {
   background: rgba(63, 81, 181, 0.1);
   border-radius: 999px;
   grid-column: 1 / -1;
@@ -2688,7 +2688,7 @@ html {
   overflow: hidden;
 }
 
-.ds-page .ds-progress span {
+.ds-page .uni2-progress span {
   background-blend-mode: soft-light, normal;
   background-image: var(--grain), linear-gradient(90deg, var(--metric-color, var(--azul)), var(--metric-dark, var(--azul-dark)));
   border-radius: inherit;
@@ -2697,7 +2697,7 @@ html {
   width: var(--progress, 50%);
 }
 
-.ds-page .ds-status {
+.ds-page .uni2-status {
   align-items: center;
   background: var(--status-bg, var(--azul));
   border-radius: 999px;
@@ -2709,13 +2709,13 @@ html {
   padding: 6px 10px;
 }
 
-.ds-page .ds-status-active { --status-bg: var(--verde-dark); }
-.ds-page .ds-status-inactive { --status-bg: #6c757d; }
-.ds-page .ds-status-pending { --status-bg: var(--amarillo); --status-color: #2d2606; }
-.ds-page .ds-status-overdue { --status-bg: var(--rojo); }
-.ds-page .ds-status-paid { --status-bg: var(--azul); }
+.ds-page .uni2-status-active { --status-bg: var(--verde-dark); }
+.ds-page .uni2-status-inactive { --status-bg: #6c757d; }
+.ds-page .uni2-status-pending { --status-bg: var(--amarillo); --status-color: #2d2606; }
+.ds-page .uni2-status-overdue { --status-bg: var(--rojo); }
+.ds-page .uni2-status-paid { --status-bg: var(--azul); }
 
-.ds-page .ds-activity-item {
+.ds-page .uni2-activity-item {
   align-items: flex-start;
   background: var(--surface-solid);
   border: 1px solid var(--linea);
@@ -2725,7 +2725,7 @@ html {
   padding: 12px;
 }
 
-.ds-page .ds-activity-icon {
+.ds-page .uni2-activity-icon {
   background: rgba(63, 81, 181, 0.1);
   border-radius: 50%;
   color: var(--azul);
@@ -3143,11 +3143,11 @@ html {
 
   .uni2-info-box,
   .ds-page .info-box,
-  .ds-page .ds-filter-bar {
+  .ds-page .uni2-filter-bar {
     grid-template-columns: 1fr;
   }
 
-  .ds-page .ds-metric-grid {
+  .ds-page .uni2-metric-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -3260,8 +3260,8 @@ html {
   .ds-page .product-price-grid,
   .ds-page .price-pair,
   .ds-page .cycle-wrap,
-  .ds-page .ds-compact-metric-grid,
-  .ds-page .ds-metric-grid {
+  .ds-page .uni2-compact-metric-grid,
+  .ds-page .uni2-metric-grid {
     grid-template-columns: 1fr;
   }
 

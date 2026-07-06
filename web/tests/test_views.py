@@ -88,6 +88,10 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "uni2-theme.js" not in content
     assert "benefit-list-body" in content
     assert "discount-tag" in content
+    assert "uni2-metric" in content
+    assert "uni2-status" in content
+    assert "ds-metric" not in content
+    assert "ds-status" not in content
 
 
 @pytest.mark.django_db
