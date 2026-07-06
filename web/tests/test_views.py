@@ -262,7 +262,7 @@ def test_home_usa_el_mismo_formato_visual_que_el_design_system(client):
     assert "uni2-section-heading" in content
     assert "benefit-band" in content
     assert "benefit-mix-card" in content
-    assert "js-home-benefits-grid" in content
+    assert "benefit-links" in content
     assert "uni2-hours-mobile" in content
     assert 'class="service-grid"' not in content
 
@@ -324,7 +324,7 @@ def test_home_muestra_beneficios_con_fotos_de_cada_rubro(client):
 
 
 @pytest.mark.django_db
-def test_home_centra_un_solo_logo_en_beneficios(client):
+def test_home_muestra_logo_unico_por_posicion_en_beneficios(client):
     foto = SimpleUploadedFile("gastronomia-unica.jpg", b"content", content_type="image/jpeg")
     rubro = ActividadComercial.objects.create(nombre="Gastronomía")
     Comercio.objects.create(
@@ -341,7 +341,7 @@ def test_home_centra_un_solo_logo_en_beneficios(client):
 
     contenido = response.content.decode()
     assert response.status_code == 200
-    assert "logo-dot-main" in contenido
+    assert "logo-dot-left" in contenido
 
 
 @pytest.mark.django_db
