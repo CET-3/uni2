@@ -260,9 +260,10 @@ def test_home_usa_el_mismo_formato_visual_que_el_design_system(client):
     assert response.status_code == 200
     assert "uni2-service-grid" in content
     assert "uni2-section-heading" in content
-    assert "benefit-band" in content
-    assert "benefit-mix-card" in content
-    assert "benefit-links" in content
+    assert "uni2-benefit-band" in content
+    assert "uni2-benefit-mix-card" in content
+    assert "uni2-benefit-links" in content
+    assert 'class="benefit-band"' not in content
     assert "uni2-hours-mobile" in content
     assert 'class="service-grid"' not in content
 
@@ -341,7 +342,7 @@ def test_home_muestra_logo_unico_por_posicion_en_beneficios(client):
 
     contenido = response.content.decode()
     assert response.status_code == 200
-    assert "logo-dot-left" in contenido
+    assert "uni2-benefit-logo-dot-left" in contenido
 
 
 @pytest.mark.django_db
