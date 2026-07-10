@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="page ds-page" id="arriba">
+<div class="page" id="arriba">
         <header class="topbar">
             <a class="brand" href="#arriba" aria-label="Volver al inicio del design system">
                 <img src="{% static 'img/LOJO_UNI2.png' %}" alt="Logo UNI2">
@@ -794,13 +794,13 @@
         if (window.lucide) lucide.createIcons();
 
         const menuToggle = document.getElementById("menu-toggle");
-        document.querySelectorAll(".ds-page .topbar .nav a, .ds-page .topbar .list-group a").forEach((link) => {
+        document.querySelectorAll(".topbar .nav a, .topbar .list-group a").forEach((link) => {
             link.addEventListener("click", () => {
                 if (menuToggle) menuToggle.checked = false;
             });
         });
 
-        const sliders = document.querySelectorAll(".ds-page .js-auto-slider");
+        const sliders = document.querySelectorAll(".js-auto-slider");
 
         sliders.forEach((slider) => {
             let paused = false;
@@ -884,14 +884,14 @@
             window.setInterval(advance, 3400);
         });
 
-        document.querySelectorAll(".ds-page [data-href]").forEach((card) => {
+        document.querySelectorAll("[data-href]").forEach((card) => {
             card.addEventListener("click", (event) => {
                 if (event.target.closest("a")) return;
                 window.location.href = card.dataset.href;
             });
         });
 
-        const cycleToggle = document.querySelector(".ds-page .cycle-toggle");
+        const cycleToggle = document.querySelector(".cycle-toggle");
         if (cycleToggle) {
             cycleToggle.addEventListener("click", (event) => {
                 const button = event.target.closest(".cycle-toggle-btn");
