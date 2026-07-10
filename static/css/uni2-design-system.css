@@ -1,56 +1,78 @@
 /* uni2-design-system.css — Design System Unificado Uni2 + PAGINA-WEB */
 
 :root {
-  /* Paleta PAGINA-WEB (réplica exacta de style2.css) */
-  --primary: #3f51b5;
-  --primary-dark: #303f9f;
+  /* ── CAPA 1: TOKENS BASE ─────────────────────────────────────────────
+     Valores concretos. Son la fuente de verdad del sistema.
+     Los componentes NO los referencian directamente;
+     lo hacen a través de los tokens semánticos de capa 2.           */
+
+  /* Colores */
+  --primary:       #3f51b5;
+  --primary-dark:  #303f9f;
   --primary-light: #5c6bc0;
-  --rojo: #ff2b2b;
-  --rojo-light: #ff6b6b;
-  --amarillo: #ffcb30;
-  --verde: #4ccb4a;
-  --verde-dark: #3db83b;
-  --bg: #ffffff;
-  --bg-alt: #f7f9fc;
-  --text: #1a1a2e;
-  --text-secondary: #3f485d;
-  --border: #e0e0e0;
-  --shadow-sm: 0 1px 3px rgba(26, 26, 46, 0.08);
-  --shadow-md: 0 4px 12px rgba(26, 26, 46, 0.1);
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 20px;
-  --topbar-bg: rgba(255, 255, 255, 0.82);
-  --topbar-text: #34405f;
-  --nav-bg: #ffffff;
-  --nav-link: #34405f;
-  --nav-link-hover: #3f51b5;
-  --footer-bg: #1a1a2e;
-  --footer-text: rgba(255, 255, 255, 0.75);
+  --rojo:          #ff2b2b;
+  --rojo-light:    #ff6b6b;
+  --amarillo:      #ffcb30;
+  --verde:         #4ccb4a;
+  --verde-dark:    #3db83b;
+
+  /* Superficies y texto */
+  --bg:            #ffffff;
+  --bg-alt:        #f7f9fc;
+  --text:          #1a1a2e;
+  --text-secondary:#3f485d;
+  --border:        #e0e0e0;
+
+  /* Forma y elevación */
+  --radius-sm:     8px;
+  --radius:        12px;
+  --radius-lg:     20px;
+  --shadow-sm:     0 1px 3px rgba(26, 26, 46, 0.08);
+  --shadow-md:     0 4px 12px rgba(26, 26, 46, 0.1);
+
+  /* Componentes estructurales */
+  --topbar-bg:     rgba(255, 255, 255, 0.82);
+  --topbar-text:   #34405f;
+  --nav-bg:        #ffffff;
+  --nav-link:      #34405f;
+  --nav-link-hover:#3f51b5;
+  --footer-bg:     #1a1a2e;
+  --footer-text:   rgba(255, 255, 255, 0.75);
 
   /* Bootstrap overrides */
-  --bs-primary: #3f51b5;
-  --bs-primary-rgb: 63, 81, 181;
-  --bs-font-sans-serif: 'Inter', system-ui, -apple-system, sans-serif;
+  --bs-primary:        #3f51b5;
+  --bs-primary-rgb:    63, 81, 181;
+  --bs-font-sans-serif:'Inter', system-ui, -apple-system, sans-serif;
 
-  /* Aliases used by the internal design-system showcase port. */
-  --azul: var(--primary);
-  --azul-dark: var(--primary-dark);
-  --amarillo-dark: #c09001;
-  --rojo-dark: #a30000;
-  --fondo: var(--bg-alt);
-  --fondo-2: var(--bg);
-  --blanco: #ffffff;
-  --texto: var(--text);
-  --suave: var(--text-secondary);
-  --linea: rgba(63, 81, 181, 0.12);
-  --sombra: 0 22px 60px rgba(11, 18, 51, 0.18);
-  --radio: 24px;
-  --surface: rgba(255, 255, 255, 0.86);
-  --surface-solid: #ffffff;
-  --surface-muted: rgba(247, 249, 252, 0.9);
-  --modal-bg: rgba(255, 255, 255, 0.96);
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.2'/%3E%3C/svg%3E");
+  /* ── CAPA 2: TOKENS SEMÁNTICOS ───────────────────────────────────────
+     Nombrados por su rol, no por su valor. Los componentes usan
+     SIEMPRE estos tokens. Cambian con el tema (dark/light)
+     porque apuntan a los tokens base, que sí se redefinen.          */
+
+  /* Color */
+  --azul:        var(--primary);
+  --azul-dark:   var(--primary-dark);
+  --amarillo-dark:#c09001;
+  --rojo-dark:   #a30000;
+
+  /* Texto */
+  --texto:       var(--text);
+  --suave:       var(--text-secondary);
+  --blanco:      #ffffff;
+
+  /* Superficies */
+  --fondo:       var(--bg-alt);
+  --fondo-2:     var(--bg);
+  --surface:     rgba(255, 255, 255, 0.86);
+  --surface-solid:#ffffff;
+  --surface-muted:rgba(247, 249, 252, 0.9);
+  --modal-bg:    rgba(255, 255, 255, 0.96);
+
+  /* Decoración y layout */
+  --linea:       rgba(63, 81, 181, 0.12);
+  --radio:       24px;
+  --sombra:      0 22px 60px rgba(11, 18, 51, 0.18);
+  --grain:       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.2'/%3E%3C/svg%3E");
 }
 
 [data-theme="dark"] {
@@ -1134,7 +1156,7 @@ html {
 .ds-page .menu-toggle:checked + .menu-button::before { transform: translateX(-50%) translateY(7px) rotate(45deg); }
 .ds-page .menu-toggle:checked + .menu-button::after { transform: translateX(-50%) translateY(-7px) rotate(-45deg); }
 
-.ds-page .nav {
+.ds-page .topbar > .nav {
   align-items: center;
   display: flex;
   gap: 6px;
@@ -1143,7 +1165,7 @@ html {
   order: 2;
 }
 
-.ds-page .nav a {
+.ds-page .topbar > .nav a {
   border-radius: 999px;
   color: #34405f;
   font-size: 0.92rem;
@@ -1153,12 +1175,12 @@ html {
   white-space: nowrap;
 }
 
-.ds-page .nav a:hover {
+.ds-page .topbar > .nav a:hover {
   background: rgba(63, 81, 181, 0.08);
   color: var(--azul);
 }
 
-.ds-page .list-group {
+.ds-page .topbar > .list-group {
   display: none;
 }
 
@@ -1180,8 +1202,7 @@ html {
   width: min(1180px, 100%);
 }
 
-.uni2-cta,
-.ds-page .cta {
+.uni2-cta {
   align-items: center;
   background-blend-mode: soft-light, normal;
   background-image: var(--grain), linear-gradient(135deg, var(--amarillo-dark) 0 24%, var(--amarillo) 48% 100%);
@@ -1200,8 +1221,7 @@ html {
   white-space: nowrap;
 }
 
-.uni2-cta-secondary,
-.ds-page .cta.secondary {
+.uni2-cta-secondary {
   background-image: var(--grain), linear-gradient(135deg, var(--azul-dark) 0 24%, var(--azul) 48% 100%);
   box-shadow: 0 16px 42px rgba(63, 81, 181, 0.24);
   color: var(--blanco);
@@ -1210,7 +1230,6 @@ html {
 .uni2-eyebrow,
 .uni2-badge,
 .uni2-discount,
-.ds-page .badge,
 .ds-page .discount,
 .ds-page .exclusive,
 .ds-page .discount-tag {
@@ -1222,8 +1241,7 @@ html {
 }
 
 .uni2-eyebrow,
-.uni2-badge,
-.ds-page .badge {
+.uni2-badge {
   align-items: center;
   background-image: var(--grain), linear-gradient(135deg, var(--amarillo-dark) 0 24%, var(--amarillo) 48% 100%);
   color: #2d2606;
@@ -1271,8 +1289,7 @@ html {
   gap: 12px;
 }
 
-.uni2-hero,
-.ds-page .hero {
+.uni2-hero {
   align-items: center;
   background:
     linear-gradient(122deg, var(--fondo) 0 62%, transparent 62%),
@@ -1285,8 +1302,7 @@ html {
   position: relative;
 }
 
-.uni2-hero::after,
-.ds-page .hero::after {
+.uni2-hero::after {
   background-image: var(--grain);
   content: "";
   inset: 0;
@@ -1303,15 +1319,13 @@ html {
   min-height: 520px;
 }
 
-.uni2-hero-layout,
-.ds-page .hero-layout {
+.uni2-hero-layout {
   display: block;
   position: relative;
   z-index: 1;
 }
 
-.uni2-hero h1,
-.ds-page .hero h1 {
+.uni2-hero h1 {
   color: var(--texto);
   font-size: clamp(3.2rem, 8vw, 6.6rem);
   font-weight: 900;
@@ -1321,8 +1335,7 @@ html {
   max-width: 760px;
 }
 
-.uni2-hero p,
-.ds-page .hero p {
+.uni2-hero p {
   color: var(--suave);
   font-size: clamp(1.05rem, 2vw, 1.22rem);
   font-weight: 500;
@@ -1331,8 +1344,7 @@ html {
   max-width: 640px;
 }
 
-.uni2-hero-actions,
-.ds-page .hero-actions {
+.uni2-hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
@@ -1375,7 +1387,6 @@ html {
 .uni2-service-grid,
 .uni2-steps,
 .uni2-benefit-links,
-.steps,
 .uni2-metric-grid {
   display: grid;
   gap: 18px;
@@ -1404,9 +1415,7 @@ html {
 }
 
 .uni2-step-card,
-.uni2-info-box,
-.ds-page .step,
-.ds-page .info-box {
+.uni2-info-box {
   background: var(--surface-solid);
   border: 1px solid var(--linea);
   box-shadow: var(--sombra);
@@ -1692,8 +1701,7 @@ html {
   scrollbar-width: none;
 }
 
-.uni2-ad-card,
-.ds-page .ad-card {
+.uni2-ad-card {
   background:
     linear-gradient(180deg, rgba(23, 32, 59, 0.03) 0%, rgba(23, 32, 59, 0.82) 72%),
     var(--ad-image),
@@ -1713,8 +1721,7 @@ html {
   scroll-snap-align: start;
 }
 
-.uni2-ad-card h3,
-.ds-page .ad-card h3 {
+.uni2-ad-card h3 {
   color: var(--blanco);
   font-size: clamp(2.1rem, 5vw, 4rem);
   line-height: 0.92;
@@ -1725,24 +1732,19 @@ html {
 
 .uni2-ad-card h3,
 .uni2-ad-card p,
-.uni2-ad-card .link,
-.ds-page .ad-card h3,
-.ds-page .ad-card p,
-.ds-page .ad-card .link {
+.uni2-ad-card .link {
   position: relative;
   z-index: 1;
 }
 
-.uni2-ad-card p,
-.ds-page .ad-card p {
+.uni2-ad-card p {
   color: rgba(255, 255, 255, 0.86);
   margin-bottom: 0;
   margin-top: 10px;
   max-width: 420px;
 }
 
-.uni2-ad-card .link,
-.ds-page .ad-card .link {
+.uni2-ad-card .link {
   color: var(--amarillo);
   font-weight: 900;
   margin-top: 1rem;
@@ -1752,14 +1754,12 @@ html {
   --ad-image: linear-gradient(135deg, var(--azul), var(--verde));
 }
 
-.uni2-steps,
-.ds-page .steps {
+.uni2-steps {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 34px;
 }
 
-.uni2-step-card,
-.ds-page .step {
+.uni2-step-card {
   border: 0;
   border-radius: 8px;
   border-top: 8px solid var(--step-color);
@@ -1782,17 +1782,12 @@ html {
   margin-bottom: 0;
 }
 
-.uni2-step-card-blue,
-.ds-page .step:nth-child(1) { --step-color: var(--azul); --step-dark: var(--azul-dark); }
-.uni2-step-card-yellow,
-.ds-page .step:nth-child(2) { --step-color: var(--amarillo); --step-dark: var(--amarillo-dark); }
-.uni2-step-card-green,
-.ds-page .step:nth-child(3) { --step-color: var(--verde); --step-dark: var(--verde-dark); }
-.uni2-step-card-red,
-.ds-page .step:nth-child(4) { --step-color: var(--rojo); --step-dark: var(--rojo-dark); }
+.uni2-step-card-blue { --step-color: var(--azul); --step-dark: var(--azul-dark); }
+.uni2-step-card-yellow { --step-color: var(--amarillo); --step-dark: var(--amarillo-dark); }
+.uni2-step-card-green { --step-color: var(--verde); --step-dark: var(--verde-dark); }
+.uni2-step-card-red { --step-color: var(--rojo); --step-dark: var(--rojo-dark); }
 
-.uni2-step-number,
-.ds-page .step strong {
+.uni2-step-number {
   background-blend-mode: soft-light, normal;
   background-image: var(--grain), linear-gradient(135deg, var(--step-dark) 0 24%, var(--step-color) 48% 100%);
   border-radius: 999px;
@@ -1804,8 +1799,7 @@ html {
   width: 48px;
 }
 
-.uni2-info-box,
-.ds-page .info-box {
+.uni2-info-box {
   background-blend-mode: soft-light, normal;
   background-image: var(--grain), linear-gradient(135deg, var(--azul-dark) 0 24%, var(--azul) 48% 100%);
   border-radius: var(--radio);
@@ -1818,16 +1812,13 @@ html {
 
 .uni2-info-box h3,
 .uni2-info-box p,
-.ds-page .info-box h3,
-.ds-page .info-box p,
 .ds-page .print-contact h3,
 .ds-page .print-contact a,
 .ds-page .contact-separator {
   color: var(--blanco);
 }
 
-.uni2-hours-table,
-.ds-page .hours-table {
+.uni2-hours-table {
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-collapse: separate;
   border-radius: 14px;
@@ -1838,16 +1829,13 @@ html {
 }
 
 .uni2-hours-table th,
-.uni2-hours-table td,
-.ds-page .hours-table th,
-.ds-page .hours-table td {
+.uni2-hours-table td {
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
   padding: 11px 12px;
   text-align: left;
 }
 
-.uni2-hours-table thead th,
-.ds-page .hours-table thead th {
+.uni2-hours-table thead th {
   background: rgba(255, 255, 255, 0.16);
   color: var(--amarillo);
   font-size: 0.76rem;
@@ -1855,8 +1843,7 @@ html {
   text-transform: uppercase;
 }
 
-.uni2-hours-chip,
-.ds-page .hours-chip {
+.uni2-hours-chip {
   border-radius: 999px;
   display: inline-flex;
   font-size: 0.82rem;
@@ -1866,12 +1853,9 @@ html {
   padding: 6px 10px;
 }
 
-.uni2-hours-chip-blue,
-.ds-page .hours-chip-blue { background: var(--blanco); color: var(--azul); }
-.uni2-hours-chip-yellow,
-.ds-page .hours-chip-yellow { background: var(--amarillo); color: #2d2606; }
-.uni2-hours-chip-green,
-.ds-page .hours-chip-green { background: var(--verde-dark); color: #ffffff; }
+.uni2-hours-chip-blue { background: var(--blanco); color: var(--azul); }
+.uni2-hours-chip-yellow { background: var(--amarillo); color: #2d2606; }
+.uni2-hours-chip-green { background: var(--verde-dark); color: #ffffff; }
 
 .ds-page .soon-card {
   background: var(--modal-bg);
@@ -2886,7 +2870,7 @@ html {
 }
 
 @media (min-width: 901px) {
-  .ds-page .menu-toggle:checked ~ .list-group {
+  .ds-page .topbar > .menu-toggle:checked ~ .list-group {
     background: var(--modal-bg);
     border: 1px solid var(--linea);
     border-radius: 18px;
@@ -2938,7 +2922,7 @@ html {
     display: grid;
   }
 
-  .ds-page .nav {
+  .ds-page .topbar > .nav {
     align-items: stretch;
     background: var(--modal-bg);
     border: 1px solid var(--linea);
@@ -2953,7 +2937,7 @@ html {
     top: calc(100% + 10px);
   }
 
-  .ds-page .menu-toggle:checked ~ .nav {
+  .ds-page .topbar > .menu-toggle:checked ~ .nav {
     display: flex;
   }
 
@@ -2961,8 +2945,7 @@ html {
     display: none;
   }
 
-  .uni2-hero,
-  .ds-page .hero {
+  .uni2-hero {
     background:
       linear-gradient(122deg, var(--fondo) 0 58%, transparent 58%),
       linear-gradient(140deg, var(--azul-dark) 0 50%, var(--azul) 58% 70%, var(--amarillo-dark) 70%, var(--amarillo) 75% 84%, var(--rojo-dark) 84%, var(--rojo) 90% 100%);
@@ -2971,8 +2954,7 @@ html {
     padding-top: 82px;
   }
 
-  .uni2-hero::after,
-  .ds-page .hero::after {
+  .uni2-hero::after {
     -webkit-mask-image: linear-gradient(122deg, transparent 0 58%, #000 58%);
     mask-image: linear-gradient(122deg, transparent 0 58%, #000 58%);
   }
@@ -2989,7 +2971,6 @@ html {
   }
 
   .uni2-info-box,
-  .ds-page .info-box,
   .ds-page .uni2-filter-bar {
     grid-template-columns: 1fr;
   }
@@ -3000,22 +2981,17 @@ html {
 }
 
 @media (max-width: 640px) {
-  .uni2-hero h1,
-  .ds-page .hero h1 {
+  .uni2-hero h1 {
     font-size: clamp(2.55rem, 13vw, 4rem);
   }
 
   .uni2-hero-actions,
-  .uni2-hero-actions .uni2-cta,
-  .ds-page .hero-actions,
-  .ds-page .hero-actions .cta {
+  .uni2-hero-actions .uni2-cta {
     width: 100%;
   }
 
   .uni2-cta,
-  .uni2-hero-actions .uni2-cta,
-  .ds-page .cta,
-  .ds-page .hero-actions .cta {
+  .uni2-hero-actions .uni2-cta {
     min-height: 52px;
   }
 
@@ -3085,7 +3061,6 @@ html {
   }
 
   .uni2-steps,
-  .ds-page .steps,
   .ds-page .product-price-grid,
   .ds-page .price-pair,
   .ds-page .cycle-wrap,
