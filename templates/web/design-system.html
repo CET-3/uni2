@@ -20,9 +20,10 @@
             <label class="menu-button" for="menu-toggle" aria-hidden="true"><span></span></label>
 
             <nav class="nav nav-pills flex-wrap gap-2" aria-label="Navegación del design system">
-                <a class="nav-link" href="#fundamentos">Fundamentos</a>
+                <a class="nav-link" href="#fundamentos">Tokens</a>
+                <a class="nav-link" href="#primitivos">Primitivos</a>
                 <a class="nav-link d-xl-none" href="#componentes">Componentes</a>
-                <a class="nav-link" href="#home">Home</a>
+                <a class="nav-link" href="#home">Patrones</a>
                 <a class="nav-link d-xl-none" href="#servicios">Servicios</a>
                 <a class="nav-link d-xl-none" href="#beneficios">Beneficios</a>
                 <a class="nav-link" href="#operaciones">Operaciones</a>
@@ -31,80 +32,227 @@
                 <a class="nav-link d-xl-none" href="{% url 'web:inicio' %}">Ver sitio</a>
             </nav>
             <nav class="list-group list-group-flush" aria-label="Más opciones del design system">
-                <a href="#componentes">Componentes</a>
-                <a href="#servicios">Servicios</a>
-                <a href="#beneficios">Beneficios</a>
-                <a href="{% url 'web:design-system-estructura' %}">Estructura</a>
-                <a href="{% url 'web:inicio' %}">Ver sitio</a>
+                <a class="list-group-item list-group-item-action" href="#primitivos">Primitivos</a>
+                <a class="list-group-item list-group-item-action" href="#componentes">Componentes</a>
+                <a class="list-group-item list-group-item-action" href="#servicios">Servicios</a>
+                <a class="list-group-item list-group-item-action" href="#beneficios">Beneficios</a>
+                <a class="list-group-item list-group-item-action" href="{% url 'web:design-system-estructura' %}">Estructura</a>
+                <a class="list-group-item list-group-item-action" href="{% url 'web:inicio' %}">Ver sitio</a>
             </nav>
             <a class="uni2-cta uni2-cta-secondary service-topbar-cta" href="{% url 'web:inicio' %}">Ver sitio</a>
         </header>
 
         <main>
-            <section class="mb-5" id="fundamentos" aria-labelledby="fundamentos-title">
+            <section class="py-5 px-3 px-md-4 px-xl-5" id="fundamentos" aria-labelledby="fundamentos-title">
                 <div class="section-inner">
                     <div class="mb-4">
-                        <p class="h6 text-muted mb-3">Fundamentos</p>
+                        <p class="h6 text-muted mb-3">Capa 1 · Tokens</p>
                         <h1 id="fundamentos-title">Sistema visual UNI2</h1>
                         <p>Referencia de tokens, tipografía y controles base para mantener consistencia en HTML estático y en la futura app Django + Bootstrap.</p>
+                        <div class="row g-3 mt-3">
+                            <div class="col-12 col-sm-6 col-xl">
+                                <a href="#fundamentos" class="card h-100 text-decoration-none border-primary">
+                                    <div class="card-body">
+                                        <p class="badge text-bg-primary mb-2">1</p>
+                                        <h3 class="h6 mb-1">Tokens</h3>
+                                        <p class="small text-muted mb-0">Variables CSS con los valores concretos: colores, tipografía, espaciado, sombras.</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-xl">
+                                <a href="#primitivos" class="card h-100 text-decoration-none">
+                                    <div class="card-body">
+                                        <p class="badge text-bg-secondary mb-2">2</p>
+                                        <h3 class="h6 mb-1">Primitivos</h3>
+                                        <p class="small text-muted mb-0">Átomos sin lógica de negocio: botones, inputs, badges, alertas.</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-xl">
+                                <a href="#componentes" class="card h-100 text-decoration-none">
+                                    <div class="card-body">
+                                        <p class="badge text-bg-secondary mb-2">3</p>
+                                        <h3 class="h6 mb-1">Componentes</h3>
+                                        <p class="small text-muted mb-0">Combinaciones de primitivos con una responsabilidad: navbar, footer, modal.</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-xl">
+                                <a href="#home" class="card h-100 text-decoration-none">
+                                    <div class="card-body">
+                                        <p class="badge text-bg-secondary mb-2">4</p>
+                                        <h3 class="h6 mb-1">Patrones</h3>
+                                        <p class="small text-muted mb-0">Soluciones repetibles: hero, listado de beneficios, secciones de servicios.</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-xl">
+                                <a href="#operaciones" class="card h-100 text-decoration-none">
+                                    <div class="card-body">
+                                        <p class="badge text-bg-secondary mb-2">5</p>
+                                        <h3 class="h6 mb-1">Páginas</h3>
+                                        <p class="small text-muted mb-0">Layouts completos con lógica de negocio: formularios, dashboards, flujos.</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="row g-3" aria-label="Tokens de color">
-                        <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden" style="--swatch: var(--azul);"><div class="card-img-top bg-body-secondary"></div><div class="card-body"><strong>Azul</strong><code>--azul</code></div></article></div>
-                        <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden" style="--swatch: var(--amarillo);"><div class="card-img-top bg-body-secondary"></div><div class="card-body"><strong>Amarillo</strong><code>--amarillo</code></div></article></div>
-                        <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden" style="--swatch: var(--verde);"><div class="card-img-top bg-body-secondary"></div><div class="card-body"><strong>Verde</strong><code>--verde</code></div></article></div>
-                        <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden" style="--swatch: var(--rojo);"><div class="card-img-top bg-body-secondary"></div><div class="card-body"><strong>Rojo</strong><code>--rojo</code></div></article></div>
+                    <div class="mt-2">
+                        <p class="h6 text-muted mb-3">Colores</p>
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div class="card-img-top" style="height:96px;background:var(--azul)" aria-hidden="true"></div><div class="card-body d-flex justify-content-between align-items-center gap-2"><strong>Azul</strong><code>--azul</code></div></article></div>
+                            <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div class="card-img-top" style="height:96px;background:var(--amarillo)" aria-hidden="true"></div><div class="card-body d-flex justify-content-between align-items-center gap-2"><strong>Amarillo</strong><code>--amarillo</code></div></article></div>
+                            <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div class="card-img-top" style="height:96px;background:var(--verde)" aria-hidden="true"></div><div class="card-body d-flex justify-content-between align-items-center gap-2"><strong>Verde</strong><code>--verde</code></div></article></div>
+                            <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div class="card-img-top" style="height:96px;background:var(--rojo)" aria-hidden="true"></div><div class="card-body d-flex justify-content-between align-items-center gap-2"><strong>Rojo</strong><code>--rojo</code></div></article></div>
+                        </div>
                     </div>
 
-                    <div class="row g-3" style="margin-top:18px">
-                        <div class="col-12 col-lg-6">
-                            <article class="card h-100">
-                                <span class="badge text-bg-light border">Tipografía</span>
-                                <span class="uni2-eyebrow">Mutual Escolar UNI2</span>
+                    <div class="mt-4">
+                        <p class="h6 text-muted mb-3">Tipografía</p>
+                        <article class="card">
+                            <div class="card-body">
+                                <span class="uni2-eyebrow">Eyebrow · sobre-título decorativo</span>
+                                <h1>Título de página</h1>
                                 <h2>Titular de sección</h2>
                                 <h3>Subtítulo de componente</h3>
-                                <p>Texto de apoyo para cards, secciones y páginas internas.</p>
-                            </article>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <article class="card h-100">
-                                <span class="badge text-bg-light border">Acciones y estados</span>
-                                <div class="uni2-inline-stack">
-                                    <a class="uni2-cta" href="#home">Acción principal</a>
-                                    <a class="uni2-cta uni2-cta-secondary" href="#componentes">Acción secundaria</a>
-                                    <span class="badge">Badge</span>
-                                    <strong class="discount">10% OFF</strong>
-                                </div>
-                            </article>
+                                <p class="mb-0">Texto de apoyo para cards, secciones y páginas internas.</p>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="mt-4">
+                        <p class="h6 text-muted mb-3">Radio de borde</p>
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-4">
+                                <article class="card h-100">
+                                    <div class="card-body">
+                                        <div class="mb-3" style="height:40px;background:var(--border);border-radius:var(--radius-sm)" aria-hidden="true"></div>
+                                        <code>--radius-sm</code>
+                                        <p class="small text-muted mb-0">8px · inputs, botones</p>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <article class="card h-100">
+                                    <div class="card-body">
+                                        <div class="mb-3" style="height:40px;background:var(--border);border-radius:var(--radius)" aria-hidden="true"></div>
+                                        <code>--radius</code>
+                                        <p class="small text-muted mb-0">12px · cards, paneles</p>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <article class="card h-100">
+                                    <div class="card-body">
+                                        <div class="mb-3" style="height:40px;background:var(--border);border-radius:var(--radius-lg)" aria-hidden="true"></div>
+                                        <code>--radius-lg</code>
+                                        <p class="small text-muted mb-0">20px · secciones destacadas</p>
+                                    </div>
+                                </article>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="card" style="margin-top:18px">
-                        <span class="badge text-bg-light border">Bootstrap 5.3.8 incluido</span>
+                    <div class="mt-4">
+                        <p class="h6 text-muted mb-3">Elevación</p>
                         <div class="row g-3">
-                            <div class="col-12 col-lg-4">
-                                <div class="card h-100">
+                            <div class="col-12 col-sm-4">
+                                <article class="card h-100">
                                     <div class="card-body">
-                                        <h3 class="card-title h5">Grid</h3>
-                                        <p class="card-text">Ejemplo con <code>.row</code>, <code>.col-12</code> y <code>.col-lg-4</code>.</p>
-                                        <a class="btn btn-primary" href="#django">Ver templates</a>
+                                        <div class="mb-3 rounded" style="height:40px;background:var(--bg);box-shadow:var(--shadow-sm)" aria-hidden="true"></div>
+                                        <code>--shadow-sm</code>
+                                        <p class="small text-muted mb-0">Cards en reposo</p>
                                     </div>
+                                </article>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <article class="card h-100">
+                                    <div class="card-body">
+                                        <div class="mb-3 rounded" style="height:40px;background:var(--bg);box-shadow:var(--shadow-md)" aria-hidden="true"></div>
+                                        <code>--shadow-md</code>
+                                        <p class="small text-muted mb-0">Cards en hover, dropdowns</p>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <article class="card h-100">
+                                    <div class="card-body">
+                                        <div class="mb-3 rounded" style="height:40px;background:var(--surface-solid);box-shadow:var(--sombra)" aria-hidden="true"></div>
+                                        <code>--sombra</code>
+                                        <p class="small text-muted mb-0">Modals, overlays</p>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-5 px-3 px-md-4 px-xl-5 bg-body-tertiary" id="primitivos" aria-labelledby="primitivos-title">
+                <div class="section-inner">
+                    <div class="mb-4">
+                        <p class="h6 text-muted mb-3">Capa 2 · Primitivos</p>
+                        <h2 id="primitivos-title">Átomos base</h2>
+                        <p>Los elementos más pequeños del sistema. No tienen lógica de negocio: solo forma, color y estado. Todo componente se construye combinando estos átomos.</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <h3 class="h6 mb-3">Botones</h3>
+                            <div class="card">
+                                <div class="card-body d-flex flex-wrap gap-2 align-items-center">
+                                    <button class="btn btn-primary">Principal</button>
+                                    <button class="btn btn-outline-primary">Secundario</button>
+                                    <button class="btn btn-light">Terciario</button>
+                                    <button class="btn btn-danger">Peligro</button>
+                                    <button class="btn btn-primary" disabled>Deshabilitado</button>
+                                    <a class="uni2-cta" href="#primitivos">CTA sitio</a>
+                                    <a class="uni2-cta uni2-cta-secondary" href="#primitivos">CTA secundario</a>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <ul class="list-group h-100">
-                                    <li class="list-group-item active" aria-current="true">Componentes Bootstrap</li>
-                                    <li class="list-group-item">Cards</li>
-                                    <li class="list-group-item">List groups</li>
-                                    <li class="list-group-item">Tablas responsive</li>
-                                </ul>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <h3 class="h6 mb-3">Alertas</h3>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="alert alert-success mb-0" role="alert">Operación exitosa.</div>
+                                <div class="alert alert-danger mb-0" role="alert">Ocurrió un error.</div>
+                                <div class="alert alert-warning mb-0" role="alert">Atención requerida.</div>
+                                <div class="alert alert-info mb-0" role="alert">Información adicional.</div>
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="table-responsive">
-                                    <table class="table table-sm align-middle mb-0">
-                                        <thead><tr><th>Clase</th><th>Uso</th></tr></thead>
-                                        <tbody><tr><td><code>.btn</code></td><td>Acciones base</td></tr><tr><td><code>.card</code></td><td>Contenedores</td></tr></tbody>
-                                    </table>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <h3 class="h6 mb-3">Badges</h3>
+                            <div class="card h-100">
+                                <div class="card-body d-flex flex-wrap gap-2 align-items-center">
+                                    <span class="badge text-bg-primary">Activo</span>
+                                    <span class="badge text-bg-success">Aprobado</span>
+                                    <span class="badge text-bg-danger">Rechazado</span>
+                                    <span class="badge text-bg-warning">Pendiente</span>
+                                    <span class="badge text-bg-secondary">Inactivo</span>
+                                    <span class="badge text-bg-light border">Neutro</span>
+                                    <strong class="discount">10% OFF</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <h3 class="h6 mb-3">Campos de formulario</h3>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-4">
+                                    <label class="form-label" for="prim-normal">Normal</label>
+                                    <input class="form-control" type="text" id="prim-normal" placeholder="Texto de ejemplo">
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <label class="form-label" for="prim-valid">Válido</label>
+                                    <input class="form-control is-valid" type="text" id="prim-valid" value="Datos correctos">
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <label class="form-label" for="prim-invalid">Inválido</label>
+                                    <input class="form-control is-invalid" type="text" id="prim-invalid" value="">
+                                    <div class="invalid-feedback">Este campo es requerido.</div>
                                 </div>
                             </div>
                         </div>
@@ -112,10 +260,10 @@
                 </div>
             </section>
 
-            <section class="mb-5" id="componentes" aria-labelledby="componentes-title">
+            <section class="py-5 px-3 px-md-4 px-xl-5" id="componentes" aria-labelledby="componentes-title">
                 <div class="section-inner">
                     <div class="mb-4">
-                        <p class="h6 text-muted mb-3">Componentes globales</p>
+                        <p class="h6 text-muted mb-3">Capa 3 · Componentes</p>
                         <h2 id="componentes-title">Piezas compartidas</h2>
                         <p>Elementos que aparecen en varias páginas: navegación, modal, contacto, footer y estados interactivos.</p>
                     </div>
@@ -158,10 +306,10 @@
                 </div>
             </section>
 
-            <section class="mb-5" id="home" aria-labelledby="home-title">
+            <section class="py-5 px-3 px-md-4 px-xl-5" id="home" aria-labelledby="home-title">
                 <div class="section-inner">
                     <div class="mb-4">
-                        <p class="h6 text-muted mb-3">Home</p>
+                        <p class="h6 text-muted mb-3">Capa 4 · Patrones</p>
                         <h2 id="home-title">Secciones principales</h2>
                         <p>La home se conserva como patrón completo: hero, servicios, club de beneficios, slider y pasos de asociación.</p>
                     </div>
@@ -281,10 +429,10 @@
                 </div>
             </section>
 
-            <section class="mb-5" id="servicios" aria-labelledby="servicios-title">
+            <section class="py-5 px-3 px-md-4 px-xl-5 bg-body-tertiary" id="servicios" aria-labelledby="servicios-title">
                 <div class="section-inner">
                     <div class="mb-4">
-                        <p class="h6 text-muted mb-3">Servicios</p>
+                        <p class="h6 text-muted mb-3">Capa 4 · Patrones</p>
                         <h2 id="servicios-title">Patrones de páginas internas</h2>
                         <p>Componentes para servicios con precios, productos, tablas agrupadas y contacto.</p>
                     </div>
@@ -398,10 +546,10 @@
                 </div>
             </section>
 
-            <section class="mb-5" id="operaciones" aria-labelledby="operaciones-title">
+            <section class="py-5 px-3 px-md-4 px-xl-5" id="operaciones" aria-labelledby="operaciones-title">
                 <div class="section-inner">
                     <div class="mb-4">
-                        <p class="h6 text-muted mb-3">Operaciones</p>
+                        <p class="h6 text-muted mb-3">Capa 5 · Páginas</p>
                         <h2 id="operaciones-title">Formularios, filtros y dashboards</h2>
                         <p>Patrones para las futuras vistas internas de Django: alta de datos, búsquedas filtradas e indicadores de gestión.</p>
                     </div>
@@ -409,8 +557,9 @@
                     <div class="row g-3">
                         <div class="col-12 col-xl-8">
                             <article class="card h-100">
-                                <span class="badge text-bg-light border">Formulario de asociado</span>
-                                <form action="#" method="get">
+                                <div class="card-body">
+                                    <span class="badge text-bg-light border">Formulario de asociado</span>
+                                    <form action="#" method="get">
                                     <div class="row g-3">
                                         <div class="col-12 col-md-6">
                                             <label class="form-label" for="nombre">Nombre y apellido</label>
@@ -451,31 +600,35 @@
                                         <button class="uni2-cta" type="button">Guardar asociado</button>
                                         <button class="uni2-cta uni2-cta-secondary" type="reset">Limpiar</button>
                                     </div>
-                                </form>
+                                    </form>
+                                </div>
                             </article>
                         </div>
 
                         <div class="col-12 col-xl-4">
                             <article class="card h-100">
-                                <span class="badge text-bg-light border">Estados de formulario</span>
-                                <label class="form-label" for="campo-valid">Campo validado</label>
-                                <input class="form-control is-valid" type="text" id="campo-valid" value="Datos completos">
-                                <div class="valid-feedback">Listo para guardar.</div>
+                                <div class="card-body">
+                                    <span class="badge text-bg-light border">Estados de formulario</span>
+                                    <label class="form-label" for="campo-valid">Campo validado</label>
+                                    <input class="form-control is-valid" type="text" id="campo-valid" value="Datos completos">
+                                    <div class="valid-feedback">Listo para guardar.</div>
 
-                                <label class="form-label mt-3" for="campo-invalid">Campo con error</label>
-                                <input class="form-control is-invalid" type="text" id="campo-invalid" value="">
-                                <div class="invalid-feedback">Este dato es obligatorio.</div>
+                                    <label class="form-label mt-3" for="campo-invalid">Campo con error</label>
+                                    <input class="form-control is-invalid" type="text" id="campo-invalid" value="">
+                                    <div class="invalid-feedback">Este dato es obligatorio.</div>
 
-                                <div class="alert alert-info" style="margin-top:16px">
-                                    <p>Usar validaciones visuales de Bootstrap y mensajes breves. La lógica real queda para Django forms.</p>
+                                    <div class="alert alert-info" style="margin-top:16px">
+                                        <p>Usar validaciones visuales de Bootstrap y mensajes breves. La lógica real queda para Django forms.</p>
+                                    </div>
                                 </div>
                             </article>
                         </div>
                     </div>
 
                     <article class="card" style="margin-top:18px">
-                        <span class="badge text-bg-light border">Filtros de búsqueda</span>
-                        <form class="uni2-filter-bar" action="#" method="get">
+                        <div class="card-body">
+                            <span class="badge text-bg-light border">Filtros de búsqueda</span>
+                            <form class="uni2-filter-bar" action="#" method="get">
                             <div>
                                 <label class="form-label" for="buscar">Buscar</label>
                                 <input class="form-control" type="search" id="buscar" name="q" placeholder="Nombre, DNI, comercio o servicio">
@@ -502,12 +655,13 @@
                                 <input class="form-control" type="date" id="fecha" name="desde">
                             </div>
                             <button class="uni2-cta" type="button">Filtrar</button>
-                        </form>
-                        <div class="uni2-chip-row" aria-label="Filtros activos">
-                            <span class="uni2-filter-chip"><i data-lucide="search"></i> "cuadernillos"</span>
-                            <span class="uni2-filter-chip"><i data-lucide="tag"></i> Servicios</span>
-                            <span class="uni2-filter-chip"><i data-lucide="check-circle"></i> Activos</span>
-                            <button class="btn btn-sm btn-outline-secondary" type="button">Limpiar filtros</button>
+                            </form>
+                            <div class="uni2-chip-row" aria-label="Filtros activos">
+                                <span class="uni2-filter-chip"><i data-lucide="search"></i> "cuadernillos"</span>
+                                <span class="uni2-filter-chip"><i data-lucide="tag"></i> Servicios</span>
+                                <span class="uni2-filter-chip"><i data-lucide="check-circle"></i> Activos</span>
+                                <button class="btn btn-sm btn-outline-secondary" type="button">Limpiar filtros</button>
+                            </div>
                         </div>
                     </article>
 
@@ -518,8 +672,8 @@
                         <article class="uni2-metric uni2-metric-red"><span>Servicios usados</span><strong>1.284</strong><p>Fotocopias y cuadernillos</p></article>
                     </div>
 
-                    <article class="card" style="margin-top:18px">
-                        <span class="badge text-bg-light border">Indicadores compactos con tendencia</span>
+                    <section class="mt-4" aria-labelledby="compact-metrics-title">
+                        <h3 class="h6 mb-3" id="compact-metrics-title">Indicadores compactos con tendencia</h3>
                         <div class="uni2-compact-metric-grid" aria-label="Indicadores compactos">
                             <article class="uni2-compact-metric uni2-compact-blue">
                                 <span class="uni2-compact-icon" aria-hidden="true"><i data-lucide="users"></i></span>
@@ -546,13 +700,14 @@
                                 <div class="uni2-progress" aria-hidden="true"><span style="--progress: 46%"></span></div>
                             </article>
                         </div>
-                    </article>
+                    </section>
 
                     <div class="row g-3" style="margin-top:18px">
                         <div class="col-12 col-xl-8">
                             <article class="card h-100">
-                                <span class="badge text-bg-light border">Tabla de gestión</span>
-                                <div class="table-responsive">
+                                <div class="card-body">
+                                    <span class="badge text-bg-light border">Tabla de gestión</span>
+                                    <div class="table-responsive">
                                     <table class="table table-hover align-middle mb-0">
                                         <thead>
                                             <tr><th>Registro</th><th>Tipo</th><th>Estado</th><th>Última actividad</th></tr>
@@ -565,17 +720,20 @@
                                             <tr><td>Cuota Sofía Gómez</td><td>Cuota</td><td><span class="uni2-status uni2-status-paid">Pagada</span></td><td>Ayer 16:30</td></tr>
                                         </tbody>
                                     </table>
+                                    </div>
                                 </div>
                             </article>
                         </div>
 
                         <div class="col-12 col-xl-4">
                             <aside class="card h-100">
-                                <span class="badge text-bg-light border">Actividad reciente</span>
-                                <div class="uni2-activity-list">
-                                    <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="user-plus"></i></span><div><h3>Alta registrada</h3><p>Se agregó un asociado de 2 C.B.</p></div></div>
-                                    <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="badge-percent"></i></span><div><h3>Beneficio actualizado</h3><p>Latte Cafetería cambió su descuento.</p></div></div>
-                                    <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="printer"></i></span><div><h3>Servicio consultado</h3><p>Cuadernillos recibió nuevas reservas.</p></div></div>
+                                <div class="card-body">
+                                    <span class="badge text-bg-light border">Actividad reciente</span>
+                                    <div class="uni2-activity-list">
+                                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="user-plus"></i></span><div><h3>Alta registrada</h3><p>Se agregó un asociado de 2 C.B.</p></div></div>
+                                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="badge-percent"></i></span><div><h3>Beneficio actualizado</h3><p>Latte Cafetería cambió su descuento.</p></div></div>
+                                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="printer"></i></span><div><h3>Servicio consultado</h3><p>Cuadernillos recibió nuevas reservas.</p></div></div>
+                                    </div>
                                 </div>
                             </aside>
                         </div>
@@ -583,7 +741,7 @@
                 </div>
             </section>
 
-            <section class="mb-5" id="django" aria-labelledby="django-title">
+            <section class="py-5 px-3 px-md-4 px-xl-5 bg-body-tertiary" id="django" aria-labelledby="django-title">
                 <div class="section-inner">
                     <div class="mb-4">
                         <p class="h6 text-muted mb-3">Django + Bootstrap</p>
@@ -594,15 +752,15 @@
                     <div class="row g-3">
                         <div class="col-12 col-xl-8">
                             <div class="row g-3">
-                                <div class="col-12 col-md-6"><article class="card h-100"><h3>base.html</h3><p>Head, fuentes, `uni2-design-system.css`, script de tema, topbar, bloque main, footer y scripts comunes.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="card h-100"><h3>includes/topbar.html</h3><p>Marca, navegación, CTAs y versión responsive.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="card h-100"><h3>includes/footer.html</h3><p>Íconos de contacto, ubicación y texto institucional.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/media_list_item.html</h3><p>Imagen o logo, título, descripción, metadata y etiqueta destacada para listados.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/action_card.html</h3><p>Ícono, título, descripción y link para accesos principales.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/comparison_table.html</h3><p>Tabla para comparar columnas de valores, estados o condiciones.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/filter_bar.html</h3><p>Búsqueda, selects, rango de fecha, chips activos y acción de limpiar.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="card h-100"><h3>components/metric_card.html</h3><p>Indicadores de dashboard con número, contexto y color semántico.</p></article></div>
-                                <div class="col-12 col-md-6"><article class="card h-100"><h3>forms/entity_form.html</h3><p>Formulario Django renderizado con clases Bootstrap y mensajes de validación.</p></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>base.html</h3><p>Head, fuentes, `uni2-design-system.css`, script de tema, topbar, bloque main, footer y scripts comunes.</p></div></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/topbar.html</h3><p>Marca, navegación, CTAs y versión responsive.</p></div></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/footer.html</h3><p>Íconos de contacto, ubicación y texto institucional.</p></div></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/media_list_item.html</h3><p>Imagen o logo, título, descripción, metadata y etiqueta destacada para listados.</p></div></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/action_card.html</h3><p>Ícono, título, descripción y link para accesos principales.</p></div></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/comparison_table.html</h3><p>Tabla para comparar columnas de valores, estados o condiciones.</p></div></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/filter_bar.html</h3><p>Búsqueda, selects, rango de fecha, chips activos y acción de limpiar.</p></div></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/metric_card.html</h3><p>Indicadores de dashboard con número, contexto y color semántico.</p></div></article></div>
+                                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>forms/entity_form.html</h3><p>Formulario Django renderizado con clases Bootstrap y mensajes de validación.</p></div></article></div>
                             </div>
                         </div>
                         <div class="col-12 col-xl-4"><pre class="bg-body-tertiary border rounded p-3 small h-100"><code>{% verbatim %}{% extends "base.html" %}
