@@ -167,13 +167,6 @@
   padding: 2rem 0;
 }
 
-.uni2-benefit-links {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  min-width: 0;
-  overflow: visible;
-  padding-bottom: 0;
-  width: 100%;
-}
 
 .uni2-benefit-mix-card {
   aspect-ratio: 1 / 1;
@@ -410,16 +403,9 @@ html {
 }
 
 /* === GRIDS === */
-.uni2-service-grid,
-.uni2-steps,
-.uni2-benefit-links,
 .uni2-metric-grid {
   display: grid;
   gap: 18px;
-}
-
-.uni2-service-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 /* === SERVICE CARD === */
@@ -504,10 +490,6 @@ html {
   box-shadow: var(--sombra);
 }
 
-.uni2-steps {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 34px;
-}
 
 .uni2-step-card {
   border: 0;
@@ -2317,12 +2299,6 @@ html {
 }
 
 @media (max-width: 1080px) {
-  .uni2-service-grid,
-  .uni2-benefit-links,
-  .uni2-steps,
-  .steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .uni2-detail-layout {
     grid-template-columns: 1fr;
@@ -2375,10 +2351,6 @@ html {
     min-height: 52px;
   }
 
-  .uni2-service-grid {
-    gap: 10px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .uni2-service-card {
     gap: 14px;
@@ -2391,10 +2363,6 @@ html {
     width: 50px;
   }
 
-  .uni2-benefit-links {
-    gap: 10px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .uni2-benefit-mix-card {
     border-radius: 14px;
