@@ -1481,7 +1481,7 @@ html {
   border-color: rgba(0, 0, 0, 0.12);
 }
 
-.uni2-dashboard-page .uni2-service-card {
+.uni2-dashboard-page .row .uni2-service-card {
   gap: 0;
   min-height: auto;
   padding: 1rem 1.5rem;
