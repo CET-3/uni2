@@ -2,7 +2,7 @@
 
 {% block title %}{{ actividad_comercial.nombre }} | Uni2{% endblock %}
 
-{% block body_class %} detail-page{% endblock %}
+{% block body_class %} uni2-detail-page{% endblock %}
 
 {% block extra_head %}
   {{ block.super }}
@@ -12,27 +12,27 @@
 {% block content %}
 <section aria-labelledby="actividad-title">
   <div class="container py-4 d-grid gap-3">
-    <div class="benefit-page-header">
+    <div class="uni2-benefit-page-header">
       <h1 id="actividad-title">{{ actividad_comercial.nombre }}</h1>
       <p>Comercios adheridos en esta categoría.</p>
     </div>
 
-    <div class="benefit-list" aria-label="Comercios adheridos">
+    <div class="uni2-benefit-list" aria-label="Comercios adheridos">
       {% for comercio in actividad_comercial.comercios.all %}
-        <a class="benefit-list-card" href="{% url 'web:comercio_detalle' comercio.pk %}" aria-label="Ver detalle de {{ comercio.nombre }}">
-          <span class="benefit-list-logo{% if not comercio.foto %} benefit-list-initials{% endif %}">
+        <a class="uni2-benefit-list-card" href="{% url 'web:comercio_detalle' comercio.pk %}" aria-label="Ver detalle de {{ comercio.nombre }}">
+          <span class="uni2-benefit-list-logo{% if not comercio.foto %} uni2-benefit-list-initials{% endif %}">
             {% if comercio.foto %}
               <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
             {% else %}
               {{ comercio.nombre|slice:":2"|upper }}
             {% endif %}
           </span>
-          <span class="benefit-list-body">
+          <span class="uni2-benefit-list-body">
             <h2>{{ comercio.nombre }}</h2>
             {% if comercio.beneficio_texto %}
-              <strong class="discount-tag">{{ comercio.beneficio_texto }}</strong>
+              <strong class="uni2-discount-tag">{{ comercio.beneficio_texto }}</strong>
             {% endif %}
-            <span class="benefit-meta">
+            <span class="uni2-benefit-meta">
               <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {{ comercio.direccion }}</span>
               {% if comercio.telefono %}
                 <span><i class="fa-solid fa-phone" aria-hidden="true"></i> {{ comercio.telefono }}</span>

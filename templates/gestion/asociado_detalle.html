@@ -9,7 +9,7 @@
         <h1 class="h2 mb-1">{{ asociado.apellido }}, {{ asociado.nombre }}</h1>
         <p class="text-secondary mb-0">Número {{ asociado.numero_asociado }} · DNI {{ asociado.dni }}</p>
     </div>
-    <div class="page-header-actions">
+    <div class="uni2-page-header-actions">
         <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Volver al listado</a>
         <a class="btn btn-outline-primary" href="{{ cuotas_url }}">Ver todas las cuotas</a>
         {% if perms.gestion.editar_asociados %}
@@ -29,7 +29,7 @@
 
 <div class="row g-4 mb-4">
     <div class="col-lg-4">
-        <div class="card surface-card h-100"><div class="card-body">
+        <div class="card uni2-surface-card h-100"><div class="card-body">
             <h2 class="h5 mb-3">Estado general</h2>
             <p class="mb-2"><strong>Tipo:</strong> {{ asociado.get_tipo_display }}</p>
             <p class="mb-2"><strong>Estado:</strong> {{ asociado.get_estado_display }}</p>
@@ -39,7 +39,7 @@
         </div></div>
     </div>
     <div class="col-lg-4">
-        <div class="card surface-card h-100"><div class="card-body">
+        <div class="card uni2-surface-card h-100"><div class="card-body">
             <h2 class="h5 mb-3">Contacto y acceso</h2>
             <p class="mb-2"><strong>Email:</strong> {{ asociado.email|default:"-" }}</p>
             <p class="mb-2"><strong>Teléfono:</strong> {{ asociado.telefono|default:"-" }}</p>
@@ -48,7 +48,7 @@
         </div></div>
     </div>
     <div class="col-lg-4">
-        <div class="card surface-card h-100"><div class="card-body">
+        <div class="card uni2-surface-card h-100"><div class="card-body">
             <h2 class="h5 mb-3">Deuda</h2>
             <p class="display-6 mb-2">${{ total_deuda }}</p>
             <p class="text-secondary mb-0">Calculada al {{ fecha_referencia|date:"d/m/Y" }}</p>
@@ -58,7 +58,7 @@
 
 <div class="row g-4">
     <div class="col-lg-7">
-        <div class="card surface-card h-100"><div class="card-body">
+        <div class="card uni2-surface-card h-100"><div class="card-body">
             <h2 class="h5 mb-3">Cuotas del año actual</h2>
             <div class="table-responsive">
                 <table class="table table-soft align-middle mb-0">
@@ -81,7 +81,7 @@
         </div></div>
     </div>
     <div class="col-lg-5">
-        <div class="card surface-card"><div class="card-body">
+        <div class="card uni2-surface-card"><div class="card-body">
             <h2 class="h5 mb-3">Pagos recientes</h2>
             <ul class="list-group list-group-flush">
                 {% for pago in pagos_recientes %}

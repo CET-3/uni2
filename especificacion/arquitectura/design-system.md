@@ -34,6 +34,8 @@ Los componentes visuales propios de Uni2 usan clases productivas con prefijo `un
 
 La página interna `/design-system/` usa los componentes estándar de Bootstrap para su mobiliario documental: navegación, grillas, cards, badges, listas, espaciado, bordes y fondos. Esto evita mantener CSS propio para estructuras que Bootstrap ya resuelve y permite que el catálogo se concentre en mostrar los componentes propios de Uni2.
 
+Las secciones completas y los agrupadores se presentan como bandas o bloques sin card. Una card se usa solamente cuando representa una unidad individual con límite propio: un elemento repetido, un formulario, una métrica o un ejemplo aislado. No se anidan cards; si un bloque agrupa varias unidades que ya tienen borde o superficie propios, el agrupador queda sin borde.
+
 La clase `ds-page` se reserva para la página interna `/design-system/`. Sirve como marco documental del catálogo: navegación propia, secciones de explicación, previews y tarjetas de referencia. Las páginas productivas no deben depender de `ds-page` para que un componente se vea correctamente.
 
 Cuando el catálogo muestra un componente que también existe en producción, debe usar la misma clase productiva `uni2-*` que usa la pantalla real. `ds-page` es la única clase con prefijo `ds-*`; no se crean variantes como `ds-card`, `ds-kicker`, `ds-heading` o `ds-preview` porque esas responsabilidades se resuelven con Bootstrap.
