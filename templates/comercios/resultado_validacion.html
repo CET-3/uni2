@@ -9,9 +9,9 @@
             <div class="card-body p-4">
                 <h1 class="h3 mb-3">Resultado de validación</h1>
                 {% if resultado.valida %}
-                    <div class="alert alert-success">Credencial válida.</div>
+                    {% include "components/alert.html" with variant="success" title="Credencial válida" message="La credencial está activa y puede utilizarse." only %}
                 {% else %}
-                    <div class="alert alert-danger">{{ resultado.mensaje|default:"Credencial inválida o inactiva." }}</div>
+                    {% include "components/alert.html" with variant="danger" message=resultado.mensaje|default:"Credencial inválida o inactiva." only %}
                 {% endif %}
 
                 {% if resultado.nombre %}

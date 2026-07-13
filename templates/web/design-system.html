@@ -56,7 +56,7 @@
                         </a>
                         <a href="#tokens" class="d-flex align-items-center gap-3 text-decoration-none p-2 rounded border border-primary">
                             <span class="badge text-bg-primary flex-shrink-0" style="width:28px">1</span>
-                            <div><strong class="d-block small">Tokens</strong><span class="text-muted" style="font-size:.8rem">Variables CSS: colores, tipografía, espaciado, sombras</span></div>
+                            <div><strong class="d-block small">Tokens</strong><span class="text-muted" style="font-size:.8rem">Variables CSS: colores, tipografía, forma, sombras y movimiento</span></div>
                         </a>
                     </div>
                     <p class="small text-muted mt-3 mb-0">La base de la pirámide son los <strong>tokens</strong>: los valores concretos que definen la identidad visual. Todo lo que está encima los usa, pero nunca los repite.</p>
@@ -83,23 +83,33 @@
         <p class="h6 text-muted mb-3">Paleta de marca</p>
         <p class="small text-muted mb-3">Los cuatro colores de identidad de UNI2, cada uno con su variante oscura para hover y contraste.</p>
         <div class="row g-3">
-            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--azul)" aria-hidden="true"></div><div style="height:32px;background:var(--azul-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Azul</strong><code class="small text-muted">--azul / --azul-dark</code></div></article></div>
-            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--amarillo)" aria-hidden="true"></div><div style="height:32px;background:var(--amarillo-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Amarillo</strong><code class="small text-muted">--amarillo / --amarillo-dark</code></div></article></div>
-            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--verde)" aria-hidden="true"></div><div style="height:32px;background:var(--verde-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Verde</strong><code class="small text-muted">--verde / --verde-dark</code></div></article></div>
-            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--rojo)" aria-hidden="true"></div><div style="height:32px;background:var(--rojo-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Rojo</strong><code class="small text-muted">--rojo / --rojo-dark</code></div></article></div>
+            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--brand-blue)" aria-hidden="true"></div><div style="height:32px;background:var(--brand-blue-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Azul</strong><code class="small text-muted">--brand-blue / --brand-blue-dark</code></div></article></div>
+            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--brand-yellow)" aria-hidden="true"></div><div style="height:32px;background:var(--brand-yellow-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Amarillo</strong><code class="small text-muted">--brand-yellow / --brand-yellow-dark</code></div></article></div>
+            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--brand-green)" aria-hidden="true"></div><div style="height:32px;background:var(--brand-green-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Verde</strong><code class="small text-muted">--brand-green / --brand-green-dark</code></div></article></div>
+            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--brand-red)" aria-hidden="true"></div><div style="height:32px;background:var(--brand-red-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Rojo</strong><code class="small text-muted">--brand-red / --brand-red-dark</code></div></article></div>
         </div>
     </div>
 
     <div class="mt-4">
         <p class="h6 text-muted mb-3">Colores semánticos</p>
-        <p class="small text-muted mb-3">Estos tokens cambian de valor entre el tema claro y el oscuro. Los componentes los usan en lugar de los colores de marca directos, para que el modo oscuro funcione automáticamente.</p>
+        <p class="small text-muted mb-3">Inventario completo de roles de color. Las muestras enseñan el valor del tema activo; los componentes consumen estos nombres para adaptarse automáticamente al modo claro u oscuro.</p>
         <div class="row g-3">
-            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--texto)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Texto</strong><code class="small text-muted">--texto</code></div></article></div>
-            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--suave)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Texto suave</strong><code class="small text-muted">--suave</code></div></article></div>
-            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--fondo);border:1px solid var(--linea)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Fondo</strong><code class="small text-muted">--fondo</code></div></article></div>
-            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--surface-solid);border:1px solid var(--linea)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Surface</strong><code class="small text-muted">--surface-solid</code></div></article></div>
-            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--linea)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Línea</strong><code class="small text-muted">--linea</code></div></article></div>
-            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--border)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Borde</strong><code class="small text-muted">--border</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-action-primary)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Acción principal</strong><code class="small text-muted">--color-action-primary</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-action-primary-hover)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Acción hover</strong><code class="small text-muted">--color-action-primary-hover</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-text)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Texto</strong><code class="small text-muted">--color-text</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-text-secondary)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Texto secundario</strong><code class="small text-muted">--color-text-secondary</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-text-muted)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Texto suave</strong><code class="small text-muted">--color-text-muted</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-on-strong);border-bottom:1px solid var(--color-border-subtle)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Sobre fondo fuerte</strong><code class="small text-muted">--color-on-strong</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-page);border-bottom:1px solid var(--color-border-subtle)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Fondo de página</strong><code class="small text-muted">--color-page</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-bootstrap-surface);border-bottom:1px solid var(--color-border-subtle)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Surface Bootstrap</strong><code class="small text-muted">--color-bootstrap-surface</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-surface);border-bottom:1px solid var(--color-border-subtle)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Surface UNI2</strong><code class="small text-muted">--color-surface</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-surface-translucent);border-bottom:1px solid var(--color-border-subtle)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Surface translúcida</strong><code class="small text-muted">--color-surface-translucent</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-surface-muted);border-bottom:1px solid var(--color-border-subtle)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Surface suave</strong><code class="small text-muted">--color-surface-muted</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-overlay-surface);border-bottom:1px solid var(--color-border-subtle)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Overlay</strong><code class="small text-muted">--color-overlay-surface</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-border)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Borde</strong><code class="small text-muted">--color-border</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-border-subtle)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Borde sutil</strong><code class="small text-muted">--color-border-subtle</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-focus-ring)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Anillo de foco</strong><code class="small text-muted">--color-focus-ring</code></div></article></div>
+            <div class="col-6 col-md-4 col-xl-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--color-nav-link)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Enlace de navegación</strong><code class="small text-muted">--color-nav-link</code></div></article></div>
         </div>
     </div>
 
@@ -107,7 +117,7 @@
         <p class="h6 text-muted mb-3">Tipografía</p>
         <div class="card">
             <div class="card-body">
-                <p class="small text-muted mb-3">Un solo token de familia tipográfica. Los tamaños no tienen token propio: viven en las clases de la Capa 2 como valores <code>clamp()</code>.</p>
+                <p class="small text-muted mb-3">Bootstrap define la familia base. Los tres tamaños semánticos viven en tokens y las clases de la Capa 2 los aplican sin atarlos a una etiqueta HTML.</p>
                 <div class="d-flex align-items-baseline gap-3 flex-wrap">
                     <span style="font-size:3rem;font-weight:900;line-height:1;font-family:'Inter',sans-serif">Inter</span>
                     <code class="small text-muted">--bs-font-sans-serif: 'Inter', system-ui, sans-serif</code>
@@ -117,6 +127,29 @@
                     a b c d e f g h i j k l m n ñ o p q r s t u v w x y z &nbsp;·&nbsp;
                     0 1 2 3 4 5 6 7 8 9
                 </p>
+                <ul class="small mb-0 mt-3">
+                    <li><code>--font-size-title-page</code> · clamp(3.2rem, 8vw, 6.6rem)</li>
+                    <li><code>--font-size-title-section</code> · clamp(2.35rem, 6vw, 4.8rem)</li>
+                    <li><code>--font-size-title-component</code> · clamp(1.15rem, 2vw, 1.5rem)</li>
+                    <li><code>--font-weight-title-display</code> / <code>--font-weight-title-component</code> · pesos 900 / 700</li>
+                    <li><code>--line-height-title-display</code> / <code>--line-height-title-component</code> · interlíneas 1 / 1.2</li>
+                    <li><code>--letter-spacing-title-display</code> / <code>--letter-spacing-title-component</code> · espaciado -0.04em / -0.01em</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <p class="h6 text-muted mb-3">Movimiento</p>
+        <div class="card">
+            <div class="card-body">
+                <p class="small text-muted mb-3">Las interacciones usan tres duraciones compartidas y una única curva. Esto mantiene consistentes botones, cards, menús y cambios de estado. Si el sistema operativo solicita movimiento reducido, las transiciones se desactivan y el carrusel comienza pausado.</p>
+                <div class="d-flex flex-column gap-2 small">
+                    <code>--motion-duration-fast: 180ms</code>
+                    <code>--motion-duration-normal: 220ms</code>
+                    <code>--motion-duration-slow: 280ms</code>
+                    <code>--motion-easing-standard: ease</code>
+                </div>
             </div>
         </div>
     </div>
@@ -127,8 +160,8 @@
             <div class="col-12 col-sm-4">
                 <article class="card h-100">
                     <div class="card-body">
-                        <div class="mb-3" style="height:40px;background:var(--border);border-radius:var(--radius-sm)" aria-hidden="true"></div>
-                        <code>--radius-sm</code>
+                        <div class="mb-3" style="height:40px;background:var(--color-border);border-radius:var(--radius-control)" aria-hidden="true"></div>
+                        <code>--radius-control</code>
                         <p class="small text-muted mb-0">8px · inputs, botones</p>
                     </div>
                 </article>
@@ -136,8 +169,8 @@
             <div class="col-12 col-sm-4">
                 <article class="card h-100">
                     <div class="card-body">
-                        <div class="mb-3" style="height:40px;background:var(--border);border-radius:var(--radius)" aria-hidden="true"></div>
-                        <code>--radius</code>
+                        <div class="mb-3" style="height:40px;background:var(--color-border);border-radius:var(--radius-card)" aria-hidden="true"></div>
+                        <code>--radius-card</code>
                         <p class="small text-muted mb-0">12px · cards, paneles</p>
                     </div>
                 </article>
@@ -145,9 +178,9 @@
             <div class="col-12 col-sm-4">
                 <article class="card h-100">
                     <div class="card-body">
-                        <div class="mb-3" style="height:40px;background:var(--border);border-radius:var(--radius-lg)" aria-hidden="true"></div>
-                        <code>--radius-lg</code>
-                        <p class="small text-muted mb-0">20px · secciones destacadas</p>
+                        <div class="mb-3" style="height:40px;background:var(--color-border);border-radius:var(--radius-panel)" aria-hidden="true"></div>
+                        <code>--radius-panel</code>
+                        <p class="small text-muted mb-0">24px · secciones destacadas</p>
                     </div>
                 </article>
             </div>
@@ -160,8 +193,8 @@
             <div class="col-12 col-sm-4">
                 <article class="card h-100">
                     <div class="card-body">
-                        <div class="mb-3 rounded" style="height:40px;background:var(--bg);box-shadow:var(--shadow-sm)" aria-hidden="true"></div>
-                        <code>--shadow-sm</code>
+                        <div class="mb-3 rounded" style="height:40px;background:var(--color-bootstrap-surface);box-shadow:var(--shadow-card)" aria-hidden="true"></div>
+                        <code>--shadow-card</code>
                         <p class="small text-muted mb-0">Cards en reposo</p>
                     </div>
                 </article>
@@ -169,8 +202,8 @@
             <div class="col-12 col-sm-4">
                 <article class="card h-100">
                     <div class="card-body">
-                        <div class="mb-3 rounded" style="height:40px;background:var(--bg);box-shadow:var(--shadow-md)" aria-hidden="true"></div>
-                        <code>--shadow-md</code>
+                        <div class="mb-3 rounded" style="height:40px;background:var(--color-bootstrap-surface);box-shadow:var(--shadow-card-hover)" aria-hidden="true"></div>
+                        <code>--shadow-card-hover</code>
                         <p class="small text-muted mb-0">Cards en hover, dropdowns</p>
                     </div>
                 </article>
@@ -178,11 +211,22 @@
             <div class="col-12 col-sm-4">
                 <article class="card h-100">
                     <div class="card-body">
-                        <div class="mb-3 rounded" style="height:40px;background:var(--surface-solid);box-shadow:var(--sombra)" aria-hidden="true"></div>
-                        <code>--sombra</code>
+                        <div class="mb-3 rounded" style="height:40px;background:var(--color-surface);box-shadow:var(--shadow-floating)" aria-hidden="true"></div>
+                        <code>--shadow-floating</code>
                         <p class="small text-muted mb-0">Modals, overlays</p>
                     </div>
                 </article>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <p class="h6 text-muted mb-3">Textura e integración con Bootstrap</p>
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3 rounded" style="height:72px;background-color:var(--brand-blue);background-image:var(--texture-grain)" aria-hidden="true"></div>
+                <p class="small mb-2"><code>--texture-grain</code> agrega textura a los bloques de marca.</p>
+                <p class="small text-muted mb-0"><code>--bs-primary</code>, <code>--bs-primary-rgb</code> y <code>--bs-font-sans-serif</code> conectan la identidad UNI2 con Bootstrap. Son adaptadores técnicos; los componentes propios consumen los tokens semánticos anteriores.</p>
             </div>
         </div>
     </div>
@@ -256,16 +300,6 @@
         </div>
 
         <div class="col-12 col-lg-6">
-            <p class="h6 text-muted mb-3">Alertas</p>
-            <div class="d-flex flex-column gap-2">
-                <div class="alert alert-success mb-0" role="alert">Operación exitosa.</div>
-                <div class="alert alert-danger mb-0" role="alert">Ocurrió un error.</div>
-                <div class="alert alert-warning mb-0" role="alert">Atención requerida.</div>
-                <div class="alert alert-info mb-0" role="alert">Información adicional.</div>
-            </div>
-        </div>
-
-        <div class="col-12 col-lg-6">
             <p class="h6 text-muted mb-3">Badges de estado</p>
             <p class="small text-muted mb-3">Bootstrap. Indican el estado de un objeto (cuota, asociado, trámite). El color es semántico: no decorativo.</p>
             <div class="card h-100">
@@ -318,16 +352,16 @@
 
         <div class="col-12">
             <p class="h6 text-muted mb-3">Tabla</p>
-            <p class="small text-muted mb-3"><code>.table.table-sm.table-hover.align-middle</code> dentro de <code>.table-responsive</code>. Los estados usan <code>.uni2-status</code>. Usada en listados de cuotas, asociados y datos de gestión.</p>
+            <p class="small text-muted mb-3"><code>.table.table-sm.table-hover.align-middle</code> dentro de <code>.table-responsive</code>. Los estados se muestran como texto hasta que el MVP defina un badge compartido. Usada en listados de cuotas, asociados y datos de gestión.</p>
             <div class="card">
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-sm table-hover align-middle mb-0">
                             <thead><tr><th>Asociado</th><th>Período</th><th>Vencimiento</th><th>Estado</th><th class="text-end">Importe</th><th></th></tr></thead>
                             <tbody>
-                                <tr><td>Pérez, Martina</td><td>Marzo 2026</td><td>31/03/2026</td><td><span class="uni2-status uni2-status-paid">Pagada</span></td><td class="text-end">$700</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
-                                <tr><td>López, Juan</td><td>Abril 2026</td><td>30/04/2026</td><td><span class="uni2-status uni2-status-pending">Pendiente</span></td><td class="text-end">$700</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
-                                <tr><td>Gómez, Sofía</td><td>Mayo 2026</td><td>31/05/2026</td><td><span class="uni2-status uni2-status-overdue">Vencida</span></td><td class="text-end">$700</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
+                                <tr><td>Pérez, Martina</td><td>Marzo 2026</td><td>31/03/2026</td><td>Pagada</td><td class="text-end">$700</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
+                                <tr><td>López, Juan</td><td>Abril 2026</td><td>30/04/2026</td><td>Pendiente</td><td class="text-end">$700</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
+                                <tr><td>Gómez, Sofía</td><td>Mayo 2026</td><td>31/05/2026</td><td>Vencida</td><td class="text-end">$700</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -443,21 +477,39 @@
         <!-- NAVBAR -->
         <div class="col-12">
             <p class="h6 text-muted mb-2">Navbar</p>
-            <p class="small text-muted mb-3">Barra de navegación principal. Se incluye desde <code>includes/navbar.html</code> en todas las páginas vía <code>base.html</code>.</p>
+            <p class="small text-muted mb-0">La barra que encabeza esta misma pantalla es el componente productivo de <code>includes/navbar.html</code>, incluido por <code>base.html</code>. No se mantiene una segunda maqueta dentro del catálogo.</p>
+        </div>
+
+        <!-- BREADCRUMBS -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Breadcrumbs</p>
+            <p class="small text-muted mb-3"><code>.uni2-breadcrumbs</code> — navegación contextual compartida por las páginas de detalle. El catálogo usa el mismo partial productivo <code>components/breadcrumbs.html</code>.</p>
             <div class="card">
-                <div class="card-body p-0 overflow-hidden" style="border-radius:var(--bs-card-border-radius)">
-                    <nav class="navbar uni2-navbar" style="position:static">
-                        <div class="uni2-navbar-inner">
-                            <a class="navbar-brand" href="#navbar-preview"><span style="font-weight:900">UNI2</span></a>
-                            <div class="d-flex align-items-center gap-3">
-                                <a class="nav-link" href="#navbar-preview">Productos y servicios</a>
-                                <a class="nav-link" href="#navbar-preview">Comercios</a>
-                                <a class="btn btn-primary uni2-login-button" href="#navbar-preview">Ingresar</a>
-                            </div>
-                        </div>
-                    </nav>
+                <div class="card-body">
+                    {% include "components/breadcrumbs.html" with home_url="#componentes" parent_url="#componentes" parent_label="Productos y servicios" current_label="Fotocopias e impresiones" aria_label="Ruta de navegación de ejemplo" only %}
+                    <hr>
+                    <ul class="small text-muted mb-0">
+                        <li>Se usa en páginas de detalle, no en la home ni en dashboards.</li>
+                        <li>La página actual se muestra como texto y usa <code>aria-current="page"</code>.</li>
+                        <li>El separador <code>›</code> es decorativo; no se agrega un icono.</li>
+                        <li>La ruta recomendada tiene entre dos y tres niveles y puede envolver en mobile.</li>
+                        <li>El partial recibe <code>parent_url</code>, <code>parent_label</code> y <code>current_label</code>; Inicio se resuelve por defecto.</li>
+                    </ul>
                 </div>
             </div>
+        </div>
+
+        <!-- ALERTAS UNI2 -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Alertas UNI2</p>
+            <p class="small text-muted mb-3"><code>.uni2-alert</code> + variante semántica — componente productivo con icono, jerarquía de contenido y una esquina inspirada en las diagonales de la identidad UNI2.</p>
+            <div class="d-grid gap-3">
+                {% include "components/alert.html" with variant="info" message="Ya podés consultar las cuotas y movimientos de tu cuenta." action_url="#componentes" action_label="Ver detalle →" only %}
+                {% include "components/alert.html" with variant="success" message="El pago se registró correctamente y la cuota quedó actualizada." only %}
+                {% include "components/alert.html" with variant="warning" title="Revisión pendiente" message="Hay datos de la planilla que necesitan confirmación antes de importar." only %}
+                {% include "components/alert.html" with variant="danger" message="Revisá los datos ingresados e intentá nuevamente." only %}
+            </div>
+            <p class="small text-muted mt-3 mb-0"><code>role="alert"</code> se reserva para errores urgentes. Información, confirmaciones y advertencias no bloqueantes usan <code>role="status"</code>.</p>
         </div>
 
         <!-- HERO -->
@@ -491,32 +543,16 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-6 col-md-3">
-                            <article class="uni2-service-card uni2-service-card-blue">
-                                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-printer"></i></span>
-                                <div><h3>Fotocopias</h3><p>Servicio de fotocopiado.</p></div>
-                                <a class="link" href="#componentes">Ver más</a>
-                            </article>
+                            {% include "components/service_card.html" with color="uni2-service-card-blue" icono="printer" titulo="Fotocopias" descripcion="Servicio de fotocopiado." url="#componentes" only %}
                         </div>
                         <div class="col-6 col-md-3">
-                            <article class="uni2-service-card uni2-service-card-yellow">
-                                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-tag"></i></span>
-                                <div><h3>Descuentos</h3><p>Comercios adheridos.</p></div>
-                                <a class="link" href="#componentes">Ver más</a>
-                            </article>
+                            {% include "components/service_card.html" with color="uni2-service-card-yellow" icono="tag" titulo="Descuentos" descripcion="Comercios adheridos." url="#componentes" only %}
                         </div>
                         <div class="col-6 col-md-3">
-                            <article class="uni2-service-card uni2-service-card-green">
-                                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bicycle"></i></span>
-                                <div><h3>Bicicleta solidaria</h3><p>Préstamo de bicicletas.</p></div>
-                                <a class="link" href="#componentes">Ver más</a>
-                            </article>
+                            {% include "components/service_card.html" with color="uni2-service-card-green" icono="bicycle" titulo="Bicicleta solidaria" descripcion="Préstamo de bicicletas." url="#componentes" only %}
                         </div>
                         <div class="col-6 col-md-3">
-                            <article class="uni2-service-card uni2-service-card-red">
-                                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-book"></i></span>
-                                <div><h3>Cuadernillos</h3><p>Material educativo.</p></div>
-                                <a class="link" href="#componentes">Ver más</a>
-                            </article>
+                            {% include "components/service_card.html" with color="uni2-service-card-red" icono="book" titulo="Cuadernillos" descripcion="Material educativo." url="#componentes" only %}
                         </div>
                     </div>
                 </div>
@@ -563,63 +599,15 @@
             </div>
         </div>
 
-        <!-- INDICADOR PRINCIPAL -->
+        <!-- RESUMEN DE IMPORTACIÓN -->
         <div class="col-12">
-            <p class="h6 text-muted mb-2">Indicador principal</p>
-            <p class="small text-muted mb-3"><code>.uni2-metric</code> + variante de color — tarjeta con borde de acento, número grande y nota. Se agrupa en <code>.uni2-metric-grid</code>.</p>
-            <div class="uni2-metric-grid">
-                <article class="uni2-metric uni2-metric-blue">
-                    <span>Asociados activos</span>
-                    <strong>248</strong>
-                    <p>+18 altas este mes</p>
-                </article>
-                <article class="uni2-metric uni2-metric-yellow">
-                    <span>Cuotas al día</span>
-                    <strong>82%</strong>
-                    <p>Meta operativa: 90%</p>
-                </article>
-                <article class="uni2-metric uni2-metric-green">
-                    <span>Beneficios vigentes</span>
-                    <strong>37</strong>
-                    <p>6 rubros publicados</p>
-                </article>
-                <article class="uni2-metric uni2-metric-red">
-                    <span>Servicios usados</span>
-                    <strong>1.284</strong>
-                    <p>Fotocopias y cuadernillos</p>
-                </article>
-            </div>
-        </div>
-
-        <!-- INDICADOR COMPACTO -->
-        <div class="col-12">
-            <p class="h6 text-muted mb-2">Indicador compacto</p>
-            <p class="small text-muted mb-3"><code>.uni2-compact-metric</code> + variante de color — fila con ícono, número, tendencia y barra de progreso. Se agrupa en <code>.uni2-compact-metric-grid</code>.</p>
-            <div class="uni2-compact-metric-grid">
-                <article class="uni2-compact-metric uni2-compact-blue">
-                    <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-people"></i></span>
-                    <div class="uni2-compact-body"><span>Asociados</span><strong>248</strong></div>
-                    <strong class="uni2-trend">+7%</strong>
-                    <div class="uni2-progress" aria-hidden="true"><span style="--progress: 72%"></span></div>
-                </article>
-                <article class="uni2-compact-metric uni2-compact-yellow">
-                    <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-credit-card-2-front"></i></span>
-                    <div class="uni2-compact-body"><span>Cuotas al día</span><strong>82%</strong></div>
-                    <strong class="uni2-trend-muted">estable</strong>
-                    <div class="uni2-progress" aria-hidden="true"><span style="--progress: 82%"></span></div>
-                </article>
-                <article class="uni2-compact-metric uni2-compact-green">
-                    <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-percent"></i></span>
-                    <div class="uni2-compact-body"><span>Beneficios</span><strong>37</strong></div>
-                    <strong class="uni2-trend">+4</strong>
-                    <div class="uni2-progress" aria-hidden="true"><span style="--progress: 64%"></span></div>
-                </article>
-                <article class="uni2-compact-metric uni2-compact-red">
-                    <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-graph-up"></i></span>
-                    <div class="uni2-compact-body"><span>Consultas</span><strong>126</strong></div>
-                    <strong class="uni2-trend-down">-3%</strong>
-                    <div class="uni2-progress" aria-hidden="true"><span style="--progress: 46%"></span></div>
-                </article>
+            <p class="h6 text-muted mb-2">Resumen de importación</p>
+            <p class="small text-muted mb-3"><code>.uni2-metric-card</code> — valor resumido usado durante la previsualización de importaciones del MVP. No representa un dashboard de métricas agregadas.</p>
+            <div class="row g-3">
+                <div class="col-6 col-lg-3"><div class="uni2-metric-card card h-100"><div class="card-body"><div class="uni2-metric-label">Importar</div><div class="uni2-metric-value">142</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="uni2-metric-card card h-100"><div class="card-body"><div class="uni2-metric-label">Revisar</div><div class="uni2-metric-value">8</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="uni2-metric-card card h-100"><div class="card-body"><div class="uni2-metric-label">No importar</div><div class="uni2-metric-value">3</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="uni2-metric-card card h-100"><div class="card-body"><div class="uni2-metric-label">Cursos nuevos</div><div class="uni2-metric-value">5</div></div></div></div>
             </div>
         </div>
 
@@ -643,35 +631,13 @@
             </div>
         </div>
 
-        <!-- MODAL INFORMATIVO -->
-        <div class="col-12 col-lg-6">
-            <p class="h6 text-muted mb-2">Modal informativo</p>
-            <p class="small text-muted mb-3"><code>.uni2-info-card</code> y <code>.uni2-info-modal</code> — comunica funciones no disponibles todavía.</p>
-            <article class="uni2-info-card">
-                <span class="uni2-info-icon" aria-hidden="true"><i class="bi bi-clock"></i></span>
-                <h2>Próximamente</h2>
-                <p>Esta función estará disponible pronto.</p>
-                <a class="uni2-cta" href="#soon-preview">Abrir modal</a>
-            </article>
-        </div>
-
         <!-- CONTACT BLOCK -->
         <div class="col-12 col-lg-6">
             <p class="h6 text-muted mb-2">Bloque de contacto</p>
             <p class="small text-muted mb-3"><code>.uni2-print-contact</code> — dato de contacto al pie de páginas de detalle e impresión.</p>
             <div class="card">
                 <div class="card-body">
-                    <article class="uni2-print-contact">
-                        <span class="uni2-print-icon" aria-hidden="true"><i class="bi bi-send"></i></span>
-                        <div>
-                            <h3>¿Tenés dudas?</h3>
-                            <div class="uni2-contact-links">
-                                <a href="mailto:unidosatencionalcliente@gmail.com">unidosatencionalcliente@gmail.com</a>
-                                <span class="uni2-contact-separator">o</span>
-                                <a class="whatsapp-link" href="https://wa.me/5492984210672" target="_blank" rel="noopener">whatsapp</a>
-                            </div>
-                        </div>
-                    </article>
+                    {% include "components/contact_block.html" with texto="Consultá disponibilidad en unidosatencionalcliente@gmail.com" only %}
                 </div>
             </div>
         </div>
@@ -679,18 +645,10 @@
         <!-- FOOTER -->
         <div class="col-12">
             <p class="h6 text-muted mb-2">Footer</p>
-            <p class="small text-muted mb-3"><code>.uni2-footer</code> — pie de página con íconos de contacto, dirección y copyright. Se incluye desde <code>includes/footer.html</code>.</p>
-            <footer class="uni2-footer" id="footer-preview">
-                <div class="uni2-footer-container">
-                    <div class="uni2-footer-actions" aria-label="Contacto de la mutual">
-                        <a class="uni2-footer-icon uni2-footer-icon-mail" href="mailto:unidosatencionalcliente@gmail.com" aria-label="Enviar mail a la mutual"><i class="bi bi-envelope" aria-hidden="true"></i></a>
-                        <a class="uni2-footer-icon uni2-footer-icon-whatsapp" href="https://wa.me/5492984210672" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
-                        <a class="uni2-footer-icon uni2-footer-icon-instagram" href="https://www.instagram.com/unidos.cet3" target="_blank" rel="noopener" aria-label="Abrir Instagram de la mutual"><i class="bi bi-instagram" aria-hidden="true"></i></a>
-                    </div>
-                    <div class="uni2-footer-location"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><span>Chacabuco 1050 &middot; General Roca, Río Negro</span></div>
-                    <p class="uni2-footer-copy">&copy; 2026 Mutual UNI2 &middot; CET N&deg;3</p>
-                </div>
-            </footer>
+            <p class="small text-muted mb-3">Muestra del componente productivo <code>includes/footer.html</code>. El catálogo incluye el mismo partial que usa <code>base.html</code>; contacto, ubicación y copyright mantienen una sola implementación.</p>
+            <div class="border rounded-3 overflow-hidden">
+                {% include "includes/footer.html" with footer_id="contacto-preview" footer_label="Ejemplo del footer" only %}
+            </div>
         </div>
 
     </div>
@@ -719,10 +677,10 @@
                     <div><h2 class="uni2-titulo-seccion">Servicios que suman</h2></div>
                 </div>
                 <div class="row g-3">
-                    <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-blue"><span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-files"></i></span><div><h3>Fotocopias</h3><p>Fotocopias rápidas y de excelente calidad.</p></div><a class="link" href="#patrones">Ver más</a></article></div>
-                    <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-yellow"><span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bag"></i></span><div><h3>Uniformes</h3><p>Calidad y comodidad para todo el año.</p></div><a class="link" href="#patrones">Ver más</a></article></div>
-                    <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-green"><span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bicycle"></i></span><div><h3>Bicicleta Solidaria</h3><p>Una forma práctica de moverte.</p></div><a class="link" href="#patrones">Ver más</a></article></div>
-                    <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-red"><span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></span><div><h3>Cuadernillos</h3><p>Todo el material para cada materia.</p></div><a class="link" href="#patrones">Ver más</a></article></div>
+                    <div class="col-6 col-md-3">{% include "components/service_card.html" with color="uni2-service-card-blue" icono="files" titulo="Fotocopias" descripcion="Fotocopias rápidas y de excelente calidad." url="#patrones" only %}</div>
+                    <div class="col-6 col-md-3">{% include "components/service_card.html" with color="uni2-service-card-yellow" icono="bag" titulo="Uniformes" descripcion="Calidad y comodidad para todo el año." url="#patrones" only %}</div>
+                    <div class="col-6 col-md-3">{% include "components/service_card.html" with color="uni2-service-card-green" icono="bicycle" titulo="Bicicleta Solidaria" descripcion="Una forma práctica de moverte." url="#patrones" only %}</div>
+                    <div class="col-6 col-md-3">{% include "components/service_card.html" with color="uni2-service-card-red" icono="journal-text" titulo="Cuadernillos" descripcion="Todo el material para cada materia." url="#patrones" only %}</div>
                 </div>
             </div>
         </div>
@@ -737,10 +695,10 @@
                         <div><h2 class="uni2-titulo-seccion">Club de Beneficios</h2></div>
                     </div>
                     <div class="row g-3">
-                        <div class="col-6 col-md-4"><a class="uni2-benefit-mix-card uni2-benefit-food" href="#patrones"><span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>AD</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>BM</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>LC</span></span></span><span class="uni2-benefit-rubric">Gastronomía y kioscos</span></a></div>
-                        <div class="col-6 col-md-4"><a class="uni2-benefit-mix-card uni2-benefit-sport" href="#patrones"><span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>AG</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>AC</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>ER</span></span></span><span class="uni2-benefit-rubric">Gym y deportes</span></a></div>
-                        <div class="col-6 col-md-4"><a class="uni2-benefit-mix-card uni2-benefit-beauty" href="#patrones"><span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>AS</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>AM</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>OM</span></span></span><span class="uni2-benefit-rubric">Belleza y Bienestar</span></a></div>
-                        <div class="col-6 col-md-4"><a class="uni2-benefit-mix-card uni2-benefit-fashion" href="#patrones"><span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>CC</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>GC</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>JD</span></span></span><span class="uni2-benefit-rubric">Indumentaria</span></a></div>
+                        <div class="col-6 col-md-4">{% include "components/benefit_card.html" with color="uni2-benefit-food" titulo="Gastronomía y kioscos" inicial_izquierda="AD" inicial_centro="BM" inicial_derecha="LC" url="#patrones" only %}</div>
+                        <div class="col-6 col-md-4">{% include "components/benefit_card.html" with color="uni2-benefit-sport" titulo="Gym y deportes" inicial_izquierda="AG" inicial_centro="AC" inicial_derecha="ER" url="#patrones" only %}</div>
+                        <div class="col-6 col-md-4">{% include "components/benefit_card.html" with color="uni2-benefit-beauty" titulo="Belleza y Bienestar" inicial_izquierda="AS" inicial_centro="AM" inicial_derecha="OM" url="#patrones" only %}</div>
+                        <div class="col-6 col-md-4">{% include "components/benefit_card.html" with color="uni2-benefit-fashion" titulo="Indumentaria" inicial_izquierda="CC" inicial_centro="GC" inicial_derecha="JD" url="#patrones" only %}</div>
                     </div>
                 </aside>
             </div>
@@ -748,25 +706,27 @@
 
         <!-- 3. LOS MÁS ELEGIDOS -->
         <div>
-            <p class="h6 text-muted mb-2">Los más elegidos</p>
+            <p class="h6 text-muted mb-2">Nuestros favoritos</p>
             <p class="small text-muted mb-3">Carrusel de publicidades con imagen de fondo, badge, descuento y CTA. Include <code>includes/publicidades_grid.html</code>.</p>
             <div class="border rounded-3 p-4 bg-body">
-                <div class="uni2-section-heading">
-                    <div><h2 class="uni2-titulo-seccion">Los m&aacute;s elegidos</h2></div>
-                    <div class="btn-group" role="group" aria-label="Controles del carrusel">
-                        <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="showcase-carousel" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
-                        <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="showcase-carousel" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+                <div class="uni2-section-heading uni2-carousel-heading">
+                    <div><h2 class="uni2-titulo-seccion">Nuestros favoritos</h2></div>
+                    <div class="btn-group uni2-carousel-controls" role="group" aria-label="Controles del carrusel de ejemplo">
+                        <button class="btn btn-outline-primary" type="button" data-slider-prev="showcase-carousel" aria-label="Publicidad anterior" disabled><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+                        <button class="btn btn-outline-primary" type="button" data-slider-toggle="showcase-carousel" aria-label="Pausar carrusel" aria-pressed="false"><i class="bi bi-pause-fill" aria-hidden="true"></i></button>
+                        <button class="btn btn-outline-primary" type="button" data-slider-next="showcase-carousel" aria-label="Publicidad siguiente"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
                     </div>
                 </div>
-                <div class="uni2-carousel js-auto-slider" id="showcase-carousel" aria-label="Carrusel de publicidades">
-                    <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1100&q=80');"><span class="uni2-badge">Alimentos</span><h3>Alto Drugstore</h3><strong class="uni2-discount">10% OFF</strong><p>Kiosco y drugstore con snacks, bebidas y productos de uso diario.</p><a class="link" href="#patrones">Conocer más</a></article>
-                    <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1100&q=80');"><span class="uni2-badge">Librería</span><h3>Librería Mu&ntilde;oz</h3><strong class="uni2-discount">10% OFF</strong><p>Útiles escolares, carpetas y materiales para la cursada.</p><a class="link" href="#patrones">Conocer más</a></article>
-                    <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1100&q=80');"><span class="uni2-badge">Actividad física</span><h3>Atenas Gimnasio</h3><strong class="uni2-discount">10% OFF</strong><p>Gimnasio de musculación y entrenamiento.</p><a class="link" href="#patrones">Conocer más</a></article>
+                <p id="showcase-carousel-instructions" class="visually-hidden">Usá las flechas izquierda y derecha para recorrer las publicidades. El carrusel se pausa mientras interactuás con él.</p>
+                <div class="uni2-carousel js-auto-slider" id="showcase-carousel" role="region" aria-roledescription="carrusel" aria-label="Carrusel de publicidades de ejemplo" aria-describedby="showcase-carousel-instructions" aria-live="off" tabindex="0">
+                    {% include "components/advertisement_card.html" with imagen_url="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1100&q=80" etiqueta_principal="Alimentos" titulo="Alto Drugstore" etiqueta_secundaria="10% OFF" descripcion="Kiosco y drugstore con snacks, bebidas y productos de uso diario." url="#patrones" only %}
+                    {% include "components/advertisement_card.html" with imagen_url="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1100&q=80" etiqueta_principal="Librería" titulo="Librería Muñoz" etiqueta_secundaria="10% OFF" descripcion="Útiles escolares, carpetas y materiales para la cursada." url="#patrones" only %}
+                    {% include "components/advertisement_card.html" with imagen_url="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1100&q=80" etiqueta_principal="Actividad física" titulo="Atenas Gimnasio" etiqueta_secundaria="10% OFF" descripcion="Gimnasio de musculación y entrenamiento." url="#patrones" only %}
                 </div>
-                <div class="d-flex justify-content-center gap-2 mt-2" data-slider-dots="showcase-carousel" aria-label="Indicadores del carrusel">
-                    <button class="btn btn-sm btn-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="0" aria-label="Ir a publicidad 1"></button>
-                    <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="1" aria-label="Ir a publicidad 2"></button>
-                    <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="2" aria-label="Ir a publicidad 3"></button>
+                <div class="d-flex justify-content-center mt-2" data-slider-dots="showcase-carousel" role="group" aria-label="Elegir publicidad de ejemplo">
+                    <button class="uni2-carousel-dot" type="button" data-slide-index="0" aria-label="Ir a publicidad 1 de 3" aria-current="true"></button>
+                    <button class="uni2-carousel-dot" type="button" data-slide-index="1" aria-label="Ir a publicidad 2 de 3"></button>
+                    <button class="uni2-carousel-dot" type="button" data-slide-index="2" aria-label="Ir a publicidad 3 de 3"></button>
                 </div>
             </div>
         </div>
@@ -802,48 +762,12 @@
         <!-- 5. LISTA DE BENEFICIOS -->
         <div>
             <p class="h6 text-muted mb-2">Lista de beneficios</p>
-            <p class="small text-muted mb-3">Lista de comercios adheridos por categoría: logo circular, descuento, descripción y metadata. Usada en <code>actividadcomercial_detalle.html</code>.</p>
+            <p class="small text-muted mb-3">Lista de comercios adheridos por categoría: logo circular, descuento y datos de contacto. Cada item enlaza a la página de detalle del comercio.</p>
             <div class="border rounded-3 p-4 bg-body">
                 <div class="uni2-benefit-list">
-                    <a class="uni2-benefit-list-card" href="#detail-alto-drugstore" aria-label="Ver beneficio de Alto Drugstore">
-                        <span class="uni2-benefit-list-logo uni2-benefit-list-initials">AD</span>
-                        <span class="uni2-benefit-list-body">
-                            <h2>Alto Drugstore y Le Bon Break Store</h2>
-                            <strong class="uni2-discount">10% OFF</strong>
-                            <p>Todo lo que necesitás en un solo lugar: bebidas, alimentos, snacks y productos de uso diario.</p>
-                            <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Alsina 189 / Hipólito Yrigoyen 731 &middot; @altodrugstoreroca</span></span>
-                        </span>
-                    </a>
-                    <a class="uni2-benefit-list-card" href="#detail-latte" aria-label="Ver beneficio de Latte Cafetería">
-                        <span class="uni2-benefit-list-logo uni2-benefit-list-initials">LC</span>
-                        <span class="uni2-benefit-list-body">
-                            <h2>Latte Cafetería</h2>
-                            <strong class="uni2-discount">15% OFF</strong>
-                            <p>El lugar perfecto para disfrutar un buen café y compartir momentos especiales.</p>
-                            <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
-                        </span>
-                    </a>
+                    {% include "components/benefit_list_item.html" with url="#patrones" titulo="Alto Drugstore y Le Bon Break Store" iniciales="AD" beneficio="10% OFF" direccion="Alsina 189 / Hipólito Yrigoyen 731" url_presencia_web="https://example.com" only %}
+                    {% include "components/benefit_list_item.html" with url="#patrones" titulo="Latte Cafetería" iniciales="LC" beneficio="15% OFF" direccion="Mitre 766" url_presencia_web="https://example.com" only %}
                 </div>
-                <article class="uni2-benefit-modal" id="detail-alto-drugstore" aria-label="Beneficio de Alto Drugstore">
-                    <a class="uni2-benefit-modal-backdrop" href="#patrones" aria-label="Cerrar detalle"></a>
-                    <div class="uni2-benefit-modal-card">
-                        <span class="uni2-benefit-list-logo uni2-benefit-list-initials">AD</span>
-                        <strong class="uni2-discount">10% OFF</strong>
-                        <h2>Alto Drugstore y Le Bon Break Store</h2>
-                        <p>Modal de detalle por hash. Se activa con <code>href="#id"</code>.</p>
-                        <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> General Roca &middot; @altodrugstoreroca</span></span>
-                    </div>
-                </article>
-                <article class="uni2-benefit-modal" id="detail-latte" aria-label="Beneficio de Latte Cafetería">
-                    <a class="uni2-benefit-modal-backdrop" href="#patrones" aria-label="Cerrar detalle"></a>
-                    <div class="uni2-benefit-modal-card">
-                        <span class="uni2-benefit-list-logo uni2-benefit-list-initials">LC</span>
-                        <strong class="uni2-discount">15% OFF</strong>
-                        <h2>Latte Cafetería</h2>
-                        <p>Detalle reutilizable para comercios del club de beneficios.</p>
-                        <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
-                    </div>
-                </article>
             </div>
         </div>
 
@@ -982,38 +906,7 @@
             </div>
         </div>
 
-        <!-- 9. FORM DE BÚSQUEDA -->
-        <div>
-            <p class="h6 text-muted mb-2">Form de búsqueda</p>
-            <p class="small text-muted mb-3">Barra de filtros inline con chips de filtros activos. Usada en vistas de gestión con múltiples criterios.</p>
-            <div class="card">
-                <div class="card-body">
-                    <form class="uni2-filter-bar" action="#" method="get">
-                        <div>
-                            <label class="form-label" for="f-buscar">Buscar</label>
-                            <input class="form-control" type="search" id="f-buscar" placeholder="Nombre, DNI, comercio o servicio">
-                        </div>
-                        <div>
-                            <label class="form-label" for="f-categoria">Categoría</label>
-                            <select class="form-select" id="f-categoria"><option>Todas</option><option>Servicios</option><option>Beneficios</option></select>
-                        </div>
-                        <div>
-                            <label class="form-label" for="f-estado">Estado</label>
-                            <select class="form-select" id="f-estado"><option>Activos</option><option>Pendientes</option><option>Inactivos</option></select>
-                        </div>
-                        <button class="uni2-cta" type="button">Filtrar</button>
-                    </form>
-                    <div class="uni2-chip-row mt-3" aria-label="Filtros activos">
-                        <span class="uni2-filter-chip"><i class="bi bi-search"></i> "cuadernillos"</span>
-                        <span class="uni2-filter-chip"><i class="bi bi-tag"></i> Servicios</span>
-                        <span class="uni2-filter-chip"><i class="bi bi-check-circle"></i> Activos</span>
-                        <button class="btn btn-sm btn-outline-secondary" type="button">Limpiar filtros</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 10. CREDENCIAL -->
+        <!-- 9. CREDENCIAL -->
         <div>
             <p class="h6 text-muted mb-2">Credencial</p>
             <p class="small text-muted mb-3">Carnet digital del asociado. Usada en <code>asociados/credencial.html</code>.</p>
@@ -1057,19 +950,19 @@
             <div class="d-flex flex-column gap-2">
                         <div class="border rounded-3 p-3 bg-body">
                             <p class="small fw-semibold mb-1">Hero</p>
-                            <p class="small text-muted mb-0">Imagen de fondo, título principal, bajada y CTA de asociación. Ocupa el viewport completo en desktop.</p>
+                            <p class="small text-muted mb-0">Fondo geométrico, título principal, bajada y CTA de asociación. Ocupa el viewport completo en desktop.</p>
                         </div>
                         <div class="border rounded-3 p-3 bg-body">
                             <p class="small fw-semibold mb-1">Patrón 1 — Servicios que suman</p>
-                            <p class="small text-muted mb-0">Grid de cuatro service cards con colores semánticos.</p>
-                        </div>
-                        <div class="border rounded-3 p-3 bg-body">
-                            <p class="small fw-semibold mb-1">Patrón 3 — Los más elegidos</p>
-                            <p class="small text-muted mb-0">Carrusel de publicidades de comercios adheridos.</p>
+                            <p class="small text-muted mb-0">Grilla responsive de service cards con variantes visuales cíclicas.</p>
                         </div>
                         <div class="border rounded-3 p-3 bg-body">
                             <p class="small fw-semibold mb-1">Patrón 2 — Club de Beneficios</p>
                             <p class="small text-muted mb-0">Grilla de rubros con logos superpuestos.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 3 — Nuestros favoritos</p>
+                            <p class="small text-muted mb-0">Carrusel de publicidades de comercios adheridos.</p>
                         </div>
                         <div class="border rounded-3 p-3 bg-body">
                             <p class="small fw-semibold mb-1">Patrón 4 — Pasos de proceso</p>
@@ -1081,23 +974,19 @@
         <!-- PANEL DE ASOCIADO -->
         <div>
             <p class="h6 text-muted mb-1">Panel del asociado</p>
-            <p class="small text-muted mb-3">Template: <code>asociados/panel.html</code> · URL: <code>/mi-panel/</code></p>
+            <p class="small text-muted mb-3">Template: <code>asociados/dashboard.html</code> · URL: <code>/asociado/panel/</code></p>
             <div class="d-flex flex-column gap-2">
                         <div class="border rounded-3 p-3 bg-body">
-                            <p class="small fw-semibold mb-1">Page Header</p>
-                            <p class="small text-muted mb-0">Saludo con nombre del asociado. Breadcrumb mínimo.</p>
+                            <p class="small fw-semibold mb-1">Hero compacto</p>
+                            <p class="small text-muted mb-0">Saludo, número, estado y accesos a credencial y cuotas.</p>
                         </div>
                         <div class="border rounded-3 p-3 bg-body">
-                            <p class="small fw-semibold mb-1">Patrón 10 — Credencial</p>
-                            <p class="small text-muted mb-0">Carnet digital con nombre, número y estado de la cuenta.</p>
+                            <p class="small fw-semibold mb-1">Accesos principales</p>
+                            <p class="small text-muted mb-0">Dos service cards enlazan a la credencial y al estado de cuotas.</p>
                         </div>
                         <div class="border rounded-3 p-3 bg-body">
-                            <p class="small fw-semibold mb-1">Patrón 5 — Lista de beneficios</p>
-                            <p class="small text-muted mb-0">Comercios disponibles para el asociado con modal de detalle.</p>
-                        </div>
-                        <div class="border rounded-3 p-3 bg-body">
-                            <p class="small fw-semibold mb-1">Patrón 1 — Servicios disponibles</p>
-                            <p class="small text-muted mb-0">Service cards con acceso rápido a los servicios activos.</p>
+                            <p class="small fw-semibold mb-1">Contenido compartido</p>
+                            <p class="small text-muted mb-0">Reutiliza las grillas de servicios, beneficios y publicidades de la home.</p>
                         </div>
             </div>
         </div>
@@ -1105,24 +994,40 @@
         <!-- PANEL DE GESTIÓN -->
         <div>
             <p class="h6 text-muted mb-1">Panel de gestión</p>
-            <p class="small text-muted mb-3">Template: <code>gestion/panel.html</code> · URL: <code>/gestion/</code></p>
+            <p class="small text-muted mb-3">Template: <code>gestion/dashboard.html</code> · URL: <code>/gestion/</code></p>
             <div class="d-flex flex-column gap-2">
                         <div class="border rounded-3 p-3 bg-body">
-                            <p class="small fw-semibold mb-1">Indicadores principales</p>
-                            <p class="small text-muted mb-0">Grid <code>uni2-metric-grid</code> con 4 métricas clave: asociados, cuotas, beneficios, servicios.</p>
+                            <p class="small fw-semibold mb-1">Hero compacto</p>
+                            <p class="small text-muted mb-0">Presenta los accesos directos para cobrar una cuota o buscar un asociado.</p>
                         </div>
                         <div class="border rounded-3 p-3 bg-body">
-                            <p class="small fw-semibold mb-1">Indicadores compactos</p>
-                            <p class="small text-muted mb-0"><code>uni2-compact-metric-grid</code> con tendencia y barra de progreso.</p>
+                            <p class="small fw-semibold mb-1">Operación diaria</p>
+                            <p class="small text-muted mb-0">Accesos a asociados y períodos de cuota según permisos.</p>
                         </div>
                         <div class="border rounded-3 p-3 bg-body">
-                            <p class="small fw-semibold mb-1">Patrón 6 — Listado con filtros y tabla</p>
-                            <p class="small text-muted mb-0">Asociados, cuotas o servicios con búsqueda y paginación.</p>
+                            <p class="small fw-semibold mb-1">Puesta en marcha</p>
+                            <p class="small text-muted mb-0">Importaciones y creación de usuarios, visibles solo con los permisos correspondientes.</p>
                         </div>
                         <div class="border rounded-3 p-3 bg-body">
-                            <p class="small fw-semibold mb-1">Patrón 8 — Form de datos</p>
-                            <p class="small text-muted mb-0">Alta y edición de asociados, comercios y servicios.</p>
+                            <p class="small fw-semibold mb-1">Soporte técnico</p>
+                            <p class="small text-muted mb-0">Enlaces al admin y a la especificación según el perfil.</p>
                         </div>
+            </div>
+        </div>
+
+        <!-- PANEL DE COMERCIO -->
+        <div>
+            <p class="h6 text-muted mb-1">Panel del comercio</p>
+            <p class="small text-muted mb-3">Template: <code>comercios/dashboard.html</code> · URL: <code>/comercio/panel/</code></p>
+            <div class="d-flex flex-column gap-2">
+                <div class="border rounded-3 p-3 bg-body">
+                    <p class="small fw-semibold mb-1">Hero compacto</p>
+                    <p class="small text-muted mb-0">Muestra el comercio, el estado del convenio y el acceso a validar credenciales.</p>
+                </div>
+                <div class="border rounded-3 p-3 bg-body">
+                    <p class="small fw-semibold mb-1">Información para atención</p>
+                    <p class="small text-muted mb-0">Resume el beneficio vigente y repite el acceso a la validación.</p>
+                </div>
             </div>
         </div>
 
@@ -1148,6 +1053,11 @@
         <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/servicios_grid.html</h3><p>Patrón 1. Grid de <code>uni2-service-card</code> con colores cíclicos. Recibe el contexto <code>categorias_productos_servicios</code>. Se muestra solo si hay datos.</p></div></article></div>
         <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/beneficios_grid.html</h3><p>Patrón 2. Grilla de rubros <code>uni2-benefit-mix-card</code> con logos superpuestos. Recibe <code>rubros_beneficio</code>. Se muestra solo si hay datos.</p></div></article></div>
         <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/publicidades_grid.html</h3><p>Patrón 3. Carrusel <code>uni2-ad-card</code> con imagen de fondo, badge y descuento. Recibe <code>publicidades</code>. Se muestra solo si hay datos.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/service_card.html</h3><p>Estructura de una tarjeta de servicio. La usan el catálogo y <code>includes/servicios_grid.html</code>.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/benefit_card.html</h3><p>Estructura de una tarjeta de rubro. Acepta fotos reales o iniciales demostrativas.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/advertisement_card.html</h3><p>Estructura de una publicidad. La sección productiva conserva la decisión sobre la URL de destino.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/contact_block.html</h3><p>Bloque de contacto usado en detalles de categorías y productos o servicios.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/benefit_list_item.html</h3><p>Fila enlazable de un comercio dentro del detalle de una actividad comercial.</p></div></article></div>
     </div>
 
     <div class="mt-4">
@@ -1160,34 +1070,4 @@
 </div>
 </section>
 
-<!-- Modal "próximamente" -->
-<div class="uni2-info-modal" id="soon-preview" role="dialog" aria-labelledby="soon-preview-title" aria-modal="true">
-    <a class="uni2-info-backdrop" href="#componentes" aria-label="Cerrar"></a>
-    <article class="uni2-info-card">
-        <a class="uni2-info-close" href="#componentes" aria-label="Cerrar">×</a>
-        <span class="uni2-info-icon" aria-hidden="true"><i class="bi bi-clock"></i></span>
-        <h2 id="soon-preview-title">Próximamente</h2>
-        <p>Patrón de modal compartido para acciones futuras.</p>
-        <a class="uni2-cta" href="#django">Ver partición</a>
-    </article>
-</div>
-
-{% endblock %}
-
-{% block extra_scripts %}
-{{ block.super }}
-<script>
-    // Bootstrap Icons no requiere inicialización JS
-
-    const cycleToggle = document.querySelector(".cycle-toggle");
-    if (cycleToggle) {
-        cycleToggle.addEventListener("click", (event) => {
-            const button = event.target.closest(".cycle-toggle-btn");
-            if (!button) return;
-            cycleToggle.querySelectorAll(".cycle-toggle-btn").forEach((item) => {
-                item.classList.toggle("is-active", item === button);
-            });
-        });
-    }
-</script>
 {% endblock %}

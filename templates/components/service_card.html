@@ -1,0 +1,14 @@
+<article class="uni2-service-card {{ color }}">
+    <span class="uni2-service-icon" aria-hidden="true">
+        <i class="bi bi-{{ icono|default:'box' }}"></i>
+    </span>
+    <div>
+        <h3>{{ titulo }}</h3>
+        {% if descripcion %}
+            <p>{{ descripcion|truncatewords:20 }}</p>
+        {% endif %}
+    </div>
+    {% if url %}
+        <a class="link" href="{{ url }}">{{ texto_enlace|default:"Ver más" }}</a>
+    {% endif %}
+</article>

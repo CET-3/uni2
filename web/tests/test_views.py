@@ -83,22 +83,38 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "Django" in content
     # La página usa el chrome del sitio (base.html): navbar, footer y tema
     assert "uni2-navbar" in content
+    assert 'id="contacto-preview"' in content
+    assert 'aria-label="Ejemplo del footer"' in content
     assert "uni2-theme.js" in content
     assert "style2.css" not in content
     assert "assets/logos/" not in content
     assert "benefit-list-body" in content
-    assert "discount-tag" in content
-    assert "uni2-metric" in content
-    assert "uni2-status" in content
+    assert "uni2-discount" in content
+    assert "uni2-metric-card" in content
+    assert "uni2-breadcrumbs" in content
+    assert "Fotocopias e impresiones" in content
+    assert 'aria-current="page"' in content
+    assert "uni2-alert-info" in content
+    assert "uni2-alert-success" in content
+    assert "uni2-alert-warning" in content
+    assert "uni2-alert-danger" in content
+    assert "Operación completada" in content
+    assert "uni2-status" not in content
     assert "ds-metric" not in content
     assert "ds-status" not in content
-    assert "uni2-service-grid" in content
-    assert 'class="py-5 px-3 px-md-4 px-xl-5"' in content
-    assert 'class="py-5 px-3 px-md-4 px-xl-5 bg-body-tertiary"' in content
+    assert "uni2-service-grid" not in content
+    assert "asociados/dashboard.html" in content
+    assert "gestion/dashboard.html" in content
+    assert "uni2-info-modal" not in content
     assert 'class="card-body"' in content
     assert 'class="service-grid"' not in content
     assert 'class="cta"' not in content
-    clases_ds = set(re.findall(r"ds-[a-z0-9-]+", content))
+    clases_ds = {
+        clase
+        for atributo in re.findall(r'class="([^"]*)"', content)
+        for clase in atributo.split()
+        if clase.startswith("ds-")
+    }
     assert clases_ds == set(), f"clases ds-* inesperadas: {clases_ds}"
 
 
@@ -108,8 +124,75 @@ def test_css_design_system_acota_navegacion_y_no_conserva_aliases_huerfanos():
 
     css = Path(css_path).read_text(encoding="utf-8")
 
-    # Después de la limpieza arquitectural no debe quedar ningún selector ds-page
+    # El catálogo usa Bootstrap para su mobiliario y no mantiene una capa CSS paralela.
     assert "ds-page" not in css
+
+
+def test_catalogo_muestra_todos_los_tokens_publicos():
+    project_root = Path(__file__).resolve().parents[2]
+    css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
+    catalogo = (project_root / "templates/web/design-system.html").read_text(encoding="utf-8")
+    prefijos_publicos = (
+        "--brand-",
+        "--color-",
+        "--font-",
+        "--letter-spacing-",
+        "--line-height-",
+        "--motion-",
+        "--radius-",
+        "--shadow-",
+        "--texture-",
+    )
+    tokens_publicos = {
+        token
+        for token in re.findall(r"(--[a-z][a-z0-9-]+)\s*:", css)
+        if token.startswith(prefijos_publicos)
+    }
+
+    faltantes = sorted(token for token in tokens_publicos if token not in catalogo)
+    assert faltantes == [], f"tokens públicos ausentes del catálogo: {faltantes}"
+
+
+def test_css_usa_tokens_canonicos_y_breakpoints_de_bootstrap():
+    css_path = finders.find("css/uni2-design-system.css")
+    assert css_path is not None
+    css = Path(css_path).read_text(encoding="utf-8")
+
+    tokens_historicos = ("--primary:", "--azul:", "--texto:", "--bg:", "--surface:")
+    assert all(token not in css for token in tokens_historicos)
+
+    breakpoints = set(re.findall(r"@media \(max-width: ([0-9.]+px)\)", css))
+    assert breakpoints == {"575.98px", "767.98px", "991.98px"}
+
+
+def test_base_carga_una_sola_hoja_css_propia():
+    project_root = Path(__file__).resolve().parents[2]
+    base = (project_root / "templates/base.html").read_text(encoding="utf-8")
+    css_dir = project_root / "static/css"
+
+    assert "css/uni2-design-system.css" in base
+    assert not (css_dir / "uni2.css").exists()
+    assert not (css_dir / "uni2-v1.css").exists()
+    assert not (css_dir / "uni2-v2.css").exists()
+
+
+def test_base_y_scripts_conservan_contratos_de_accesibilidad():
+    project_root = Path(__file__).resolve().parents[2]
+    base = (project_root / "templates/base.html").read_text(encoding="utf-8")
+    css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
+    theme_js = (project_root / "static/js/uni2-theme.js").read_text(encoding="utf-8")
+    carousel_js = (project_root / "static/js/uni2-carousel.js").read_text(encoding="utf-8")
+
+    assert base.index("js/uni2-theme.js") < base.index("css/uni2-design-system.css")
+    assert 'href="#contenido-principal"' in base
+    assert 'id="contenido-principal"' in base
+    assert 'aria-label="Modo oscuro"' in base
+    assert 'aria-pressed="false"' in base
+    assert "applyTheme(preferredTheme(), false)" in theme_js
+    assert "prefers-reduced-motion: reduce" in css
+    assert "--color-focus-ring" in css
+    assert "reducedMotion.matches" in carousel_js
+    assert "data-slider-toggle" in carousel_js
 
 
 @pytest.mark.django_db
@@ -234,6 +317,11 @@ def test_home_muestra_publicidades_activas_con_foto_y_links(client):
     assert "publicidades/anillado.webp" in contenido
     assert reverse("web:producto_servicio_detalle", args=[producto.id]) in contenido
     assert reverse("web:comercio_detalle", args=[comercio.id]) in contenido
+    assert 'aria-roledescription="carrusel"' in contenido
+    assert 'data-slider-toggle="publicidades-carousel"' in contenido
+    assert 'aria-label="Pausar carrusel"' in contenido
+    assert 'class="uni2-carousel-dot"' in contenido
+    assert 'tabindex="0"' in contenido
 
 
 @pytest.mark.django_db
@@ -254,6 +342,8 @@ def test_home_muestra_publicidad_sin_foto_sin_error(client):
     assert "Bicicleta solidaria" in contenido
     assert "Préstamo gratuito de bicicletas." in contenido
     assert "Conocer más" not in contenido
+    assert "data-slider-toggle" not in contenido
+    assert "uni2-carousel-dot" not in contenido
 
 
 @pytest.mark.django_db
@@ -280,23 +370,86 @@ def test_home_usa_el_mismo_formato_visual_que_el_design_system(client):
 
     content = response.content.decode()
     assert response.status_code == 200
-    assert "uni2-service-grid" in content
     assert "uni2-section-heading" in content
     assert "uni2-benefit-band" in content
     assert "uni2-benefit-mix-card" in content
-    assert "uni2-benefit-links" in content
+    assert 'class="row g-3"' in content
     assert 'class="benefit-band"' not in content
     assert "uni2-hours-mobile" in content
     assert 'class="service-grid"' not in content
 
 
-def test_club_de_beneficios_usa_tres_columnas_desde_tablet():
+def test_catalogo_y_home_comparten_componentes_visuales():
     project_root = Path(__file__).resolve().parents[2]
-    include = (project_root / "templates/includes/beneficios_grid.html").read_text(encoding="utf-8")
+    servicios = (project_root / "templates/includes/servicios_grid.html").read_text(encoding="utf-8")
+    beneficios = (project_root / "templates/includes/beneficios_grid.html").read_text(encoding="utf-8")
+    publicidades = (project_root / "templates/includes/publicidades_grid.html").read_text(encoding="utf-8")
+    actividad_detalle = (project_root / "templates/web/actividadcomercial_detalle.html").read_text(encoding="utf-8")
+    categoria_detalle = (project_root / "templates/web/categoria_detalle.html").read_text(encoding="utf-8")
+    producto_detalle = (project_root / "templates/web/producto_servicio_detalle.html").read_text(encoding="utf-8")
     design_system = (project_root / "templates/web/design-system.html").read_text(encoding="utf-8")
 
-    assert '<div class="col-6 col-md-4">' in include
-    assert design_system.count('class="col-6 col-md-4"><a class="uni2-benefit-mix-card') == 4
+    assert 'class="col-6 col-md-4"' in beneficios
+    assert 'components/service_card.html' in servicios
+    assert 'components/benefit_card.html' in beneficios
+    assert 'components/advertisement_card.html' in publicidades
+    assert 'components/benefit_list_item.html' in actividad_detalle
+    assert 'components/contact_block.html' in categoria_detalle
+    assert 'components/contact_block.html' in producto_detalle
+    assert 'components/service_card.html' in design_system
+    assert 'components/benefit_card.html' in design_system
+    assert 'components/advertisement_card.html' in design_system
+    assert 'components/benefit_list_item.html' in design_system
+    assert 'components/contact_block.html' in design_system
+    assert 'components/breadcrumbs.html' in design_system
+    assert 'components/alert.html' in design_system
+    assert 'includes/footer.html' in design_system
+
+
+def test_paginas_de_detalle_comparten_el_componente_breadcrumbs():
+    project_root = Path(__file__).resolve().parents[2]
+    templates_con_breadcrumbs = (
+        "categoria_detalle.html",
+        "producto_servicio_detalle.html",
+        "comercio_detalle.html",
+        "comercio_no_disponible.html",
+    )
+
+    for template_name in templates_con_breadcrumbs:
+        template = (project_root / "templates/web" / template_name).read_text(encoding="utf-8")
+        assert 'components/breadcrumbs.html' in template
+        assert '<nav aria-label="breadcrumb">' not in template
+
+
+def test_templates_usan_una_sola_familia_productiva_de_alertas():
+    project_root = Path(__file__).resolve().parents[2]
+    templates_root = project_root / "templates"
+    css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
+    templates_con_alertas = (
+        "includes/messages.html",
+        "comercios/resultado_validacion.html",
+        "registration/login.html",
+        "gestion/importar_cuotas_historicas.html",
+        "gestion/importar_asociados.html",
+        "gestion/asociados.html",
+        "web/design-system/estructura.html",
+        "web/design-system.html",
+    )
+
+    for relative_path in templates_con_alertas:
+        template = (templates_root / relative_path).read_text(encoding="utf-8")
+        assert 'components/alert.html' in template
+
+    for template_path in templates_root.rglob("*.html"):
+        template = template_path.read_text(encoding="utf-8")
+        assert 'class="alert ' not in template
+
+    assert ".alert-success" not in css
+    assert ".alert-danger" not in css
+    assert ".alert-warning" not in css
+    assert ".alert-info" not in css
+    assert ".uni2-flash-messages" in css
+    assert 'class="uni2-flash-messages"' in (templates_root / "includes/messages.html").read_text(encoding="utf-8")
 
 
 @pytest.mark.django_db
@@ -394,6 +547,9 @@ def test_detalle_producto_servicio_publico_muestra_producto_activo(client):
     assert response.status_code == 200
     assert "Anillado" in contenido
     assert "$600,00" in contenido
+    assert 'class="uni2-breadcrumbs"' in contenido
+    assert 'aria-current="page">Anillado' in contenido
+    assert reverse("web:productos_servicios") in contenido
 
 
 @pytest.mark.django_db
@@ -426,8 +582,12 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
     assert "commerce-benefit-logo" in contenido
     assert "Visitar online" not in contenido
     assert "Visitar sitio" not in contenido
+    assert 'class="uni2-breadcrumbs"' in contenido
+    assert 'aria-current="page">Librería Sur' in contenido
+    assert reverse("web:comercios") in contenido
     assert response_pendiente.status_code == 200
     assert "próximamente" in response_pendiente.content.decode()
+    assert 'class="uni2-breadcrumbs"' in response_pendiente.content.decode()
 
 
 @pytest.mark.django_db
@@ -514,6 +674,8 @@ def test_categoria_detalle_muestra_sus_productos_activos(client):
     assert "Inactivo" not in contenido
     assert "$50,00" in contenido
     assert "Consultá en la mutual" in contenido
+    assert 'class="uni2-breadcrumbs"' in contenido
+    assert 'aria-current="page">Fotocopias' in contenido
 
 
 @pytest.mark.django_db
@@ -573,7 +735,7 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     assert contenido.count("benefit-list-logo") >= 2
     assert "benefit-list-body" in contenido
     assert "benefit-meta" in contenido
-    assert "discount-tag" in contenido
+    assert "uni2-discount" in contenido
     assert "benefit-back" not in contenido
     assert "Actividad comercial" not in contenido
     assert "breadcrumb-item" not in contenido

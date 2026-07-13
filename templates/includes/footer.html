@@ -1,4 +1,4 @@
-<footer class="uni2-footer" id="contacto">
+<footer class="uni2-footer" id="{{ footer_id|default:'contacto' }}"{% if footer_label %} aria-label="{{ footer_label }}"{% endif %}>
     <div class="uni2-footer-container">
         <div class="uni2-footer-actions" aria-label="Contacto de la mutual">
             <a class="uni2-footer-icon uni2-footer-icon-mail" href="mailto:unidosatencionalcliente@gmail.com" aria-label="Enviar mail a la mutual">

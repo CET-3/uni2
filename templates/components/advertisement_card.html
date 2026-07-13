@@ -1,0 +1,12 @@
+<article
+    class="uni2-ad-card{% if not foto and not imagen_url %} uni2-ad-card-sin-foto{% endif %}"
+    {% if foto %}style="--ad-image: url('{{ foto.url }}');"{% elif imagen_url %}style="--ad-image: url('{{ imagen_url }}');"{% endif %}
+>
+    <span class="uni2-badge">{{ etiqueta_principal }}</span>
+    <h3>{{ titulo }}</h3>
+    <strong class="uni2-discount">{{ etiqueta_secundaria }}</strong>
+    <p>{{ descripcion }}</p>
+    {% if url %}
+        <a class="link" href="{{ url }}">{{ texto_enlace|default:"Conocer más" }}</a>
+    {% endif %}
+</article>

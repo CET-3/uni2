@@ -18,30 +18,8 @@
 
     <div class="uni2-benefit-list" aria-label="Comercios adheridos">
       {% for comercio in actividad_comercial.comercios.all %}
-        <a class="uni2-benefit-list-card" href="{% url 'web:comercio_detalle' comercio.pk %}" aria-label="Ver detalle de {{ comercio.nombre }}">
-          <span class="uni2-benefit-list-logo{% if not comercio.foto %} uni2-benefit-list-initials{% endif %}">
-            {% if comercio.foto %}
-              <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
-            {% else %}
-              {{ comercio.nombre|slice:":2"|upper }}
-            {% endif %}
-          </span>
-          <span class="uni2-benefit-list-body">
-            <h2>{{ comercio.nombre }}</h2>
-            {% if comercio.beneficio_texto %}
-              <strong class="uni2-discount">{{ comercio.beneficio_texto }}</strong>
-            {% endif %}
-            <span class="uni2-benefit-meta">
-              <span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> {{ comercio.direccion }}</span>
-              {% if comercio.telefono %}
-                <span><i class="bi bi-telephone" aria-hidden="true"></i> {{ comercio.telefono }}</span>
-              {% endif %}
-              {% if comercio.url_presencia_web %}
-                <span><i class="bi bi-globe" aria-hidden="true"></i> Visitar online</span>
-              {% endif %}
-            </span>
-          </span>
-        </a>
+        {% url 'web:comercio_detalle' comercio.pk as detalle_url %}
+        {% include "components/benefit_list_item.html" with url=detalle_url titulo=comercio.nombre foto=comercio.foto beneficio=comercio.beneficio_texto direccion=comercio.direccion telefono=comercio.telefono url_presencia_web=comercio.url_presencia_web only %}
       {% empty %}
         <p>No hay comercios adheridos en esta categoría.</p>
       {% endfor %}
