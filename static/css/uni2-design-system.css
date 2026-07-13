@@ -167,14 +167,6 @@
   padding: 2rem 0;
 }
 
-.uni2-benefit-intro h2 {
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  margin-bottom: 0;
-}
-
 .uni2-benefit-links {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   min-width: 0;
@@ -334,10 +326,6 @@ html {
 
 .uni2-hero h1 {
   color: var(--texto);
-  font-size: clamp(3.2rem, 8vw, 6.6rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1;
   margin-top: 18px;
   max-width: 760px;
 }
@@ -1499,45 +1487,6 @@ html {
   padding: 1rem 1.5rem;
 }
 
-.uni2-quick-action-card,
-.uni2-module-card,
-.uni2-info-card {
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.uni2-quick-action-card .card-body,
-.uni2-module-card .card-body,
-.uni2-info-card .card-body {
-  padding: 1.25rem;
-}
-
-.uni2-sidebar-card {
-  border: 1px solid var(--border);
-  border-radius: 1.25rem;
-  box-shadow: var(--shadow-sm);
-  top: 1.25rem;
-}
-
-.uni2-sidebar-card .list-group-item {
-  align-items: center;
-  border: 0;
-  display: flex;
-  font-weight: 500;
-  gap: 0.75rem;
-  justify-content: space-between;
-  padding: 0.85rem 1.25rem;
-}
-
-.uni2-sidebar-card .list-group-item + .list-group-item {
-  border-top: 1px solid var(--border);
-}
-
-.uni2-sidebar-card .list-group-item.active {
-  background: rgba(63, 81, 181, 0.08);
-  color: var(--primary);
-}
 
 .uni2-metric-card {
   border: 0;
@@ -1560,13 +1509,6 @@ html {
   line-height: 1.05;
 }
 
-.uni2-section-card {
-  border: 0;
-  border-radius: 1.25rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.uni2-section-card .card-body { padding: 1.5rem; }
 
 .uni2-section-title-row {
   align-items: center;
@@ -1597,20 +1539,7 @@ html {
   text-transform: uppercase;
 }
 
-.uni2-status-badge-soft {
-  background: rgba(63, 81, 181, 0.08);
-  border-radius: 999px;
-  color: var(--primary);
-  display: inline-flex;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.35rem 0.7rem;
-}
-
-.uni2-compact-list li + li { margin-top: 0.75rem; }
-
-.uni2-page-header-actions,
-.uni2-mobile-stack-actions {
+.uni2-page-header-actions {
   display: flex;
   gap: 0.75rem;
 }
@@ -1621,92 +1550,6 @@ html {
   box-shadow: var(--shadow-sm);
 }
 
-.uni2-admin-layout { display: grid; gap: 1.5rem; }
-
-.uni2-admin-main-column,
-.uni2-admin-side-column {
-  display: grid;
-  gap: 1.5rem;
-  align-content: start;
-}
-
-.uni2-quick-action-meta {
-  align-items: center;
-  color: var(--text-secondary);
-  display: flex;
-  font-size: 0.88rem;
-  gap: 0.75rem;
-  justify-content: space-between;
-  margin: 0.9rem 0 1rem;
-}
-
-.uni2-quick-action-meta span:first-child { min-width: 0; }
-
-.uni2-support-link-list,
-.uni2-module-link-list { display: grid; gap: 0.75rem; }
-
-.uni2-support-link-item,
-.uni2-module-link-item {
-  align-items: center;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  color: inherit;
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  padding: 0.95rem 1rem;
-  text-decoration: none;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-
-.uni2-support-link-item:hover,
-.uni2-module-link-item:hover {
-  border-color: var(--primary);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
-}
-
-.uni2-support-link-copy,
-.uni2-module-link-copy { min-width: 0; }
-
-.uni2-support-link-copy strong,
-.uni2-module-link-copy strong {
-  display: block;
-  font-size: 0.98rem;
-}
-
-.uni2-support-link-copy span,
-.uni2-module-link-copy span {
-  color: var(--text-secondary);
-  display: block;
-  font-size: 0.86rem;
-  margin-top: 0.2rem;
-}
-
-.uni2-module-toggle {
-  align-items: center;
-  background: rgba(63, 81, 181, 0.08);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  color: var(--primary);
-  display: flex;
-  font-weight: 600;
-  justify-content: space-between;
-  padding: 0.9rem 1rem;
-  width: 100%;
-}
-
-.uni2-module-toggle[aria-expanded="true"] .uni2-module-toggle-label::after { content: "ocultar"; }
-.uni2-module-toggle[aria-expanded="false"] .uni2-module-toggle-label::after { content: "mostrar"; }
-
-.uni2-module-toggle-label::after {
-  color: var(--text-secondary);
-  font-size: 0.82rem;
-  font-weight: 500;
-  margin-left: 0.45rem;
-  text-transform: lowercase;
-}
 
 .table-soft thead th {
   color: var(--text-secondary);
@@ -1717,16 +1560,6 @@ html {
   white-space: nowrap;
 }
 
-@media (min-width: 992px) {
-  .uni2-admin-layout {
-    align-items: start;
-    grid-template-columns: minmax(0, 1fr) 320px;
-  }
-  .uni2-admin-side-column {
-    position: sticky;
-    top: 1.25rem;
-  }
-}
 
 @media (max-width: 991.98px) {
   .uni2-navbar-inner {
@@ -1783,26 +1616,15 @@ html {
     width: 100%;
   }
 
-  .uni2-dashboard-hero .card-body { padding: 1.25rem; }
-  .uni2-dashboard-hero .display-6 { font-size: 2rem; }
-  .uni2-dashboard-hero { margin-bottom: 1.5rem; }
-  .uni2-page-header-actions,
-  .uni2-mobile-stack-actions { flex-direction: column; }
-  .uni2-page-header-actions .btn,
-  .uni2-mobile-stack-actions .btn { width: 100%; }
-  .uni2-module-toggle { margin-bottom: 0.9rem; }
+  .uni2-page-header-actions { flex-direction: column; }
+  .uni2-page-header-actions .btn { width: 100%; }
   .table-soft { font-size: 0.92rem; }
   .uni2-surface-card .card-body,
-  .uni2-section-card .card-body,
   .uni2-metric-card .card-body { padding: 1.15rem; }
 }
 
 @media (max-width: 575.98px) {
   main.py-4 { padding-top: 1rem !important; }
-  .uni2-dashboard-hero { border-radius: 1.1rem; }
-  .uni2-dashboard-hero .display-6 { font-size: 1.7rem; }
-  .uni2-dashboard-actions-grid { grid-template-columns: 1fr; }
-  .uni2-quick-action-meta { align-items: flex-start; flex-direction: column; }
   .table-soft { font-size: 0.88rem; }
   .table-soft td, .table-soft th { padding: 0.7rem 0.5rem; }
 }
@@ -1832,10 +1654,6 @@ html {
 
 .uni2-detail-copy h1 {
   color: var(--texto);
-  font-size: clamp(3.2rem, 8vw, 6.6rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1;
   margin-top: 18px;
   max-width: 760px;
 }
@@ -1952,10 +1770,6 @@ html {
 
 .uni2-benefit-page-header h1 {
   color: var(--texto);
-  font-size: clamp(3.2rem, 8vw, 6.6rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1;
   margin-top: 18px;
   max-width: 760px;
 }
