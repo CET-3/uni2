@@ -9,15 +9,9 @@
     <div class="row g-3" aria-label="Servicios de la mutual">
         {% for categoria in categorias_productos_servicios %}
             {% cycle 'uni2-service-card-blue' 'uni2-service-card-yellow' 'uni2-service-card-green' 'uni2-service-card-red' 'uni2-service-card-purple' as color silent %}
+            {% url 'web:categoria_detalle' categoria.pk as detalle_url %}
             <div class="col-6 col-md-3">
-                <article class="uni2-service-card {{ color }}">
-                    <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-{{ categoria.etiqueta_icono|default:'box' }}"></i></span>
-                    <div>
-                        <h3>{{ categoria.nombre }}</h3>
-                        <p>{{ categoria.descripcion|truncatewords:20 }}</p>
-                    </div>
-                    <a class="link" href="{% url 'web:categoria_detalle' categoria.pk %}">Ver más</a>
-                </article>
+                {% include "components/service_card.html" with color=color icono=categoria.etiqueta_icono titulo=categoria.nombre descripcion=categoria.descripcion url=detalle_url only %}
             </div>
         {% endfor %}
     </div>

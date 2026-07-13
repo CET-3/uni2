@@ -98,6 +98,12 @@ def crear_planilla_cuotas(rows):
     return buffer
 
 
+@pytest.fixture
+def operacion_cuotas_historicas_a_junio(monkeypatch):
+    """Mantiene determinista el escenario de la planilla histórica marzo-junio."""
+    monkeypatch.setattr("gestion.views.timezone.localdate", lambda: date(2026, 6, 30))
+
+
 @pytest.mark.django_db
 def test_dashboard_gestion_requiere_permiso(client):
     user_model = get_user_model()
@@ -434,7 +440,7 @@ def test_crear_usuarios_faltantes_asociados_se_procesa_en_lotes(client, monkeypa
 
 
 @pytest.mark.django_db
-def test_importar_cuotas_historicas_previsualiza_desde_planilla(client):
+def test_importar_cuotas_historicas_previsualiza_desde_planilla(client, operacion_cuotas_historicas_a_junio):
     staff = crear_usuario_gestion("staff_cuotas_preview")
     asociado = create_asociado(
         nombre="Lena", apellido="Leyes", dni="52328996", tipo="asociado", fecha_alta="2026-03-01"
@@ -480,7 +486,9 @@ def test_importar_cuotas_historicas_previsualiza_desde_planilla(client):
 
 
 @pytest.mark.django_db
-def test_importar_cuotas_historicas_descarga_planilla_con_cuotas_a_revisar(client):
+def test_importar_cuotas_historicas_descarga_planilla_con_cuotas_a_revisar(
+    client, operacion_cuotas_historicas_a_junio
+):
     staff = crear_usuario_gestion("staff_cuotas_revisar")
     archivo = crear_planilla_cuotas(
         [
@@ -525,7 +533,7 @@ def test_importar_cuotas_historicas_descarga_planilla_con_cuotas_a_revisar(clien
 
 
 @pytest.mark.django_db
-def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client):
+def test_importar_cuotas_historicas_confirma_cuotas_y_pagos(client, operacion_cuotas_historicas_a_junio):
     staff = crear_usuario_gestion("staff_cuotas_confirma")
     asociado = create_asociado(
         nombre="Lena", apellido="Leyes", dni="52328996", tipo="asociado", fecha_alta="2026-03-01"

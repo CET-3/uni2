@@ -8,22 +8,10 @@
 
     <div class="row g-3" aria-label="Rubros con beneficios">
         {% for rubro in rubros_beneficio %}
+            {% cycle 'uni2-benefit-food' 'uni2-benefit-sport' 'uni2-benefit-beauty' 'uni2-benefit-fashion' as color silent %}
+            {% url 'web:actividad_comercial_detalle' rubro.pk as detalle_url %}
             <div class="col-6 col-md-4">
-                <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="uni2-benefit-mix-card {% cycle 'uni2-benefit-food' 'uni2-benefit-sport' 'uni2-benefit-beauty' 'uni2-benefit-fashion' %}">
-                    <span class="uni2-benefit-logo-cloud" aria-hidden="true">
-                        {% for comercio in rubro.comercios_con_foto|slice:":3" %}
-                            {% if comercio.foto %}
-                            <span class="uni2-benefit-logo-dot
-                                {% if forloop.counter == 1 %}uni2-benefit-logo-dot-left
-                                {% elif forloop.counter == 2 %}uni2-benefit-logo-dot-main
-                                {% else %}uni2-benefit-logo-dot-right{% endif %}">
-                                <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
-                            </span>
-                            {% endif %}
-                        {% endfor %}
-                    </span>
-                    <span class="uni2-benefit-rubric">{{ rubro.nombre }}</span>
-                </a>
+                {% include "components/benefit_card.html" with color=color titulo=rubro.nombre comercios=rubro.comercios_con_foto url=detalle_url only %}
             </div>
         {% endfor %}
     </div>

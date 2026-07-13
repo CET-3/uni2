@@ -1,0 +1,26 @@
+<a class="uni2-benefit-list-card" href="{{ url }}" aria-label="Ver detalle de {{ titulo }}">
+    <span class="uni2-benefit-list-logo{% if not foto %} uni2-benefit-list-initials{% endif %}">
+        {% if foto %}
+            <img src="{{ foto.url }}" alt="{{ titulo }}" loading="lazy">
+        {% else %}
+            {{ iniciales|default:titulo|slice:":2"|upper }}
+        {% endif %}
+    </span>
+    <span class="uni2-benefit-list-body">
+        <h2>{{ titulo }}</h2>
+        {% if beneficio %}
+            <strong class="uni2-discount">{{ beneficio }}</strong>
+        {% endif %}
+        <span class="uni2-benefit-meta">
+            {% if direccion %}
+                <span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> {{ direccion }}</span>
+            {% endif %}
+            {% if telefono %}
+                <span><i class="bi bi-telephone" aria-hidden="true"></i> {{ telefono }}</span>
+            {% endif %}
+            {% if url_presencia_web %}
+                <span><i class="bi bi-globe" aria-hidden="true"></i> Visitar online</span>
+            {% endif %}
+        </span>
+    </span>
+</a>

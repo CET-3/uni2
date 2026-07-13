@@ -1,7 +1,9 @@
 {% if messages %}
-    <div class="mb-3">
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags|default:'info' }} mb-2">{{ message }}</div>
-        {% endfor %}
+    <div class="container pt-3">
+        <div class="uni2-flash-messages">
+            {% for message in messages %}
+                {% include "components/alert.html" with variant=message.tags|default:"info" message=message extra_classes="mb-2" only %}
+            {% endfor %}
+        </div>
     </div>
 {% endif %}
