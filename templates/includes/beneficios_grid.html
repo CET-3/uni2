@@ -8,7 +8,7 @@
 
     <div class="row g-3" aria-label="Rubros con beneficios">
         {% for rubro in rubros_beneficio %}
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-md-4">
                 <a href="{% url 'web:actividad_comercial_detalle' rubro.pk %}" class="uni2-benefit-mix-card {% cycle 'uni2-benefit-food' 'uni2-benefit-sport' 'uni2-benefit-beauty' 'uni2-benefit-fashion' %}">
                     <span class="uni2-benefit-logo-cloud" aria-hidden="true">
                         {% for comercio in rubro.comercios_con_foto|slice:":3" %}

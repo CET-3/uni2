@@ -290,6 +290,15 @@ def test_home_usa_el_mismo_formato_visual_que_el_design_system(client):
     assert 'class="service-grid"' not in content
 
 
+def test_club_de_beneficios_usa_tres_columnas_desde_tablet():
+    project_root = Path(__file__).resolve().parents[2]
+    include = (project_root / "templates/includes/beneficios_grid.html").read_text(encoding="utf-8")
+    design_system = (project_root / "templates/web/design-system.html").read_text(encoding="utf-8")
+
+    assert '<div class="col-6 col-md-4">' in include
+    assert design_system.count('class="col-6 col-md-4"><a class="uni2-benefit-mix-card') == 4
+
+
 @pytest.mark.django_db
 def test_home_muestra_horarios_en_formato_movil_compacto(client):
     response = client.get(reverse("web:home"))

@@ -1909,8 +1909,8 @@ html {
   position: absolute;
 }
 
-/* === SOON MODAL === */
-.uni2-soon-icon {
+/* === MODAL INFORMATIVO === */
+.uni2-info-icon {
   background-blend-mode: soft-light, normal;
   background-image: var(--grain), linear-gradient(135deg, var(--azul-dark) 0 24%, var(--azul) 48% 100%);
   border-radius: 50%;
@@ -1922,12 +1922,12 @@ html {
   width: 58px;
 }
 
-.uni2-soon-card {
+.uni2-info-card {
   background: var(--surface-solid);
   border: 1px solid var(--linea);
   border-radius: 18px;
   border-top: 8px solid var(--amarillo);
-  box-shadow: 0 28px 80px rgba(23, 32, 59, 0.28);
+  box-shadow: 0 8px 28px rgba(23, 32, 59, 0.14);
   display: grid;
   gap: 16px;
   padding: 28px;
@@ -1935,16 +1935,19 @@ html {
   width: min(430px, 100%);
 }
 
-.uni2-soon-card h2 {
-  font-size: clamp(2.3rem, 9vw, 3.6rem);
+.uni2-info-card h2 {
+  font-size: clamp(1.9rem, 4.5vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
   margin: 0;
 }
 
-.uni2-soon-card p {
+.uni2-info-card p {
   margin: 0;
 }
 
-.uni2-soon-modal {
+.uni2-info-modal {
   display: none;
   inset: 0;
   padding: 18px;
@@ -1953,28 +1956,30 @@ html {
   z-index: 120;
 }
 
-.uni2-soon-modal:target {
+.uni2-info-modal:target {
   display: grid;
 }
 
-.uni2-soon-modal .uni2-soon-card {
+.uni2-info-modal .uni2-info-card {
   padding-inline: clamp(22px, 5vw, 28px);
   width: min(430px, calc(100vw - 36px));
 }
 
-.uni2-soon-modal .uni2-soon-card h2 {
+.uni2-info-modal .uni2-info-card h2 {
   font-size: clamp(2.25rem, 6.5vw, 3rem);
-  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
-.uni2-soon-backdrop {
+.uni2-info-backdrop {
   backdrop-filter: blur(8px);
   background: rgba(23, 32, 59, 0.48);
   inset: 0;
   position: absolute;
 }
 
-.uni2-soon-close {
+.uni2-info-close {
   background: rgba(63, 81, 181, 0.08);
   border-radius: 50%;
   color: var(--azul);

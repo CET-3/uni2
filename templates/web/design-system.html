@@ -12,7 +12,6 @@
         <li class="nav-item"><a class="nav-link py-1" href="#primitivos">Primitivos</a></li>
         <li class="nav-item"><a class="nav-link py-1" href="#componentes">Componentes</a></li>
         <li class="nav-item"><a class="nav-link py-1" href="#patrones">Patrones</a></li>
-        <li class="nav-item"><a class="nav-link py-1" href="#servicios">Servicios</a></li>
         <li class="nav-item"><a class="nav-link py-1" href="#paginas">Páginas</a></li>
         <li class="nav-item"><a class="nav-link py-1" href="#django">Django</a></li>
         <li class="nav-item ms-auto"><a class="nav-link py-1" href="{% url 'web:inicio' %}">Ver sitio</a></li>
@@ -194,7 +193,7 @@
 <!-- ═══════════════════════════════════════════
      CAPA 2 · PRIMITIVOS
 ═══════════════════════════════════════════ -->
-<section id="primitivos" class="py-5 bg-body-tertiary" aria-labelledby="primitivos-title">
+<section id="primitivos" class="py-5" aria-labelledby="primitivos-title">
 <div class="container">
 
     <p class="h6 text-muted mb-2">Capa 2 · Primitivos</p>
@@ -319,17 +318,19 @@
 
         <div class="col-12">
             <p class="h6 text-muted mb-3">Tabla</p>
-            <p class="small text-muted mb-3">Bootstrap <code>.table</code>. Usada en listados de cuotas, horarios y datos tabulares de gestión.</p>
+            <p class="small text-muted mb-3"><code>.table.table-sm.table-hover.align-middle</code> dentro de <code>.table-responsive</code>. Los estados usan <code>.uni2-status</code>. Usada en listados de cuotas, asociados y datos de gestión.</p>
             <div class="card">
-                <div class="card-body">
-                    <table class="table table-sm mb-0">
-                        <thead><tr><th>Período</th><th>Vencimiento</th><th>Estado</th><th class="text-end">Importe</th></tr></thead>
-                        <tbody>
-                            <tr><td>Marzo 2026</td><td>31/03/2026</td><td><span class="badge text-bg-success">Pagada</span></td><td class="text-end">$700</td></tr>
-                            <tr><td>Abril 2026</td><td>30/04/2026</td><td><span class="badge text-bg-warning">Pendiente</span></td><td class="text-end">$700</td></tr>
-                            <tr><td>Mayo 2026</td><td>31/05/2026</td><td><span class="badge text-bg-danger">Vencida</span></td><td class="text-end">$700</td></tr>
-                        </tbody>
-                    </table>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle mb-0">
+                            <thead><tr><th>Asociado</th><th>Período</th><th>Vencimiento</th><th>Estado</th><th class="text-end">Importe</th><th></th></tr></thead>
+                            <tbody>
+                                <tr><td>Pérez, Martina</td><td>Marzo 2026</td><td>31/03/2026</td><td><span class="uni2-status uni2-status-paid">Pagada</span></td><td class="text-end">$700</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
+                                <tr><td>López, Juan</td><td>Abril 2026</td><td>30/04/2026</td><td><span class="uni2-status uni2-status-pending">Pendiente</span></td><td class="text-end">$700</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
+                                <tr><td>Gómez, Sofía</td><td>Mayo 2026</td><td>31/05/2026</td><td><span class="uni2-status uni2-status-overdue">Vencida</span></td><td class="text-end">$700</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -423,6 +424,21 @@
     <p>Elementos autocontenidos que aparecen en múltiples páginas.</p>
 
     <div class="row g-4 mt-1">
+
+        <!-- CARD BOOTSTRAP -->
+        <div class="col-12 col-lg-6">
+            <p class="h6 text-muted mb-2">Card</p>
+            <p class="small text-muted mb-3">Componente base de Bootstrap. Contenedor con fondo, borde y borde-radius. Se usa en toda la app para agrupar información.</p>
+            <div class="card">
+                <div class="card-header">Encabezado</div>
+                <div class="card-body">
+                    <h3 class="card-title">Título de la card</h3>
+                    <p class="card-text">Texto de ejemplo dentro de la card. Puede contener cualquier contenido.</p>
+                    <a href="#componentes" class="btn btn-primary">Acción</a>
+                </div>
+                <div class="card-footer text-muted">Pie de la card</div>
+            </div>
+        </div>
 
         <!-- NAVBAR -->
         <div class="col-12">
@@ -547,47 +563,63 @@
             </div>
         </div>
 
-        <!-- METRIC CARD -->
-        <div class="col-12 col-lg-6">
-            <p class="h6 text-muted mb-2">Metric Card</p>
-            <p class="small text-muted mb-3"><code>.uni2-metric-card</code> — número resumen en dashboards de gestión.</p>
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div class="uni2-metric-card card">
-                                <div class="card-body">
-                                    <div class="uni2-metric-label">Importar</div>
-                                    <div class="uni2-metric-value">142</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="uni2-metric-card card">
-                                <div class="card-body">
-                                    <div class="uni2-metric-label">Revisar</div>
-                                    <div class="uni2-metric-value">8</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="uni2-metric-card card">
-                                <div class="card-body">
-                                    <div class="uni2-metric-label">No importar</div>
-                                    <div class="uni2-metric-value">3</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="uni2-metric-card card">
-                                <div class="card-body">
-                                    <div class="uni2-metric-label">Cursos nuevos</div>
-                                    <div class="uni2-metric-value">5</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- INDICADOR PRINCIPAL -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Indicador principal</p>
+            <p class="small text-muted mb-3"><code>.uni2-metric</code> + variante de color — tarjeta con borde de acento, número grande y nota. Se agrupa en <code>.uni2-metric-grid</code>.</p>
+            <div class="uni2-metric-grid">
+                <article class="uni2-metric uni2-metric-blue">
+                    <span>Asociados activos</span>
+                    <strong>248</strong>
+                    <p>+18 altas este mes</p>
+                </article>
+                <article class="uni2-metric uni2-metric-yellow">
+                    <span>Cuotas al día</span>
+                    <strong>82%</strong>
+                    <p>Meta operativa: 90%</p>
+                </article>
+                <article class="uni2-metric uni2-metric-green">
+                    <span>Beneficios vigentes</span>
+                    <strong>37</strong>
+                    <p>6 rubros publicados</p>
+                </article>
+                <article class="uni2-metric uni2-metric-red">
+                    <span>Servicios usados</span>
+                    <strong>1.284</strong>
+                    <p>Fotocopias y cuadernillos</p>
+                </article>
+            </div>
+        </div>
+
+        <!-- INDICADOR COMPACTO -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Indicador compacto</p>
+            <p class="small text-muted mb-3"><code>.uni2-compact-metric</code> + variante de color — fila con ícono, número, tendencia y barra de progreso. Se agrupa en <code>.uni2-compact-metric-grid</code>.</p>
+            <div class="uni2-compact-metric-grid">
+                <article class="uni2-compact-metric uni2-compact-blue">
+                    <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-people"></i></span>
+                    <div class="uni2-compact-body"><span>Asociados</span><strong>248</strong></div>
+                    <strong class="uni2-trend">+7%</strong>
+                    <div class="uni2-progress" aria-hidden="true"><span style="--progress: 72%"></span></div>
+                </article>
+                <article class="uni2-compact-metric uni2-compact-yellow">
+                    <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-credit-card-2-front"></i></span>
+                    <div class="uni2-compact-body"><span>Cuotas al día</span><strong>82%</strong></div>
+                    <strong class="uni2-trend-muted">estable</strong>
+                    <div class="uni2-progress" aria-hidden="true"><span style="--progress: 82%"></span></div>
+                </article>
+                <article class="uni2-compact-metric uni2-compact-green">
+                    <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-percent"></i></span>
+                    <div class="uni2-compact-body"><span>Beneficios</span><strong>37</strong></div>
+                    <strong class="uni2-trend">+4</strong>
+                    <div class="uni2-progress" aria-hidden="true"><span style="--progress: 64%"></span></div>
+                </article>
+                <article class="uni2-compact-metric uni2-compact-red">
+                    <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-graph-up"></i></span>
+                    <div class="uni2-compact-body"><span>Consultas</span><strong>126</strong></div>
+                    <strong class="uni2-trend-down">-3%</strong>
+                    <div class="uni2-progress" aria-hidden="true"><span style="--progress: 46%"></span></div>
+                </article>
             </div>
         </div>
 
@@ -595,12 +627,12 @@
         <div class="col-12 col-lg-6">
             <p class="h6 text-muted mb-2">Page Header Actions</p>
             <p class="small text-muted mb-3"><code>.uni2-page-header-actions</code> — grupo de botones al encabezado de páginas de gestión.</p>
-            <div class="card h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 w-100">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
                         <div>
                             <h2 class="h4 mb-1">Gestión de asociados</h2>
-                            <p class="text-secondary mb-0 small">Buscá por texto libre y acotá con filtros.</p>
+                            <p class="mb-0 small">Buscá por texto libre y acotá con filtros.</p>
                         </div>
                         <div class="uni2-page-header-actions">
                             <a class="btn btn-outline-primary" href="#componentes">Exportar</a>
@@ -611,20 +643,16 @@
             </div>
         </div>
 
-        <!-- SOON MODAL -->
+        <!-- MODAL INFORMATIVO -->
         <div class="col-12 col-lg-6">
-            <p class="h6 text-muted mb-2">Soon Modal</p>
-            <p class="small text-muted mb-3"><code>.uni2-soon-card</code> y <code>.uni2-soon-modal</code> — comunica funciones no disponibles todavía.</p>
-            <div class="card">
-                <div class="card-body">
-                    <article class="uni2-soon-card border rounded-3 p-3 bg-body-tertiary">
-                        <span class="uni2-soon-icon" aria-hidden="true"><i class="bi bi-clock"></i></span>
-                        <h3>Próximamente</h3>
-                        <p>Esta función estará disponible pronto.</p>
-                        <a class="uni2-cta" href="#soon-preview">Abrir modal</a>
-                    </article>
-                </div>
-            </div>
+            <p class="h6 text-muted mb-2">Modal informativo</p>
+            <p class="small text-muted mb-3"><code>.uni2-info-card</code> y <code>.uni2-info-modal</code> — comunica funciones no disponibles todavía.</p>
+            <article class="uni2-info-card">
+                <span class="uni2-info-icon" aria-hidden="true"><i class="bi bi-clock"></i></span>
+                <h2>Próximamente</h2>
+                <p>Esta función estará disponible pronto.</p>
+                <a class="uni2-cta" href="#soon-preview">Abrir modal</a>
+            </article>
         </div>
 
         <!-- CONTACT BLOCK -->
@@ -671,437 +699,433 @@
 </section>
 
 <!-- ═══════════════════════════════════════════
-     CAPA 4 · PATRONES — Home
+     CAPA 4 · PATRONES
 ═══════════════════════════════════════════ -->
-<section id="patrones" class="py-5 bg-body-tertiary" aria-labelledby="patrones-title">
+<section id="patrones" class="py-5" aria-labelledby="patrones-title">
 <div class="container">
 
     <p class="h6 text-muted mb-2">Capa 4 · Patrones</p>
-    <h2 id="patrones-title">Secciones principales</h2>
-    <p class="mb-4">La home como patrón completo: hero, servicios, club de beneficios, slider y pasos de asociación.</p>
+    <h2 id="patrones-title">Composiciones reutilizables</h2>
+    <p>Secciones y layouts compuestos por componentes de la capa 3. Aparecen en varias páginas.</p>
 
-    <section class="uni2-hero uni2-mini-hero" aria-labelledby="hero-title">
-        <div class="uni2-section-inner uni2-hero-layout">
-            <div>
-                <span class="uni2-eyebrow">Mutual Escolar UNI2</span>
-                <h1 id="hero-title">Tu mutual, más cerca que nunca</h1>
-                <p>Una comunidad comprometida con vos, con beneficios para cada momento</p>
-                <div class="uni2-hero-actions">
-                    <a class="uni2-cta" href="#django">Sumate</a>
-                    <a class="uni2-cta uni2-cta-secondary" href="#componentes">Iniciar sesión</a>
+    <div class="d-flex flex-column gap-5 mt-4">
+
+        <!-- 1. SERVICIOS QUE SUMAN -->
+        <div>
+            <p class="h6 text-muted mb-2">Servicios que suman</p>
+            <p class="small text-muted mb-3">Heading + grid de service cards. Include <code>includes/servicios_grid.html</code>. Aparece en la home y en los dashboards.</p>
+            <div class="border rounded-3 p-4 bg-body">
+                <div class="uni2-section-heading">
+                    <div><h2 class="uni2-titulo-seccion">Servicios que suman</h2></div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-blue"><span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-files"></i></span><div><h3>Fotocopias</h3><p>Fotocopias rápidas y de excelente calidad.</p></div><a class="link" href="#patrones">Ver más</a></article></div>
+                    <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-yellow"><span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bag"></i></span><div><h3>Uniformes</h3><p>Calidad y comodidad para todo el año.</p></div><a class="link" href="#patrones">Ver más</a></article></div>
+                    <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-green"><span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bicycle"></i></span><div><h3>Bicicleta Solidaria</h3><p>Una forma práctica de moverte.</p></div><a class="link" href="#patrones">Ver más</a></article></div>
+                    <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-red"><span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></span><div><h3>Cuadernillos</h3><p>Todo el material para cada materia.</p></div><a class="link" href="#patrones">Ver más</a></article></div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <div class="border rounded-3 p-3 bg-body mt-4">
-        <div class="uni2-section-heading">
-            <div><h2 class="uni2-titulo-seccion">Servicios que suman</h2></div>
-        </div>
-        <div class="row g-3" aria-label="Servicios de la mutual">
-            <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-blue" data-href="#servicios">
-                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-files"></i></span>
-                <div><h3>Fotocopias</h3><p>Fotocopias rápidas y de excelente calidad.</p></div>
-                <a class="link" href="#servicios">Ver más</a>
-            </article></div>
-            <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-yellow" data-href="#servicios">
-                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bag"></i></span>
-                <div><h3>Uniformes</h3><p>Calidad y comodidad para acompa&ntilde;arte todo el a&ntilde;o.</p></div>
-                <a class="link" href="#servicios">Ver más</a>
-            </article></div>
-            <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-green" data-href="#servicios">
-                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bicycle"></i></span>
-                <div><h3>Bicicleta Solidaria</h3><p>Una forma práctica y sustentable de moverte.</p></div>
-                <a class="link" href="#servicios">Ver más</a>
-            </article></div>
-            <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-red" data-href="#servicios">
-                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></span>
-                <div><h3>Cuadernillos</h3><p>Todo el material que necesitás para cada materia.</p></div>
-                <a class="link" href="#servicios">Ver más</a>
-            </article></div>
-            <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-purple">
-                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-paperclip"></i></span>
-                <div><h3>Anillado</h3><p>Cuidá tu material de estudio con un acabado profesional.</p></div>
-            </article></div>
-        </div>
-
-        <aside class="uni2-benefit-band" aria-labelledby="beneficios-home-title">
-            <div class="uni2-section-heading">
-                <div><h2 id="beneficios-home-title" class="uni2-titulo-seccion">Club de Beneficios</h2></div>
-            </div>
-            <div class="row g-3 js-home-benefits-grid" aria-label="Rubros con beneficios">
-                <div class="col-6 col-md-3"><a class="uni2-benefit-mix-card uni2-benefit-food" href="#beneficios">
-                    <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>AD</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>BM</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>LC</span></span></span>
-                    <span class="uni2-benefit-rubric">Gastronomía y kioscos</span>
-                </a></div>
-                <div class="col-6 col-md-3"><a class="uni2-benefit-mix-card uni2-benefit-sport" href="#beneficios">
-                    <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>AG</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>AC</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>ER</span></span></span>
-                    <span class="uni2-benefit-rubric">Gym y deportes</span>
-                </a></div>
-                <div class="col-6 col-md-3"><a class="uni2-benefit-mix-card uni2-benefit-beauty" href="#beneficios">
-                    <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>AS</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>AM</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>OM</span></span></span>
-                    <span class="uni2-benefit-rubric">Belleza y Bienestar</span>
-                </a></div>
-                <div class="col-6 col-md-3"><a class="uni2-benefit-mix-card uni2-benefit-fashion" href="#beneficios">
-                    <span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>CC</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>GC</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>JD</span></span></span>
-                    <span class="uni2-benefit-rubric">Indumentaria</span>
-                </a></div>
-            </div>
-        </aside>
-
-        <div class="uni2-section-heading mt-4">
-            <div><h2 class="uni2-titulo-seccion">Los m&aacute;s elegidos</h2></div>
-            <div class="btn-group" role="group" aria-label="Controles del carrusel">
-                <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="showcase-carousel" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
-                <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="showcase-carousel" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+        <!-- 2. CLUB DE BENEFICIOS -->
+        <div>
+            <p class="h6 text-muted mb-2">Club de Beneficios</p>
+            <p class="small text-muted mb-3">Grilla de rubros con logos circulares superpuestos. Include <code>includes/beneficios_grid.html</code>.</p>
+            <div class="border rounded-3 p-4 bg-body">
+                <aside class="uni2-benefit-band">
+                    <div class="uni2-section-heading">
+                        <div><h2 class="uni2-titulo-seccion">Club de Beneficios</h2></div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4"><a class="uni2-benefit-mix-card uni2-benefit-food" href="#patrones"><span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>AD</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>BM</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>LC</span></span></span><span class="uni2-benefit-rubric">Gastronomía y kioscos</span></a></div>
+                        <div class="col-6 col-md-4"><a class="uni2-benefit-mix-card uni2-benefit-sport" href="#patrones"><span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>AG</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>AC</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>ER</span></span></span><span class="uni2-benefit-rubric">Gym y deportes</span></a></div>
+                        <div class="col-6 col-md-4"><a class="uni2-benefit-mix-card uni2-benefit-beauty" href="#patrones"><span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>AS</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>AM</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>OM</span></span></span><span class="uni2-benefit-rubric">Belleza y Bienestar</span></a></div>
+                        <div class="col-6 col-md-4"><a class="uni2-benefit-mix-card uni2-benefit-fashion" href="#patrones"><span class="uni2-benefit-logo-cloud" aria-hidden="true"><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>CC</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>GC</span></span><span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>JD</span></span></span><span class="uni2-benefit-rubric">Indumentaria</span></a></div>
+                    </div>
+                </aside>
             </div>
         </div>
-        <div class="uni2-carousel js-auto-slider" id="showcase-carousel" aria-label="Carrusel de publicidades">
-            <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1100&q=80');">
-                <span class="uni2-badge">Alimentos</span><h3>Alto Drugstore</h3><strong class="uni2-discount">10% OFF</strong><p>Kiosco y drugstore con snacks, bebidas y productos para resolver compras rápidas.</p><a class="link" href="#beneficios">Conocer más</a>
-            </article>
-            <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1100&q=80');">
-                <span class="uni2-badge">Librería</span><h3>Librería Mu&ntilde;oz</h3><strong class="uni2-discount">10% OFF</strong><p>Útiles escolares, carpetas, hojas y materiales para la cursada.</p><a class="link" href="#beneficios">Conocer más</a>
-            </article>
-            <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1100&q=80');">
-                <span class="uni2-badge">Actividad física</span><h3>Atenas Gimnasio</h3><strong class="uni2-discount">10% OFF</strong><p>Gimnasio de musculación y entrenamiento para sumar actividad física.</p><a class="link" href="#beneficios">Conocer más</a>
-            </article>
-        </div>
-        <div class="d-flex justify-content-center gap-2 mt-2" data-slider-dots="showcase-carousel" aria-label="Indicadores del carrusel">
-            <button class="btn btn-sm btn-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="0" aria-label="Ir a publicidad 1"></button>
-            <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="1" aria-label="Ir a publicidad 2"></button>
-            <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="2" aria-label="Ir a publicidad 3"></button>
-        </div>
 
-        <div class="uni2-section-heading mt-4">
-            <div><h2 class="uni2-titulo-seccion">C&oacute;mo ser parte de nuestra comunidad</h2></div>
-        </div>
-        <div class="mt-4">
-            <div class="row g-3">
-                <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-blue"><strong class="uni2-step-number">1</strong><h3>Acércate a la mutual</h3><p>Visitá UNI2 durante nuestros horarios de atención.</p></article></div>
-                <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-yellow"><strong class="uni2-step-number">2</strong><h3>Completá tu inscripción</h3><p>Registrá tus datos de forma rápida y sencilla.</p></article></div>
-                <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-green"><strong class="uni2-step-number">3</strong><h3>Sumate a la comunidad</h3><p>Con una cuota social de solo $800 por mes, ya sos asociado.</p></article></div>
-                <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-red"><strong class="uni2-step-number">4</strong><h3>Disfrutá tus beneficios</h3><p>Accedé a servicios, descuentos y oportunidades exclusivas.</p></article></div>
-            </div>
-            <div class="uni2-info-box mt-3" aria-label="Información importante">
-                <div><h3>Asociación</h3><p>Presencial en la mutual.</p></div>
-                <div><h3>Cuota social</h3><p>$800 mensuales.</p></div>
-                <div class="uni2-schedule-card">
-                    <h3>Horarios de atención</h3>
-                    <table class="uni2-hours-table uni2-hours-table-compact" style="display:table" aria-label="Horarios de atención resumidos">
-                        <thead><tr><th>Día</th><th>Horarios</th></tr></thead>
-                        <tbody><tr><th>Lunes a Jueves</th><td><span class="uni2-hours-chip uni2-hours-chip-blue">08:50-09:00</span><span class="uni2-hours-chip uni2-hours-chip-yellow">10:20-10:30</span><span class="uni2-hours-chip uni2-hours-chip-green">13:30-17:30</span></td></tr></tbody>
-                    </table>
+        <!-- 3. LOS MÁS ELEGIDOS -->
+        <div>
+            <p class="h6 text-muted mb-2">Los más elegidos</p>
+            <p class="small text-muted mb-3">Carrusel de publicidades con imagen de fondo, badge, descuento y CTA. Include <code>includes/publicidades_grid.html</code>.</p>
+            <div class="border rounded-3 p-4 bg-body">
+                <div class="uni2-section-heading">
+                    <div><h2 class="uni2-titulo-seccion">Los m&aacute;s elegidos</h2></div>
+                    <div class="btn-group" role="group" aria-label="Controles del carrusel">
+                        <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="showcase-carousel" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+                        <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="showcase-carousel" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="uni2-carousel js-auto-slider" id="showcase-carousel" aria-label="Carrusel de publicidades">
+                    <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1100&q=80');"><span class="uni2-badge">Alimentos</span><h3>Alto Drugstore</h3><strong class="uni2-discount">10% OFF</strong><p>Kiosco y drugstore con snacks, bebidas y productos de uso diario.</p><a class="link" href="#patrones">Conocer más</a></article>
+                    <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1100&q=80');"><span class="uni2-badge">Librería</span><h3>Librería Mu&ntilde;oz</h3><strong class="uni2-discount">10% OFF</strong><p>Útiles escolares, carpetas y materiales para la cursada.</p><a class="link" href="#patrones">Conocer más</a></article>
+                    <article class="uni2-ad-card" style="--ad-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1100&q=80');"><span class="uni2-badge">Actividad física</span><h3>Atenas Gimnasio</h3><strong class="uni2-discount">10% OFF</strong><p>Gimnasio de musculación y entrenamiento.</p><a class="link" href="#patrones">Conocer más</a></article>
+                </div>
+                <div class="d-flex justify-content-center gap-2 mt-2" data-slider-dots="showcase-carousel" aria-label="Indicadores del carrusel">
+                    <button class="btn btn-sm btn-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="0" aria-label="Ir a publicidad 1"></button>
+                    <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="1" aria-label="Ir a publicidad 2"></button>
+                    <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="2" aria-label="Ir a publicidad 3"></button>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
-</section>
-
-<!-- ═══════════════════════════════════════════
-     CAPA 4 · PATRONES — Servicios
-═══════════════════════════════════════════ -->
-<section id="servicios" class="py-5" aria-labelledby="servicios-title">
-<div class="container">
-
-    <p class="h6 text-muted mb-2">Capa 4 · Patrones</p>
-    <h2 id="servicios-title">Patrones de páginas internas</h2>
-    <p class="mb-4">Componentes para servicios con precios, productos, tablas agrupadas y contacto.</p>
-
-    <div class="uni2-detail-panel">
-        <h2>Tabla de precios</h2>
-        <div class="uni2-price-table-wrap">
-            <table class="uni2-price-table uni2-price-table-compact" aria-label="Precios de ejemplo">
-                <thead><tr><th>Producto</th><th>Asociado</th><th>No asociado</th></tr></thead>
-                <tbody><tr><th>Fotocopia simple</th><td>$120</td><td>$150</td></tr><tr><th>Fotocopia doble faz</th><td>$150</td><td>$200</td></tr></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="uni2-detail-panel mt-4">
-        <div class="uni2-product-price-grid" aria-label="Precios de uniformes">
-            <article class="uni2-product-price-card">
-                <div class="uni2-product-price-head"><span class="uni2-product-price-icon">R</span><div><h2>Remeras</h2><p>Talles XS a XL.</p></div></div>
-                <div class="uni2-price-pair"><div class="uni2-price-pill"><span>Asociado</span><strong>$16.000</strong></div><div class="uni2-price-pill"><span>No asociado</span><strong>$20.000</strong></div></div>
-            </article>
-            <article class="uni2-product-price-card">
-                <div class="uni2-product-price-head"><span class="uni2-product-price-icon">C</span><div><h2>Camperas</h2><p>Talles XS a XL.</p></div></div>
-                <div class="uni2-price-pair"><div class="uni2-price-pill"><span>Asociado</span><strong>$30.000</strong></div><div class="uni2-price-pill"><span>No asociado</span><strong>$40.000</strong></div></div>
-            </article>
-        </div>
-    </div>
-
-    <div class="uni2-detail-panel uni2-booklet-panel mt-4">
-        <div class="uni2-detail-title-row"><h1>Cuadernillos</h1><p>Tabla agrupada para materiales por ciclo.</p></div>
-        <div class="uni2-cycle-wrap">
-            <div class="uni2-cycle-toggle" aria-hidden="false">
-                <button type="button" class="uni2-cycle-toggle-btn" data-target="cb">Ciclo Básico</button>
-                <button type="button" class="uni2-cycle-toggle-btn" data-target="cs">Ciclo Superior</button>
+        <!-- 4. PASOS DE PROCESO -->
+        <div>
+            <p class="h6 text-muted mb-2">Pasos de proceso</p>
+            <p class="small text-muted mb-3">Step cards numeradas + info box con datos clave. Usada en la home para explicar cómo asociarse.</p>
+            <div class="border rounded-3 p-4 bg-body">
+                <div class="uni2-section-heading">
+                    <div><h2 class="uni2-titulo-seccion">C&oacute;mo ser parte de nuestra comunidad</h2></div>
+                </div>
+                <div class="row g-3 mt-1">
+                    <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-blue"><strong class="uni2-step-number">1</strong><h3>Acercate a la mutual</h3><p>Visitá UNI2 en nuestros horarios.</p></article></div>
+                    <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-yellow"><strong class="uni2-step-number">2</strong><h3>Completá tu inscripción</h3><p>Registrá tus datos.</p></article></div>
+                    <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-green"><strong class="uni2-step-number">3</strong><h3>Sumate a la comunidad</h3><p>Cuota de $700 por mes.</p></article></div>
+                    <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-red"><strong class="uni2-step-number">4</strong><h3>Disfrutá tus beneficios</h3><p>Accesos y descuentos exclusivos.</p></article></div>
+                </div>
+                <div class="uni2-info-box mt-3">
+                    <div><h3>Asociación</h3><p>Presencial en la mutual.</p></div>
+                    <div><h3>Cuota social</h3><p>$700 mensuales.</p></div>
+                    <div class="uni2-schedule-card">
+                        <h3>Horarios de atención</h3>
+                        <table class="uni2-hours-table uni2-hours-table-compact" style="display:table">
+                            <thead><tr><th>Día</th><th>Horarios</th></tr></thead>
+                            <tbody><tr><th>Lunes a Jueves</th><td><span class="uni2-hours-chip uni2-hours-chip-blue">08:50-09:00</span><span class="uni2-hours-chip uni2-hours-chip-yellow">10:20-10:30</span><span class="uni2-hours-chip uni2-hours-chip-green">13:30-17:30</span></td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <article class="uni2-cycle-card uni2-cycle-card--cb">
-                <div class="uni2-cycle-head"><span class="uni2-cycle-code">C.B</span><div><h2>CICLO BASICO</h2></div></div>
-                <div class="uni2-price-table-wrap">
-                    <table class="uni2-price-table uni2-booklet-table">
-                        <thead><tr><th>Cuadernillo</th><th>Asociado</th><th>No asociado</th></tr></thead>
-                        <tbody><tr class="uni2-table-group-row"><th colspan="3">1 C.B</th></tr><tr><th>Matemática</th><td><span class="uni2-exclusive">$4.050</span></td><td>$5.400</td></tr></tbody>
-                    </table>
+        </div>
+
+        <!-- 5. LISTA DE BENEFICIOS -->
+        <div>
+            <p class="h6 text-muted mb-2">Lista de beneficios</p>
+            <p class="small text-muted mb-3">Lista de comercios adheridos por categoría: logo circular, descuento, descripción y metadata. Usada en <code>actividadcomercial_detalle.html</code>.</p>
+            <div class="border rounded-3 p-4 bg-body">
+                <div class="uni2-benefit-list">
+                    <a class="uni2-benefit-list-card" href="#detail-alto-drugstore" aria-label="Ver beneficio de Alto Drugstore">
+                        <span class="uni2-benefit-list-logo uni2-benefit-list-initials">AD</span>
+                        <span class="uni2-benefit-list-body">
+                            <h2>Alto Drugstore y Le Bon Break Store</h2>
+                            <strong class="uni2-discount">10% OFF</strong>
+                            <p>Todo lo que necesitás en un solo lugar: bebidas, alimentos, snacks y productos de uso diario.</p>
+                            <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Alsina 189 / Hipólito Yrigoyen 731 &middot; @altodrugstoreroca</span></span>
+                        </span>
+                    </a>
+                    <a class="uni2-benefit-list-card" href="#detail-latte" aria-label="Ver beneficio de Latte Cafetería">
+                        <span class="uni2-benefit-list-logo uni2-benefit-list-initials">LC</span>
+                        <span class="uni2-benefit-list-body">
+                            <h2>Latte Cafetería</h2>
+                            <strong class="uni2-discount">15% OFF</strong>
+                            <p>El lugar perfecto para disfrutar un buen café y compartir momentos especiales.</p>
+                            <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
+                        </span>
+                    </a>
                 </div>
-            </article>
-            <article class="uni2-cycle-card uni2-cycle-card--cs">
-                <div class="uni2-cycle-head"><span class="uni2-cycle-code">C.S</span><div><h2>CICLO SUPERIOR</h2></div></div>
-                <div class="uni2-price-table-wrap">
-                    <table class="uni2-price-table uni2-booklet-table">
-                        <thead><tr><th>Cuadernillo</th><th>Asociado</th><th>No asociado</th></tr></thead>
-                        <tbody><tr class="uni2-table-group-row"><th colspan="3">2 C.S</th></tr><tr><th>Microeconomía</th><td><span class="uni2-exclusive">$4.650</span></td><td>$6.200</td></tr></tbody>
-                    </table>
+                <article class="uni2-benefit-modal" id="detail-alto-drugstore" aria-label="Beneficio de Alto Drugstore">
+                    <a class="uni2-benefit-modal-backdrop" href="#patrones" aria-label="Cerrar detalle"></a>
+                    <div class="uni2-benefit-modal-card">
+                        <span class="uni2-benefit-list-logo uni2-benefit-list-initials">AD</span>
+                        <strong class="uni2-discount">10% OFF</strong>
+                        <h2>Alto Drugstore y Le Bon Break Store</h2>
+                        <p>Modal de detalle por hash. Se activa con <code>href="#id"</code>.</p>
+                        <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> General Roca &middot; @altodrugstoreroca</span></span>
+                    </div>
+                </article>
+                <article class="uni2-benefit-modal" id="detail-latte" aria-label="Beneficio de Latte Cafetería">
+                    <a class="uni2-benefit-modal-backdrop" href="#patrones" aria-label="Cerrar detalle"></a>
+                    <div class="uni2-benefit-modal-card">
+                        <span class="uni2-benefit-list-logo uni2-benefit-list-initials">LC</span>
+                        <strong class="uni2-discount">15% OFF</strong>
+                        <h2>Latte Cafetería</h2>
+                        <p>Detalle reutilizable para comercios del club de beneficios.</p>
+                        <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <!-- 6. LISTADO CON FILTROS Y TABLA -->
+        <div>
+            <p class="h6 text-muted mb-2">Listado con filtros y tabla</p>
+            <p class="small text-muted mb-3">Page header con acciones + formulario de filtro en card + tabla de resultados. Usado en <code>gestion/asociados.html</code>.</p>
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-3">
+                <div>
+                    <h2 class="h4 mb-1">Gestión de asociados</h2>
+                    <p class="mb-0 small text-secondary">Buscá por texto libre y acotá con filtros de estado o tipo.</p>
                 </div>
-            </article>
+                <div class="uni2-page-header-actions">
+                    <a class="btn btn-outline-primary" href="#patrones">Exportar</a>
+                    <a class="btn btn-primary" href="#patrones">Nuevo asociado</a>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form class="row g-3 align-items-end" action="#" method="get">
+                        <div class="col-lg-4">
+                            <label class="form-label" for="q-listado">Buscar</label>
+                            <input class="form-control" type="search" id="q-listado" placeholder="Nombre, DNI...">
+                        </div>
+                        <div class="col-lg-2">
+                            <label class="form-label" for="estado-listado">Estado</label>
+                            <select class="form-select" id="estado-listado"><option>Todos</option><option>Activo</option><option>Inactivo</option></select>
+                        </div>
+                        <div class="col-lg-2">
+                            <label class="form-label" for="tipo-listado">Tipo</label>
+                            <select class="form-select" id="tipo-listado"><option>Todos</option><option>Alumno</option><option>Docente</option></select>
+                        </div>
+                        <div class="col-lg-2">
+                            <button class="btn btn-primary w-100" type="button">Buscar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle mb-0">
+                            <thead><tr><th>Asociado</th><th>Número</th><th>DNI</th><th>Curso</th><th>Estado</th><th></th></tr></thead>
+                            <tbody>
+                                <tr><td>Pérez, Martina</td><td>00142</td><td>45.123.456</td><td>2 C.B</td><td>Activo</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#patrones">Ver detalle</a></td></tr>
+                                <tr><td>López, Juan</td><td>00143</td><td>46.234.567</td><td>3 C.S</td><td>Activo</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#patrones">Ver detalle</a></td></tr>
+                                <tr><td>Gómez, Sofía</td><td>00144</td><td>47.345.678</td><td>1 C.B</td><td>Inactivo</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#patrones">Ver detalle</a></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        <aside class="uni2-print-contact">
-            <span class="uni2-print-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></span>
-            <div><h3>Reservá tu material en la mutual a</h3><div class="uni2-contact-links"><a href="mailto:unidosatencionalcliente@gmail.com">unidosatencionalcliente@gmail.com</a><span class="uni2-contact-separator">o</span><a class="whatsapp-link" href="https://wa.me/5492984210672" target="_blank" rel="noopener">whatsapp</a></div></div>
-        </aside>
+
+        <!-- 7. DETALLE DE ÍTEM -->
+        <div>
+            <p class="h6 text-muted mb-2">Detalle de ítem</p>
+            <p class="small text-muted mb-3">Layout de dos columnas: copy a la izquierda, panel de datos a la derecha. Usado en <code>comercio_detalle.html</code> y <code>producto_servicio_detalle.html</code>.</p>
+            <div class="border rounded-3 p-4 bg-body">
+                <section class="uni2-service-detail uni2-commerce-detail">
+                    <div class="uni2-detail-layout">
+                        <div class="uni2-detail-copy">
+                            <span class="uni2-eyebrow">Gastronomía y kioscos</span>
+                            <h1 class="uni2-titulo-principal">Alto Drugstore</h1>
+                        </div>
+                        <div class="uni2-detail-panel">
+                            <div class="uni2-commerce-benefit-row">
+                                <span class="uni2-commerce-benefit-logo uni2-commerce-benefit-logo--fallback">AD</span>
+                                <div class="uni2-commerce-benefit-copy">
+                                    <strong class="uni2-commerce-benefit-text">10% OFF en toda la tienda</strong>
+                                </div>
+                            </div>
+                            <div><h2>Dirección</h2><p>Alsina 189, General Roca</p></div>
+                            <div><h2>Teléfono</h2><p>2984 123456</p></div>
+                            <div><a class="uni2-cta uni2-cta-secondary" href="#patrones">Visitar online</a></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- 8. FORM DE DATOS -->
+        <div>
+            <p class="h6 text-muted mb-2">Form de datos</p>
+            <p class="small text-muted mb-3">Formulario de alta o edición dentro de una card. Usado en <code>gestion/asociado_form.html</code> y similares. Incluye validación Bootstrap.</p>
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-3">
+                <div>
+                    <h2 class="h4 mb-1">Nuevo asociado</h2>
+                    <p class="mb-0 small text-secondary">Alta manual para la atención diaria de la mutual.</p>
+                </div>
+                <div class="uni2-page-header-actions">
+                    <a class="btn btn-outline-primary" href="#patrones">Volver al listado</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <form action="#" method="get" novalidate>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="f-nombre">Nombre</label>
+                                <input class="form-control is-valid" type="text" id="f-nombre" value="Martina">
+                                <div class="valid-feedback">Listo para guardar.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="f-apellido">Apellido</label>
+                                <input class="form-control" type="text" id="f-apellido" placeholder="Pérez">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="f-dni">DNI</label>
+                                <input class="form-control is-invalid" type="text" id="f-dni" value="">
+                                <div class="invalid-feedback">Este dato es obligatorio.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="f-tipo">Tipo</label>
+                                <select class="form-select" id="f-tipo"><option>Alumno</option><option>Docente</option></select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="f-curso">Curso actual</label>
+                                <select class="form-select" id="f-curso"><option>2 C.B</option><option>3 C.S</option></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="f-email">Email</label>
+                                <input class="form-control" type="email" id="f-email" placeholder="nombre@email.com">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="f-telefono">Teléfono</label>
+                                <input class="form-control" type="text" id="f-telefono" placeholder="2984...">
+                            </div>
+                        </div>
+                        <div class="mt-4 d-flex gap-2">
+                            <button class="btn btn-primary" type="button">Guardar asociado</button>
+                            <a class="btn btn-outline-primary" href="#patrones">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. FORM DE BÚSQUEDA -->
+        <div>
+            <p class="h6 text-muted mb-2">Form de búsqueda</p>
+            <p class="small text-muted mb-3">Barra de filtros inline con chips de filtros activos. Usada en vistas de gestión con múltiples criterios.</p>
+            <div class="card">
+                <div class="card-body">
+                    <form class="uni2-filter-bar" action="#" method="get">
+                        <div>
+                            <label class="form-label" for="f-buscar">Buscar</label>
+                            <input class="form-control" type="search" id="f-buscar" placeholder="Nombre, DNI, comercio o servicio">
+                        </div>
+                        <div>
+                            <label class="form-label" for="f-categoria">Categoría</label>
+                            <select class="form-select" id="f-categoria"><option>Todas</option><option>Servicios</option><option>Beneficios</option></select>
+                        </div>
+                        <div>
+                            <label class="form-label" for="f-estado">Estado</label>
+                            <select class="form-select" id="f-estado"><option>Activos</option><option>Pendientes</option><option>Inactivos</option></select>
+                        </div>
+                        <button class="uni2-cta" type="button">Filtrar</button>
+                    </form>
+                    <div class="uni2-chip-row mt-3" aria-label="Filtros activos">
+                        <span class="uni2-filter-chip"><i class="bi bi-search"></i> "cuadernillos"</span>
+                        <span class="uni2-filter-chip"><i class="bi bi-tag"></i> Servicios</span>
+                        <span class="uni2-filter-chip"><i class="bi bi-check-circle"></i> Activos</span>
+                        <button class="btn btn-sm btn-outline-secondary" type="button">Limpiar filtros</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. CREDENCIAL -->
+        <div>
+            <p class="h6 text-muted mb-2">Credencial</p>
+            <p class="small text-muted mb-3">Carnet digital del asociado. Usada en <code>asociados/credencial.html</code>.</p>
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <p class="text-uppercase text-secondary small mb-2">Credencial digital</p>
+                            <h2 class="h3">Martina Pérez</h2>
+                            <p class="mb-2"><strong>Tipo:</strong> Alumna</p>
+                            <p class="mb-2"><strong>Estado:</strong> Activa</p>
+                            <p class="mb-2"><strong>Número:</strong> 00142</p>
+                            <p class="mb-0"><strong>Token:</strong> <code>uni2-a7f3c1</code></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-</section>
-
-<!-- ═══════════════════════════════════════════
-     CAPA 4 · PATRONES — Beneficios
-═══════════════════════════════════════════ -->
-<section class="uni2-benefit-page" id="beneficios" aria-labelledby="beneficios-title">
-    <div class="uni2-benefit-page-header">
-        <a class="uni2-benefit-back" href="#patrones">Volver a patrones</a>
-        <h1 id="beneficios-title">Listas de beneficios</h1>
-        <p>Patrón para categorías del club de beneficios: lista compacta, logo circular, metadata y descuento visible.</p>
-    </div>
-
-    <div class="uni2-benefit-list">
-        <a class="uni2-benefit-list-card" href="#detail-alto-drugstore" aria-label="Ver beneficio de Alto Drugstore">
-            <span class="uni2-benefit-list-logo uni2-benefit-list-initials">AD</span>
-            <span class="uni2-benefit-list-body">
-                <h2>Alto Drugstore y Le Bon Break Store</h2>
-                <strong class="uni2-discount">10% OFF</strong>
-                <p>Todo lo que necesitás en un solo lugar: bebidas, alimentos, snacks y productos de uso diario.</p>
-                <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Alsina 189 / Hipólito Yrigoyen 731 &middot; @altodrugstoreroca</span></span>
-            </span>
-        </a>
-        <a class="uni2-benefit-list-card" href="#detail-latte" aria-label="Ver beneficio de Latte Cafetería">
-            <span class="uni2-benefit-list-logo uni2-benefit-list-initials">LC</span>
-            <span class="uni2-benefit-list-body">
-                <h2>Latte Cafetería</h2>
-                <strong class="uni2-discount">15% OFF</strong>
-                <p>El lugar perfecto para disfrutar un buen café y compartir momentos especiales.</p>
-                <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
-            </span>
-        </a>
-    </div>
-
-    <article class="uni2-benefit-modal" id="detail-alto-drugstore" aria-label="Beneficio de Alto Drugstore">
-        <a class="uni2-benefit-modal-backdrop" href="#beneficios" aria-label="Cerrar detalle"></a>
-        <div class="uni2-benefit-modal-card">
-            <span class="uni2-benefit-list-logo uni2-benefit-list-initials">AD</span>
-            <strong class="uni2-discount">10% OFF</strong>
-            <h2>Alto Drugstore y Le Bon Break Store</h2>
-            <p>Ejemplo de modal por hash para mostrar el detalle de un comercio adherido.</p>
-            <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> General Roca &middot; @altodrugstoreroca</span></span>
-        </div>
-    </article>
-    <article class="uni2-benefit-modal" id="detail-latte" aria-label="Beneficio de Latte Cafetería">
-        <a class="uni2-benefit-modal-backdrop" href="#beneficios" aria-label="Cerrar detalle"></a>
-        <div class="uni2-benefit-modal-card">
-            <span class="uni2-benefit-list-logo uni2-benefit-list-initials">LC</span>
-            <strong class="uni2-discount">15% OFF</strong>
-            <h2>Latte Cafetería</h2>
-            <p>Detalle reutilizable para comercios del club de beneficios.</p>
-            <span class="uni2-benefit-meta"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
-        </div>
-    </article>
 </div>
 </section>
 
 <!-- ═══════════════════════════════════════════
      CAPA 5 · PÁGINAS
 ═══════════════════════════════════════════ -->
-<section id="paginas" class="py-5 bg-body-tertiary" aria-labelledby="paginas-title">
+<section id="paginas" class="py-5" aria-labelledby="paginas-title">
 <div class="container">
 
     <p class="h6 text-muted mb-2">Capa 5 · Páginas</p>
-    <h2 id="paginas-title">Formularios, filtros y dashboards</h2>
-    <p class="mb-4">Patrones para las vistas internas de Django: alta de datos, búsquedas filtradas e indicadores de gestión.</p>
+    <h2 id="paginas-title">Páginas completas</h2>
+    <p class="mb-4">Composiciones de pantalla completa que ensamblan patrones de la capa 4. Cada página tiene un template Django propio y una URL definida.</p>
 
-    <div class="row g-3">
-        <div class="col-12 col-xl-8">
-            <article class="card h-100">
-                <div class="card-body">
-                    <p class="h6 text-muted mb-3">Formulario de asociado</p>
-                    <form action="#" method="get">
-                        <div class="row g-3">
-                            <div class="col-12 col-md-6">
-                                <label class="form-label" for="nombre">Nombre y apellido</label>
-                                <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Ej. Martina Pérez">
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label" for="dni">DNI</label>
-                                <input class="form-control" type="text" id="dni" name="dni" placeholder="Sin puntos">
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label" for="email">Email</label>
-                                <input class="form-control" type="email" id="email" name="email" placeholder="nombre@email.com">
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label" for="curso">Curso</label>
-                                <select class="form-select" id="curso" name="curso">
-                                    <option selected>Seleccionar curso</option>
-                                    <option>1 C.B</option><option>2 C.B</option>
-                                    <option>1 C.S</option><option>2 C.S</option>
-                                    <option>3 C.S</option><option>4 C.S</option>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label" for="observaciones">Observaciones</label>
-                                <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Alergias, autorizaciones o notas internas"></textarea>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="1" id="autorizacion">
-                                    <label class="form-check-label" for="autorizacion">Autorización familiar registrada</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="uni2-inline-stack mt-3">
-                            <button class="uni2-cta" type="button">Guardar asociado</button>
-                            <button class="uni2-cta uni2-cta-secondary" type="reset">Limpiar</button>
-                        </div>
-                    </form>
-                </div>
-            </article>
-        </div>
-        <div class="col-12 col-xl-4">
-            <article class="card h-100">
-                <div class="card-body">
-                    <p class="h6 text-muted mb-3">Estados de formulario</p>
-                    <label class="form-label" for="campo-valid">Campo validado</label>
-                    <input class="form-control is-valid" type="text" id="campo-valid" value="Datos completos">
-                    <div class="valid-feedback">Listo para guardar.</div>
-                    <label class="form-label mt-3" for="campo-invalid">Campo con error</label>
-                    <input class="form-control is-invalid" type="text" id="campo-invalid" value="">
-                    <div class="invalid-feedback">Este dato es obligatorio.</div>
-                    <div class="alert alert-info mt-3">
-                        <p class="mb-0">Usar validaciones Bootstrap. La lógica real queda para Django forms.</p>
-                    </div>
-                </div>
-            </article>
-        </div>
-    </div>
+    <div class="d-flex flex-column gap-5">
 
-    <article class="card mt-3">
-        <div class="card-body">
-            <p class="h6 text-muted mb-3">Filtros de búsqueda</p>
-            <form class="uni2-filter-bar" action="#" method="get">
-                <div>
-                    <label class="form-label" for="buscar">Buscar</label>
-                    <input class="form-control" type="search" id="buscar" name="q" placeholder="Nombre, DNI, comercio o servicio">
-                </div>
-                <div>
-                    <label class="form-label" for="categoria">Categoría</label>
-                    <select class="form-select" id="categoria" name="categoria">
-                        <option selected>Todas</option>
-                        <option>Servicios</option><option>Beneficios</option><option>Asociados</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="form-label" for="estado">Estado</label>
-                    <select class="form-select" id="estado" name="estado">
-                        <option selected>Activos</option>
-                        <option>Pendientes</option><option>Inactivos</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="form-label" for="fecha">Desde</label>
-                    <input class="form-control" type="date" id="fecha" name="desde">
-                </div>
-                <button class="uni2-cta" type="button">Filtrar</button>
-            </form>
-            <div class="uni2-chip-row mt-3" aria-label="Filtros activos">
-                <span class="uni2-filter-chip"><i class="bi bi-search"></i> "cuadernillos"</span>
-                <span class="uni2-filter-chip"><i class="bi bi-tag"></i> Servicios</span>
-                <span class="uni2-filter-chip"><i class="bi bi-check-circle"></i> Activos</span>
-                <button class="btn btn-sm btn-outline-secondary" type="button">Limpiar filtros</button>
+        <!-- HOME -->
+        <div>
+            <p class="h6 text-muted mb-1">Home pública</p>
+            <p class="small text-muted mb-3">Template: <code>web/home.html</code> · URL: <code>/</code></p>
+            <div class="d-flex flex-column gap-2">
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Hero</p>
+                            <p class="small text-muted mb-0">Imagen de fondo, título principal, bajada y CTA de asociación. Ocupa el viewport completo en desktop.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 1 — Servicios que suman</p>
+                            <p class="small text-muted mb-0">Grid de cuatro service cards con colores semánticos.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 3 — Los más elegidos</p>
+                            <p class="small text-muted mb-0">Carrusel de publicidades de comercios adheridos.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 2 — Club de Beneficios</p>
+                            <p class="small text-muted mb-0">Grilla de rubros con logos superpuestos.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 4 — Pasos de proceso</p>
+                            <p class="small text-muted mb-0">Step cards numeradas + horarios de atención.</p>
+                        </div>
             </div>
         </div>
-    </article>
 
-    <div class="uni2-metric-grid mt-3" aria-label="Indicadores principales">
-        <article class="uni2-metric uni2-metric-blue"><span>Asociados activos</span><strong>248</strong><p>+18 altas este mes</p></article>
-        <article class="uni2-metric uni2-metric-yellow"><span>Cuotas al día</span><strong>82%</strong><p>Meta operativa: 90%</p></article>
-        <article class="uni2-metric uni2-metric-green"><span>Beneficios vigentes</span><strong>37</strong><p>6 rubros publicados</p></article>
-        <article class="uni2-metric uni2-metric-red"><span>Servicios usados</span><strong>1.284</strong><p>Fotocopias y cuadernillos</p></article>
-    </div>
+        <!-- PANEL DE ASOCIADO -->
+        <div>
+            <p class="h6 text-muted mb-1">Panel del asociado</p>
+            <p class="small text-muted mb-3">Template: <code>asociados/panel.html</code> · URL: <code>/mi-panel/</code></p>
+            <div class="d-flex flex-column gap-2">
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Page Header</p>
+                            <p class="small text-muted mb-0">Saludo con nombre del asociado. Breadcrumb mínimo.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 10 — Credencial</p>
+                            <p class="small text-muted mb-0">Carnet digital con nombre, número y estado de la cuenta.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 5 — Lista de beneficios</p>
+                            <p class="small text-muted mb-0">Comercios disponibles para el asociado con modal de detalle.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 1 — Servicios disponibles</p>
+                            <p class="small text-muted mb-0">Service cards con acceso rápido a los servicios activos.</p>
+                        </div>
+            </div>
+        </div>
 
-    <div class="mt-4">
-        <p class="h6 text-muted mb-3">Indicadores compactos con tendencia</p>
-        <div class="uni2-compact-metric-grid" aria-label="Indicadores compactos">
-            <article class="uni2-compact-metric uni2-compact-blue">
-                <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-people"></i></span>
-                <div class="uni2-compact-body"><span>Asociados</span><strong>248</strong></div>
-                <strong class="uni2-trend">+7%</strong>
-                <div class="uni2-progress" aria-hidden="true"><span style="--progress: 72%"></span></div>
-            </article>
-            <article class="uni2-compact-metric uni2-compact-yellow">
-                <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-credit-card-2-front"></i></span>
-                <div class="uni2-compact-body"><span>Cuotas al día</span><strong>82%</strong></div>
-                <strong class="uni2-trend-muted">estable</strong>
-                <div class="uni2-progress" aria-hidden="true"><span style="--progress: 82%"></span></div>
-            </article>
-            <article class="uni2-compact-metric uni2-compact-green">
-                <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-percent"></i></span>
-                <div class="uni2-compact-body"><span>Beneficios</span><strong>37</strong></div>
-                <strong class="uni2-trend">+4</strong>
-                <div class="uni2-progress" aria-hidden="true"><span style="--progress: 64%"></span></div>
-            </article>
-            <article class="uni2-compact-metric uni2-compact-red">
-                <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-graph-up"></i></span>
-                <div class="uni2-compact-body"><span>Consultas</span><strong>126</strong></div>
-                <strong class="uni2-trend-down">-3%</strong>
-                <div class="uni2-progress" aria-hidden="true"><span style="--progress: 46%"></span></div>
-            </article>
+        <!-- PANEL DE GESTIÓN -->
+        <div>
+            <p class="h6 text-muted mb-1">Panel de gestión</p>
+            <p class="small text-muted mb-3">Template: <code>gestion/panel.html</code> · URL: <code>/gestion/</code></p>
+            <div class="d-flex flex-column gap-2">
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Indicadores principales</p>
+                            <p class="small text-muted mb-0">Grid <code>uni2-metric-grid</code> con 4 métricas clave: asociados, cuotas, beneficios, servicios.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Indicadores compactos</p>
+                            <p class="small text-muted mb-0"><code>uni2-compact-metric-grid</code> con tendencia y barra de progreso.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 6 — Listado con filtros y tabla</p>
+                            <p class="small text-muted mb-0">Asociados, cuotas o servicios con búsqueda y paginación.</p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-body">
+                            <p class="small fw-semibold mb-1">Patrón 8 — Form de datos</p>
+                            <p class="small text-muted mb-0">Alta y edición de asociados, comercios y servicios.</p>
+                        </div>
+            </div>
         </div>
-    </div>
 
-    <div class="row g-3 mt-1">
-        <div class="col-12 col-xl-8">
-            <article class="card h-100">
-                <div class="card-body">
-                    <p class="h6 text-muted mb-3">Tabla de gestión</p>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead><tr><th>Registro</th><th>Tipo</th><th>Estado</th><th>Última actividad</th></tr></thead>
-                            <tbody>
-                                <tr><td>Fotocopias</td><td>Servicio</td><td><span class="uni2-status uni2-status-active">Activo</span></td><td>Hoy 10:20</td></tr>
-                                <tr><td>Bicicleta solidaria</td><td>Servicio</td><td><span class="uni2-status uni2-status-inactive">Inactivo</span></td><td>15 Jun 2026</td></tr>
-                                <tr><td>Cuota Martina Pérez</td><td>Cuota</td><td><span class="uni2-status uni2-status-pending">Pendiente</span></td><td>Hoy 09:05</td></tr>
-                                <tr><td>Cuota Juan López</td><td>Cuota</td><td><span class="uni2-status uni2-status-overdue">Vencida</span></td><td>10 Jun 2026</td></tr>
-                                <tr><td>Cuota Sofía Gómez</td><td>Cuota</td><td><span class="uni2-status uni2-status-paid">Pagada</span></td><td>Ayer 16:30</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </article>
-        </div>
-        <div class="col-12 col-xl-4">
-            <aside class="card h-100">
-                <div class="card-body">
-                    <p class="h6 text-muted mb-3">Actividad reciente</p>
-                    <div class="uni2-activity-list">
-                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i class="bi bi-person-plus"></i></span><div><h3>Alta registrada</h3><p>Se agregó un asociado de 2 C.B.</p></div></div>
-                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i class="bi bi-percent"></i></span><div><h3>Beneficio actualizado</h3><p>Latte Cafetería cambió su descuento.</p></div></div>
-                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i class="bi bi-printer"></i></span><div><h3>Servicio consultado</h3><p>Cuadernillos recibió nuevas reservas.</p></div></div>
-                    </div>
-                </div>
-            </aside>
-        </div>
     </div>
 
 </div>
@@ -1113,43 +1137,35 @@
 <section id="django" class="py-5" aria-labelledby="django-title">
 <div class="container">
 
-    <p class="h6 text-muted mb-2">Django + Bootstrap</p>
-    <h2 id="django-title">Partición sugerida</h2>
-    <p class="mb-4">Mapa para convertir esta guía en templates y componentes reutilizables sin perder la identidad visual actual.</p>
+    <p class="h6 text-muted mb-2">Django · Templates compartidos</p>
+    <h2 id="django-title">Includes reutilizables</h2>
+    <p class="mb-4">Secciones completas extraídas a archivos propios. Se incluyen con <code>{% verbatim %}{% include %}{% endverbatim %}</code> en la home pública y en el panel de asociado.</p>
 
     <div class="row g-3">
-        <div class="col-12 col-xl-8">
-            <div class="row g-3">
-                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>base.html</h3><p>Head, fuentes, <code>uni2-design-system.css</code>, script de tema, navbar, bloque main, footer y scripts comunes.</p></div></article></div>
-                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/navbar.html</h3><p>Marca, navegación, CTAs y versión responsive.</p></div></article></div>
-                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/footer.html</h3><p>Íconos de contacto, ubicación y texto institucional.</p></div></article></div>
-                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/media_list_item.html</h3><p>Imagen o logo, título, descripción, metadata y etiqueta destacada para listados.</p></div></article></div>
-                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/action_card.html</h3><p>Ícono, título, descripción y link para accesos principales.</p></div></article></div>
-                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/comparison_table.html</h3><p>Tabla para comparar columnas de valores, estados o condiciones.</p></div></article></div>
-                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/filter_bar.html</h3><p>Búsqueda, selects, rango de fecha, chips activos y acción de limpiar.</p></div></article></div>
-                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>components/metric_card.html</h3><p>Indicadores de dashboard con número, contexto y color semántico.</p></div></article></div>
-                <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>forms/entity_form.html</h3><p>Formulario Django renderizado con clases Bootstrap y mensajes de validación.</p></div></article></div>
-            </div>
-        </div>
-        <div class="col-12 col-xl-4">
-            <pre class="bg-body-tertiary border rounded p-3 small h-100"><code>{% verbatim %}{% extends "base.html" %}
-{% block content %}
-  {% include "sections/hero.html" %}
-  {% include "sections/action_grid.html" %}
-  {% include "sections/feature_strip.html" %}
-{% endblock %}{% endverbatim %}</code></pre>
-        </div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>base.html</h3><p>Head, fuentes, <code>uni2-design-system.css</code>, script de tema, navbar, bloque main, footer y scripts comunes. Todas las páginas lo extienden.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/navbar.html</h3><p>Marca, navegación, CTAs y versión responsive. Incluido desde <code>base.html</code>.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/footer.html</h3><p>Íconos de contacto, ubicación y texto institucional. Incluido desde <code>base.html</code>.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/servicios_grid.html</h3><p>Patrón 1. Grid de <code>uni2-service-card</code> con colores cíclicos. Recibe el contexto <code>categorias_productos_servicios</code>. Se muestra solo si hay datos.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/beneficios_grid.html</h3><p>Patrón 2. Grilla de rubros <code>uni2-benefit-mix-card</code> con logos superpuestos. Recibe <code>rubros_beneficio</code>. Se muestra solo si hay datos.</p></div></article></div>
+        <div class="col-12 col-md-6"><article class="card h-100"><div class="card-body"><h3>includes/publicidades_grid.html</h3><p>Patrón 3. Carrusel <code>uni2-ad-card</code> con imagen de fondo, badge y descuento. Recibe <code>publicidades</code>. Se muestra solo si hay datos.</p></div></article></div>
+    </div>
+
+    <div class="mt-4">
+        <p class="small fw-semibold mb-2">Uso en <code>web/home.html</code> y <code>asociados/dashboard.html</code></p>
+        <pre class="bg-body-tertiary border rounded p-3 small mb-0"><code>{% verbatim %}{% include 'includes/servicios_grid.html' %}
+{% include 'includes/beneficios_grid.html' %}
+{% include 'includes/publicidades_grid.html' %}{% endverbatim %}</code></pre>
     </div>
 
 </div>
 </section>
 
 <!-- Modal "próximamente" -->
-<div class="uni2-soon-modal" id="soon-preview" role="dialog" aria-labelledby="soon-preview-title" aria-modal="true">
-    <a class="uni2-soon-backdrop" href="#componentes" aria-label="Cerrar"></a>
-    <article class="uni2-soon-card">
-        <a class="uni2-soon-close" href="#componentes" aria-label="Cerrar">×</a>
-        <span class="uni2-soon-icon" aria-hidden="true"><i class="bi bi-clock"></i></span>
+<div class="uni2-info-modal" id="soon-preview" role="dialog" aria-labelledby="soon-preview-title" aria-modal="true">
+    <a class="uni2-info-backdrop" href="#componentes" aria-label="Cerrar"></a>
+    <article class="uni2-info-card">
+        <a class="uni2-info-close" href="#componentes" aria-label="Cerrar">×</a>
+        <span class="uni2-info-icon" aria-hidden="true"><i class="bi bi-clock"></i></span>
         <h2 id="soon-preview-title">Próximamente</h2>
         <p>Patrón de modal compartido para acciones futuras.</p>
         <a class="uni2-cta" href="#django">Ver partición</a>
