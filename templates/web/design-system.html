@@ -5,7 +5,8 @@
 
 {% block content %}
 
-<nav class="border-bottom py-2 px-3 px-md-4 px-xl-5 bg-body" aria-label="Secciones del design system">
+<nav class="border-bottom py-2 bg-body" aria-label="Secciones del design system">
+    <div class="container">
     <ul class="nav nav-pills gap-1 flex-nowrap overflow-x-auto mb-0">
         <li class="nav-item"><a class="nav-link py-1" href="#tokens">Tokens</a></li>
         <li class="nav-item"><a class="nav-link py-1" href="#primitivos">Primitivos</a></li>
@@ -16,85 +17,108 @@
         <li class="nav-item"><a class="nav-link py-1" href="#django">Django</a></li>
         <li class="nav-item ms-auto"><a class="nav-link py-1" href="{% url 'web:inicio' %}">Ver sitio</a></li>
     </ul>
+    </div>
 </nav>
+
+<!-- ═══════════════════════════════════════════
+     INTRO · QUÉ ES UN DESIGN SYSTEM
+═══════════════════════════════════════════ -->
+<section class="py-5 border-bottom" aria-labelledby="ds-intro-title">
+<div class="container">
+    <div class="row g-5 align-items-center">
+        <div class="col-lg-6">
+            <p class="text-muted small text-uppercase fw-bold tracking-wide mb-2">¿Qué es esto?</p>
+            <h1 id="ds-intro-title" class="display-5 fw-black mb-3">Design System UNI2</h1>
+            <p class="lead mb-3">Un design system es el conjunto de decisiones de diseño de un producto, documentadas y organizadas para que todo el equipo las use de forma consistente.</p>
+            <p class="mb-3">En lugar de inventar cada vez cómo se ve un botón, un color o una card, el design system define esas respuestas <strong>una sola vez</strong>. Todos los que construyen el sitio — diseñadores, desarrolladores, alumnos — trabajan desde el mismo punto de partida.</p>
+            <p class="mb-0 text-muted">El design system de UNI2 está implementado en un único archivo CSS (<code>uni2-design-system.css</code>) y documentado en esta página.</p>
+        </div>
+        <div class="col-lg-6">
+            <div class="card border-0 bg-body-secondary">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-bold mb-1">La pirámide de capas</h2>
+                    <p class="small text-muted mb-4">Cada capa se construye sobre la anterior. No se puede tener componentes sin primitivos, ni primitivos sin tokens.</p>
+                    <div class="d-flex flex-column gap-2">
+                        <a href="#paginas" class="d-flex align-items-center gap-3 text-decoration-none p-2 rounded bg-body">
+                            <span class="badge text-bg-secondary flex-shrink-0" style="width:28px">5</span>
+                            <div><strong class="d-block small">Páginas</strong><span class="text-muted" style="font-size:.8rem">Layouts completos con lógica de negocio</span></div>
+                        </a>
+                        <a href="#patrones" class="d-flex align-items-center gap-3 text-decoration-none p-2 rounded bg-body">
+                            <span class="badge text-bg-secondary flex-shrink-0" style="width:28px">4</span>
+                            <div><strong class="d-block small">Patrones</strong><span class="text-muted" style="font-size:.8rem">Secciones reutilizables: hero, grilla de servicios, pasos</span></div>
+                        </a>
+                        <a href="#componentes" class="d-flex align-items-center gap-3 text-decoration-none p-2 rounded bg-body">
+                            <span class="badge text-bg-secondary flex-shrink-0" style="width:28px">3</span>
+                            <div><strong class="d-block small">Componentes</strong><span class="text-muted" style="font-size:.8rem">Navbar, footer, modal, cards</span></div>
+                        </a>
+                        <a href="#primitivos" class="d-flex align-items-center gap-3 text-decoration-none p-2 rounded bg-body">
+                            <span class="badge text-bg-secondary flex-shrink-0" style="width:28px">2</span>
+                            <div><strong class="d-block small">Primitivos</strong><span class="text-muted" style="font-size:.8rem">Botones, inputs, badges — átomos sin lógica de negocio</span></div>
+                        </a>
+                        <a href="#tokens" class="d-flex align-items-center gap-3 text-decoration-none p-2 rounded border border-primary">
+                            <span class="badge text-bg-primary flex-shrink-0" style="width:28px">1</span>
+                            <div><strong class="d-block small">Tokens</strong><span class="text-muted" style="font-size:.8rem">Variables CSS: colores, tipografía, espaciado, sombras</span></div>
+                        </a>
+                    </div>
+                    <p class="small text-muted mt-3 mb-0">La base de la pirámide son los <strong>tokens</strong>: los valores concretos que definen la identidad visual. Todo lo que está encima los usa, pero nunca los repite.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
 
 <!-- ═══════════════════════════════════════════
      CAPA 1 · TOKENS
 ═══════════════════════════════════════════ -->
-<section id="tokens" class="py-5 px-3 px-md-4 px-xl-5" aria-labelledby="tokens-title">
+<section id="tokens" class="py-5" aria-labelledby="tokens-title">
+<div class="container">
 
     <div class="mb-5">
         <p class="h6 text-muted mb-2">Capa 1 · Tokens</p>
         <h2 id="tokens-title">Sistema visual UNI2</h2>
         <p class="mb-0">Variables CSS con los valores concretos del sistema. Son la fuente de verdad: todo lo demás se construye sobre ellos.</p>
-
-        <div class="row g-3 mt-3" aria-label="Pirámide del sistema de diseño">
-            <div class="col-12 col-sm-6 col-xl">
-                <a href="#tokens" class="card h-100 text-decoration-none border-primary">
-                    <div class="card-body">
-                        <p class="badge text-bg-primary mb-2">1</p>
-                        <h3 class="h6 mb-1">Tokens</h3>
-                        <p class="small text-muted mb-0">Variables CSS con los valores concretos: colores, tipografía, espaciado, sombras.</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-sm-6 col-xl">
-                <a href="#primitivos" class="card h-100 text-decoration-none">
-                    <div class="card-body">
-                        <p class="badge text-bg-secondary mb-2">2</p>
-                        <h3 class="h6 mb-1">Primitivos</h3>
-                        <p class="small text-muted mb-0">Átomos sin lógica de negocio: botones, inputs, badges, alertas.</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-sm-6 col-xl">
-                <a href="#componentes" class="card h-100 text-decoration-none">
-                    <div class="card-body">
-                        <p class="badge text-bg-secondary mb-2">3</p>
-                        <h3 class="h6 mb-1">Componentes</h3>
-                        <p class="small text-muted mb-0">Combinaciones de primitivos con una responsabilidad: navbar, footer, modal.</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-sm-6 col-xl">
-                <a href="#patrones" class="card h-100 text-decoration-none">
-                    <div class="card-body">
-                        <p class="badge text-bg-secondary mb-2">4</p>
-                        <h3 class="h6 mb-1">Patrones</h3>
-                        <p class="small text-muted mb-0">Soluciones repetibles: hero, listado de beneficios, secciones de servicios.</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-sm-6 col-xl">
-                <a href="#paginas" class="card h-100 text-decoration-none">
-                    <div class="card-body">
-                        <p class="badge text-bg-secondary mb-2">5</p>
-                        <h3 class="h6 mb-1">Páginas</h3>
-                        <p class="small text-muted mb-0">Layouts completos con lógica de negocio: formularios, dashboards, flujos.</p>
-                    </div>
-                </a>
-            </div>
-        </div>
     </div>
 
     <div>
-        <p class="h6 text-muted mb-3">Colores</p>
+        <p class="h6 text-muted mb-3">Paleta de marca</p>
+        <p class="small text-muted mb-3">Los cuatro colores de identidad de UNI2, cada uno con su variante oscura para hover y contraste.</p>
         <div class="row g-3">
-            <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div class="card-img-top" style="height:96px;background:var(--azul)" aria-hidden="true"></div><div class="card-body d-flex justify-content-between align-items-center gap-2"><strong>Azul</strong><code>--azul</code></div></article></div>
-            <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div class="card-img-top" style="height:96px;background:var(--amarillo)" aria-hidden="true"></div><div class="card-body d-flex justify-content-between align-items-center gap-2"><strong>Amarillo</strong><code>--amarillo</code></div></article></div>
-            <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div class="card-img-top" style="height:96px;background:var(--verde)" aria-hidden="true"></div><div class="card-body d-flex justify-content-between align-items-center gap-2"><strong>Verde</strong><code>--verde</code></div></article></div>
-            <div class="col-12 col-sm-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div class="card-img-top" style="height:96px;background:var(--rojo)" aria-hidden="true"></div><div class="card-body d-flex justify-content-between align-items-center gap-2"><strong>Rojo</strong><code>--rojo</code></div></article></div>
+            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--azul)" aria-hidden="true"></div><div style="height:32px;background:var(--azul-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Azul</strong><code class="small text-muted">--azul / --azul-dark</code></div></article></div>
+            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--amarillo)" aria-hidden="true"></div><div style="height:32px;background:var(--amarillo-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Amarillo</strong><code class="small text-muted">--amarillo / --amarillo-dark</code></div></article></div>
+            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--verde)" aria-hidden="true"></div><div style="height:32px;background:var(--verde-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Verde</strong><code class="small text-muted">--verde / --verde-dark</code></div></article></div>
+            <div class="col-6 col-lg-3"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:64px;background:var(--rojo)" aria-hidden="true"></div><div style="height:32px;background:var(--rojo-dark)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Rojo</strong><code class="small text-muted">--rojo / --rojo-dark</code></div></article></div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <p class="h6 text-muted mb-3">Colores semánticos</p>
+        <p class="small text-muted mb-3">Estos tokens cambian de valor entre el tema claro y el oscuro. Los componentes los usan en lugar de los colores de marca directos, para que el modo oscuro funcione automáticamente.</p>
+        <div class="row g-3">
+            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--texto)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Texto</strong><code class="small text-muted">--texto</code></div></article></div>
+            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--suave)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Texto suave</strong><code class="small text-muted">--suave</code></div></article></div>
+            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--fondo);border:1px solid var(--linea)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Fondo</strong><code class="small text-muted">--fondo</code></div></article></div>
+            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--surface-solid);border:1px solid var(--linea)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Surface</strong><code class="small text-muted">--surface-solid</code></div></article></div>
+            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--linea)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Línea</strong><code class="small text-muted">--linea</code></div></article></div>
+            <div class="col-6 col-md-4 col-lg-2"><article class="card h-100 border rounded-3 overflow-hidden"><div style="height:56px;background:var(--border)" aria-hidden="true"></div><div class="card-body py-2 px-3"><strong class="d-block small">Borde</strong><code class="small text-muted">--border</code></div></article></div>
         </div>
     </div>
 
     <div class="mt-4">
         <p class="h6 text-muted mb-3">Tipografía</p>
-        <div class="border rounded-3 p-4 d-flex flex-column gap-4">
-            <div><span class="uni2-eyebrow">Eyebrow · sobre-título decorativo</span></div>
-            <div><h1 class="uni2-titulo-principal mb-0">Título de página</h1><code class="small text-muted">.uni2-titulo-principal</code></div>
-            <div><h2 class="uni2-titulo-seccion mb-0">Titular de sección</h2><code class="small text-muted">.uni2-titulo-seccion</code></div>
-            <div><h3 class="uni2-titulo-componente mb-0">Subtítulo de componente</h3><code class="small text-muted">.uni2-titulo-componente</code></div>
-            <div><p class="mb-0">Texto de apoyo para cards, secciones y páginas internas.</p></div>
+        <div class="card">
+            <div class="card-body">
+                <p class="small text-muted mb-3">Un solo token de familia tipográfica. Los tamaños no tienen token propio: viven en las clases de la Capa 2 como valores <code>clamp()</code>.</p>
+                <div class="d-flex align-items-baseline gap-3 flex-wrap">
+                    <span style="font-size:3rem;font-weight:900;line-height:1;font-family:'Inter',sans-serif">Inter</span>
+                    <code class="small text-muted">--bs-font-sans-serif: 'Inter', system-ui, sans-serif</code>
+                </div>
+                <p class="mt-3 mb-0" style="font-family:'Inter',sans-serif">
+                    A B C D E F G H I J K L M N Ñ O P Q R S T U V W X Y Z &nbsp;·&nbsp;
+                    a b c d e f g h i j k l m n ñ o p q r s t u v w x y z &nbsp;·&nbsp;
+                    0 1 2 3 4 5 6 7 8 9
+                </p>
+            </div>
         </div>
     </div>
 
@@ -164,18 +188,48 @@
         </div>
     </div>
 
+</div>
 </section>
 
 <!-- ═══════════════════════════════════════════
      CAPA 2 · PRIMITIVOS
 ═══════════════════════════════════════════ -->
-<section id="primitivos" class="py-5 px-3 px-md-4 px-xl-5 bg-body-tertiary" aria-labelledby="primitivos-title">
+<section id="primitivos" class="py-5 bg-body-tertiary" aria-labelledby="primitivos-title">
+<div class="container">
 
     <p class="h6 text-muted mb-2">Capa 2 · Primitivos</p>
     <h2 id="primitivos-title">Átomos base</h2>
     <p class="mb-0">Los elementos más pequeños del sistema. No tienen lógica de negocio: solo forma, color y estado. Todo componente se construye combinando estos átomos.</p>
 
     <div class="row g-4 mt-1">
+
+        <div class="col-12">
+            <p class="h6 text-muted mb-3">Escala tipográfica</p>
+            <div class="card">
+                <div class="card-body d-flex flex-column gap-4">
+                    <div>
+                        <span class="uni2-eyebrow">Eyebrow · sobre-título decorativo</span>
+                        <code class="d-block small text-muted mt-1">.uni2-eyebrow</code>
+                    </div>
+                    <div>
+                        <p class="uni2-titulo-principal mb-1">Título de página</p>
+                        <code class="small text-muted">.uni2-titulo-principal — clamp(3.2rem, 8vw, 6.6rem) · peso 900</code>
+                    </div>
+                    <div>
+                        <p class="uni2-titulo-seccion mb-1">Titular de sección</p>
+                        <code class="small text-muted">.uni2-titulo-seccion — clamp(1.8rem, 4vw, 2.6rem) · peso 800</code>
+                    </div>
+                    <div>
+                        <p class="uni2-titulo-componente mb-1">Subtítulo de componente</p>
+                        <code class="small text-muted">.uni2-titulo-componente — clamp(1.15rem, 2vw, 1.5rem) · peso 700</code>
+                    </div>
+                    <div>
+                        <p class="mb-1">Texto de cuerpo para cards, secciones y páginas internas.</p>
+                        <code class="small text-muted">elemento &lt;p&gt; sin clase adicional — 1rem · peso 400</code>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="col-12">
             <p class="h6 text-muted mb-3">Botones</p>
@@ -238,12 +292,14 @@
 
     </div>
 
+</div>
 </section>
 
 <!-- ═══════════════════════════════════════════
      CAPA 3 · COMPONENTES
 ═══════════════════════════════════════════ -->
-<section id="componentes" class="py-5 px-3 px-md-4 px-xl-5" aria-labelledby="componentes-title">
+<section id="componentes" class="py-5" aria-labelledby="componentes-title">
+<div class="container">
 
     <p class="h6 text-muted mb-2">Capa 3 · Componentes</p>
     <h2 id="componentes-title">Piezas compartidas</h2>
@@ -288,12 +344,14 @@
         </footer>
     </div>
 
+</div>
 </section>
 
 <!-- ═══════════════════════════════════════════
      CAPA 4 · PATRONES — Home
 ═══════════════════════════════════════════ -->
-<section id="patrones" class="py-5 px-3 px-md-4 px-xl-5 bg-body-tertiary" aria-labelledby="patrones-title">
+<section id="patrones" class="py-5 bg-body-tertiary" aria-labelledby="patrones-title">
+<div class="container">
 
     <p class="h6 text-muted mb-2">Capa 4 · Patrones</p>
     <h2 id="patrones-title">Secciones principales</h2>
@@ -314,8 +372,8 @@
     </section>
 
     <div class="border rounded-3 p-3 bg-body mt-4">
-        <div class="uni2-section-heading uni2-compact-heading">
-            <div><h2>Servicios que suman</h2></div>
+        <div class="uni2-section-heading">
+            <div><h2 class="uni2-titulo-seccion">Servicios que suman</h2></div>
         </div>
         <div class="row g-3" aria-label="Servicios de la mutual">
             <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-blue" data-href="#servicios">
@@ -346,7 +404,7 @@
 
         <aside class="uni2-benefit-band" aria-labelledby="beneficios-home-title">
             <div class="uni2-section-heading">
-                <div><h2 id="beneficios-home-title">Club de Beneficios</h2></div>
+                <div><h2 id="beneficios-home-title" class="uni2-titulo-seccion">Club de Beneficios</h2></div>
             </div>
             <div class="row g-3 js-home-benefits-grid" aria-label="Rubros con beneficios">
                 <div class="col-6 col-md-3"><a class="uni2-benefit-mix-card uni2-benefit-food" href="#beneficios">
@@ -369,7 +427,7 @@
         </aside>
 
         <div class="uni2-section-heading mt-4">
-            <div><h2>Los m&aacute;s elegidos</h2></div>
+            <div><h2 class="uni2-titulo-seccion">Los m&aacute;s elegidos</h2></div>
             <div class="btn-group" role="group" aria-label="Controles del carrusel">
                 <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="showcase-carousel" aria-label="Anterior"><i data-lucide="chevron-left"></i></button>
                 <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="showcase-carousel" aria-label="Siguiente"><i data-lucide="chevron-right"></i></button>
@@ -392,8 +450,10 @@
             <button class="btn btn-sm btn-outline-primary rounded-circle p-0" style="width:12px;height:12px" type="button" data-slide-index="2" aria-label="Ir a publicidad 3"></button>
         </div>
 
+        <div class="uni2-section-heading mt-4">
+            <div><h2 class="uni2-titulo-seccion">C&oacute;mo ser parte de nuestra comunidad</h2></div>
+        </div>
         <div class="mt-4">
-            <h2>C&oacute;mo ser parte de nuestra comunidad</h2>
             <div class="row g-3">
                 <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-blue"><strong class="uni2-step-number">1</strong><h3>Acércate a la mutual</h3><p>Visitá UNI2 durante nuestros horarios de atención.</p></article></div>
                 <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-yellow"><strong class="uni2-step-number">2</strong><h3>Completá tu inscripción</h3><p>Registrá tus datos de forma rápida y sencilla.</p></article></div>
@@ -414,12 +474,14 @@
         </div>
     </div>
 
+</div>
 </section>
 
 <!-- ═══════════════════════════════════════════
      CAPA 4 · PATRONES — Servicios
 ═══════════════════════════════════════════ -->
-<section id="servicios" class="py-5 px-3 px-md-4 px-xl-5" aria-labelledby="servicios-title">
+<section id="servicios" class="py-5" aria-labelledby="servicios-title">
+<div class="container">
 
     <p class="h6 text-muted mb-2">Capa 4 · Patrones</p>
     <h2 id="servicios-title">Patrones de páginas internas</h2>
@@ -533,12 +595,14 @@
             <span class="uni2-benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
         </div>
     </article>
+</div>
 </section>
 
 <!-- ═══════════════════════════════════════════
      CAPA 5 · PÁGINAS
 ═══════════════════════════════════════════ -->
-<section id="paginas" class="py-5 px-3 px-md-4 px-xl-5 bg-body-tertiary" aria-labelledby="paginas-title">
+<section id="paginas" class="py-5 bg-body-tertiary" aria-labelledby="paginas-title">
+<div class="container">
 
     <p class="h6 text-muted mb-2">Capa 5 · Páginas</p>
     <h2 id="paginas-title">Formularios, filtros y dashboards</h2>
@@ -717,12 +781,14 @@
         </div>
     </div>
 
+</div>
 </section>
 
 <!-- ═══════════════════════════════════════════
      DJANGO
 ═══════════════════════════════════════════ -->
-<section id="django" class="py-5 px-3 px-md-4 px-xl-5" aria-labelledby="django-title">
+<section id="django" class="py-5" aria-labelledby="django-title">
+<div class="container">
 
     <p class="h6 text-muted mb-2">Django + Bootstrap</p>
     <h2 id="django-title">Partición sugerida</h2>
@@ -752,6 +818,7 @@
         </div>
     </div>
 
+</div>
 </section>
 
 <!-- Modal "próximamente" -->
