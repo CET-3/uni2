@@ -6,7 +6,6 @@
 
 {% block extra_head %}
   {{ block.super }}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -33,12 +32,12 @@
               <strong class="uni2-discount">{{ comercio.beneficio_texto }}</strong>
             {% endif %}
             <span class="uni2-benefit-meta">
-              <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {{ comercio.direccion }}</span>
+              <span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> {{ comercio.direccion }}</span>
               {% if comercio.telefono %}
-                <span><i class="fa-solid fa-phone" aria-hidden="true"></i> {{ comercio.telefono }}</span>
+                <span><i class="bi bi-telephone" aria-hidden="true"></i> {{ comercio.telefono }}</span>
               {% endif %}
               {% if comercio.url_presencia_web %}
-                <span><i class="fa-solid fa-globe" aria-hidden="true"></i> Visitar online</span>
+                <span><i class="bi bi-globe" aria-hidden="true"></i> Visitar online</span>
               {% endif %}
             </span>
           </span>
