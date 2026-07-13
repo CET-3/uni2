@@ -232,7 +232,8 @@
         </div>
 
         <div class="col-12">
-            <p class="h6 text-muted mb-3">Botones</p>
+            <p class="h6 text-muted mb-3">Botones Bootstrap</p>
+            <p class="small text-muted mb-3">Usados en formularios, acciones internas y paneles de gestión. Son elementos de Bootstrap sin modificaciones.</p>
             <div class="card">
                 <div class="card-body d-flex flex-wrap gap-2 align-items-center">
                     <button class="btn btn-primary">Principal</button>
@@ -240,7 +241,16 @@
                     <button class="btn btn-light">Terciario</button>
                     <button class="btn btn-danger">Peligro</button>
                     <button class="btn btn-primary" disabled>Deshabilitado</button>
-                    <a class="uni2-cta" href="#primitivos">CTA sitio</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <p class="h6 text-muted mb-3">CTA del sitio</p>
+            <p class="small text-muted mb-3">Llamadas a la acción de la identidad visual de UNI2. Se usan en heroes y secciones públicas, no en formularios internos.</p>
+            <div class="card">
+                <div class="card-body d-flex flex-wrap gap-2 align-items-center">
+                    <a class="uni2-cta" href="#primitivos">CTA principal</a>
                     <a class="uni2-cta uni2-cta-secondary" href="#primitivos">CTA secundario</a>
                 </div>
             </div>
@@ -257,16 +267,33 @@
         </div>
 
         <div class="col-12 col-lg-6">
-            <p class="h6 text-muted mb-3">Badges</p>
+            <p class="h6 text-muted mb-3">Badges de estado</p>
+            <p class="small text-muted mb-3">Bootstrap. Indican el estado de un objeto (cuota, asociado, trámite). El color es semántico: no decorativo.</p>
             <div class="card h-100">
-                <div class="card-body d-flex flex-wrap gap-2 align-items-center">
-                    <span class="badge text-bg-primary">Activo</span>
-                    <span class="badge text-bg-success">Aprobado</span>
-                    <span class="badge text-bg-danger">Rechazado</span>
-                    <span class="badge text-bg-warning">Pendiente</span>
-                    <span class="badge text-bg-secondary">Inactivo</span>
-                    <span class="badge text-bg-light border">Neutro</span>
-                    <strong class="discount">10% OFF</strong>
+                <div class="card-body d-flex flex-column gap-3">
+                    <div class="d-flex align-items-center gap-3"><span class="badge text-bg-success">Aprobado</span><code class="small">&lt;span class="badge text-bg-success"&gt;</code><span class="small text-muted">Pagado, activo, confirmado</span></div>
+                    <div class="d-flex align-items-center gap-3"><span class="badge text-bg-warning">Pendiente</span><code class="small">&lt;span class="badge text-bg-warning"&gt;</code><span class="small text-muted">En proceso, sin confirmar</span></div>
+                    <div class="d-flex align-items-center gap-3"><span class="badge text-bg-danger">Rechazado</span><code class="small">&lt;span class="badge text-bg-danger"&gt;</code><span class="small text-muted">Error, vencido, bloqueado</span></div>
+                    <div class="d-flex align-items-center gap-3"><span class="badge text-bg-primary">Activo</span><code class="small">&lt;span class="badge text-bg-primary"&gt;</code><span class="small text-muted">Estado principal positivo</span></div>
+                    <div class="d-flex align-items-center gap-3"><span class="badge text-bg-secondary">Inactivo</span><code class="small">&lt;span class="badge text-bg-secondary"&gt;</code><span class="small text-muted">Sin actividad, archivado</span></div>
+                    <div class="d-flex align-items-center gap-3"><span class="badge text-bg-light border">Neutro</span><code class="small">&lt;span class="badge text-bg-light border"&gt;</code><span class="small text-muted">Sin estado definido</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <p class="h6 text-muted mb-3">Badges de identidad UNI2</p>
+            <p class="small text-muted mb-3">Clases propias. No indican estado — son etiquetas de categoría o precio con la identidad visual del sitio.</p>
+            <div class="card h-100">
+                <div class="card-body d-flex flex-column gap-4">
+                    <div>
+                        <span class="uni2-badge">Servicio</span>
+                        <code class="d-block small text-muted mt-2">.uni2-badge — etiqueta de categoría en cards de catálogo</code>
+                    </div>
+                    <div>
+                        <strong class="uni2-discount">10% OFF</strong>
+                        <code class="d-block small text-muted mt-2">.uni2-discount — descuento destacado en cards de publicidad</code>
+                    </div>
                 </div>
             </div>
         </div>
@@ -559,7 +586,7 @@
             <span class="uni2-benefit-list-logo uni2-benefit-list-initials">AD</span>
             <span class="uni2-benefit-list-body">
                 <h2>Alto Drugstore y Le Bon Break Store</h2>
-                <strong class="uni2-discount-tag">10% OFF</strong>
+                <strong class="uni2-discount">10% OFF</strong>
                 <p>Todo lo que necesitás en un solo lugar: bebidas, alimentos, snacks y productos de uso diario.</p>
                 <span class="uni2-benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Alsina 189 / Hipólito Yrigoyen 731 &middot; @altodrugstoreroca</span></span>
             </span>
@@ -568,7 +595,7 @@
             <span class="uni2-benefit-list-logo uni2-benefit-list-initials">LC</span>
             <span class="uni2-benefit-list-body">
                 <h2>Latte Cafetería</h2>
-                <strong class="uni2-discount-tag">15% OFF</strong>
+                <strong class="uni2-discount">15% OFF</strong>
                 <p>El lugar perfecto para disfrutar un buen café y compartir momentos especiales.</p>
                 <span class="uni2-benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
             </span>
@@ -579,7 +606,7 @@
         <a class="uni2-benefit-modal-backdrop" href="#beneficios" aria-label="Cerrar detalle"></a>
         <div class="uni2-benefit-modal-card">
             <span class="uni2-benefit-list-logo uni2-benefit-list-initials">AD</span>
-            <strong class="uni2-discount-tag">10% OFF</strong>
+            <strong class="uni2-discount">10% OFF</strong>
             <h2>Alto Drugstore y Le Bon Break Store</h2>
             <p>Ejemplo de modal por hash para mostrar el detalle de un comercio adherido.</p>
             <span class="uni2-benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> General Roca &middot; @altodrugstoreroca</span></span>
@@ -589,7 +616,7 @@
         <a class="uni2-benefit-modal-backdrop" href="#beneficios" aria-label="Cerrar detalle"></a>
         <div class="uni2-benefit-modal-card">
             <span class="uni2-benefit-list-logo uni2-benefit-list-initials">LC</span>
-            <strong class="uni2-discount-tag">15% OFF</strong>
+            <strong class="uni2-discount">15% OFF</strong>
             <h2>Latte Cafetería</h2>
             <p>Detalle reutilizable para comercios del club de beneficios.</p>
             <span class="uni2-benefit-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Mitre 766 &middot; @latte.cafeteria</span></span>
