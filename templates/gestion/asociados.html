@@ -55,7 +55,7 @@
             </div>
         </form>
         {% if form.errors %}
-            <div class="alert alert-warning mt-3 mb-0">Revisá los filtros ingresados.</div>
+            {% include "components/alert.html" with variant="warning" message="Revisá los filtros ingresados." extra_classes="mt-3 mb-0" only %}
         {% endif %}
     </div>
 </div>
@@ -101,7 +101,7 @@
         </div>
     </div>
 {% elif form.is_bound %}
-    <div class="alert alert-warning">No se encontraron asociados para la búsqueda ingresada.</div>
+    {% include "components/alert.html" with variant="warning" title="Sin resultados" message="No se encontraron asociados para la búsqueda ingresada." only %}
 {% endif %}
 </div>
 {% endblock %}

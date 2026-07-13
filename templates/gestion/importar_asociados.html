@@ -82,14 +82,7 @@
         </div>
     </div>
 
-    <div class="alert alert-info mb-4">
-        <p class="mb-2"><strong>Cómo leer la previsualización:</strong></p>
-        <p class="mb-2"><strong>Importar</strong> son filas completas que se guardarán cuando confirmes.</p>
-        <p class="mb-2"><strong>Revisar</strong> son filas con datos de persona, pero con algún dato bloqueante: por ejemplo DNI faltante o dudoso, número duplicado, tipo inválido o curso incompleto para asociados.</p>
-        <p class="mb-0"><strong>No importar</strong> son filas que no parecen ser personas para cargar, como renglones vacíos o con datos auxiliares de la planilla.</p>
-        <hr>
-        <p class="mb-0">Este importador es para la carga inicial. Para el mantenimiento futuro, Uni2 usará una planilla propia exportable e importable con columnas normalizadas.</p>
-    </div>
+    {% include "components/alert.html" with variant="info" title="Cómo leer la previsualización" message="Importar: son filas completas que se guardarán cuando confirmes." secondary_message="Revisar: son filas con datos de persona, pero con algún dato bloqueante como DNI faltante o dudoso, número duplicado, tipo inválido o curso incompleto para asociados." tertiary_message="No importar: son filas que no parecen ser personas para cargar, como renglones vacíos o con datos auxiliares de la planilla." note="Este importador es para la carga inicial. Para el mantenimiento futuro, Uni2 usará una planilla propia exportable e importable con columnas normalizadas." extra_classes="mb-4" is_static=True only %}
 
     {% if preview.cursos_a_crear %}
         <section class="card uni2-surface-card mb-4">
@@ -253,10 +246,7 @@
 {% endif %}
 
 {% if usuarios_faltantes_estado %}
-    <div class="alert alert-warning mt-4 mb-0">
-        Se están creando usuarios por tandas para evitar que la operación supere el tiempo máximo de Vercel.
-        Presioná nuevamente <strong>Continuar creando usuarios faltantes</strong> hasta completar el proceso.
-    </div>
+    {% include "components/alert.html" with variant="warning" title="Creación por tandas en curso" message="Se están creando usuarios por tandas para evitar que la operación supere el tiempo máximo. Presioná nuevamente Continuar creando usuarios faltantes hasta completar el proceso." extra_classes="mt-4 mb-0" only %}
 {% endif %}
 </div>
 {% endblock %}
