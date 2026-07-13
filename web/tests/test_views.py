@@ -1,7 +1,11 @@
+import re
+from pathlib import Path
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.staticfiles import finders
 from django.urls import reverse
 
 from comercios.models import ActividadComercial, Comercio
@@ -33,7 +37,7 @@ def test_design_system_requiere_login(client):
     response = client.get(reverse("web:design-system"))
 
     assert response.status_code == 302
-    assert response.url.startswith("/usuarios/login/")
+    assert response.url == f'{reverse("usuarios:login")}?next={reverse("web:design-system")}'
 
 
 @pytest.mark.django_db
@@ -74,18 +78,14 @@ def test_design_system_porta_secciones_del_showcase(client):
     content = response.content.decode()
     assert response.status_code == 200
     assert "Sistema visual UNI2" in content
-    assert "Componentes globales" in content
-    assert "Home" in content
     assert "Servicios que suman" in content
     assert "Club de Beneficios" in content
-    assert "Operaciones" in content
     assert "Django" in content
-    assert "ds-page" in content
-    assert "uni2-navbar" not in content
-    assert "uni2-footer" not in content
+    # La página usa el chrome del sitio (base.html): navbar, footer y tema
+    assert "uni2-navbar" in content
+    assert "uni2-theme.js" in content
     assert "style2.css" not in content
     assert "assets/logos/" not in content
-    assert "uni2-theme.js" not in content
     assert "benefit-list-body" in content
     assert "discount-tag" in content
     assert "uni2-metric" in content
@@ -93,11 +93,23 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "ds-metric" not in content
     assert "ds-status" not in content
     assert "uni2-service-grid" in content
+    assert 'class="py-5 px-3 px-md-4 px-xl-5"' in content
+    assert 'class="py-5 px-3 px-md-4 px-xl-5 bg-body-tertiary"' in content
+    assert 'class="card-body"' in content
     assert 'class="service-grid"' not in content
     assert 'class="cta"' not in content
-    import re
     clases_ds = set(re.findall(r"ds-[a-z0-9-]+", content))
-    assert clases_ds == {"ds-page"}, f"clases ds-* inesperadas: {clases_ds - {'ds-page'}}"
+    assert clases_ds == set(), f"clases ds-* inesperadas: {clases_ds}"
+
+
+def test_css_design_system_acota_navegacion_y_no_conserva_aliases_huerfanos():
+    css_path = finders.find("css/uni2-design-system.css")
+    assert css_path is not None
+
+    css = Path(css_path).read_text(encoding="utf-8")
+
+    # Después de la limpieza arquitectural no debe quedar ningún selector ds-page
+    assert "ds-page" not in css
 
 
 @pytest.mark.django_db
