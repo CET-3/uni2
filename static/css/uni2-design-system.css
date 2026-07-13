@@ -360,38 +360,29 @@ html {
 /* === BADGES, EYEBROW, DESCUENTOS === */
 .uni2-eyebrow,
 .uni2-badge,
-.uni2-discount,
-.uni2-discount-tag {
+.uni2-discount {
+  align-items: center;
   background-blend-mode: soft-light, normal;
   border-radius: 999px;
   display: inline-flex;
+  font-size: 0.78rem;
   font-weight: 900;
+  letter-spacing: 0.06em;
+  min-height: 34px;
+  padding: 7px 12px;
+  text-transform: uppercase;
   width: fit-content;
 }
 
 .uni2-eyebrow,
 .uni2-badge {
-  align-items: center;
   background-image: var(--grain), linear-gradient(135deg, var(--amarillo-dark) 0 24%, var(--amarillo) 48% 100%);
   color: #2d2606;
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  min-height: 34px;
-  padding: 7px 12px;
-  text-transform: uppercase;
-}
-
-.uni2-discount,
-.uni2-discount-tag {
-  background-image: var(--grain), linear-gradient(135deg, var(--verde-dark) 0 24%, var(--verde) 48% 100%);
-  color: #05230a;
-  padding: 8px 13px;
 }
 
 .uni2-discount {
-  align-items: center;
-  margin-top: 14px;
-  min-height: 40px;
+  background-image: var(--grain), linear-gradient(135deg, var(--verde-dark) 0 24%, var(--verde) 48% 100%);
+  color: #05230a;
 }
 
 /* === GRIDS === */
@@ -1783,7 +1774,7 @@ html {
   transform: translateY(-2px);
 }
 
-.uni2-benefit-list-card > .uni2-discount-tag {
+.uni2-benefit-list-card > .uni2-discount {
   justify-self: start;
   margin: 2px 0 0;
   white-space: nowrap;
@@ -1835,7 +1826,7 @@ html {
   margin: 0;
 }
 
-.uni2-benefit-list-body .uni2-discount-tag {
+.uni2-benefit-list-body .uni2-discount {
   background-image: var(--grain), linear-gradient(135deg, var(--amarillo-dark) 0 24%, var(--amarillo) 48% 100%);
   border-radius: 999px;
   box-shadow: 0 10px 22px rgba(23, 32, 59, 0.12);
@@ -1906,7 +1897,7 @@ html {
   margin: 0;
 }
 
-.uni2-benefit-modal-card .uni2-discount-tag {
+.uni2-benefit-modal-card .uni2-discount {
   font-size: 1rem;
   margin: 0 auto;
 }
@@ -2371,7 +2362,7 @@ html {
     width: 52px;
   }
 
-  .uni2-benefit-list-body .uni2-discount-tag {
+  .uni2-benefit-list-body .uni2-discount {
     font-size: 0.7rem;
     padding: 6px 9px;
   }
@@ -2439,7 +2430,7 @@ html {
     padding: 14px;
   }
 
-  .uni2-discount-tag {
+  .uni2-discount {
     font-size: 0.74rem;
     padding: 8px 10px;
   }
