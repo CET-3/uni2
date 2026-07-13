@@ -156,7 +156,7 @@ Un componente tiene:
 
 ```html
 <article class="uni2-service-card uni2-service-card-blue">
-  <span class="uni2-service-icon"><i data-lucide="copy"></i></span>
+  <span class="uni2-service-icon"><i class="bi bi-files"></i></span>
   <div>
     <h3>Fotocopias</h3>
     <p>Blanco y negro, doble faz.</p>
