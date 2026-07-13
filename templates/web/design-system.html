@@ -420,45 +420,251 @@
 
     <p class="h6 text-muted mb-2">Capa 3 · Componentes</p>
     <h2 id="componentes-title">Piezas compartidas</h2>
-    <p>Elementos que aparecen en varias páginas: modal, contacto y footer.</p>
+    <p>Elementos autocontenidos que aparecen en múltiples páginas.</p>
 
-    <div class="row g-3 mt-1">
-        <div class="col-12 col-lg-6">
-            <article class="uni2-soon-card border rounded-3 p-3 bg-body-tertiary h-100">
-                <span class="uni2-soon-icon" aria-hidden="true"><i data-lucide="clock-3"></i></span>
-                <h3>Próximamente</h3>
-                <p>Modal por hash para comunicar funciones no disponibles.</p>
-                <a class="uni2-cta" href="#soon-preview">Abrir modal</a>
-            </article>
+    <div class="row g-4 mt-1">
+
+        <!-- NAVBAR -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Navbar</p>
+            <p class="small text-muted mb-3">Barra de navegación principal. Se incluye desde <code>includes/navbar.html</code> en todas las páginas vía <code>base.html</code>.</p>
+            <div class="card">
+                <div class="card-body p-0 overflow-hidden" style="border-radius:var(--bs-card-border-radius)">
+                    <nav class="navbar uni2-navbar" style="position:static">
+                        <div class="uni2-navbar-inner">
+                            <a class="navbar-brand" href="#navbar-preview"><span style="font-weight:900">UNI2</span></a>
+                            <div class="d-flex align-items-center gap-3">
+                                <a class="nav-link" href="#navbar-preview">Productos y servicios</a>
+                                <a class="nav-link" href="#navbar-preview">Comercios</a>
+                                <a class="btn btn-primary uni2-login-button" href="#navbar-preview">Ingresar</a>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
         </div>
-        <div class="col-12 col-lg-6">
-            <article class="uni2-print-contact h-100">
-                <span class="uni2-print-icon" aria-hidden="true"><i data-lucide="send"></i></span>
-                <div>
-                    <h3>Bloque de contacto</h3>
-                    <div class="uni2-contact-links">
-                        <a href="mailto:unidosatencionalcliente@gmail.com">unidosatencionalcliente@gmail.com</a>
-                        <span class="uni2-contact-separator">o</span>
-                        <a class="whatsapp-link" href="https://wa.me/5492984210672" target="_blank" rel="noopener">whatsapp</a>
+
+        <!-- HERO -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Hero</p>
+            <p class="small text-muted mb-3"><code>.uni2-hero</code> — sección de apertura con eyebrow, título y acciones. Aparece en la home y en todos los dashboards.</p>
+            <div class="card">
+                <div class="card-body p-0 overflow-hidden" style="border-radius:var(--bs-card-border-radius)">
+                    <section class="uni2-hero">
+                        <div class="container uni2-hero-layout">
+                            <div>
+                                <span class="uni2-eyebrow">Mutual Escolar UNI2</span>
+                                <h1 class="uni2-titulo-principal">Tu mutual, más cerca que nunca</h1>
+                                <p>Una comunidad comprometida con vos.</p>
+                                <div class="uni2-hero-actions">
+                                    <a class="uni2-cta" href="#hero-preview">Sumate</a>
+                                    <a class="uni2-cta uni2-cta-secondary" href="#hero-preview">Iniciar sesión</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- SERVICE CARD -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Service Card</p>
+            <p class="small text-muted mb-3"><code>.uni2-service-card</code> + variante de color — tarjeta de acceso o servicio. Usada en la home, comercios y dashboards.</p>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <article class="uni2-service-card uni2-service-card-blue">
+                                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-printer"></i></span>
+                                <div><h3>Fotocopias</h3><p>Servicio de fotocopiado.</p></div>
+                                <a class="link" href="#componentes">Ver más</a>
+                            </article>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <article class="uni2-service-card uni2-service-card-yellow">
+                                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-tag"></i></span>
+                                <div><h3>Descuentos</h3><p>Comercios adheridos.</p></div>
+                                <a class="link" href="#componentes">Ver más</a>
+                            </article>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <article class="uni2-service-card uni2-service-card-green">
+                                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bicycle"></i></span>
+                                <div><h3>Bicicleta solidaria</h3><p>Préstamo de bicicletas.</p></div>
+                                <a class="link" href="#componentes">Ver más</a>
+                            </article>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <article class="uni2-service-card uni2-service-card-red">
+                                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-book"></i></span>
+                                <div><h3>Cuadernillos</h3><p>Material educativo.</p></div>
+                                <a class="link" href="#componentes">Ver más</a>
+                            </article>
+                        </div>
                     </div>
                 </div>
-            </article>
-        </div>
-    </div>
-
-    <div class="mt-4">
-        <p class="h6 text-muted mb-3">Footer</p>
-        <footer class="uni2-footer" id="footer-preview">
-            <div class="uni2-footer-container">
-                <div class="uni2-footer-actions" aria-label="Contacto de la mutual">
-                    <a class="uni2-footer-icon uni2-footer-icon-mail" href="mailto:unidosatencionalcliente@gmail.com" aria-label="Enviar mail a la mutual"><i class="bi bi-envelope" aria-hidden="true"></i></a>
-                    <a class="uni2-footer-icon uni2-footer-icon-whatsapp" href="https://wa.me/5492984210672" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
-                    <a class="uni2-footer-icon uni2-footer-icon-instagram" href="https://www.instagram.com/unidos.cet3" target="_blank" rel="noopener" aria-label="Abrir Instagram de la mutual"><i class="bi bi-instagram" aria-hidden="true"></i></a>
-                </div>
-                <div class="uni2-footer-location"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><span>Chacabuco 1050 &middot; General Roca, Río Negro</span></div>
-                <p class="uni2-footer-copy">&copy; 2026 Mutual UNI2 &middot; CET N&deg;3</p>
             </div>
-        </footer>
+        </div>
+
+        <!-- STEP CARD -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Step Card</p>
+            <p class="small text-muted mb-3"><code>.uni2-step-card</code> — pasos numerados. Usada en "Cómo asociarse" en la home.</p>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <article class="uni2-step-card uni2-step-card-blue">
+                                <strong class="uni2-step-number">1</strong>
+                                <h3>Acercate a la mutual</h3>
+                                <p>Visitá UNI2 en nuestros horarios.</p>
+                            </article>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <article class="uni2-step-card uni2-step-card-yellow">
+                                <strong class="uni2-step-number">2</strong>
+                                <h3>Completá tu inscripción</h3>
+                                <p>Registrá tus datos.</p>
+                            </article>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <article class="uni2-step-card uni2-step-card-green">
+                                <strong class="uni2-step-number">3</strong>
+                                <h3>Sumate a la comunidad</h3>
+                                <p>Cuota de $700 por mes.</p>
+                            </article>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <article class="uni2-step-card uni2-step-card-red">
+                                <strong class="uni2-step-number">4</strong>
+                                <h3>Disfrutá tus beneficios</h3>
+                                <p>Accesos y descuentos.</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- METRIC CARD -->
+        <div class="col-12 col-lg-6">
+            <p class="h6 text-muted mb-2">Metric Card</p>
+            <p class="small text-muted mb-3"><code>.uni2-metric-card</code> — número resumen en dashboards de gestión.</p>
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="uni2-metric-card card">
+                                <div class="card-body">
+                                    <div class="uni2-metric-label">Importar</div>
+                                    <div class="uni2-metric-value">142</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="uni2-metric-card card">
+                                <div class="card-body">
+                                    <div class="uni2-metric-label">Revisar</div>
+                                    <div class="uni2-metric-value">8</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="uni2-metric-card card">
+                                <div class="card-body">
+                                    <div class="uni2-metric-label">No importar</div>
+                                    <div class="uni2-metric-value">3</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="uni2-metric-card card">
+                                <div class="card-body">
+                                    <div class="uni2-metric-label">Cursos nuevos</div>
+                                    <div class="uni2-metric-value">5</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE HEADER ACTIONS -->
+        <div class="col-12 col-lg-6">
+            <p class="h6 text-muted mb-2">Page Header Actions</p>
+            <p class="small text-muted mb-3"><code>.uni2-page-header-actions</code> — grupo de botones al encabezado de páginas de gestión.</p>
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 w-100">
+                        <div>
+                            <h2 class="h4 mb-1">Gestión de asociados</h2>
+                            <p class="text-secondary mb-0 small">Buscá por texto libre y acotá con filtros.</p>
+                        </div>
+                        <div class="uni2-page-header-actions">
+                            <a class="btn btn-outline-primary" href="#componentes">Exportar</a>
+                            <a class="btn btn-primary" href="#componentes">Nuevo asociado</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOON MODAL -->
+        <div class="col-12 col-lg-6">
+            <p class="h6 text-muted mb-2">Soon Modal</p>
+            <p class="small text-muted mb-3"><code>.uni2-soon-card</code> y <code>.uni2-soon-modal</code> — comunica funciones no disponibles todavía.</p>
+            <div class="card">
+                <div class="card-body">
+                    <article class="uni2-soon-card border rounded-3 p-3 bg-body-tertiary">
+                        <span class="uni2-soon-icon" aria-hidden="true"><i class="bi bi-clock"></i></span>
+                        <h3>Próximamente</h3>
+                        <p>Esta función estará disponible pronto.</p>
+                        <a class="uni2-cta" href="#soon-preview">Abrir modal</a>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTACT BLOCK -->
+        <div class="col-12 col-lg-6">
+            <p class="h6 text-muted mb-2">Bloque de contacto</p>
+            <p class="small text-muted mb-3"><code>.uni2-print-contact</code> — dato de contacto al pie de páginas de detalle e impresión.</p>
+            <div class="card">
+                <div class="card-body">
+                    <article class="uni2-print-contact">
+                        <span class="uni2-print-icon" aria-hidden="true"><i class="bi bi-send"></i></span>
+                        <div>
+                            <h3>¿Tenés dudas?</h3>
+                            <div class="uni2-contact-links">
+                                <a href="mailto:unidosatencionalcliente@gmail.com">unidosatencionalcliente@gmail.com</a>
+                                <span class="uni2-contact-separator">o</span>
+                                <a class="whatsapp-link" href="https://wa.me/5492984210672" target="_blank" rel="noopener">whatsapp</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Footer</p>
+            <p class="small text-muted mb-3"><code>.uni2-footer</code> — pie de página con íconos de contacto, dirección y copyright. Se incluye desde <code>includes/footer.html</code>.</p>
+            <footer class="uni2-footer" id="footer-preview">
+                <div class="uni2-footer-container">
+                    <div class="uni2-footer-actions" aria-label="Contacto de la mutual">
+                        <a class="uni2-footer-icon uni2-footer-icon-mail" href="mailto:unidosatencionalcliente@gmail.com" aria-label="Enviar mail a la mutual"><i class="bi bi-envelope" aria-hidden="true"></i></a>
+                        <a class="uni2-footer-icon uni2-footer-icon-whatsapp" href="https://wa.me/5492984210672" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
+                        <a class="uni2-footer-icon uni2-footer-icon-instagram" href="https://www.instagram.com/unidos.cet3" target="_blank" rel="noopener" aria-label="Abrir Instagram de la mutual"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="uni2-footer-location"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><span>Chacabuco 1050 &middot; General Roca, Río Negro</span></div>
+                    <p class="uni2-footer-copy">&copy; 2026 Mutual UNI2 &middot; CET N&deg;3</p>
+                </div>
+            </footer>
+        </div>
+
     </div>
 
 </div>
@@ -494,27 +700,27 @@
         </div>
         <div class="row g-3" aria-label="Servicios de la mutual">
             <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-blue" data-href="#servicios">
-                <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="copy"></i></span>
+                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-files"></i></span>
                 <div><h3>Fotocopias</h3><p>Fotocopias rápidas y de excelente calidad.</p></div>
                 <a class="link" href="#servicios">Ver más</a>
             </article></div>
             <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-yellow" data-href="#servicios">
-                <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="shirt"></i></span>
+                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bag"></i></span>
                 <div><h3>Uniformes</h3><p>Calidad y comodidad para acompa&ntilde;arte todo el a&ntilde;o.</p></div>
                 <a class="link" href="#servicios">Ver más</a>
             </article></div>
             <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-green" data-href="#servicios">
-                <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="bike"></i></span>
+                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-bicycle"></i></span>
                 <div><h3>Bicicleta Solidaria</h3><p>Una forma práctica y sustentable de moverte.</p></div>
                 <a class="link" href="#servicios">Ver más</a>
             </article></div>
             <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-red" data-href="#servicios">
-                <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="notebook-tabs"></i></span>
+                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></span>
                 <div><h3>Cuadernillos</h3><p>Todo el material que necesitás para cada materia.</p></div>
                 <a class="link" href="#servicios">Ver más</a>
             </article></div>
             <div class="col-6 col-md-3"><article class="uni2-service-card uni2-service-card-purple">
-                <span class="uni2-service-icon" aria-hidden="true"><i data-lucide="paperclip"></i></span>
+                <span class="uni2-service-icon" aria-hidden="true"><i class="bi bi-paperclip"></i></span>
                 <div><h3>Anillado</h3><p>Cuidá tu material de estudio con un acabado profesional.</p></div>
             </article></div>
         </div>
@@ -546,8 +752,8 @@
         <div class="uni2-section-heading mt-4">
             <div><h2 class="uni2-titulo-seccion">Los m&aacute;s elegidos</h2></div>
             <div class="btn-group" role="group" aria-label="Controles del carrusel">
-                <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="showcase-carousel" aria-label="Anterior"><i data-lucide="chevron-left"></i></button>
-                <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="showcase-carousel" aria-label="Siguiente"><i data-lucide="chevron-right"></i></button>
+                <button class="btn btn-sm btn-outline-primary" type="button" data-slider-prev="showcase-carousel" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+                <button class="btn btn-sm btn-outline-primary" type="button" data-slider-next="showcase-carousel" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
             </div>
         </div>
         <div class="uni2-carousel js-auto-slider" id="showcase-carousel" aria-label="Carrusel de publicidades">
@@ -654,7 +860,7 @@
             </article>
         </div>
         <aside class="uni2-print-contact">
-            <span class="uni2-print-icon" aria-hidden="true"><i data-lucide="notebook-tabs"></i></span>
+            <span class="uni2-print-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></span>
             <div><h3>Reservá tu material en la mutual a</h3><div class="uni2-contact-links"><a href="mailto:unidosatencionalcliente@gmail.com">unidosatencionalcliente@gmail.com</a><span class="uni2-contact-separator">o</span><a class="whatsapp-link" href="https://wa.me/5492984210672" target="_blank" rel="noopener">whatsapp</a></div></div>
         </aside>
     </div>
@@ -819,9 +1025,9 @@
                 <button class="uni2-cta" type="button">Filtrar</button>
             </form>
             <div class="uni2-chip-row mt-3" aria-label="Filtros activos">
-                <span class="uni2-filter-chip"><i data-lucide="search"></i> "cuadernillos"</span>
-                <span class="uni2-filter-chip"><i data-lucide="tag"></i> Servicios</span>
-                <span class="uni2-filter-chip"><i data-lucide="check-circle"></i> Activos</span>
+                <span class="uni2-filter-chip"><i class="bi bi-search"></i> "cuadernillos"</span>
+                <span class="uni2-filter-chip"><i class="bi bi-tag"></i> Servicios</span>
+                <span class="uni2-filter-chip"><i class="bi bi-check-circle"></i> Activos</span>
                 <button class="btn btn-sm btn-outline-secondary" type="button">Limpiar filtros</button>
             </div>
         </div>
@@ -838,25 +1044,25 @@
         <p class="h6 text-muted mb-3">Indicadores compactos con tendencia</p>
         <div class="uni2-compact-metric-grid" aria-label="Indicadores compactos">
             <article class="uni2-compact-metric uni2-compact-blue">
-                <span class="uni2-compact-icon" aria-hidden="true"><i data-lucide="users"></i></span>
+                <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-people"></i></span>
                 <div class="uni2-compact-body"><span>Asociados</span><strong>248</strong></div>
                 <strong class="uni2-trend">+7%</strong>
                 <div class="uni2-progress" aria-hidden="true"><span style="--progress: 72%"></span></div>
             </article>
             <article class="uni2-compact-metric uni2-compact-yellow">
-                <span class="uni2-compact-icon" aria-hidden="true"><i data-lucide="wallet-cards"></i></span>
+                <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-credit-card-2-front"></i></span>
                 <div class="uni2-compact-body"><span>Cuotas al día</span><strong>82%</strong></div>
                 <strong class="uni2-trend-muted">estable</strong>
                 <div class="uni2-progress" aria-hidden="true"><span style="--progress: 82%"></span></div>
             </article>
             <article class="uni2-compact-metric uni2-compact-green">
-                <span class="uni2-compact-icon" aria-hidden="true"><i data-lucide="badge-percent"></i></span>
+                <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-percent"></i></span>
                 <div class="uni2-compact-body"><span>Beneficios</span><strong>37</strong></div>
                 <strong class="uni2-trend">+4</strong>
                 <div class="uni2-progress" aria-hidden="true"><span style="--progress: 64%"></span></div>
             </article>
             <article class="uni2-compact-metric uni2-compact-red">
-                <span class="uni2-compact-icon" aria-hidden="true"><i data-lucide="activity"></i></span>
+                <span class="uni2-compact-icon" aria-hidden="true"><i class="bi bi-graph-up"></i></span>
                 <div class="uni2-compact-body"><span>Consultas</span><strong>126</strong></div>
                 <strong class="uni2-trend-down">-3%</strong>
                 <div class="uni2-progress" aria-hidden="true"><span style="--progress: 46%"></span></div>
@@ -889,9 +1095,9 @@
                 <div class="card-body">
                     <p class="h6 text-muted mb-3">Actividad reciente</p>
                     <div class="uni2-activity-list">
-                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="user-plus"></i></span><div><h3>Alta registrada</h3><p>Se agregó un asociado de 2 C.B.</p></div></div>
-                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="badge-percent"></i></span><div><h3>Beneficio actualizado</h3><p>Latte Cafetería cambió su descuento.</p></div></div>
-                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i data-lucide="printer"></i></span><div><h3>Servicio consultado</h3><p>Cuadernillos recibió nuevas reservas.</p></div></div>
+                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i class="bi bi-person-plus"></i></span><div><h3>Alta registrada</h3><p>Se agregó un asociado de 2 C.B.</p></div></div>
+                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i class="bi bi-percent"></i></span><div><h3>Beneficio actualizado</h3><p>Latte Cafetería cambió su descuento.</p></div></div>
+                        <div class="uni2-activity-item"><span class="uni2-activity-icon"><i class="bi bi-printer"></i></span><div><h3>Servicio consultado</h3><p>Cuadernillos recibió nuevas reservas.</p></div></div>
                     </div>
                 </div>
             </aside>
@@ -943,7 +1149,7 @@
     <a class="uni2-soon-backdrop" href="#componentes" aria-label="Cerrar"></a>
     <article class="uni2-soon-card">
         <a class="uni2-soon-close" href="#componentes" aria-label="Cerrar">×</a>
-        <span class="uni2-soon-icon" aria-hidden="true"><i data-lucide="clock-3"></i></span>
+        <span class="uni2-soon-icon" aria-hidden="true"><i class="bi bi-clock"></i></span>
         <h2 id="soon-preview-title">Próximamente</h2>
         <p>Patrón de modal compartido para acciones futuras.</p>
         <a class="uni2-cta" href="#django">Ver partición</a>
@@ -954,9 +1160,8 @@
 
 {% block extra_scripts %}
 {{ block.super }}
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script>
-    if (window.lucide) lucide.createIcons();
+    // Bootstrap Icons no requiere inicialización JS
 
     const cycleToggle = document.querySelector(".cycle-toggle");
     if (cycleToggle) {
