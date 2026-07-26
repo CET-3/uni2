@@ -1,0 +1,36 @@
+<div
+    class="uni2-alert {% if variant == 'success' %}uni2-alert-success{% elif variant == 'warning' %}uni2-alert-warning{% elif variant == 'danger' or variant == 'error' %}uni2-alert-danger{% else %}uni2-alert-info{% endif %}{% if extra_classes %} {{ extra_classes }}{% endif %}"
+    {% if not is_static %}role="{% if variant == 'danger' or variant == 'error' %}alert{% else %}status{% endif %}"{% endif %}
+>
+    <span class="uni2-alert-icon" aria-hidden="true">
+        {% if variant == 'success' %}
+            <i class="bi bi-check-lg"></i>
+        {% elif variant == 'warning' %}
+            <i class="bi bi-exclamation-lg"></i>
+        {% elif variant == 'danger' or variant == 'error' %}
+            <i class="bi bi-x-lg"></i>
+        {% else %}
+            <i class="bi bi-info-lg"></i>
+        {% endif %}
+    </span>
+    <div class="uni2-alert-content">
+        <strong class="uni2-alert-title">
+            {% if title %}
+                {{ title }}
+            {% elif variant == 'success' %}
+                Operación completada
+            {% elif variant == 'warning' %}
+                Revisión necesaria
+            {% elif variant == 'danger' or variant == 'error' %}
+                No pudimos completar la acción
+            {% else %}
+                Información importante
+            {% endif %}
+        </strong>
+        {% if message %}<div class="uni2-alert-message">{{ message }}</div>{% endif %}
+        {% if secondary_message %}<p class="uni2-alert-message">{{ secondary_message }}</p>{% endif %}
+        {% if tertiary_message %}<p class="uni2-alert-message">{{ tertiary_message }}</p>{% endif %}
+        {% if note %}<p class="uni2-alert-note">{{ note }}</p>{% endif %}
+        {% if action_url and action_label %}<a class="uni2-alert-action" href="{{ action_url }}">{{ action_label }}</a>{% endif %}
+    </div>
+</div>

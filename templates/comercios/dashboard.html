@@ -2,7 +2,7 @@
 
 {% block title %}Panel de comercio | Uni2{% endblock %}
 
-{% block body_class %} dashboard-page{% endblock %}
+{% block body_class %} uni2-dashboard-page{% endblock %}
 
 {% block content %}
 
@@ -10,10 +10,10 @@
     <div class="container uni2-hero-layout">
         <div>
             <span class="uni2-eyebrow">Mi comercio</span>
-            <h1 id="hero-title">{{ comercio.nombre }}</h1>
+            <h1 id="hero-title" class="uni2-titulo-principal">{{ comercio.nombre }}</h1>
             <p>Pantalla simple para validar credenciales de asociados.</p>
-            <div class="pill-row">
-                <span class="dashboard-pill">Convenio {{ comercio.get_estado_display }}</span>
+            <div class="uni2-pill-row">
+                <span class="uni2-dashboard-pill">Convenio {{ comercio.get_estado_display }}</span>
             </div>
             <div class="uni2-hero-actions">
                 <a class="uni2-cta" href="{% url 'comercios:validar_credencial' %}">Validar credencial</a>
@@ -27,12 +27,12 @@
     <section class="mb-5" aria-labelledby="beneficio-title">
         <div class="uni2-section-heading">
             <div>
-                <h2 id="beneficio-title">Información para atención</h2>
+                <h2 id="beneficio-title" class="uni2-titulo-componente">Información para atención</h2>
             </div>
         </div>
         <div class="row g-3">
             <div class="col-md-6">
-                <div class="uni2-service-card uni2-service-card-green">
+                <div class="uni2-service-card uni2-service-card-static uni2-service-card-green">
                     <div>
                         <h3>Beneficio vigente</h3>
                         <p>{{ comercio.beneficio_texto|default:"No hay beneficio cargado." }}</p>

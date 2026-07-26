@@ -1,36 +1,51 @@
 {% if publicidades %}
 {% with carousel_id="publicidades-carousel" %}
 <section aria-labelledby="publicidad-title">
-    <div class="uni2-section-heading">
+    <div class="uni2-section-heading uni2-carousel-heading">
         <div>
-            <h2 id="publicidad-title">Nuestros favoritos</h2>
+            <h2 id="publicidad-title" class="uni2-titulo-seccion">Nuestros favoritos</h2>
         </div>
+        {% if publicidades|length > 1 %}
+            <div class="btn-group uni2-carousel-controls" role="group" aria-label="Controles de Nuestros favoritos">
+                <button class="btn btn-outline-primary" type="button" data-slider-prev="{{ carousel_id }}" aria-label="Publicidad anterior" disabled><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+                <button class="btn btn-outline-primary" type="button" data-slider-toggle="{{ carousel_id }}" aria-label="Pausar carrusel" aria-pressed="false"><i class="bi bi-pause-fill" aria-hidden="true"></i></button>
+                <button class="btn btn-outline-primary" type="button" data-slider-next="{{ carousel_id }}" aria-label="Publicidad siguiente"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+            </div>
+        {% endif %}
     </div>
 
-    <div class="uni2-carousel js-auto-slider" id="{{ carousel_id }}" aria-label="Carrusel de publicidades">
+    {% if publicidades|length > 1 %}
+        <p id="{{ carousel_id }}-instructions" class="visually-hidden">Usá las flechas izquierda y derecha para recorrer las publicidades. El carrusel se pausa mientras interactuás con él.</p>
+    {% endif %}
+    <div
+        class="uni2-carousel js-auto-slider"
+        id="{{ carousel_id }}"
+        role="region"
+        aria-roledescription="carrusel"
+        aria-label="Nuestros favoritos"
+        aria-live="off"
+        {% if publicidades|length > 1 %}aria-describedby="{{ carousel_id }}-instructions" tabindex="0"{% endif %}
+    >
         {% for publicidad in publicidades %}
-            <article
-                class="uni2-ad-card{% if not publicidad.foto %} uni2-ad-card-sin-foto{% endif %}"
-                {% if publicidad.foto %}style="--ad-image: url('{{ publicidad.foto.url }}');"{% endif %}
-            >
-                <span class="uni2-badge">{{ publicidad.etiqueta_principal }}</span>
-                <h3>{{ publicidad.titulo }}</h3>
-                <strong class="uni2-discount">{{ publicidad.etiqueta_secundaria }}</strong>
-                <p>{{ publicidad.descripcion }}</p>
-                {% if publicidad.producto_servicio_id %}
-                    <a class="link" href="{% url 'web:producto_servicio_detalle' publicidad.producto_servicio_id %}">Conocer más</a>
-                {% elif publicidad.comercio_id %}
-                    <a class="link" href="{% url 'web:comercio_detalle' publicidad.comercio_id %}">Conocer más</a>
-                {% endif %}
-            </article>
+            {% if publicidad.producto_servicio_id %}
+                {% url 'web:producto_servicio_detalle' publicidad.producto_servicio_id as detalle_url %}
+                {% include "components/advertisement_card.html" with foto=publicidad.foto etiqueta_principal=publicidad.etiqueta_principal titulo=publicidad.titulo etiqueta_secundaria=publicidad.etiqueta_secundaria descripcion=publicidad.descripcion url=detalle_url only %}
+            {% elif publicidad.comercio_id %}
+                {% url 'web:comercio_detalle' publicidad.comercio_id as detalle_url %}
+                {% include "components/advertisement_card.html" with foto=publicidad.foto etiqueta_principal=publicidad.etiqueta_principal titulo=publicidad.titulo etiqueta_secundaria=publicidad.etiqueta_secundaria descripcion=publicidad.descripcion url=detalle_url only %}
+            {% else %}
+                {% include "components/advertisement_card.html" with foto=publicidad.foto etiqueta_principal=publicidad.etiqueta_principal titulo=publicidad.titulo etiqueta_secundaria=publicidad.etiqueta_secundaria descripcion=publicidad.descripcion only %}
+            {% endif %}
         {% endfor %}
     </div>
 
-    <div class="d-flex justify-content-center gap-2" data-slider-dots="{{ carousel_id }}" aria-label="Indicadores del carrusel Nuestros favoritos">
-        {% for publicidad in publicidades %}
-            <button class="btn btn-sm {% if forloop.first %}btn-primary{% else %}btn-outline-primary{% endif %} rounded-circle p-0" style="width: 12px; height: 12px;" type="button" data-slide-index="{{ forloop.counter0 }}" aria-label="Ir a favorito {{ forloop.counter }}"></button>
-        {% endfor %}
-    </div>
+    {% if publicidades|length > 1 %}
+        <div class="d-flex justify-content-center" data-slider-dots="{{ carousel_id }}" role="group" aria-label="Elegir publicidad">
+            {% for publicidad in publicidades %}
+                <button class="uni2-carousel-dot" type="button" data-slide-index="{{ forloop.counter0 }}" aria-label="Ir a publicidad {{ forloop.counter }} de {{ publicidades|length }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+            {% endfor %}
+        </div>
+    {% endif %}
 </section>
 {% endwith %}
 {% endif %}

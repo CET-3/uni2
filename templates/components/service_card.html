@@ -1,0 +1,22 @@
+{% if url %}
+<a class="uni2-service-card {{ color }}" href="{{ url }}">
+{% else %}
+<article class="uni2-service-card uni2-service-card-static {{ color }}">
+{% endif %}
+    <span class="uni2-service-icon" aria-hidden="true">
+        <i class="bi bi-{{ icono|default:'box' }}"></i>
+    </span>
+    <div>
+        <h3>{{ titulo }}</h3>
+        {% if descripcion %}
+            <p>{{ descripcion|truncatewords:20 }}</p>
+        {% endif %}
+    </div>
+    {% if url %}
+        <span class="link">{{ texto_enlace|default:"Ver más" }}</span>
+    {% endif %}
+{% if url %}
+</a>
+{% else %}
+</article>
+{% endif %}

@@ -9,7 +9,7 @@
         <h1 class="h2 mb-1">Gestión de asociados</h1>
         <p class="text-secondary mb-0">Buscá por texto libre y acotá con filtros de estado, tipo, curso, usuario o deuda.</p>
     </div>
-    <div class="page-header-actions">
+    <div class="uni2-page-header-actions">
         <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
         {% if perms.gestion.exportar_asociados %}
             <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">Exportar asociados</a>
@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<div class="card surface-card mb-4">
+<div class="card uni2-surface-card mb-4">
     <div class="card-body">
         <form method="get" class="row g-3 align-items-end">
             <div class="col-lg-4">
@@ -55,13 +55,13 @@
             </div>
         </form>
         {% if form.errors %}
-            <div class="alert alert-warning mt-3 mb-0">Revisá los filtros ingresados.</div>
+            {% include "components/alert.html" with variant="warning" message="Revisá los filtros ingresados." extra_classes="mt-3 mb-0" only %}
         {% endif %}
     </div>
 </div>
 
 {% if asociados %}
-    <div class="card surface-card">
+    <div class="card uni2-surface-card">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-soft align-middle mb-0">
@@ -101,7 +101,7 @@
         </div>
     </div>
 {% elif form.is_bound %}
-    <div class="alert alert-warning">No se encontraron asociados para la búsqueda ingresada.</div>
+    {% include "components/alert.html" with variant="warning" title="Sin resultados" message="No se encontraron asociados para la búsqueda ingresada." only %}
 {% endif %}
 </div>
 {% endblock %}

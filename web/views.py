@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Prefetch
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views.generic import DetailView, TemplateView
 
 from comercios.selectors import get_comercios_firmados, get_rubros_con_comercios
@@ -115,7 +116,7 @@ class ActividadComercialDetalleView(DetailView):
 
 
 class VerDesignSystemRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
-    login_url = "/usuarios/login/"
+    login_url = reverse_lazy("usuarios:login")
     permission_required = GESTION_VER_DESIGN_SYSTEM
 
     def test_func(self):
@@ -125,11 +126,7 @@ class VerDesignSystemRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 class DesignSystemView(VerDesignSystemRequiredMixin, TemplateView):
     template_name = "web/design-system.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["show_site_chrome"] = False
-        context["load_theme_script"] = False
-        return context
+    pass
 
 
 class DesignSystemEstructuraView(VerDesignSystemRequiredMixin, TemplateView):

@@ -2,33 +2,28 @@
 
 {% block title %}{{ producto_servicio.nombre }} | Uni2{% endblock %}
 
-{% block body_class %} detail-page{% endblock %}
+{% block body_class %} uni2-detail-page{% endblock %}
 
 {% block content %}
 <div class="container py-3">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'web:home' %}">Inicio</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'web:productos_servicios' %}">Productos y servicios</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ producto_servicio.nombre }}</li>
-    </ol>
-  </nav>
+  {% url "web:productos_servicios" as breadcrumb_parent_url %}
+  {% include "components/breadcrumbs.html" with parent_url=breadcrumb_parent_url parent_label="Productos y servicios" current_label=producto_servicio.nombre only %}
 </div>
 
-<section class="service-detail" aria-labelledby="ps-title">
+<section class="uni2-service-detail" aria-labelledby="ps-title">
   <div class="container pb-5">
-    <div class="detail-layout">
-      <div class="detail-copy">
+    <div class="uni2-detail-layout">
+      <div class="uni2-detail-copy">
         <span class="uni2-eyebrow">{{ producto_servicio.categoria.nombre }}</span>
-        <h1 id="ps-title">{{ producto_servicio.nombre }}</h1>
+        <h1 id="ps-title" class="uni2-titulo-principal">{{ producto_servicio.nombre }}</h1>
         <p>{{ producto_servicio.descripcion }}</p>
         <a href="{% url 'web:productos_servicios' %}" class="uni2-cta uni2-cta-secondary">← Todos los productos</a>
       </div>
 
-      <div class="detail-panel">
+      <div class="uni2-detail-panel">
         <h2>Precios</h2>
-        <div class="price-table-wrap">
-          <table class="price-table price-table-compact" aria-label="Precios">
+        <div class="uni2-price-table-wrap">
+          <table class="uni2-price-table uni2-price-table-compact" aria-label="Precios">
             <thead>
               <tr>
                 <th>Tipo</th>
@@ -49,12 +44,7 @@
         </div>
 
         {% if producto_servicio.categoria.texto_cta %}
-          <aside class="print-contact">
-            <span class="print-icon" aria-hidden="true"><i class="bi bi-send"></i></span>
-            <div>
-              {{ producto_servicio.categoria.texto_cta|linebreaks|urlize }}
-            </div>
-          </aside>
+          {% include "components/contact_block.html" with texto=producto_servicio.categoria.texto_cta only %}
         {% endif %}
       </div>
     </div>
