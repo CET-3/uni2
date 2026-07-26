@@ -195,6 +195,130 @@ def test_base_y_scripts_conservan_contratos_de_accesibilidad():
     assert "data-slider-toggle" in carousel_js
 
 
+def test_design_system_conserva_contraste_de_texto_en_ambos_temas():
+    project_root = Path(__file__).resolve().parents[2]
+    css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
+
+    def get_block(selector):
+        start = css.index(f"{selector} {{")
+        return css[start : css.index("\n}", start)]
+
+    def get_tokens(block):
+        return dict(re.findall(r"(--[a-z][a-z0-9-]+)\s*:\s*([^;]+);", block))
+
+    def resolve_token(tokens, name):
+        value = tokens[name].strip()
+        while value.startswith("var("):
+            referenced_name = value.removeprefix("var(").removesuffix(")")
+            value = tokens[referenced_name].strip()
+        return value
+
+    def relative_luminance(color):
+        channels = [int(color[index : index + 2], 16) / 255 for index in (1, 3, 5)]
+        channels = [
+            channel / 12.92 if channel <= 0.04045 else ((channel + 0.055) / 1.055) ** 2.4
+            for channel in channels
+        ]
+        return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+
+    def contrast_ratio(foreground, background):
+        lighter, darker = sorted(
+            (relative_luminance(foreground), relative_luminance(background)),
+            reverse=True,
+        )
+        return (lighter + 0.05) / (darker + 0.05)
+
+    light_tokens = get_tokens(get_block(":root"))
+    dark_tokens = light_tokens | get_tokens(get_block('[data-theme="dark"]'))
+    text_tokens = (
+        "--color-action-on-surface",
+        "--color-success-text",
+        "--color-warning-text",
+        "--color-danger-text",
+    )
+
+    for token_name in text_tokens:
+        assert contrast_ratio(
+            resolve_token(light_tokens, token_name),
+            resolve_token(light_tokens, "--color-surface"),
+        ) >= 4.5
+        assert contrast_ratio(
+            resolve_token(dark_tokens, token_name),
+            resolve_token(dark_tokens, "--color-surface"),
+        ) >= 4.5
+
+    for background_token in ("--brand-yellow", "--brand-green"):
+        assert contrast_ratio(
+            resolve_token(light_tokens, "--color-on-bright"),
+            resolve_token(light_tokens, background_token),
+        ) >= 4.5
+
+    assert "color: var(--color-danger-text) !important" in css
+    assert "color: var(--step-number-text)" in css
+
+
+def test_hero_mobile_protege_el_texto_del_fondo_decorativo():
+    project_root = Path(__file__).resolve().parents[2]
+    css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
+
+    assert ".uni2-hero-layout > div {" in css
+    assert "background: var(--color-surface-translucent);" in css
+    assert "border: 1px solid var(--color-border-subtle);" in css
+
+
+def test_paginas_simples_usan_el_shell_responsive_compartido():
+    project_root = Path(__file__).resolve().parents[2]
+    templates_root = project_root / "templates"
+    paginas_simples = (
+        "registration/login.html",
+        "asociados/credencial.html",
+        "asociados/cuotas.html",
+        "comercios/validar_credencial.html",
+        "comercios/resultado_validacion.html",
+    )
+
+    for relative_path in paginas_simples:
+        template = (templates_root / relative_path).read_text(encoding="utf-8")
+        assert '<div class="container py-5">' in template
+
+
+def test_service_card_distingue_navegacion_de_contenido_estatico():
+    project_root = Path(__file__).resolve().parents[2]
+    component = (project_root / "templates/components/service_card.html").read_text(encoding="utf-8")
+    css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
+
+    assert '<a class="uni2-service-card {{ color }}" href="{{ url }}">' in component
+    assert '<article class="uni2-service-card uni2-service-card-static {{ color }}">' in component
+    assert '<span class="link">' in component
+    assert '<a class="link"' not in component
+    assert "a.uni2-service-card:hover" in css
+    assert "button.uni2-service-card:hover" in css
+    assert "\n.uni2-service-card:hover {" not in css
+    assert ".uni2-service-card-static" in css
+
+
+def test_catalogo_y_documentacion_reflejan_el_css_productivo():
+    project_root = Path(__file__).resolve().parents[2]
+    catalogo = (project_root / "templates/web/design-system.html").read_text(encoding="utf-8")
+    conceptos = (
+        project_root / "especificacion/arquitectura/design-system-conceptos.md"
+    ).read_text(encoding="utf-8")
+    css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
+
+    assert ".uni2-titulo-seccion — clamp(2.35rem, 6vw, 4.8rem) · peso 900" in catalogo
+    assert "grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);" in css
+    for class_name in (
+        "uni2-skip-link",
+        "uni2-flash-messages",
+        "uni2-service-card-static",
+        "uni2-carousel-heading",
+        "uni2-carousel-controls",
+        "uni2-carousel-dot",
+        "uni2-hours-table-compact",
+    ):
+        assert f"`{class_name}`" in conceptos
+
+
 @pytest.mark.django_db
 def test_productos_servicios_publicos_muestran_activos_ordenados_y_cta_linkeable(client):
     categoria = CategoriaProductoServicio.objects.create(

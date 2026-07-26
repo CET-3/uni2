@@ -33,7 +33,13 @@ El sistema diferencia la paleta de marca de los roles que consumen los component
 
 ```css
 --color-action-primary: var(--brand-blue);
+--color-action-on-surface: var(--brand-blue);
+--color-success-text: #177323;
+--color-warning-text: #765900;
+--color-danger-text: var(--brand-red-dark);
 --color-text: #1a1a2e;
+--color-on-strong: #ffffff;
+--color-on-bright: #1a1a2e;
 --color-page: #f7f9fc;
 --color-surface: #ffffff;
 --color-border: #e0e0e0;
@@ -46,6 +52,10 @@ El tema oscuro redefine los roles que deben cambiar, sin modificar la paleta ins
 
 ```css
 [data-theme="dark"] {
+  --color-action-on-surface: #97a6ff;
+  --color-success-text: #76e875;
+  --color-warning-text: #ffda63;
+  --color-danger-text: #ff8d96;
   --color-text: #edf2ff;
   --color-page: #080c16;
   --color-surface: #101827;
@@ -54,6 +64,8 @@ El tema oscuro redefine los roles que deben cambiar, sin modificar la paleta ins
 ```
 
 Los componentes usan tokens de rol para texto, fondos, bordes, radios, sombras, tipografía y movimiento. Las variantes que representan explícitamente los colores institucionales pueden usar tokens `--brand-*`.
+
+`--color-action-primary` representa el fondo de una acción fuerte y no se usa automáticamente como texto. `--color-action-on-surface` representa enlaces, contornos e indicadores sobre una superficie; por eso cambia a un tono claro en el tema oscuro. Los tokens `--color-success-text`, `--color-warning-text` y `--color-danger-text` cumplen el mismo rol para estados semánticos. `--color-on-strong` aporta texto claro sobre fondos oscuros y `--color-on-bright` aporta texto oscuro sobre amarillos o verdes luminosos.
 
 El espaciado y los cortes responsive no se duplican como tokens propios: se usa la escala de utilidades y los breakpoints de Bootstrap 5. Solo se agrega un token cuando representa una decisión compartida del producto; un valor aislado puede permanecer local al componente.
 
@@ -129,7 +141,7 @@ Un componente tiene:
 1. Una clase raíz con prefijo `uni2-` que lo identifica
 2. Clases modificadoras para variantes de color o tamaño
 3. Clases de elementos internos para partes del componente
-4. Solo usa tokens semánticos (capa 2), nunca valores hardcodeados
+4. Usa tokens para decisiones compartidas; un valor estrictamente local puede quedar dentro del componente
 
 ### Ejemplo: uni2-service-card
 
@@ -155,23 +167,34 @@ Un componente tiene:
   letter-spacing: -0.04em;
 }
 
-/* Modificadores de color (la variable --card-color la setea cada variante) */
-.uni2-service-card-blue   { --card-color: var(--brand-blue); }
-.uni2-service-card-green  { --card-color: var(--brand-green); }
-.uni2-service-card-yellow { --card-color: var(--brand-yellow); }
-.uni2-service-card-red    { --card-color: var(--brand-red); }
+.uni2-service-card .link {
+  color: var(--card-action);
+}
+
+/* Cada variante separa su color decorativo del color legible de la acción. */
+.uni2-service-card-blue {
+  --card-color: var(--brand-blue);
+  --card-action: var(--color-action-on-surface);
+}
+
+.uni2-service-card-green {
+  --card-color: var(--brand-green);
+  --card-action: var(--color-success-text);
+}
 ```
 
 ```html
-<article class="uni2-service-card uni2-service-card-blue">
+<a class="uni2-service-card uni2-service-card-blue" href="/servicios/fotocopias/">
   <span class="uni2-service-icon"><i class="bi bi-files"></i></span>
   <div>
     <h3>Fotocopias</h3>
     <p>Blanco y negro, doble faz.</p>
   </div>
-  <a class="link" href="/servicios/fotocopias/">Ver precios</a>
-</article>
+  <span class="link">Ver precios</span>
+</a>
 ```
+
+Una service card con destino usa un único enlace en la raíz: toda la superficie es interactiva y la etiqueta `.link` es texto, no un segundo enlace anidado. Cuando la card solo agrupa información o contiene acciones independientes, la raíz es un `article` o `div` con `uni2-service-card-static`; esa variante no se eleva al pasar el puntero.
 
 ### Convenciones de nomenclatura
 
@@ -201,6 +224,7 @@ Un componente tiene:
 
 | Clase | Uso |
 |---|---|
+| `uni2-skip-link` | Enlace de salto al contenido principal, visible al recibir foco |
 | `uni2-navbar` | Barra de navegación principal |
 | `uni2-navbar-inner` | Contenedor interno del navbar |
 | `uni2-navbar-nav` | Lista de links de nav |
@@ -242,6 +266,7 @@ Un componente tiene:
 | Clase | Uso |
 |---|---|
 | `uni2-service-card` | Card de servicio con borde superior de color |
+| `uni2-service-card-static` | Variante informativa sin interacción sobre toda la superficie |
 | `uni2-service-card-blue` | Variante azul |
 | `uni2-service-card-green` | Variante verde |
 | `uni2-service-card-yellow` | Variante amarilla |
@@ -271,6 +296,7 @@ Un componente tiene:
 | `uni2-alert-message` | Mensaje principal o secundario |
 | `uni2-alert-note` | Nota separada al final |
 | `uni2-alert-action` | Acción opcional |
+| `uni2-flash-messages` | Agrupador de mensajes globales con ancho de lectura acotado |
 
 ### Publicidades (home carousel)
 
@@ -279,6 +305,9 @@ Un componente tiene:
 | `uni2-ad-card` | Card de publicidad con imagen de fondo |
 | `uni2-ad-card-sin-foto` | Variante sin imagen |
 | `uni2-carousel` | Carrusel horizontal |
+| `uni2-carousel-heading` | Cabecera que acomoda los controles del carrusel en mobile |
+| `uni2-carousel-controls` | Grupo de controles anterior, pausa y siguiente |
+| `uni2-carousel-dot` | Indicador y acceso directo a una publicidad |
 | `uni2-info-box` | Caja de info compacta |
 
 ### Beneficios — banda home
@@ -316,6 +345,7 @@ Un componente tiene:
 |---|---|
 | `uni2-hours-mobile` | Contenedor de horarios mobile |
 | `uni2-hours-table` | Tabla de horarios desktop |
+| `uni2-hours-table-compact` | Variante compacta usada en muestras o espacios acotados |
 | `uni2-hours-day` | Fila de un día |
 | `uni2-hours-chip` | Chip de turno horario |
 | `uni2-hours-chip-blue` | Turno mañana |
@@ -394,10 +424,10 @@ Un componente tiene:
 
 ### Lo que un componente NO debe hacer
 
-- Usar colores literales (`#3f51b5`) en lugar de tokens (`var(--brand-blue)`)
-- Definir su propio `font-size` sin relación con la escala tipográfica
-- Asumir que está dentro de otro componente específico
-- Depender de la posición en el DOM (no usar `>` o `:first-child` salvo necesidad real)
+- Repetir como literal una decisión de color que ya tiene token (`var(--brand-blue)` o un rol semántico)
+- Crear una escala tipográfica paralela para títulos que ya cubren las clases `uni2-titulo-*`
+- Asumir que está dentro de otro componente específico fuera de su propia raíz
+- Depender de la posición en el DOM cuando una clase explícita comunica mejor la responsabilidad; los selectores estructurales quedan para relaciones internas breves y estables
 
 ---
 

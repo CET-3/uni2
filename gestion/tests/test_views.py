@@ -659,7 +659,7 @@ def test_cobros_sin_asociado_indica_buscar_en_consulta_de_asociados(client):
 
 
 @pytest.mark.django_db
-def test_cobros_renderiza_saldo_parseable_para_importe_sugerido(client):
+def test_cobros_renderiza_saldo_y_etiqueta_accesible_para_cada_cuota(client):
     staff = crear_usuario_gestion("staff_cobro_saldo_js")
     asociado = create_asociado(
         nombre="Laura", apellido="Mendez", dni="47777112", tipo="asociado", fecha_alta="2026-05-10"
@@ -673,6 +673,7 @@ def test_cobros_renderiza_saldo_parseable_para_importe_sugerido(client):
         fecha_vencimiento=timezone.localdate(),
     )
     generar_cuotas_para_periodo(periodo)
+    cuota = asociado.cuotas.get(periodo=periodo)
 
     client.force_login(staff)
     response = client.get(reverse("gestion:cobros"), {"asociado": asociado.id})
@@ -683,6 +684,9 @@ def test_cobros_renderiza_saldo_parseable_para_importe_sugerido(client):
     assert match
     assert "," not in match.group(1)
     assert Decimal(match.group(1)) == Decimal("3000.00")
+    assert f'id="cuota-{cuota.id}"' in content
+    assert f'for="cuota-{cuota.id}"' in content
+    assert f"Cobrar cuota {cuota.periodo}" in content
 
 
 @pytest.mark.django_db
