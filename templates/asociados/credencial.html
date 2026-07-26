@@ -3,16 +3,18 @@
 {% block title %}Mi credencial | Uni2{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-6">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <p class="text-uppercase text-secondary small mb-2">Credencial digital</p>
-                <h1 class="h3">{{ asociado.nombre }} {{ asociado.apellido }}</h1>
-                <p class="mb-2"><strong>Tipo:</strong> {{ asociado.get_tipo_display }}</p>
-                <p class="mb-2"><strong>Estado:</strong> {{ asociado.get_estado_display }}</p>
-                <p class="mb-2"><strong>Número:</strong> {{ asociado.numero_asociado }}</p>
-                <p class="mb-0"><strong>Token:</strong> <code>{{ asociado.token_credencial }}</code></p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <p class="text-uppercase text-secondary small mb-2">Credencial digital</p>
+                    <h1 class="h3">{{ asociado.nombre }} {{ asociado.apellido }}</h1>
+                    <p class="mb-2"><strong>Tipo:</strong> {{ asociado.get_tipo_display }}</p>
+                    <p class="mb-2"><strong>Estado:</strong> {{ asociado.get_estado_display }}</p>
+                    <p class="mb-2"><strong>Número:</strong> {{ asociado.numero_asociado }}</p>
+                    <p class="mb-0"><strong>Token:</strong> <code>{{ asociado.token_credencial }}</code></p>
+                </div>
             </div>
         </div>
     </div>

@@ -1,0 +1,27 @@
+<a href="{{ url }}" class="uni2-benefit-mix-card {{ color }}">
+    <span class="uni2-benefit-logo-cloud" aria-hidden="true">
+        {% if comercios %}
+            {% for comercio in comercios|slice:":3" %}
+                {% if comercio.foto %}
+                    <span class="uni2-benefit-logo-dot
+                        {% if forloop.counter == 1 %}uni2-benefit-logo-dot-left
+                        {% elif forloop.counter == 2 %}uni2-benefit-logo-dot-main
+                        {% else %}uni2-benefit-logo-dot-right{% endif %}">
+                        <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
+                    </span>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% if inicial_izquierda %}
+                <span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-left"><span>{{ inicial_izquierda }}</span></span>
+            {% endif %}
+            {% if inicial_centro %}
+                <span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-main"><span>{{ inicial_centro }}</span></span>
+            {% endif %}
+            {% if inicial_derecha %}
+                <span class="uni2-benefit-logo-dot uni2-benefit-logo-dot-right"><span>{{ inicial_derecha }}</span></span>
+            {% endif %}
+        {% endif %}
+    </span>
+    <span class="uni2-benefit-rubric">{{ titulo }}</span>
+</a>

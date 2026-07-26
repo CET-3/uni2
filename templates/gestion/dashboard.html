@@ -2,7 +2,7 @@
 
 {% block title %}Gestión mutual | Uni2{% endblock %}
 
-{% block body_class %} dashboard-page{% endblock %}
+{% block body_class %} uni2-dashboard-page{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
     <div class="container uni2-hero-layout">
         <div>
             <span class="uni2-eyebrow">Administración interna</span>
-            <h1 id="hero-title">Panel de gestión</h1>
+            <h1 id="hero-title" class="uni2-titulo-principal">Panel de gestión</h1>
             <p>Accesos directos a las tareas principales del MVP.</p>
             <div class="uni2-hero-actions">
                 <a class="uni2-cta" href="{% url 'gestion:asociados' %}">Cobrar cuota</a>
@@ -25,7 +25,7 @@
     <section class="mb-5" aria-labelledby="operacion-title">
         <div class="uni2-section-heading">
             <div>
-                <h2 id="operacion-title">Operación diaria</h2>
+                <h2 id="operacion-title" class="uni2-titulo-componente">Operación diaria</h2>
             </div>
         </div>
         <div class="row g-3">
@@ -54,7 +54,7 @@
     <section class="mb-5" aria-labelledby="marcha-title">
         <div class="uni2-section-heading">
             <div>
-                <h2 id="marcha-title">Puesta en marcha</h2>
+                <h2 id="marcha-title" class="uni2-titulo-componente">Puesta en marcha</h2>
             </div>
         </div>
         <div class="row g-3">
@@ -97,12 +97,12 @@
     <section class="mb-5" aria-labelledby="soporte-title">
         <div class="uni2-section-heading">
             <div>
-                <h2 id="soporte-title">Soporte técnico</h2>
+                <h2 id="soporte-title" class="uni2-titulo-componente">Soporte técnico</h2>
             </div>
         </div>
         <div class="row g-3">
             <div class="col-md-6">
-                <div class="uni2-service-card uni2-service-card-blue">
+                <div class="uni2-service-card uni2-service-card-static uni2-service-card-blue">
                     <div>
                         <h3>Admin de Django</h3>
                         <p>Usar para tareas técnicas o excepciones del MVP, como cursos, productos, servicios y comercios.</p>
@@ -121,12 +121,12 @@
     <section class="mb-5" aria-labelledby="soporte-title">
         <div class="uni2-section-heading">
             <div>
-                <h2 id="soporte-title">Soporte técnico</h2>
+                <h2 id="soporte-title" class="uni2-titulo-componente">Soporte técnico</h2>
             </div>
         </div>
         <div class="row g-3">
             <div class="col-md-6">
-                <div class="uni2-service-card uni2-service-card-blue">
+                <div class="uni2-service-card uni2-service-card-static uni2-service-card-blue">
                     <div>
                         <h3>Especificación</h3>
                         <p>Consultar la documentación funcional y técnica del proyecto.</p>

@@ -10,14 +10,14 @@
         <h1 class="h2 mb-1">Cobro de cuotas</h1>
         <p class="text-secondary mb-0">Revisá la deuda y registrá el pago del asociado seleccionado.</p>
     </div>
-    <div class="page-header-actions">
+    <div class="uni2-page-header-actions">
         <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
         <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
     </div>
 </div>
 
 {% if selected_asociado %}
-    <div class="card surface-card mb-4">
+    <div class="card uni2-surface-card mb-4">
         <div class="card-body py-3">
             <div class="row g-3 align-items-center">
                 <div class="col-sm-auto">
@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <div class="card surface-card">
+    <div class="card uni2-surface-card">
         <div class="card-body">
             <h2 class="h5 mb-3">Registrar pago</h2>
             <form method="post" novalidate>
@@ -73,7 +73,11 @@
                             {% for cuota in cuotas_deudoras %}
                                 <tr>
                                     <td>
+                                        <label class="visually-hidden" for="cuota-{{ cuota.cuota.id }}">
+                                            Cobrar cuota {{ cuota.cuota.periodo }}
+                                        </label>
                                         <input
+                                            id="cuota-{{ cuota.cuota.id }}"
                                             class="form-check-input cuota-cobro-check"
                                             type="checkbox"
                                             name="cuotas_ids"
@@ -92,7 +96,7 @@
                                     <td>{{ cuota.estado_display }}</td>
                                 </tr>
                             {% empty %}
-                                <tr><td colspan="8">El asociado no tiene cuotas pendientes.</td></tr>
+                                <tr><td colspan="9">El asociado no tiene cuotas pendientes.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -148,7 +152,7 @@
         });
     </script>
 {% else %}
-    <div class="card surface-card">
+    <div class="card uni2-surface-card">
         <div class="card-body">
             <h2 class="h5 mb-3">Seleccioná un asociado</h2>
             <p class="text-secondary">Los cobros se inician desde la consulta de asociados para mantener una única búsqueda operativa.</p>

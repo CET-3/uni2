@@ -9,12 +9,12 @@
         <h1 class="h2 mb-1">Importar cuotas históricas</h1>
         <p class="text-secondary mb-0">Subí la planilla heredada de cuotas sociales para previsualizar antes de guardar.</p>
     </div>
-    <div class="page-header-actions">
+    <div class="uni2-page-header-actions">
         <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
     </div>
 </div>
 
-<div class="card surface-card mb-4">
+<div class="card uni2-surface-card mb-4">
     <div class="card-body">
         <form method="post" enctype="multipart/form-data" class="row g-3 align-items-end">
             {% csrf_token %}
@@ -39,51 +39,46 @@
 {% if preview %}
     <div class="row g-3 mb-4">
         <div class="col-6 col-lg-3">
-            <div class="metric-card card h-100">
+            <div class="uni2-metric-card card h-100">
                 <div class="card-body">
-                    <div class="metric-label">Cuotas a crear</div>
-                    <div class="metric-value">{{ preview.summary.cuotas_a_crear }}</div>
+                    <div class="uni2-metric-label">Cuotas a crear</div>
+                    <div class="uni2-metric-value">{{ preview.summary.cuotas_a_crear }}</div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-3">
-            <div class="metric-card card h-100">
+            <div class="uni2-metric-card card h-100">
                 <div class="card-body">
-                    <div class="metric-label">Pagos históricos</div>
-                    <div class="metric-value">{{ preview.summary.pagos_a_crear }}</div>
+                    <div class="uni2-metric-label">Pagos históricos</div>
+                    <div class="uni2-metric-value">{{ preview.summary.pagos_a_crear }}</div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-3">
-            <div class="metric-card card h-100">
+            <div class="uni2-metric-card card h-100">
                 <div class="card-body">
-                    <div class="metric-label">Impagas</div>
-                    <div class="metric-value">{{ preview.summary.cuotas_impagas }}</div>
+                    <div class="uni2-metric-label">Impagas</div>
+                    <div class="uni2-metric-value">{{ preview.summary.cuotas_impagas }}</div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-3">
-            <div class="metric-card card h-100">
+            <div class="uni2-metric-card card h-100">
                 <div class="card-body">
-                    <div class="metric-label">Revisar</div>
-                    <div class="metric-value">{{ preview.summary.revisar }}</div>
+                    <div class="uni2-metric-label">Revisar</div>
+                    <div class="uni2-metric-value">{{ preview.summary.revisar }}</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="alert alert-info mb-4">
-        <p class="mb-2"><strong>Criterio de importación:</strong></p>
-        <p class="mb-2">Se importan cuotas de marzo a diciembre, solo hasta el mes en curso de la fecha de operación.</p>
-        <p class="mb-2">Cada cuota se crea con importe $500 y recargo $100. Los pagos marcados en la planilla se registran con fecha técnica del día 10 del mes.</p>
-        <p class="mb-0">Esta importación histórica crea cuotas, pagos y aplicaciones a cuota.</p>
-    </div>
+    {% include "components/alert.html" with variant="info" title="Criterio de importación" message="Se importan cuotas de marzo a diciembre, solo hasta el mes en curso de la fecha de operación." secondary_message="Cada cuota se crea con importe $500 y recargo $100. Los pagos marcados en la planilla se registran con fecha técnica del día 10 del mes." tertiary_message="Esta importación histórica crea cuotas, pagos y aplicaciones a cuota." extra_classes="mb-4" is_static=True only %}
 
-    <section class="card surface-card mb-4">
+    <section class="card uni2-surface-card mb-4">
         <div class="card-body">
-            <div class="section-title-row">
+            <div class="uni2-section-title-row">
                 <div>
-                    <div class="muted-kicker">Muestra</div>
+                    <div class="uni2-muted-kicker">Muestra</div>
                     <h2 class="h4 mb-0">Cuotas importables</h2>
                 </div>
             </div>
@@ -122,11 +117,11 @@
     </section>
 
     {% if preview.revisar %}
-        <section class="card surface-card mb-4">
+        <section class="card uni2-surface-card mb-4">
             <div class="card-body">
-                <div class="section-title-row">
+                <div class="uni2-section-title-row">
                     <div>
-                        <div class="muted-kicker">No se importan</div>
+                        <div class="uni2-muted-kicker">No se importan</div>
                         <h2 class="h4 mb-0">Cuotas a revisar</h2>
                     </div>
                 </div>
@@ -170,7 +165,7 @@
         </section>
     {% endif %}
 
-    <form method="post" class="card surface-card">
+    <form method="post" class="card uni2-surface-card">
         <div class="card-body d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center">
             {% csrf_token %}
             <input type="hidden" name="action" value="confirm">
@@ -184,7 +179,7 @@
 {% endif %}
 
 {% if result and result.errores %}
-    <section class="card surface-card mt-4">
+    <section class="card uni2-surface-card mt-4">
         <div class="card-body">
             <h2 class="h5">Errores de importación</h2>
             <ul class="mb-0">
