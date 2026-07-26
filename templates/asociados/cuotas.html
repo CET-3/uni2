@@ -3,44 +3,46 @@
 {% block title %}Mis cuotas | Uni2{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h2 mb-0">Mis cuotas</h1>
-    <div class="text-end">
-        <div class="small text-secondary">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</div>
-        <div class="h4 mb-0">${{ total_deuda }}</div>
+<div class="container py-5">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+        <h1 class="h2 mb-0">Mis cuotas</h1>
+        <div class="text-end">
+            <div class="small text-secondary">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</div>
+            <div class="h4 mb-0">${{ total_deuda }}</div>
+        </div>
     </div>
-</div>
 
-<div class="card">
-    <div class="table-responsive">
-        <table class="table mb-0">
-            <thead>
-                <tr>
-                    <th>Periodo</th>
-                    <th>Original</th>
-                    <th>Recargo</th>
-                    <th>Saldo</th>
-                    <th>Pagado</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cuotas %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
                     <tr>
-                        <td>{{ item.cuota.periodo }}</td>
-                        <td>${{ item.importe_original }}</td>
-                        <td>${{ item.recargo }}</td>
-                        <td>${{ item.saldo }}</td>
-                        <td>${{ item.importe_pagado }}</td>
-                        <td>{{ item.estado_display }}</td>
+                        <th>Periodo</th>
+                        <th>Original</th>
+                        <th>Recargo</th>
+                        <th>Saldo</th>
+                        <th>Pagado</th>
+                        <th>Estado</th>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="6">Todavía no hay cuotas generadas.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for item in cuotas %}
+                        <tr>
+                            <td>{{ item.cuota.periodo }}</td>
+                            <td>${{ item.importe_original }}</td>
+                            <td>${{ item.recargo }}</td>
+                            <td>${{ item.saldo }}</td>
+                            <td>${{ item.importe_pagado }}</td>
+                            <td>{{ item.estado_display }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6">Todavía no hay cuotas generadas.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}
