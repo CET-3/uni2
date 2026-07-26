@@ -3,7 +3,7 @@ type: "Pantalla"
 title: "Gestión"
 description: "Gestión"
 tags: [mvp, pantalla]
-timestamp: 2026-06-22T00:00:00-03:00
+timestamp: 2026-07-13T00:00:00-03:00
 ---
 
 # Gestión
@@ -21,6 +21,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Cursos.
 - Períodos de cuota.
 - Generar cuotas.
-- Registrar pago desde un asociado seleccionado en la consulta de asociados. La pantalla de cobro muestra cuotas pendientes ordenadas de la más vieja a la más nueva, permite seleccionar una o más cuotas a cobrar, valida que la selección sea continua desde la cuota pendiente más vieja, calcula automáticamente el mínimo a cobrar, prellena el importe recibido y registra como donación cualquier excedente.
+- Registrar pago desde un asociado seleccionado en la consulta de asociados. La pantalla de cobro muestra cuotas pendientes ordenadas de la más vieja a la más nueva, permite seleccionar una o más cuotas a cobrar, valida que la selección sea continua desde la cuota pendiente más vieja, calcula automáticamente el mínimo a cobrar, prellena el importe recibido y registra como donación cualquier excedente. Cada checkbox de selección tiene como nombre accesible el período de su cuota, para que pueda identificarse al navegar el formulario con tecnologías asistivas.
 - Deudores.
 - Acceso al admin técnico de Django solo para usuarios con `is_staff`.

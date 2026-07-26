@@ -16,10 +16,15 @@
   /* Roles de color. Los componentes consumen estos nombres. */
   --color-action-primary: var(--brand-blue);
   --color-action-primary-hover: var(--brand-blue-dark);
+  --color-action-on-surface: var(--brand-blue);
+  --color-success-text: #177323;
+  --color-warning-text: #765900;
+  --color-danger-text: var(--brand-red-dark);
   --color-text: #1a1a2e;
   --color-text-secondary: #3f485d;
   --color-text-muted: var(--color-text-secondary);
   --color-on-strong: #ffffff;
+  --color-on-bright: #1a1a2e;
   --color-page: #f7f9fc;
   --color-bootstrap-surface: #ffffff;
   --color-surface: #ffffff;
@@ -66,6 +71,10 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
+  --color-action-on-surface: #97a6ff;
+  --color-success-text: #76e875;
+  --color-warning-text: #ffda63;
+  --color-danger-text: #ff8d96;
   --color-text: #edf2ff;
   --color-text-secondary: #a0a0b0;
   --color-text-muted: rgba(237, 242, 255, 0.78);
@@ -295,7 +304,7 @@ html {
 }
 
 .uni2-breadcrumbs a {
-  color: var(--color-action-primary);
+  color: var(--color-action-on-surface);
   font-weight: 700;
   text-decoration: none;
   text-underline-offset: 0.2em;
@@ -420,36 +429,31 @@ html {
 
 .uni2-alert-info {
   --uni2-alert-accent: var(--brand-blue);
-  --uni2-alert-action-color: var(--brand-blue);
+  --uni2-alert-action-color: var(--color-action-on-surface);
   --uni2-alert-icon-color: var(--color-on-strong);
   --uni2-alert-soft: rgba(63, 81, 181, 0.12);
 }
 
 .uni2-alert-success {
   --uni2-alert-accent: var(--brand-green);
-  --uni2-alert-action-color: #177323;
+  --uni2-alert-action-color: var(--color-success-text);
   --uni2-alert-icon-color: #07230d;
   --uni2-alert-soft: rgba(76, 203, 74, 0.13);
 }
 
 .uni2-alert-warning {
   --uni2-alert-accent: var(--brand-yellow);
-  --uni2-alert-action-color: #765900;
+  --uni2-alert-action-color: var(--color-warning-text);
   --uni2-alert-icon-color: #2d2606;
   --uni2-alert-soft: rgba(255, 203, 48, 0.16);
 }
 
 .uni2-alert-danger {
   --uni2-alert-accent: var(--brand-red);
-  --uni2-alert-action-color: #b91624;
+  --uni2-alert-action-color: var(--color-danger-text);
   --uni2-alert-icon-color: var(--color-on-strong);
   --uni2-alert-soft: rgba(255, 43, 43, 0.11);
 }
-
-[data-theme="dark"] .uni2-alert-info { --uni2-alert-action-color: #97a6ff; }
-[data-theme="dark"] .uni2-alert-success { --uni2-alert-action-color: #76e875; }
-[data-theme="dark"] .uni2-alert-warning { --uni2-alert-action-color: #ffda63; }
-[data-theme="dark"] .uni2-alert-danger { --uni2-alert-action-color: #ff8d96; }
 
 .uni2-flash-messages {
   max-width: 960px;
@@ -582,15 +586,16 @@ html {
   transition: transform var(--motion-duration-fast) var(--motion-easing-standard), box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
 }
 
-.uni2-service-card:hover {
+a.uni2-service-card:hover,
+button.uni2-service-card:hover {
   box-shadow: 0 26px 56px rgba(47, 63, 146, 0.18);
   transform: translateY(-5px);
 }
 
-.uni2-service-card[data-href] { cursor: pointer; }
+.uni2-service-card-static { cursor: default; }
 
 .uni2-service-card .link {
-  color: var(--card-color);
+  color: var(--card-action);
   font-weight: 900;
   margin-top: auto;
   width: fit-content;
@@ -612,11 +617,30 @@ html {
 }
 
 /* === SERVICE CARD COLORES === */
-.uni2-service-card-blue   { --card-color: var(--brand-blue);     --card-dark: var(--brand-blue-dark); }
-.uni2-service-card-yellow { --card-color: var(--brand-yellow); --card-dark: var(--brand-yellow-dark); }
-.uni2-service-card-green  { --card-color: var(--brand-green);    --card-dark: var(--brand-green-dark); }
-.uni2-service-card-red    { --card-color: var(--brand-red);     --card-dark: var(--brand-red-dark); }
-.uni2-service-card-purple { --card-color: var(--brand-red);     --card-dark: var(--brand-red-dark); }
+.uni2-service-card-blue {
+  --card-action: var(--color-action-on-surface);
+  --card-color: var(--brand-blue);
+  --card-dark: var(--brand-blue-dark);
+}
+
+.uni2-service-card-yellow {
+  --card-action: var(--color-warning-text);
+  --card-color: var(--brand-yellow);
+  --card-dark: var(--brand-yellow-dark);
+}
+
+.uni2-service-card-green {
+  --card-action: var(--color-success-text);
+  --card-color: var(--brand-green);
+  --card-dark: var(--brand-green-dark);
+}
+
+.uni2-service-card-red,
+.uni2-service-card-purple {
+  --card-action: var(--color-danger-text);
+  --card-color: var(--brand-red);
+  --card-dark: var(--brand-red-dark);
+}
 
 .uni2-service-icon {
   background-blend-mode: soft-light, normal;
@@ -665,16 +689,17 @@ html {
   margin-bottom: 0;
 }
 
-.uni2-step-card-blue   { --step-color: var(--brand-blue);     --step-dark: var(--brand-blue-dark); }
-.uni2-step-card-yellow { --step-color: var(--brand-yellow); --step-dark: var(--brand-yellow-dark); }
-.uni2-step-card-green  { --step-color: var(--brand-green);    --step-dark: var(--brand-green-dark); }
-.uni2-step-card-red    { --step-color: var(--brand-red);     --step-dark: var(--brand-red-dark); }
+.uni2-step-card-blue   { --step-color: var(--brand-blue);   --step-number-bg: var(--brand-blue-dark); --step-number-text: var(--color-on-strong); }
+.uni2-step-card-yellow { --step-color: var(--brand-yellow); --step-number-bg: var(--brand-yellow);    --step-number-text: var(--color-on-bright); }
+.uni2-step-card-green  { --step-color: var(--brand-green);  --step-number-bg: var(--brand-green);     --step-number-text: var(--color-on-bright); }
+.uni2-step-card-red    { --step-color: var(--brand-red);    --step-number-bg: var(--brand-red-dark);  --step-number-text: var(--color-on-strong); }
 
 .uni2-step-number {
-  background-blend-mode: soft-light, normal;
-  background-image: var(--texture-grain), linear-gradient(135deg, var(--step-dark) 0 24%, var(--step-color) 48% 100%);
+  background-color: var(--step-number-bg);
+  background-image: var(--texture-grain);
+  background-blend-mode: soft-light;
   border-radius: 999px;
-  color: var(--color-on-strong);
+  color: var(--step-number-text);
   display: grid;
   height: 48px;
   margin-bottom: 18px;
@@ -728,7 +753,7 @@ html {
 
 .uni2-carousel-dot::before {
   background: transparent;
-  border: 2px solid var(--color-action-primary);
+  border: 2px solid var(--color-action-on-surface);
   border-radius: 50%;
   content: "";
   height: 12px;
@@ -736,7 +761,7 @@ html {
 }
 
 .uni2-carousel-dot[aria-current="true"]::before {
-  background: var(--color-action-primary);
+  background: var(--color-action-on-surface);
 }
 
 .uni2-ad-card {
@@ -846,8 +871,8 @@ html {
 }
 
 .uni2-hours-chip-blue    { background: var(--color-on-strong);       color: var(--brand-blue); }
-.uni2-hours-chip-yellow  { background: var(--brand-yellow);     color: #2d2606; }
-.uni2-hours-chip-green   { background: var(--brand-green-dark);   color: #ffffff; }
+.uni2-hours-chip-yellow  { background: var(--brand-yellow); color: var(--color-on-bright); }
+.uni2-hours-chip-green   { background: var(--brand-green);  color: var(--color-on-bright); }
 .uni2-hours-chip-muted   { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.86); }
 
 .uni2-schedule-card {
@@ -945,7 +970,7 @@ html {
 .uni2-navbar .nav-link:hover,
 .uni2-navbar .nav-link.active {
   background: rgba(63, 81, 181, 0.08);
-  color: var(--brand-blue) !important;
+  color: var(--color-action-on-surface) !important;
 }
 
 .uni2-navbar .navbar-toggler {
@@ -1040,11 +1065,11 @@ html {
 .uni2-navbar .uni2-user-menu-link:hover,
 .uni2-navbar .uni2-user-menu-link:focus {
   background: rgba(63, 81, 181, 0.08);
-  color: var(--brand-blue);
+  color: var(--color-action-on-surface);
 }
 
 .uni2-user-menu-link i {
-  color: var(--brand-blue);
+  color: var(--color-action-on-surface);
   flex: 0 0 auto;
   font-size: 1rem;
   width: 1.1rem;
@@ -1111,8 +1136,8 @@ html {
 }
 
 .btn-outline-primary {
-  color: var(--color-action-primary);
-  border-color: var(--color-action-primary);
+  color: var(--color-action-on-surface);
+  border-color: var(--color-action-on-surface);
 }
 .btn-outline-primary:hover {
   background: var(--color-action-primary);
@@ -1173,7 +1198,7 @@ html {
 
 .form-control:focus,
 .form-select:focus {
-  border-color: var(--color-action-primary);
+  border-color: var(--color-action-on-surface);
   box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.12);
   outline: none;
 }
@@ -1187,7 +1212,7 @@ html {
 .form-control.is-invalid { border-color: var(--brand-red); }
 .invalid-feedback, .text-danger {
   font-size: 0.8rem;
-  color: var(--brand-red) !important;
+  color: var(--color-danger-text) !important;
   font-weight: 500;
 }
 
@@ -1542,10 +1567,12 @@ html {
 
 .uni2-detail-layout {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
   align-items: start;
+  gap: clamp(24px, 4vw, 52px);
+  grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
 }
+
+.uni2-detail-copy { min-width: 0; }
 
 .uni2-detail-copy h1 {
   color: var(--color-text);
@@ -1759,7 +1786,7 @@ html {
 }
 
 .uni2-benefit-meta i {
-  color: var(--brand-blue);
+  color: var(--color-action-on-surface);
 }
 
 .uni2-benefit-meta span {
@@ -1806,7 +1833,7 @@ html {
 
 .uni2-price-table thead th {
   background: rgba(63, 81, 181, 0.09);
-  color: var(--brand-blue);
+  color: var(--color-action-on-surface);
   font-size: 0.78rem;
   font-weight: 900;
   letter-spacing: 0.06em;
@@ -1884,6 +1911,15 @@ html {
   .uni2-hero::after {
     -webkit-mask-image: linear-gradient(122deg, transparent 0 58%, #000 58%);
     mask-image: linear-gradient(122deg, transparent 0 58%, #000 58%);
+  }
+
+  .uni2-hero-layout > div {
+    backdrop-filter: blur(10px);
+    background: var(--color-surface-translucent);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-card);
+    padding: clamp(20px, 6vw, 28px);
   }
 
   .uni2-carousel {

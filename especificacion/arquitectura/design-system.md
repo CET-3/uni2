@@ -3,7 +3,7 @@ type: "Decisión de arquitectura"
 title: "Design system interno"
 description: "Referencia visual interna para construir pantallas de Uni2."
 tags: [mvp, arquitectura, frontend]
-timestamp: 2026-06-28T00:00:00-03:00
+timestamp: 2026-07-13T00:00:00-03:00
 ---
 
 # Design system interno
@@ -34,9 +34,13 @@ El CSS propio usa los mismos cortes responsive de Bootstrap: `991.98px` para ada
 
 Los componentes visuales propios de Uni2 usan clases productivas con prefijo `uni2-` tanto en las pantallas reales como en el catálogo. Ejemplos: `uni2-hero`, `uni2-cta`, `uni2-section-heading`, `uni2-section-kicker`, `uni2-service-card`, `uni2-service-icon`, `uni2-benefit-band`, `uni2-benefit-mix-card`, `uni2-benefit-logo-cloud`, `uni2-benefit-logo-dot`, `uni2-ad-card`, `uni2-step-card`, `uni2-info-box`, `uni2-navbar` y `uni2-footer`.
 
+Las pantallas simples sin hero —por ejemplo login, credencial, cuotas y validación de credenciales— colocan su contenido dentro de `container py-5`. El container limita el ancho y mantiene el margen lateral en mobile; las filas y columnas internas deciden el ancho específico del formulario, card o tabla.
+
 La página interna `/design-system/` usa los componentes estándar de Bootstrap para su mobiliario documental: navegación, grillas, cards, badges, listas, espaciado, bordes y fondos. Esto evita mantener CSS propio para estructuras que Bootstrap ya resuelve y permite que el catálogo se concentre en mostrar los componentes propios de Uni2.
 
 Las secciones completas y los agrupadores se presentan como bandas o bloques sin card. Una card se usa solamente cuando representa una unidad individual con límite propio: un elemento repetido, un formulario, una métrica o un ejemplo aislado. No se anidan cards; si un bloque agrupa varias unidades que ya tienen borde o superficie propios, el agrupador queda sin borde.
+
+Una `uni2-service-card` navegable usa un enlace como elemento raíz, de modo que toda la card tenga una única semántica y una única zona interactiva. La etiqueta visual `.link` dentro de esa raíz es un `span`. Una card informativa o con botones propios agrega `uni2-service-card-static`; no recibe hover de navegación y sus acciones conservan su semántica independiente.
 
 Cuando el catálogo muestra un componente que también existe en producción, debe usar la misma clase productiva `uni2-*` que usa la pantalla real. El catálogo no define clases `ds-*`: su mobiliario documental se resuelve con componentes y utilidades de Bootstrap.
 
@@ -79,6 +83,14 @@ El tema se determina antes de cargar las hojas de estilo para evitar un destello
 
 El chrome incluye un enlace para saltar directamente al contenido principal. Todos los enlaces, botones, controles de formulario y elementos con navegación por teclado reciben un anillo de foco visible mediante `--color-focus-ring`, con un valor de contraste específico para cada tema.
 
+Los colores institucionales no se usan directamente como texto cuando no alcanzan el contraste necesario. `--color-action-primary` y `--color-action-primary-hover` quedan reservados para fondos de acciones fuertes. Los enlaces, botones con contorno, encabezados interactivos e iconos sobre superficies usan `--color-action-on-surface`, que cambia a un tono más claro en el tema oscuro. Los textos de éxito, advertencia y error usan sus propios tokens semánticos para conservar al menos una relación de contraste de 4.5:1 sobre la superficie de cada tema.
+
+Los componentes que alternan colores de marca también definen el color de su contenido. Los números de `uni2-step-card` usan fondo azul o rojo oscuro con texto claro, y fondo amarillo o verde con texto oscuro. Los chips de horario amarillos y verdes siguen el mismo criterio. El color de marca sigue visible en bordes y fondos, pero no decide por sí solo el color del texto.
+
+En anchos menores a `md`, el contenido de `uni2-hero` se apoya sobre una superficie translúcida. Las diagonales institucionales permanecen como fondo, sin cruzarse visualmente con el texto ni depender de una posición particular del título o de la descripción.
+
+Cuando una tabla contiene controles repetidos, cada control debe nombrar el dato de su fila. En el cobro de cuotas, cada checkbox tiene una etiqueta visualmente oculta con el período de la cuota; no se usa una etiqueta genérica como "Elegir" como único nombre accesible.
+
 Las animaciones y transiciones respetan `prefers-reduced-motion`. En ese modo se eliminan los desplazamientos decorativos, el scroll deja de ser animado y los carruseles comienzan pausados.
 
 El carrusel de publicidades ofrece controles anterior, pausa/reanudación y siguiente, además de indicadores con un área interactiva de `44px`. Puede recorrerse con las flechas del teclado cuando recibe foco, se pausa durante interacción con puntero, touch o teclado y no anuncia automáticamente cada cambio a lectores de pantalla. Cada publicidad informa su posición dentro del conjunto. Si hay una sola publicidad, no se muestran controles innecesarios.
@@ -94,6 +106,8 @@ Se usa en páginas de detalle con rutas de dos o tres niveles. No se usa en la h
 El partial resuelve `Inicio` y su URL como valores por defecto. Las páginas pasan explícitamente `parent_url`, `parent_label` y `current_label`; también pueden reemplazar `home_url`, `home_label` y `aria_label` cuando una muestra o contexto lo necesita. Esta interfaz cubre la jerarquía corta del MVP sin introducir listas armadas en las views.
 
 Las páginas de categoría, producto/servicio, comercio disponible y comercio no disponible usan este componente. Actividad comercial conserva la decisión específica de no mostrar breadcrumb.
+
+En viewport de escritorio, las páginas públicas de detalle distribuyen introducción y panel en dos columnas mediante `uni2-detail-layout`. Por debajo de `lg` se apilan en una columna para mantener una lectura cómoda y evitar comprimir tablas o datos de contacto.
 
 ## Alertas UNI2 compartidas
 

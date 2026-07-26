@@ -73,7 +73,11 @@
                             {% for cuota in cuotas_deudoras %}
                                 <tr>
                                     <td>
+                                        <label class="visually-hidden" for="cuota-{{ cuota.cuota.id }}">
+                                            Cobrar cuota {{ cuota.cuota.periodo }}
+                                        </label>
                                         <input
+                                            id="cuota-{{ cuota.cuota.id }}"
                                             class="form-check-input cuota-cobro-check"
                                             type="checkbox"
                                             name="cuotas_ids"
@@ -92,7 +96,7 @@
                                     <td>{{ cuota.estado_display }}</td>
                                 </tr>
                             {% empty %}
-                                <tr><td colspan="8">El asociado no tiene cuotas pendientes.</td></tr>
+                                <tr><td colspan="9">El asociado no tiene cuotas pendientes.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
