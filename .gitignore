@@ -1,21 +1,34 @@
-*.swp
-.env.prod
-.env.production
-.venv_tests/
-**/__pycache__/
-.superpowers/
-docs/superpowers/
-data/
-*.swp
+# Variables de entorno
 .env
 .env.prod
 .env.production
+
+# Entornos, cachés y archivos locales de Python
+.venv/
 .venv_tests/
 **/__pycache__/
+.pytest_cache/
+*.py[cod]
+db.sqlite3
+test.sqlite3
+
+# Datos operativos y archivos generados
+data/
+analisis_padron/
+media/
+tmp/
+*.xlsx
+
+# Configuración local de asistentes y herramientas
+.agents/
+.claude/
+.codex/
+.opencode/
 .vercel/
 .superpowers/
 docs/superpowers/
-data/
-db.sqlite3
-test.sqlite3
-media/
+opencode.json
+
+# Editores y sistema operativo
+*.swp
+.DS_Store

@@ -3,7 +3,7 @@ type: "Arquitectura"
 title: "Arquitectura actual del código"
 description: "Organización por dominio y experiencia de usuario."
 tags: [mvp, arquitectura]
-timestamp: 2026-06-22T00:00:00-03:00
+timestamp: 2026-07-26T00:00:00-03:00
 ---
 
 # Arquitectura actual del código
@@ -29,6 +29,12 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
 - La carpeta `templates/comercios/` contiene el flujo del comercio.
 - La carpeta `templates/web/` agrupa el sitio público.
 - El admin de Django queda como soporte técnico y no como navegación principal del backoffice.
+
+### Archivos locales y datos operativos
+
+El repositorio versiona el código, las migraciones, las pruebas, la especificación OKF y solamente datos de ejemplo sintéticos. Los padrones reales, las planillas de importación, los resultados de análisis, las bases de datos locales y los archivos media no se versionan. Deben guardarse en las rutas locales ignoradas por Git, como `data/`, `analisis_padron/` y `media/`.
+
+Si una prueba necesita datos personales, debe usar información ficticia o anonimizada dentro de fixtures de prueba explícitas. Los prototipos temporales y la configuración personal de asistentes de desarrollo tampoco forman parte de la estructura del proyecto.
 
 ### Criterio de separación en la especificación
 
