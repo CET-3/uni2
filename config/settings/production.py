@@ -4,17 +4,34 @@ import dj_database_url
 
 from .base import *  # noqa: F403
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+def _env_list(name):
+    return [value.strip() for value in os.environ.get(name, "").split(",") if value.strip()]
+
+
+def _unique(values):
+    return list(dict.fromkeys(values))
+
+
+DEBUG = False
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+_vercel_hosts = [
+    host
+    for variable in ("VERCEL_URL", "VERCEL_BRANCH_URL", "VERCEL_PROJECT_PRODUCTION_URL")
+    if (host := os.environ.get(variable))
+]
 
-_csrf_origins = [o for o in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if o]
-if vercel_url := os.environ.get("VERCEL_URL"):
-    _csrf_origins.append(f"https://{vercel_url}")
-CSRF_TRUSTED_ORIGINS = _csrf_origins
+ALLOWED_HOSTS = _unique([*_env_list("ALLOWED_HOSTS"), *_vercel_hosts])
+CSRF_TRUSTED_ORIGINS = _unique(
+    [*_env_list("CSRF_TRUSTED_ORIGINS"), *(f"https://{host}" for host in _vercel_hosts)]
+)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 3600
 
 # --- Base de datos ----------------------------------------------------------
 DATABASES = {

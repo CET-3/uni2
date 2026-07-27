@@ -1,8 +1,9 @@
 from datetime import date
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 
 from asociados.models import Asociado, Curso
 from comercios.models import ActividadComercial, Comercio
@@ -36,9 +37,15 @@ ATENCION_MUTUAL_PERMISSIONS = (
 
 
 class Command(BaseCommand):
-    help = "Carga datos iniciales para desarrollo local de Uni2."
+    help = "Carga datos ficticios para desarrollo local de Uni2."
 
     def handle(self, *args, **options):
+        if not settings.ALLOW_DEMO_DATA:
+            raise CommandError(
+                "carga_inicial sólo está habilitado en desarrollo local y tests; "
+                "no debe ejecutarse sobre producción."
+            )
+
         ensure_default_groups()
         permisos_gestion = Permission.objects.filter(
             content_type__app_label="gestion",
