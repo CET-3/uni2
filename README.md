@@ -7,15 +7,17 @@ Sistema de gestión para la Mutual Escolar del CET 3.
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
-## Setup local
+## Setup local para alumnos (SQLite)
+
+SQLite viene incluido con Python y no requiere instalar ni configurar un
+servidor de base de datos.
 
 ```bash
 # Instalar dependencias
 uv sync
 
-# Copiar variables de entorno
+# Usar el perfil local con SQLite
 cp .env.example .env
-# Editar .env con las credenciales locales si es necesario
 
 # Aplicar migraciones
 uv run python manage.py migrate
@@ -26,6 +28,31 @@ uv run python manage.py carga_inicial
 # Levantar servidor
 uv run python manage.py runserver
 ```
+
+La base se guarda en el archivo local `db.sqlite3`. Ese archivo no se versiona
+y cada alumno tiene sus propios datos.
+
+## Setup local con PostgreSQL
+
+Quienes tengan PostgreSQL instalado pueden usar el mismo proyecto y los mismos
+settings con otro archivo de variables:
+
+```bash
+uv sync
+cp .env.postgres.example .env
+```
+
+Después hay que editar `.env` con las credenciales locales, crear la base
+indicada en `DB_NAME` y ejecutar los mismos comandos:
+
+```bash
+uv run python manage.py migrate
+uv run python manage.py carga_inicial
+uv run python manage.py runserver
+```
+
+En ambos perfiles Django usa `config.settings.local`. `DB_ENGINE` selecciona
+`sqlite` o `postgres`; no hace falta modificar código para cambiar de motor.
 
 Para probar desde un teléfono conectado a la misma red Wi-Fi que la computadora:
 
@@ -53,7 +80,11 @@ También queda habilitada para desarrollo local desde `http://192.168.18.138:800
 ## Tests
 
 ```bash
+# Usa el motor configurado en el archivo .env
 uv run pytest
+
+# Verificación explícita con SQLite
+DB_ENGINE=sqlite uv run pytest
 ```
 
 ## Agregar dependencias
