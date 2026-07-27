@@ -1,0 +1,79 @@
+import json
+import os
+import subprocess
+import sys
+
+
+def load_production_settings(**variables):
+    environment = os.environ.copy()
+    for name in (
+        "ALLOWED_HOSTS",
+        "CSRF_TRUSTED_ORIGINS",
+        "DEBUG",
+        "VERCEL_BRANCH_URL",
+        "VERCEL_PROJECT_PRODUCTION_URL",
+        "VERCEL_URL",
+    ):
+        environment.pop(name, None)
+
+    environment.update(
+        {
+            "DATABASE_URL": "sqlite:///:memory:",
+            "SECRET_KEY": "test-secret-key",
+            **variables,
+        }
+    )
+    script = """
+import json
+from config.settings import production
+
+print(json.dumps({
+    "allowed_hosts": production.ALLOWED_HOSTS,
+    "csrf_cookie_secure": production.CSRF_COOKIE_SECURE,
+    "csrf_trusted_origins": production.CSRF_TRUSTED_ORIGINS,
+    "debug": production.DEBUG,
+    "hsts_seconds": production.SECURE_HSTS_SECONDS,
+    "secure_ssl_redirect": production.SECURE_SSL_REDIRECT,
+    "session_cookie_secure": production.SESSION_COOKIE_SECURE,
+}))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        check=True,
+        capture_output=True,
+        env=environment,
+        text=True,
+    )
+    return json.loads(result.stdout)
+
+
+def test_produccion_no_permite_activar_debug_desde_el_entorno():
+    production = load_production_settings(DEBUG="True")
+
+    assert production["debug"] is False
+    assert production["secure_ssl_redirect"] is True
+    assert production["session_cookie_secure"] is True
+    assert production["csrf_cookie_secure"] is True
+    assert production["hsts_seconds"] == 3600
+
+
+def test_produccion_admite_hosts_configurados_y_urls_exactas_de_vercel():
+    production = load_production_settings(
+        ALLOWED_HOSTS=" mutual.example ,api.mutual.example,mutual.example",
+        CSRF_TRUSTED_ORIGINS=" https://mutual.example ",
+        VERCEL_URL="uni2-deploy.vercel.app",
+        VERCEL_BRANCH_URL="uni2-main.vercel.app",
+        VERCEL_PROJECT_PRODUCTION_URL="mutual.example",
+    )
+
+    assert production["allowed_hosts"] == [
+        "mutual.example",
+        "api.mutual.example",
+        "uni2-deploy.vercel.app",
+        "uni2-main.vercel.app",
+    ]
+    assert production["csrf_trusted_origins"] == [
+        "https://mutual.example",
+        "https://uni2-deploy.vercel.app",
+        "https://uni2-main.vercel.app",
+    ]
