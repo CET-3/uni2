@@ -2,6 +2,8 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core.management import call_command
+from django.core.management.base import CommandError
+from django.test import override_settings
 
 from asociados.models import Asociado
 from comercios.models import ActividadComercial, Comercio
@@ -12,6 +14,15 @@ from gestion.permissions import GESTION_COBRAR_CUOTAS, GESTION_IMPORTAR_ASOCIADO
 SERVICIOS_VERCEL = {"Fotocopias", "Uniformes", "Bicicleta solidaria", "Cuadernillos y anillado"}
 RUBROS_VERCEL = {"Gastronomía", "Actividad física", "Belleza", "Vestimenta", "Educación", "Tecnología y accesorios"}
 COMERCIOS_VERCEL = {"Alto Drugstore", "Librería Muñoz", "Atenas Gimnasio", "Andromeda Studio", "Carolina's Closet", "Techno Store"}
+
+
+@pytest.mark.django_db
+@override_settings(ALLOW_DEMO_DATA=False)
+def test_carga_inicial_rechaza_entornos_sin_datos_demo():
+    with pytest.raises(CommandError, match="no debe ejecutarse sobre producción"):
+        call_command("carga_inicial")
+
+    assert not get_user_model().objects.filter(username="admin").exists()
 
 
 @pytest.mark.django_db

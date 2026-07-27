@@ -39,8 +39,12 @@ de datos y exige `DATABASE_URL`.
 - Antes de integrar cambios de persistencia o consultas, se debe verificar al
   menos SQLite. Los cambios que dependan del comportamiento del motor también
   deben probarse con PostgreSQL.
-- Cambiar de motor no migra datos existentes. Cada base se inicializa aplicando
-  migraciones y ejecutando `carga_inicial`.
+- Cambiar de motor no migra datos existentes. Cada base local se inicializa
+  aplicando migraciones y puede recibir los datos ficticios de `carga_inicial`.
+- `carga_inicial` sólo está habilitado en desarrollo local y tests. Producción
+  recibe migraciones mediante el procedimiento operativo documentado y sus
+  datos se administran por los flujos previstos; nunca carga usuarios con
+  contraseñas de demostración.
 
 Los comandos de instalación y puesta en marcha se mantienen en el
 [README del proyecto](../../README.md).
