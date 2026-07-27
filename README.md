@@ -66,7 +66,7 @@ Después abrir desde el teléfono:
 http://192.168.18.138:8000
 ```
 
-Usuarios iniciales:
+Usuarios ficticios creados sólo en desarrollo local:
 
 - Gestión/admin técnico: `admin` / `admin1234`
 - Atención de mutual y asociado de prueba: `atencion` / `atencion1234`
@@ -102,39 +102,59 @@ git add pyproject.toml uv.lock
 
 ## Deploy
 
-El deploy es automático via GitHub → Vercel al hacer push a `main`.
+Vercel acepta deploys automáticos únicamente desde `main`. Los previews de
+otros branches están deshabilitados hasta disponer de una base PostgreSQL
+separada de producción.
 
-Para deployar manualmente:
+Cuando la integración Git está habilitada, fusionar un PR en `main` inicia el
+deploy productivo. Como alternativa manual y controlada:
 
 ```bash
-vercel --prod
+vercel deploy --prod --skip-domain
+vercel inspect URL_DEL_DEPLOY --wait
+vercel promote URL_DEL_DEPLOY
 ```
 
-Variables de entorno necesarias en Vercel (setear desde el dashboard):
+Variables de entorno de **Production** necesarias en Vercel:
+
 - `SECRET_KEY`
 - `DATABASE_URL`
 - `ALLOWED_HOSTS`
 - `CSRF_TRUSTED_ORIGINS`
 
-### Migraciones y carga inicial en producción
+`ALLOWED_HOSTS` lleva nombres de dominio sin `https://`;
+`CSRF_TRUSTED_ORIGINS`, orígenes completos con `https://`. Los hosts exactos
+generados por Vercel se agregan automáticamente mediante sus variables de
+sistema. En Vercel debe permanecer habilitada la opción **Automatically expose
+System Environment Variables**.
 
-Las migraciones **no** se ejecutan automáticamente dentro de la función serverless
-de Vercel (se eliminó para no saturar el pool de conexiones de Supabase).
-Tampoco los comandos de gestión (`carga_inicial`).
+`DEBUG` está deshabilitado por código en producción y no se configura mediante
+una variable. `SECRET_KEY` debe ser un valor aleatorio largo; cambiarlo cierra
+las sesiones existentes.
 
-Para correrlos hay que hacerlo desde la máquina local apuntando a la base de
-producción. Obtené la DATABASE_URL desde el dashboard de Vercel
-(Project → Settings → Environment Variables) o desde Supabase
-(Supabase → Project Settings → Database → Connection string → URI):
+### Migraciones en producción
+
+El handler serverless no ejecuta migraciones ni comandos de carga. Cuando un PR
+incluye migraciones, después de aprobarlo y antes de fusionarlo se revisa el
+plan usando las variables de Production guardadas en Vercel:
 
 ```bash
-# Migraciones
-DATABASE_URL="postgresql://..." uv run python manage.py migrate
-
-# Carga inicial de datos (idempotente)
-DATABASE_URL="postgresql://..." uv run python manage.py carga_inicial
+vercel env run --environment production -- \
+  env DJANGO_SETTINGS_MODULE=config.settings.production \
+  uv run python manage.py migrate --plan
 ```
 
-> **Importante**: después de correr migraciones o carga inicial, si el deploy
-> anterior falló, hacer un nuevo push (commit vacío o reploy manual desde Vercel)
-> para que la función serverless arranque fresca con la base actualizada.
+Si el plan es correcto y existe un respaldo adecuado para un cambio riesgoso:
+
+```bash
+vercel env run --environment production -- \
+  env DJANGO_SETTINGS_MODULE=config.settings.production \
+  uv run python manage.py migrate
+```
+
+Las migraciones deben ser compatibles con la versión que continúa atendiendo
+tráfico hasta que se fusione el PR. Los cambios destructivos se dividen en más
+de una entrega.
+
+`carga_inicial` contiene usuarios y contenido ficticios. Sólo funciona con
+settings locales o de test y nunca se ejecuta sobre producción.
