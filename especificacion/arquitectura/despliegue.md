@@ -14,13 +14,16 @@ el inicio de una función serverless nunca modifique la base de datos.
 
 ### Responsabilidades
 
-- `api/index.py` expone la aplicación WSGI y no ejecuta consultas, migraciones
-  ni cargas de datos.
+- Vercel detecta el proyecto Django mediante `manage.py`, encuentra la
+  aplicación WSGI y empaqueta la función sin un entrypoint `api/index.py`.
+- `manage.py` selecciona `config.settings.production` cuando Vercel expone
+  `VERCEL=1`; fuera de Vercel conserva los settings locales. Un valor vacío de
+  `DJANGO_SETTINGS_MODULE` no impide esta selección segura.
 - El build usa Python 3.12, `pyproject.toml` y `uv.lock`; no mantiene una
   segunda lista de dependencias en archivos `requirements*.txt`.
-- El build ejecuta `collectstatic` mediante `uv` y genera el manifiesto de
-  WhiteNoise antes de empaquetar la función. `staticfiles/` es un artefacto y
-  no se versiona.
+- El soporte Django de Vercel detecta y publica los archivos estáticos en su
+  CDN. WhiteNoise conserva el manifiesto y el servicio de respaldo dentro de
+  Django. `staticfiles/` es un artefacto y no se versiona.
 - Las migraciones se revisan y ejecutan como un paso explícito de operación.
 - `carga_inicial` contiene únicamente datos ficticios de desarrollo y está
   bloqueado en producción mediante `ALLOW_DEMO_DATA=False`.
@@ -47,9 +50,11 @@ el inicio de una función serverless nunca modifique la base de datos.
 
 ### Ramas y entornos
 
-`vercel.json` habilita deploy automático para `main` y lo deshabilita para el
-resto de los branches. Los previews permanecen apagados mientras no exista una
-base PostgreSQL de Preview separada, con credenciales y datos ficticios.
+`vercel.json` mantiene solamente las decisiones propias del proyecto: región y
+ramas desplegables. Habilita deploy automático para `main` y lo deshabilita
+para el resto de los branches. Los previews permanecen apagados mientras no
+exista una base PostgreSQL de Preview separada, con credenciales y datos
+ficticios.
 
 Nunca se configura un Preview con `DATABASE_URL`, `SECRET_KEY` o credenciales
 de storage pertenecientes a Production.

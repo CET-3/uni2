@@ -115,9 +115,10 @@ vercel inspect URL_DEL_DEPLOY --wait
 vercel promote URL_DEL_DEPLOY
 ```
 
-Durante el build, Vercel usa `uv` y `uv.lock`, ejecuta `collectstatic` y genera
-el manifiesto de WhiteNoise. `staticfiles/` es un artefacto del deploy: no se
-prepara ni se versiona manualmente.
+Vercel detecta `manage.py`, instala el entorno desde `pyproject.toml` y
+`uv.lock`, encuentra la aplicación WSGI y publica los archivos estáticos en su
+CDN. `staticfiles/` es un artefacto del deploy: no se prepara ni se versiona
+manualmente.
 
 Variables de entorno de **Production** necesarias en Vercel:
 
@@ -138,9 +139,10 @@ las sesiones existentes.
 
 ### Migraciones en producción
 
-El handler serverless no ejecuta migraciones ni comandos de carga. Cuando un PR
-incluye migraciones, después de aprobarlo y antes de fusionarlo se revisa el
-plan usando las variables de Production guardadas en Vercel:
+El arranque de la aplicación en Vercel no ejecuta migraciones ni comandos de
+carga. Cuando un PR incluye migraciones, después de aprobarlo y antes de
+fusionarlo se revisa el plan usando las variables de Production guardadas en
+Vercel:
 
 ```bash
 vercel env run --environment production -- \
