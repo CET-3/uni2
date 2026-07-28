@@ -4,9 +4,19 @@ import os
 import sys
 
 
+def configure_settings_module():
+    if os.environ.get("DJANGO_SETTINGS_MODULE"):
+        return
+
+    if os.environ.get("VERCEL") == "1":
+        os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings.production"
+    else:
+        os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings.local"
+
+
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
+    configure_settings_module()
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

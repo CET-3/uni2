@@ -1,24 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "version": 2,
   "git": {
     "deploymentEnabled": {
       "*": false,
       "main": true
     }
   },
-  "buildCommand": "uv run python manage.py collectstatic --noinput",
-  "functions": {
-    "api/index.py": {
-      "maxDuration": 60,
-      "includeFiles": "../templates/**",
-      "regions": ["gru1"]
-    }
-  },
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "api/index.py"
-    }
-  ]
+  "regions": ["gru1"]
 }
