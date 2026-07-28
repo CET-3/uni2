@@ -59,6 +59,11 @@ para el resto de los branches. Los previews permanecen apagados mientras no
 exista una base PostgreSQL de Preview separada, con credenciales y datos
 ficticios.
 
+GitHub Actions ejecuta `pytest` con Python 3.12, las dependencias fijadas en
+`uv.lock` y SQLite para cada PR y cada actualización de `main`. El check
+`pytest (SQLite)` debe aprobarse antes de fusionar. El CI no recibe secretos ni
+credenciales de PostgreSQL.
+
 Nunca se configura un Preview con `DATABASE_URL`, `SECRET_KEY` o credenciales
 de storage pertenecientes a Production.
 
