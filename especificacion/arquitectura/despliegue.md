@@ -16,8 +16,11 @@ el inicio de una función serverless nunca modifique la base de datos.
 
 - `api/index.py` expone la aplicación WSGI y no ejecuta consultas, migraciones
   ni cargas de datos.
-- El build ejecuta `collectstatic` y genera el manifiesto de WhiteNoise antes
-  de empaquetar la función. `staticfiles/` es un artefacto y no se versiona.
+- El build usa Python 3.12, `pyproject.toml` y `uv.lock`; no mantiene una
+  segunda lista de dependencias en archivos `requirements*.txt`.
+- El build ejecuta `collectstatic` mediante `uv` y genera el manifiesto de
+  WhiteNoise antes de empaquetar la función. `staticfiles/` es un artefacto y
+  no se versiona.
 - Las migraciones se revisan y ejecutan como un paso explícito de operación.
 - `carga_inicial` contiene únicamente datos ficticios de desarrollo y está
   bloqueado en producción mediante `ALLOW_DEMO_DATA=False`.
