@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 def test_vercel_recolecta_estaticos_y_despliega_solo_main():
     config = json.loads((BASE_DIR / "vercel.json").read_text(encoding="utf-8"))
 
-    assert config["buildCommand"] == "python manage.py collectstatic --noinput"
+    assert config["buildCommand"] == "uv run python manage.py collectstatic --noinput"
     assert config["git"]["deploymentEnabled"] == {
         "*": False,
         "main": True,
