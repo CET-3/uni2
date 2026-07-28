@@ -87,6 +87,9 @@ uv run pytest
 DB_ENGINE=sqlite uv run pytest
 ```
 
+Cada PR y cada actualización de `main` ejecutan la misma suite con SQLite en
+GitHub Actions. El check requerido se llama `pytest (SQLite)`.
+
 ## Agregar dependencias
 
 ```bash
