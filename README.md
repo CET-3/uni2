@@ -117,8 +117,10 @@ vercel promote URL_DEL_DEPLOY
 
 Vercel detecta `manage.py`, instala el entorno desde `pyproject.toml` y
 `uv.lock`, encuentra la aplicación WSGI y publica los archivos estáticos en su
-CDN. `staticfiles/` es un artefacto del deploy: no se prepara ni se versiona
-manualmente.
+CDN. `vercel.json` declara el preset `django` para que esta detección tenga
+prioridad incluso si el proyecto remoto conservaba el preset `Other` de una
+configuración anterior. `staticfiles/` es un artefacto del deploy: no se
+prepara ni se versiona manualmente.
 
 Variables de entorno de **Production** necesarias en Vercel:
 
