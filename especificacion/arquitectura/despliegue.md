@@ -16,6 +16,9 @@ el inicio de una función serverless nunca modifique la base de datos.
 
 - Vercel detecta el proyecto Django mediante `manage.py`, encuentra la
   aplicación WSGI y empaqueta la función sin un entrypoint `api/index.py`.
+- `vercel.json` declara explícitamente el preset `django` para que la
+  configuración versionada reemplace cualquier preset `Other` heredado en el
+  proyecto remoto.
 - `manage.py` selecciona `config.settings.production` cuando Vercel expone
   `VERCEL=1`; fuera de Vercel conserva los settings locales. Un valor vacío de
   `DJANGO_SETTINGS_MODULE` no impide esta selección segura.

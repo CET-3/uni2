@@ -14,6 +14,7 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 def test_vercel_usa_django_zero_config_y_despliega_solo_main():
     config = json.loads((BASE_DIR / "vercel.json").read_text(encoding="utf-8"))
 
+    assert config["framework"] == "django"
     assert config["git"]["deploymentEnabled"] == {
         "*": False,
         "main": True,
