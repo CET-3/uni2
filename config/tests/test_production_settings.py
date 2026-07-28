@@ -15,6 +15,9 @@ def load_production_settings(**variables):
         "VERCEL_URL",
     ):
         environment.pop(name, None)
+    for name in tuple(environment):
+        if name.startswith("AWS_"):
+            environment.pop(name)
 
     environment.update(
         {
@@ -35,6 +38,8 @@ print(json.dumps({
     "hsts_seconds": production.SECURE_HSTS_SECONDS,
     "secure_ssl_redirect": production.SECURE_SSL_REDIRECT,
     "session_cookie_secure": production.SESSION_COOKIE_SECURE,
+    "storages": production.STORAGES,
+    "uses_legacy_staticfiles_storage": hasattr(production, "STATICFILES_STORAGE"),
 }))
 """
     result = subprocess.run(
@@ -55,6 +60,11 @@ def test_produccion_no_permite_activar_debug_desde_el_entorno():
     assert production["session_cookie_secure"] is True
     assert production["csrf_cookie_secure"] is True
     assert production["hsts_seconds"] == 3600
+    assert production["storages"]["default"]["BACKEND"] == "django.core.files.storage.FileSystemStorage"
+    assert production["storages"]["staticfiles"]["BACKEND"] == (
+        "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    )
+    assert production["uses_legacy_staticfiles_storage"] is False
 
 
 def test_produccion_admite_hosts_configurados_y_urls_exactas_de_vercel():
@@ -77,3 +87,16 @@ def test_produccion_admite_hosts_configurados_y_urls_exactas_de_vercel():
         "https://uni2-deploy.vercel.app",
         "https://uni2-main.vercel.app",
     ]
+
+
+def test_produccion_usa_s3_para_media_sin_cambiar_el_storage_de_estaticos():
+    production = load_production_settings(
+        AWS_ACCESS_KEY_ID="test-access-key",
+        AWS_SECRET_ACCESS_KEY="test-secret-key",
+        AWS_STORAGE_BUCKET_NAME="test-bucket",
+    )
+
+    assert production["storages"]["default"]["BACKEND"] == "storages.backends.s3.S3Storage"
+    assert production["storages"]["staticfiles"]["BACKEND"] == (
+        "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    )

@@ -115,9 +115,9 @@ vercel inspect URL_DEL_DEPLOY --wait
 vercel promote URL_DEL_DEPLOY
 ```
 
-Durante el build, Vercel ejecuta `collectstatic` y genera el manifiesto de
-WhiteNoise. `staticfiles/` es un artefacto del deploy: no se prepara ni se
-versiona manualmente.
+Durante el build, Vercel usa `uv` y `uv.lock`, ejecuta `collectstatic` y genera
+el manifiesto de WhiteNoise. `staticfiles/` es un artefacto del deploy: no se
+prepara ni se versiona manualmente.
 
 Variables de entorno de **Production** necesarias en Vercel:
 

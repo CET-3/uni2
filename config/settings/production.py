@@ -45,7 +45,10 @@ DATABASES = {
 # --- Archivos estáticos (WhiteNoise) ----------------------------------------
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")  # noqa: F405
 STATIC_ROOT = BASE_DIR / "staticfiles"  # noqa: F405
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}
 
 # --- Archivos subidos por usuarios ------------------------------------------
 # Vercel no ofrece filesystem persistente para uploads. Si se define un bucket
@@ -61,7 +64,4 @@ if os.environ.get("AWS_STORAGE_BUCKET_NAME"):
     AWS_QUERYSTRING_AUTH = False
     AWS_DEFAULT_ACL = "public-read"
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
-    STORAGES = {
-        "default": {"BACKEND": "storages.backends.s3.S3Storage"},
-        "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
-    }
+    STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
