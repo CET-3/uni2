@@ -11,6 +11,7 @@
 *.py[cod]
 db.sqlite3
 test.sqlite3
+staticfiles/
 
 # Datos operativos y archivos generados
 data/
