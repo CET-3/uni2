@@ -90,6 +90,11 @@ DB_ENGINE=sqlite uv run pytest
 Cada PR y cada actualización de `main` ejecutan la misma suite con SQLite en
 GitHub Actions. El check requerido se llama `pytest (SQLite)`.
 
+## Colaboración
+
+Todos los cambios se entregan mediante PRs. El paso a paso para crear una rama,
+probar y abrir el PR está en [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Agregar dependencias
 
 ```bash
@@ -104,6 +109,9 @@ git add pyproject.toml uv.lock
 ```
 
 ## Deploy
+
+La versión pública de Production está en
+<https://uni2-ashy.vercel.app/>.
 
 Vercel acepta deploys automáticos únicamente desde `main`. Los previews de
 otros branches están deshabilitados hasta disponer de una base PostgreSQL

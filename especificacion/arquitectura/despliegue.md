@@ -64,6 +64,16 @@ GitHub Actions ejecuta `pytest` con Python 3.12, las dependencias fijadas en
 `pytest (SQLite)` debe aprobarse antes de fusionar. El CI no recibe secretos ni
 credenciales de PostgreSQL.
 
+El repositorio es público para que los estudiantes puedan clonarlo sin
+pertenecer a la organización. Todo cambio se entrega mediante un PR. La rama
+`main` exige el check `pytest (SQLite)` actualizado, aplica la protección
+también a administradores y no admite force-push ni borrado. No se exige una
+segunda aprobación mientras el proyecto tenga una única mantenedora.
+
+El dominio público estable de Production es
+`https://uni2-ashy.vercel.app/`. Las URLs técnicas de deployments y previews
+permanecen detrás de Standard Protection de Vercel.
+
 Nunca se configura un Preview con `DATABASE_URL`, `SECRET_KEY` o credenciales
 de storage pertenecientes a Production.
 
