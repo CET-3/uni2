@@ -9,6 +9,11 @@ class ActividadComercial(models.Model):
         unique=True,
         help_text="Nombre del rubro o actividad principal del comercio.",
     )
+    descripcion = models.TextField(
+        "descripción",
+        blank=True,
+        help_text="Texto público que presenta el rubro en la página de beneficios.",
+    )
 
     class Meta:
         verbose_name = "Actividad comercial"
@@ -52,6 +57,10 @@ class Comercio(models.Model):
         max_length=150,
         help_text="Nombre público del comercio adherido.",
     )
+    descripcion = models.TextField(
+        "descripción",
+        help_text="Texto público que presenta la actividad o propuesta del comercio.",
+    )
     propietario = models.CharField(
         "propietario",
         max_length=150,
@@ -81,17 +90,6 @@ class Comercio(models.Model):
         null=True,
         help_text="Fecha en que se firmó o registró el convenio.",
     )
-    notas = models.TextField(
-        "notas",
-        blank=True,
-        null=True,
-        help_text="Notas internas para seguimiento administrativo.",
-    )
-    flyer_disponible = models.BooleanField(
-        "flyer disponible",
-        default=False,
-        help_text="Indica si existe un flyer o pieza de difusión disponible.",
-    )
     foto = models.ImageField(
         "foto",
         upload_to="comercios/",
@@ -115,7 +113,8 @@ class Comercio(models.Model):
     direccion = models.CharField(
         "dirección",
         max_length=255,
-        help_text="Dirección física del comercio.",
+        blank=True,
+        help_text="Dirección física del comercio, si tiene un local o espacio de atención.",
     )
     url_presencia_web = models.URLField(
         "presencia web",

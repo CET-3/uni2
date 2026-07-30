@@ -331,12 +331,16 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 
 | Clase | Uso |
 |---|---|
+| `uni2-benefit-page` | Fondo y espaciado de la página de actividad comercial |
+| `uni2-benefit-page-layout` | Composición vertical del encabezado y el listado |
 | `uni2-benefit-page-header` | Encabezado de la sección |
 | `uni2-benefit-list` | Contenedor de la lista de comercios |
-| `uni2-benefit-list-card` | Item clickeable de la lista |
+| `uni2-benefit-list-card` | Fila visual con acciones separadas |
 | `uni2-benefit-list-logo` | Logo circular del comercio |
 | `uni2-benefit-list-initials` | Variante de logo con iniciales de texto |
 | `uni2-benefit-list-body` | Contenido de texto del item |
+| `uni2-benefit-detail-link` | Nombre que enlaza al detalle del comercio |
+| `uni2-benefit-online-link` | Acción que abre la presencia web |
 | `uni2-benefit-meta` | Dirección e info secundaria |
 
 ### Horarios
@@ -383,11 +387,12 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | Clase | Uso |
 |---|---|
 | `uni2-commerce-detail` | Layout de página de detalle de comercio |
-| `uni2-commerce-benefit-row` | Fila de beneficio en detalle |
-| `uni2-commerce-benefit-logo` | Logo circular del comercio |
-| `uni2-commerce-benefit-logo--fallback` | Variante sin imagen (iniciales) |
-| `uni2-commerce-benefit-copy` | Texto del beneficio |
-| `uni2-commerce-benefit-text` | Descripción del beneficio en mayúsculas |
+| `uni2-commerce-identity` | Agrupa logo e información principal del comercio |
+| `uni2-commerce-identity-logo` | Logo circular junto al nombre del comercio |
+| `uni2-commerce-identity-logo--fallback` | Variante sin imagen (iniciales) |
+| `uni2-commerce-identity-copy` | Rubro, nombre y descripción del comercio |
+| `uni2-commerce-benefit-block` | Bloque amarillo destacado del beneficio |
+| `uni2-commerce-benefit-text` | Descripción del beneficio |
 
 ### Dashboard / Admin
 

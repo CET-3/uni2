@@ -91,7 +91,8 @@ C, Comercio D ni Comercio E.
 
 **Resultado esperado:** se ve información pública como nombre, actividad
 comercial, beneficio, dirección, teléfono, email o presencia web, si esos datos
-fueron cargados.
+fueron cargados. Al
+seleccionar `Visitar online`, la presencia web se abre en una pestaña nueva.
 
 ### PM-COMERCIO-PUBLICO-008 - No mostrar datos internos
 
@@ -100,8 +101,8 @@ fueron cargados.
 1. Abrir la sección `Comercios`.
 2. Revisar la información visible de un comercio publicado.
 
-**Resultado esperado:** no se ven notas internas, usuario asociado ni datos
-administrativos que no correspondan a visitantes.
+**Resultado esperado:** no se ven el usuario asociado ni datos administrativos
+que no correspondan a visitantes.
 
 ### PM-COMERCIO-PUBLICO-009 - Listado sin comercios publicados
 
@@ -120,6 +121,8 @@ administrativos que no correspondan a visitantes.
 1. Ir a `/comercios/<pk>/` de un comercio con estado `Pendiente`.
 
 **Resultado esperado:** no da error 404. Muestra "Este comercio estará disponible próximamente" con un enlace "Ver comercios adheridos".
+El breadcrumb muestra `Comercios > actividad comercial`, sin `Inicio` ni el
+nombre del comercio. Ambos niveles son enlaces.
 
 ### PM-COMERCIO-PUBLICO-011 - Revisar detalle de comercio firmado
 
@@ -127,7 +130,12 @@ administrativos que no correspondan a visitantes.
 
 1. Ir a `/comercios/<pk>/` de un comercio con estado `Firmado`.
 
-**Resultado esperado:** se ven nombre, actividad comercial, dirección, beneficio y datos de contacto del comercio.
+**Resultado esperado:** se ven nombre, descripción debajo del nombre, actividad
+comercial, beneficio y los datos públicos disponibles. Si el comercio no tiene
+dirección, no aparece un bloque de dirección vacío. El breadcrumb muestra
+`Comercios > actividad comercial`, sin `Inicio` ni el nombre del comercio.
+`Comercios` lleva a la sección de beneficios de la home y la actividad lleva a
+su listado de comercios.
 
 ### PM-COMERCIO-PUBLICO-012 - Revisar en pantalla chica
 

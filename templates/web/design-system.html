@@ -767,11 +767,11 @@
         <!-- 5. LISTA DE BENEFICIOS -->
         <div>
             <p class="h6 text-muted mb-2">Lista de beneficios</p>
-            <p class="small text-muted mb-3">Lista de comercios adheridos por categoría: logo circular, descuento y datos de contacto. Cada item enlaza a la página de detalle del comercio.</p>
+            <p class="small text-muted mb-3">Lista de comercios adheridos por categoría: logo circular, nombre y descripción, datos de contacto y descuento alineado a la derecha. Toda la card abre el detalle; “Visitar online” queda como acción independiente y abre la presencia web en otra pestaña.</p>
             <div class="border rounded-3 p-4 bg-body">
                 <div class="uni2-benefit-list">
-                    {% include "components/benefit_list_item.html" with url="#patrones" titulo="Alto Drugstore y Le Bon Break Store" iniciales="AD" beneficio="10% OFF" direccion="Alsina 189 / Hipólito Yrigoyen 731" url_presencia_web="https://example.com" only %}
-                    {% include "components/benefit_list_item.html" with url="#patrones" titulo="Latte Cafetería" iniciales="LC" beneficio="15% OFF" direccion="Mitre 766" url_presencia_web="https://example.com" only %}
+                    {% include "components/benefit_list_item.html" with url="#patrones" titulo="Alto Drugstore y Le Bon Break Store" descripcion="Bebidas, alimentos, snacks y productos de uso diario." iniciales="AD" beneficio="10% OFF" direccion="Alsina 189 / Hipólito Yrigoyen 731" url_presencia_web="https://example.com" only %}
+                    {% include "components/benefit_list_item.html" with url="#patrones" titulo="Latte Cafetería" descripcion="Un lugar para disfrutar un buen café y compartir momentos especiales." iniciales="LC" beneficio="15% OFF" direccion="Mitre 766" url_presencia_web="https://example.com" only %}
                 </div>
             </div>
         </div>
@@ -835,19 +835,23 @@
                 <section class="uni2-service-detail uni2-commerce-detail">
                     <div class="uni2-detail-layout">
                         <div class="uni2-detail-copy">
-                            <span class="uni2-eyebrow">Gastronomía y kioscos</span>
-                            <h1 class="uni2-titulo-principal">Alto Drugstore</h1>
+                            <div class="uni2-commerce-identity">
+                                <span class="uni2-commerce-identity-logo uni2-commerce-identity-logo--fallback">AD</span>
+                                <div class="uni2-commerce-identity-copy">
+                                    <span class="uni2-eyebrow">Gastronomía y kioscos</span>
+                                    <h1 class="uni2-titulo-principal">Alto Drugstore</h1>
+                                    <p>Bebidas, alimentos, snacks y productos de uso diario.</p>
+                                </div>
+                            </div>
                         </div>
                         <div class="uni2-detail-panel">
-                            <div class="uni2-commerce-benefit-row">
-                                <span class="uni2-commerce-benefit-logo uni2-commerce-benefit-logo--fallback">AD</span>
-                                <div class="uni2-commerce-benefit-copy">
-                                    <strong class="uni2-commerce-benefit-text">10% OFF en toda la tienda</strong>
-                                </div>
+                            <div class="uni2-commerce-benefit-block">
+                                <h2>Beneficio</h2>
+                                <strong class="uni2-commerce-benefit-text">10% OFF en toda la tienda</strong>
                             </div>
                             <div><h2>Dirección</h2><p>Alsina 189, General Roca</p></div>
                             <div><h2>Teléfono</h2><p>2984 123456</p></div>
-                            <div><a class="uni2-cta uni2-cta-secondary" href="#patrones">Visitar online</a></div>
+                            <div><a class="uni2-cta uni2-cta-secondary" href="https://example.com" target="_blank" rel="noopener noreferrer">Visitar online</a></div>
                         </div>
                     </div>
                 </section>
