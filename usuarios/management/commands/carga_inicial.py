@@ -213,12 +213,30 @@ class Command(BaseCommand):
 
         # ── Actividades comerciales (rubros) ──
 
-        gastronomia, _ = ActividadComercial.objects.get_or_create(nombre="Gastronomía")
-        act_fisica, _ = ActividadComercial.objects.get_or_create(nombre="Actividad física")
-        belleza, _ = ActividadComercial.objects.get_or_create(nombre="Belleza")
-        vestimenta, _ = ActividadComercial.objects.get_or_create(nombre="Vestimenta")
-        educacion, _ = ActividadComercial.objects.get_or_create(nombre="Educación")
-        tecnologia, _ = ActividadComercial.objects.get_or_create(nombre="Tecnología y accesorios")
+        gastronomia, _ = ActividadComercial.objects.get_or_create(
+            nombre="Gastronomía",
+            defaults={"descripcion": "Sabores y opciones para disfrutar en cada momento."},
+        )
+        act_fisica, _ = ActividadComercial.objects.get_or_create(
+            nombre="Actividad física",
+            defaults={"descripcion": "Espacios y propuestas para moverse, entrenar y sentirse bien."},
+        )
+        belleza, _ = ActividadComercial.objects.get_or_create(
+            nombre="Belleza",
+            defaults={"descripcion": "Servicios de cuidado personal y bienestar."},
+        )
+        vestimenta, _ = ActividadComercial.objects.get_or_create(
+            nombre="Vestimenta",
+            defaults={"descripcion": "Indumentaria y accesorios con beneficios para asociados."},
+        )
+        educacion, _ = ActividadComercial.objects.get_or_create(
+            nombre="Educación",
+            defaults={"descripcion": "Materiales y servicios para acompañar el aprendizaje."},
+        )
+        tecnologia, _ = ActividadComercial.objects.get_or_create(
+            nombre="Tecnología y accesorios",
+            defaults={"descripcion": "Tecnología, accesorios y soluciones para todos los días."},
+        )
 
         # ── Comercios ──
 
@@ -226,11 +244,11 @@ class Command(BaseCommand):
             nombre="Librería Sur",
             defaults={
                 "actividad_comercial": educacion,
+                "descripcion": "Librería y artículos escolares para estudiantes y familias.",
                 "propietario": "Marina López",
                 "beneficio_texto": "10% en útiles escolares",
                 "estado": Comercio.ESTADO_FIRMADO,
                 "fecha_convenio": date(2026, 3, 30),
-                "flyer_disponible": True,
                 "telefono": "2944-000111",
                 "direccion": "Mitre 123",
                 "ciudad": "General Roca",
@@ -243,10 +261,10 @@ class Command(BaseCommand):
             nombre="Alto Drugstore",
             defaults={
                 "actividad_comercial": gastronomia,
+                "descripcion": "Alimentos, bebidas y productos de uso diario.",
                 "propietario": "Carlos Gómez",
                 "beneficio_texto": "10% de descuento en compras al contado",
                 "estado": Comercio.ESTADO_FIRMADO,
-                "flyer_disponible": True,
                 "telefono": "2944-100111",
                 "direccion": "San Martín 250",
                 "ciudad": "General Roca",
@@ -257,10 +275,10 @@ class Command(BaseCommand):
             nombre="Librería Muñoz",
             defaults={
                 "actividad_comercial": educacion,
+                "descripcion": "Artículos de librería, útiles escolares y materiales de estudio.",
                 "propietario": "Ana Muñoz",
                 "beneficio_texto": "15% en todos los productos recibiendo Becas",
                 "estado": Comercio.ESTADO_FIRMADO,
-                "flyer_disponible": True,
                 "telefono": "2944-100222",
                 "direccion": "Mitre 340",
                 "ciudad": "General Roca",
@@ -271,10 +289,10 @@ class Command(BaseCommand):
             nombre="Atenas Gimnasio",
             defaults={
                 "actividad_comercial": act_fisica,
+                "descripcion": "Espacio de entrenamiento físico con clases y equipamiento.",
                 "propietario": "María Atenas Covelli",
                 "beneficio_texto": "1 clase gratis + 10% en cuotas",
                 "estado": Comercio.ESTADO_FIRMADO,
-                "flyer_disponible": True,
                 "telefono": "2944-100333",
                 "direccion": "Belgrano 500",
                 "ciudad": "General Roca",
@@ -285,10 +303,10 @@ class Command(BaseCommand):
             nombre="Andromeda Studio",
             defaults={
                 "actividad_comercial": belleza,
+                "descripcion": "Servicios de belleza, manicuría y peinados.",
                 "propietario": "Luciana López",
                 "beneficio_texto": "20% en manicuría y peinados",
                 "estado": Comercio.ESTADO_FIRMADO,
-                "flyer_disponible": True,
                 "telefono": "2944-100444",
                 "direccion": "Rivadavia 150",
                 "ciudad": "General Roca",
@@ -299,10 +317,10 @@ class Command(BaseCommand):
             nombre="Carolina's Closet",
             defaults={
                 "actividad_comercial": vestimenta,
+                "descripcion": "Indumentaria femenina urbana y formal.",
                 "propietario": "Carolina Fernández",
                 "beneficio_texto": "15% en indumentaria femenina",
                 "estado": Comercio.ESTADO_FIRMADO,
-                "flyer_disponible": True,
                 "telefono": "2944-100555",
                 "direccion": "Mitre 420",
                 "ciudad": "General Roca",
@@ -313,10 +331,10 @@ class Command(BaseCommand):
             nombre="Techno Store",
             defaults={
                 "actividad_comercial": tecnologia,
+                "descripcion": "Accesorios tecnológicos y asesoramiento especializado.",
                 "propietario": "Pedro Martínez",
                 "beneficio_texto": "10% en accesorios tecnológicos",
                 "estado": Comercio.ESTADO_FIRMADO,
-                "flyer_disponible": True,
                 "telefono": "2944-100666",
                 "direccion": "San Martín 600",
                 "ciudad": "General Roca",

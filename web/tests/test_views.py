@@ -397,6 +397,7 @@ def test_home_muestra_publicidades_activas_con_foto_y_links(client):
     actividad = ActividadComercial.objects.create(nombre="Librería")
     comercio = Comercio.objects.create(
         nombre="Librería Sur",
+        descripcion="Útiles, libros y materiales para acompañar el aprendizaje.",
         direccion="Mitre 123",
         actividad_comercial=actividad,
         beneficio_texto="10% en útiles",
@@ -681,6 +682,7 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
     actividad = ActividadComercial.objects.create(nombre="Librería")
     comercio = Comercio.objects.create(
         nombre="Librería Sur",
+        descripcion="Útiles, libros y materiales para acompañar el aprendizaje.",
         direccion="Mitre 123",
         actividad_comercial=actividad,
         beneficio_texto="10% en útiles",
@@ -700,18 +702,60 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
     contenido = response.content.decode()
     assert response.status_code == 200
     assert "Librería Sur" in contenido
+    assert "Útiles, libros y materiales para acompañar el aprendizaje." in contenido
     assert "10% en útiles" in contenido
     assert "Todos los comercios" not in contenido
     assert "Mitre 123" in contenido
-    assert "commerce-benefit-logo" in contenido
+    assert "uni2-commerce-identity-logo" in contenido
+    assert "uni2-commerce-benefit-block" in contenido
+    assert 'class="uni2-commerce-benefit-text"' in contenido
     assert "Visitar online" not in contenido
     assert "Visitar sitio" not in contenido
     assert 'class="uni2-breadcrumbs"' in contenido
-    assert 'aria-current="page">Librería Sur' in contenido
-    assert reverse("web:comercios") in contenido
+    breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
+    assert f'href="{reverse("web:inicio")}#beneficios">Comercios</a>' in breadcrumb
+    assert (
+        f'href="{reverse("web:actividad_comercial_detalle", args=[actividad.pk])}">'
+        "Librería</a>"
+    ) in breadcrumb
+    assert "Inicio" not in breadcrumb
+    assert "Librería Sur" not in breadcrumb
+    assert 'aria-current="page"' not in breadcrumb
     assert response_pendiente.status_code == 200
-    assert "próximamente" in response_pendiente.content.decode()
-    assert 'class="uni2-breadcrumbs"' in response_pendiente.content.decode()
+    contenido_pendiente = response_pendiente.content.decode()
+    assert "próximamente" in contenido_pendiente
+    breadcrumb_pendiente = re.search(
+        r'<nav class="uni2-breadcrumbs".*?</nav>',
+        contenido_pendiente,
+        re.DOTALL,
+    ).group()
+    assert f'href="{reverse("web:inicio")}#beneficios">Comercios</a>' in breadcrumb_pendiente
+    assert (
+        f'href="{reverse("web:actividad_comercial_detalle", args=[actividad.pk])}">'
+        "Librería</a>"
+    ) in breadcrumb_pendiente
+    assert "Inicio" not in breadcrumb_pendiente
+    assert "Librería Pendiente" not in breadcrumb_pendiente
+
+
+@pytest.mark.django_db
+def test_detalle_comercio_sin_direccion_no_muestra_bloque_vacio(client):
+    actividad = ActividadComercial.objects.create(nombre="Venta online")
+    comercio = Comercio.objects.create(
+        nombre="Emprendimiento virtual",
+        descripcion="Productos disponibles exclusivamente por internet.",
+        actividad_comercial=actividad,
+        beneficio_texto="10% en compras online",
+        estado=Comercio.ESTADO_FIRMADO,
+        direccion="",
+    )
+
+    response = client.get(reverse("web:comercio_detalle", args=[comercio.id]))
+
+    contenido = response.content.decode()
+    assert response.status_code == 200
+    assert "Emprendimiento virtual" in contenido
+    assert "<h2>Dirección</h2>" not in contenido
 
 
 @pytest.mark.django_db
@@ -719,6 +763,7 @@ def test_comercios_publicos_muestran_actividad_comercial(client):
     actividad = ActividadComercial.objects.create(nombre="Librería")
     Comercio.objects.create(
         nombre="Librería Zeta",
+        descripcion="Útiles escolares y materiales de estudio.",
         direccion="Mitre 123",
         actividad_comercial=actividad,
         beneficio_texto="10% en útiles",
@@ -727,6 +772,7 @@ def test_comercios_publicos_muestran_actividad_comercial(client):
     )
     Comercio.objects.create(
         nombre="Librería Alfa",
+        descripcion="Papelería y servicio de anillado.",
         direccion="San Martín 55",
         actividad_comercial=actividad,
         beneficio_texto="2x1 en anillados",
@@ -819,9 +865,13 @@ def test_categoria_detalle_404_si_inactiva_o_inexistente(client):
 
 @pytest.mark.django_db
 def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
-    actividad = ActividadComercial.objects.create(nombre="Gastronomía")
+    actividad = ActividadComercial.objects.create(
+        nombre="Gastronomía",
+        descripcion="Sabores y opciones para disfrutar en cada momento.",
+    )
     parrilla = Comercio.objects.create(
         nombre="Parrilla Don Pancho",
+        descripcion="Carnes a la parrilla y platos para compartir.",
         direccion="Mitre 100",
         actividad_comercial=actividad,
         beneficio_texto="10% de descuento",
@@ -831,6 +881,7 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     )
     Comercio.objects.create(
         nombre="Lo de Carlitos",
+        descripcion="Milanesas y comidas caseras.",
         direccion="Belgrano 200",
         actividad_comercial=actividad,
         beneficio_texto="2x1 en milanesas",
@@ -860,14 +911,55 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     assert "benefit-list-body" in contenido
     assert "benefit-meta" in contenido
     assert "uni2-discount" in contenido
-    assert "benefit-back" not in contenido
+    assert 'class="uni2-breadcrumbs"' in contenido
+    breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
+    assert f'href="{reverse("web:inicio")}#beneficios">Comercios</a>' in breadcrumb
+    assert 'aria-current="page">Gastronomía' in breadcrumb
+    assert f'href="{url}">Gastronomía</a>' not in breadcrumb
+    assert "Inicio" not in breadcrumb
     assert "Actividad comercial" not in contenido
-    assert "breadcrumb-item" not in contenido
+    assert "Sabores y opciones para disfrutar en cada momento." in contenido
     assert "Parrilla Don Pancho" in contenido
+    assert "Carnes a la parrilla y platos para compartir." in contenido
     assert "10% de descuento" in contenido
     assert "Lo de Carlitos" in contenido
-    assert reverse("web:comercio_detalle", args=[parrilla.pk]) in contenido
+    assert "Milanesas y comidas caseras." in contenido
+    detalle_parrilla_url = reverse("web:comercio_detalle", args=[parrilla.pk])
+    assert f'<a class="uni2-benefit-detail-link" href="{detalle_parrilla_url}">' in contenido
+    assert contenido.count(f'href="{detalle_parrilla_url}"') == 1
     assert "No Visible" not in contenido
+
+
+@pytest.mark.django_db
+def test_visitar_online_abre_la_presencia_web_en_una_pestania_nueva(client):
+    actividad = ActividadComercial.objects.create(nombre="Venta online")
+    presencia_web = "https://www.instagram.com/emprendimiento.prueba/"
+    comercio = Comercio.objects.create(
+        nombre="Emprendimiento de prueba",
+        descripcion="Productos disponibles por internet.",
+        actividad_comercial=actividad,
+        beneficio_texto="10% en compras",
+        estado=Comercio.ESTADO_FIRMADO,
+        url_presencia_web=presencia_web,
+    )
+    expected_link = re.compile(
+        rf'<a[^>]+href="{re.escape(presencia_web)}"'
+        r'[^>]+target="_blank"[^>]+rel="noopener noreferrer"[^>]*>'
+    )
+
+    page_urls = (
+        reverse("web:comercios"),
+        reverse("web:comercio_detalle", args=[comercio.pk]),
+        reverse("web:actividad_comercial_detalle", args=[actividad.pk]),
+    )
+    for page_url in page_urls:
+        response = client.get(page_url)
+        content = response.content.decode()
+
+        assert response.status_code == 200
+        assert expected_link.search(content)
+
+    assert reverse("web:comercio_detalle", args=[comercio.pk]) in content
 
 
 @pytest.mark.django_db

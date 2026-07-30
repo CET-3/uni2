@@ -21,7 +21,9 @@
                     <div>
                         <h3>{{ comercio.nombre }}</h3>
                         <p><strong>Actividad:</strong> {{ comercio.actividad_comercial.nombre }}</p>
-                        <p>{{ comercio.direccion }}</p>
+                        {% if comercio.direccion %}
+                            <p>{{ comercio.direccion }}</p>
+                        {% endif %}
                         {% if comercio.ciudad or comercio.provincia %}
                             <p>{{ comercio.ciudad }} {{ comercio.provincia }}</p>
                         {% endif %}

@@ -46,6 +46,7 @@
 ### Importación y exportación
 
 * [CU-importar-padron-inicial](cu-importar-padron-inicial.md) - Actor: Administrador
+* [CU-importar-comercios-iniciales](cu-importar-comercios-iniciales.md) - Actor: Administrador
 * [CU-exportar-asociados-formato-uni2](cu-exportar-asociados-formato-uni2.md) - Actor: Administrador
 * [CU-importar-cuotas-historicas](cu-importar-cuotas-historicas.md) - Actor: Administrador
 

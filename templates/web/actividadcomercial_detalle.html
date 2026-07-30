@@ -2,24 +2,23 @@
 
 {% block title %}{{ actividad_comercial.nombre }} | Uni2{% endblock %}
 
-{% block body_class %} uni2-detail-page{% endblock %}
-
-{% block extra_head %}
-  {{ block.super }}
-{% endblock %}
-
 {% block content %}
-<section aria-labelledby="actividad-title">
-  <div class="container py-4 d-grid gap-3">
-    <div class="uni2-benefit-page-header">
+<div class="container py-3">
+  {% url "web:inicio" as breadcrumb_comercios_url %}
+  {% include "components/breadcrumbs.html" with hide_home=True parent_url=breadcrumb_comercios_url parent_fragment="beneficios" parent_label="Comercios" current_label=actividad_comercial.nombre only %}
+</div>
+
+<section class="uni2-benefit-page" aria-labelledby="actividad-title">
+  <div class="container uni2-benefit-page-layout">
+    <header class="uni2-benefit-page-header">
       <h1 id="actividad-title" class="uni2-titulo-principal">{{ actividad_comercial.nombre }}</h1>
-      <p>Comercios adheridos en esta categoría.</p>
-    </div>
+      <p>{{ actividad_comercial.descripcion|default:"Comercios adheridos en esta categoría." }}</p>
+    </header>
 
     <div class="uni2-benefit-list" aria-label="Comercios adheridos">
       {% for comercio in actividad_comercial.comercios.all %}
         {% url 'web:comercio_detalle' comercio.pk as detalle_url %}
-        {% include "components/benefit_list_item.html" with url=detalle_url titulo=comercio.nombre foto=comercio.foto beneficio=comercio.beneficio_texto direccion=comercio.direccion telefono=comercio.telefono url_presencia_web=comercio.url_presencia_web only %}
+        {% include "components/benefit_list_item.html" with url=detalle_url titulo=comercio.nombre descripcion=comercio.descripcion foto=comercio.foto beneficio=comercio.beneficio_texto direccion=comercio.direccion telefono=comercio.telefono url_presencia_web=comercio.url_presencia_web only %}
       {% empty %}
         <p>No hay comercios adheridos en esta categoría.</p>
       {% endfor %}

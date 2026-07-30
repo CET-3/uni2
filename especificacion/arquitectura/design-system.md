@@ -46,7 +46,7 @@ Cuando el catálogo muestra un componente que también existe en producción, de
 
 Las clases genéricas sin prefijo, como `hero`, `cta`, `step`, `info-box`, `ad-card` o `benefit-card`, no deben usarse en pantallas productivas nuevas. Los componentes que el catálogo comparte con producción usan el prefijo `uni2-`.
 
-La lista de beneficios con logo circular, metadata y descuento usa las mismas clases globales en el catálogo y en la pantalla productiva. El listado conserva una respuesta de hover y foco consistente para indicar que cada fila enlaza a una página de detalle. El MVP no usa modales por hash para este flujo.
+La lista de beneficios con logo circular, nombre, descripción, metadata y descuento usa las mismas clases globales en el catálogo y en la pantalla productiva. Un único enlace de detalle extiende su zona interactiva sobre toda la card mediante un pseudoelemento; `Visitar online` se posiciona por encima y conserva su destino externo independiente. Esto evita anidar enlaces y evita duplicar la acción de detalle en la navegación por teclado. El nombre y `Visitar online` no se subrayan; la descripción usa el color de texto secundario y el badge de beneficio se alinea a la derecha. En mobile, el componente usa dos columnas y ubica el badge debajo del contenido para preservar un ancho de lectura cómodo. La fila conserva una respuesta de hover y foco consistente. El MVP no usa modales por hash para este flujo.
 
 Los datos de ejemplo pueden mencionar asociados, beneficios, servicios o cuotas porque pertenecen a Uni2. El nombre de un reusable nuevo no debe quedar atado a esos ejemplos salvo que sea una pieza realmente exclusiva de esa entidad.
 
@@ -101,11 +101,11 @@ El catálogo presenta `uni2-breadcrumbs` en la capa de componentes y usa el mism
 
 El breadcrumb es un componente de navegación contextual, no una primitiva: combina una lista ordenada, enlaces, separadores y el estado de página actual dentro de un `nav` con nombre accesible. Usa la estructura base de Bootstrap, un separador textual decorativo `›`, enlaces con el color de acción y la página actual con color de texto secundario.
 
-Se usa en páginas de detalle con rutas de dos o tres niveles. No se usa en la home ni en dashboards. La página actual no enlaza y declara `aria-current="page"`; los nombres largos pueden envolver en mobile. No se agrega un icono de inicio porque el texto ya comunica el destino y el separador no necesita exponerse a tecnologías asistivas.
+Se usa en páginas de detalle con rutas de dos o tres niveles. No se usa en la home ni en dashboards. Por defecto, la página actual no enlaza y declara `aria-current="page"`; los nombres largos pueden envolver en mobile. En el detalle de un comercio, el breadcrumb muestra solamente los dos ancestros navegables (`Comercios > actividad comercial`) porque el nombre del comercio ya es el título de la pantalla. No se agrega un icono de inicio porque el texto ya comunica el destino y el separador no necesita exponerse a tecnologías asistivas.
 
-El partial resuelve `Inicio` y su URL como valores por defecto. Las páginas pasan explícitamente `parent_url`, `parent_label` y `current_label`; también pueden reemplazar `home_url`, `home_label` y `aria_label` cuando una muestra o contexto lo necesita. Esta interfaz cubre la jerarquía corta del MVP sin introducir listas armadas en las views.
+El partial resuelve `Inicio` y su URL como valores por defecto. Las páginas pasan explícitamente `parent_url`, `parent_label` y `current_label`; también pueden reemplazar `home_url`, `home_label` y `aria_label`. `hide_home` omite el primer nivel, `parent_fragment` agrega un ancla al enlace padre y `current_url` convierte el último nivel en otro ancestro navegable. Esta interfaz cubre la jerarquía corta del MVP sin introducir listas armadas en las views.
 
-Las páginas de categoría, producto/servicio, comercio disponible y comercio no disponible usan este componente. Actividad comercial conserva la decisión específica de no mostrar breadcrumb.
+Las páginas de categoría, producto/servicio, actividad comercial, comercio disponible y comercio no disponible usan este componente. Las pantallas de actividad comercial y comercio comparten la jerarquía `Comercios > actividad`, sin el nivel `Inicio`. En el detalle del comercio ambos niveles son ancestros navegables; en la página de la actividad, su propio nombre es el nivel actual y no enlaza.
 
 En viewport de escritorio, las páginas públicas de detalle distribuyen introducción y panel en dos columnas mediante `uni2-detail-layout`. Por debajo de `lg` se apilan en una columna para mantener una lectura cómoda y evitar comprimir tablas o datos de contacto.
 

@@ -6,8 +6,9 @@
 
 {% block content %}
 <div class="container py-3">
-  {% url "web:comercios" as breadcrumb_parent_url %}
-  {% include "components/breadcrumbs.html" with parent_url=breadcrumb_parent_url parent_label="Comercios" current_label=comercio.nombre only %}
+  {% url "web:inicio" as breadcrumb_comercios_url %}
+  {% url "web:actividad_comercial_detalle" comercio.actividad_comercial_id as breadcrumb_actividad_url %}
+  {% include "components/breadcrumbs.html" with hide_home=True parent_url=breadcrumb_comercios_url parent_fragment="beneficios" parent_label="Comercios" current_url=breadcrumb_actividad_url current_label=comercio.actividad_comercial.nombre only %}
 </div>
 
 <section class="uni2-service-detail" aria-labelledby="comercio-title">

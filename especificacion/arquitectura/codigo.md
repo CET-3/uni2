@@ -3,7 +3,7 @@ type: "Arquitectura"
 title: "Arquitectura actual del código"
 description: "Organización por dominio y experiencia de usuario."
 tags: [mvp, arquitectura]
-timestamp: 2026-07-26T00:00:00-03:00
+timestamp: 2026-07-29T00:00:00-03:00
 ---
 
 # Arquitectura actual del código
@@ -70,6 +70,7 @@ El sistema no recuerda el último panel en el MVP. Cada visita a `/` o al logo v
 - Registrar los permisos propios mediante un modelo técnico no gestionado por Django llamado `PermisoGestion`. Este modelo no representa una tabla de negocio: sirve para que las migraciones creen permisos personalizados de la app `gestion`.
 - Controlar cada pantalla de gestión con permisos Django propios: ver dashboard de gestión, consultar asociados, editar asociados, importar asociados, exportar asociados, cobrar cuotas, ver deudores, administrar períodos de cuota e importar cuotas históricas.
 - El comando `carga_inicial` crea datos ficticios para desarrollo local: 4 categorías de servicios (Fotocopias, Uniformes, Bicicleta solidaria, Cuadernillos y anillado) con productos asociados, 6 rubros de actividad comercial (Gastronomía, Actividad física, Belleza, Vestimenta, Educación, Tecnología y accesorios), 7 comercios adheridos con beneficios, 3 publicidades sin foto, grupos y permisos, cursos, un usuario admin, un usuario de atención de mutual vinculado también a un asociado de prueba, un usuario asociado vinculado a un asociado de prueba y un usuario comercio vinculado al comercio Librería Sur. El setting explícito `ALLOW_DEMO_DATA` lo habilita solamente en desarrollo local y tests; producción lo rechaza.
+- El comando `importar_comercios_xlsx` realiza la carga inicial real de comercios desde una planilla local. Sin `--confirmar` solo analiza y valida; con `--confirmar` crea o actualiza comercios y actividades, y guarda las imágenes embebidas mediante el storage configurado. La lectura y las reglas de importación viven en `comercios/importers.py`, mientras que el comando se limita a coordinar la entrada y mostrar el resultado.
 - Las fotos cargadas por admin técnico usan la configuración de archivos media documentada en [Archivos media](media.md).
 - El límite técnico `DATA_UPLOAD_MAX_NUMBER_FIELDS` se eleva a `10000` para permitir acciones masivas razonables en el admin técnico luego de importaciones iniciales con muchas cuotas.
 - En desarrollo local, `config.settings.local` acepta `localhost`, `127.0.0.1` y `192.168.18.138` como hosts permitidos. Esto permite levantar `runserver` en `0.0.0.0:8000` y probar la app desde un teléfono conectado a la misma red Wi-Fi.

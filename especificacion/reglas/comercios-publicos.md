@@ -3,7 +3,7 @@ type: "Regla de negocio"
 title: "Comercios públicos"
 description: "Reglas de negocio sobre publicación y visualización de comercios."
 tags: [mvp, reglas]
-timestamp: 2026-06-24T00:00:00-03:00
+timestamp: 2026-07-29T00:00:00-03:00
 ---
 
 # Comercios públicos
@@ -17,3 +17,4 @@ en el sitio público.
 4. El detalle público de un comercio (`/comercios/<pk>/`) está disponible para cualquier comercio existente, independientemente de su estado. Si el comercio tiene estado `Firmado`, se muestran sus datos completos. Si tiene otro estado (`Pendiente`, `Vencido` o `Baja`), se muestra una pantalla informativa con el mensaje "Este comercio estará disponible próximamente" y un enlace para volver al listado de comercios.
 5. En la sección Beneficios de la home se muestran hasta 3 comercios con foto por cada rubro (`ActividadComercial`) que tenga al menos un comercio en estado `Firmado`. Las fotos se toman del campo `foto` del modelo `Comercio`. Los comercios sin foto no se muestran en la nube de logos de la card del rubro.
 6. En el MVP, la gestión de comercios se realiza desde el admin técnico de Django.
+7. La dirección es opcional: los emprendimientos sin local físico pueden publicarse y su detalle no muestra un bloque de dirección vacío.
