@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Sin conexión | UNI2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <section class="uni2-offline-page" aria-labelledby="uni2-offline-title">
+                <span class="uni2-offline-icon" aria-hidden="true"><i class="bi bi-wifi-off"></i></span>
+                <p class="uni2-section-kicker mb-2">UNI2 sin conexión</p>
+                <h1 class="h2" id="uni2-offline-title">No pudimos cargar esta página</h1>
+                <p class="lead">
+                    Revisá la conexión y volvé a intentar. El contenido privado y las operaciones de gestión no se guardan para usarlos sin conexión.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center mt-4">
+                    <button class="btn btn-primary" type="button" data-pwa-retry>
+                        <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+                        Volver a intentar
+                    </button>
+                    <a class="btn btn-outline-primary" href="/">Ir al inicio</a>
+                    <a class="btn btn-outline-primary js-pwa-saved-credential-link" href="/asociado/credencial/" hidden>
+                        Ver mi credencial guardada
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

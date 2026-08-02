@@ -40,14 +40,24 @@
                         <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:design-system' %}">Design system</a></li>
                     {% endif %}
                     <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:inicio' %}">Sitio público</a></li>
+                    <li class="nav-item d-lg-none js-pwa-install-item" hidden>
+                        <button class="nav-link uni2-mobile-nav-button js-pwa-install-trigger" type="button">
+                            <i class="bi bi-download me-2" aria-hidden="true"></i>Instalar UNI2
+                        </button>
+                    </li>
                     <li class="nav-item d-lg-none">
-                        <form method="post" action="{% url 'usuarios:logout' %}">
+                        <form method="post" action="{% url 'usuarios:logout' %}" data-pwa-logout>
                             {% csrf_token %}
                             <button class="nav-link uni2-mobile-nav-button" type="submit">Salir</button>
                         </form>
                     </li>
                 {% else %}
                     <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'usuarios:login' %}">Ingresar</a></li>
+                    <li class="nav-item d-lg-none js-pwa-install-item" hidden>
+                        <button class="nav-link uni2-mobile-nav-button js-pwa-install-trigger" type="button">
+                            <i class="bi bi-download me-2" aria-hidden="true"></i>Instalar UNI2
+                        </button>
+                    </li>
                 {% endif %}
             </ul>
             <div class="d-none d-lg-flex align-items-center gap-2 flex-wrap">
@@ -96,7 +106,10 @@
                             <li class="uni2-user-menu-section">
                                 <span class="uni2-user-menu-label">Cuenta</span>
                                 <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:inicio' %}"><i class="bi bi-globe" aria-hidden="true"></i><span>Sitio público</span></a>
-                                <form method="post" action="{% url 'usuarios:logout' %}">
+                                <button class="dropdown-item uni2-user-menu-link js-pwa-install-trigger js-pwa-install-item" type="button" hidden>
+                                    <i class="bi bi-download" aria-hidden="true"></i><span>Instalar UNI2</span>
+                                </button>
+                                <form method="post" action="{% url 'usuarios:logout' %}" data-pwa-logout>
                                     {% csrf_token %}
                                     <button class="dropdown-item uni2-user-menu-link uni2-user-menu-logout" type="submit"><i class="bi bi-box-arrow-right" aria-hidden="true"></i><span>Salir</span></button>
                                 </form>
@@ -104,6 +117,9 @@
                         </ul>
                     </div>
                 {% else %}
+                    <button class="btn btn-outline-primary uni2-login-button js-pwa-install-trigger js-pwa-install-item" type="button" hidden>
+                        <i class="bi bi-download me-1" aria-hidden="true"></i>Instalar
+                    </button>
                     <a class="btn btn-primary uni2-login-button" href="{% url 'usuarios:login' %}">Ingresar</a>
                 {% endif %}
             </div>

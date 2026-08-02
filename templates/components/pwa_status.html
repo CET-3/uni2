@@ -1,0 +1,43 @@
+<div
+    id="uni2-connectivity-status"
+    class="uni2-pwa-connectivity"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    tabindex="-1"
+    hidden
+>
+    <i class="bi bi-wifi-off" aria-hidden="true"></i>
+    <span data-pwa-connectivity-message>Sin conexión. Algunas funciones no están disponibles.</span>
+</div>
+
+<div
+    class="modal fade"
+    id="uni2-install-instructions"
+    tabindex="-1"
+    aria-labelledby="uni2-install-instructions-title"
+    aria-describedby="uni2-install-instructions-description"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content uni2-pwa-modal">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="uni2-install-instructions-title">Instalar UNI2 en este dispositivo</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="uni2-install-instructions-description">
+                    En Safari, tocá <strong>Compartir</strong>
+                    <i class="bi bi-box-arrow-up" aria-hidden="true"></i>
+                    y después <strong>Agregar a inicio</strong>.
+                </p>
+                <p class="mb-0 text-secondary" data-pwa-ios-browser-note hidden>
+                    Si no ves esa opción, abrí esta página en Safari y repetí los pasos.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+            </div>
+        </div>
+    </div>
+</div>

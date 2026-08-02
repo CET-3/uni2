@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.urls import include, path
 
 urlpatterns = [
+    path("", include(("pwa.urls", "pwa"), namespace="pwa")),
     path("admin/", admin.site.urls),
     path("especificacion/", include(("especificacion.urls", "especificacion"), namespace="especificacion")),
     path("", include(("web.urls", "web"), namespace="web")),

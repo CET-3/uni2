@@ -1,22 +1,131 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Mi credencial | Uni2{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <p class="text-uppercase text-secondary small mb-2">Credencial digital</p>
-                    <h1 class="h3">{{ asociado.nombre }} {{ asociado.apellido }}</h1>
-                    <p class="mb-2"><strong>Tipo:</strong> {{ asociado.get_tipo_display }}</p>
-                    <p class="mb-2"><strong>Estado:</strong> {{ asociado.get_estado_display }}</p>
-                    <p class="mb-2"><strong>Número:</strong> {{ asociado.numero_asociado }}</p>
-                    <p class="mb-0"><strong>Token:</strong> <code>{{ asociado.token_credencial }}</code></p>
+        <div class="col-xl-7 col-lg-8">
+            <section
+                id="uni2-credential"
+                class="uni2-credential"
+                aria-labelledby="uni2-credential-title"
+                data-credential-nombre="{{ asociado.nombre }}"
+                data-credential-apellido="{{ asociado.apellido }}"
+                data-credential-numero="{{ asociado.numero_asociado }}"
+                data-credential-tipo="{{ asociado.get_tipo_display }}"
+                data-credential-estado="{{ asociado.get_estado_display }}"
+                data-credential-token="{{ asociado.token_credencial }}"
+            >
+                <div class="uni2-credential-card">
+                    <div class="uni2-credential-heading">
+                        <div>
+                            <p class="uni2-credential-kicker">Credencial digital UNI2</p>
+                            <h1 class="h2 mb-1" id="uni2-credential-title">{{ asociado.nombre }} {{ asociado.apellido }}</h1>
+                            <p class="mb-0 text-secondary">Asociado N.º {{ asociado.numero_asociado }}</p>
+                        </div>
+                        <span class="uni2-credential-state {% if asociado.estado == 'activo' %}uni2-credential-state-active{% else %}uni2-credential-state-inactive{% endif %}">
+                            {{ asociado.get_estado_display }}
+                        </span>
+                    </div>
+
+                    <div class="uni2-credential-body">
+                        <div class="uni2-credential-qr-wrap">
+                            <div
+                                class="uni2-credential-qr"
+                                data-uni2-qr-value="{{ asociado.token_credencial }}"
+                                aria-label="Código QR de la credencial de {{ asociado.nombre }} {{ asociado.apellido }}"
+                            >
+                                <span class="small text-secondary">Generando código QR…</span>
+                            </div>
+                            <p class="small text-secondary mb-0">El comercio necesita conexión para confirmar la vigencia.</p>
+                        </div>
+
+                        <dl class="uni2-credential-data mb-0">
+                            <div>
+                                <dt>Tipo</dt>
+                                <dd>{{ asociado.get_tipo_display }}</dd>
+                            </div>
+                            <div>
+                                <dt>Número</dt>
+                                <dd>{{ asociado.numero_asociado }}</dd>
+                            </div>
+                            <div>
+                                <dt>Token de validación</dt>
+                                <dd><code class="uni2-credential-token">{{ asociado.token_credencial }}</code></dd>
+                            </div>
+                        </dl>
+                    </div>
                 </div>
+
+                <aside class="uni2-credential-offline-panel mt-4" aria-labelledby="uni2-offline-save-title">
+                    <div>
+                        <h2 class="h5 mb-2" id="uni2-offline-save-title">Tener la credencial sin conexión</h2>
+                        <p class="mb-1">
+                            Podés guardar en este dispositivo tu nombre, número, tipo, último estado y token durante {{ pwa_credential_offline_ttl_days|default:7 }} días.
+                        </p>
+                        <p class="small text-secondary mb-0">
+                            Cualquier persona que use este dispositivo podrá verla. No se guardan cuotas, deuda ni otros datos.
+                        </p>
+                    </div>
+                    <div class="uni2-credential-offline-actions">
+                        <button
+                            class="btn btn-primary"
+                            id="uni2-credential-save"
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#uni2-credential-consent"
+                            hidden
+                        >
+                            <i class="bi bi-phone" aria-hidden="true"></i>
+                            Guardar en este dispositivo
+                        </button>
+                        <button class="btn btn-outline-primary" id="uni2-credential-delete" type="button" hidden>
+                            <i class="bi bi-trash3" aria-hidden="true"></i>
+                            Eliminar de este dispositivo
+                        </button>
+                    </div>
+                    <p class="uni2-credential-storage-status mb-0" id="uni2-credential-storage-status" role="status" aria-live="polite"></p>
+                </aside>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div
+    class="modal fade"
+    id="uni2-credential-consent"
+    tabindex="-1"
+    aria-labelledby="uni2-credential-consent-title"
+    aria-describedby="uni2-credential-consent-description"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content uni2-pwa-modal">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="uni2-credential-consent-title">Guardar credencial sin conexión</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="uni2-credential-consent-description">
+                    La copia estará disponible durante {{ pwa_credential_offline_ttl_days|default:7 }} días, incluso sin iniciar sesión. Usá esta opción solamente en un dispositivo de confianza.
+                </p>
+                <p class="mb-0">
+                    La copia puede estar desactualizada: el comercio siempre debe validar la credencial con conexión.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="uni2-credential-save-confirm">Guardar credencial</button>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ block.super }}
+    <script src="{% static 'vendor/qrcode-generator/1.4.4/qrcode.min.js' %}"></script>
+    <script src="{% static 'pwa/uni2-credential.js' %}"></script>
 {% endblock %}

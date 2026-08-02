@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "cuotas",
     "comercios",
     "contenidos",
+    "pwa",
     "especificacion",
 ]
 
@@ -47,6 +48,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "pwa.middleware.PWACacheControlMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -65,6 +67,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "usuarios.context_processors.navigation_roles",
+                "pwa.context_processors.pwa_settings",
             ],
         },
     },
@@ -108,6 +111,12 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# La PWA usa un identificador de build para separar sus cachés. Vercel expone
+# el SHA del commit; en desarrollo el nombre estable permite reemplazar los
+# mismos recursos sin crear una caché nueva en cada ejecución.
+PWA_BUILD_ID = os.getenv("VERCEL_GIT_COMMIT_SHA", "development")
+PWA_CREDENTIAL_OFFLINE_TTL_DAYS = 7
 
 # El admin técnico puede recibir acciones masivas sobre muchas cuotas luego de
 # importaciones iniciales. El valor por defecto de Django queda corto para ese uso.

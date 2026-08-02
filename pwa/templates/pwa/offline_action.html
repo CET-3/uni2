@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}La operación no se envió | UNI2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <section class="uni2-offline-page uni2-offline-page-warning" aria-labelledby="uni2-offline-action-title">
+                <span class="uni2-offline-icon" aria-hidden="true"><i class="bi bi-exclamation-triangle"></i></span>
+                <p class="uni2-section-kicker mb-2">Conexión interrumpida</p>
+                <h1 class="h2" id="uni2-offline-action-title">La operación no se envió</h1>
+                <p class="lead">
+                    El cambio no quedó guardado ni pendiente. Cuando recuperes la conexión, volvé a la pantalla anterior, revisá los datos y enviá el formulario otra vez.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center mt-4">
+                    <button class="btn btn-primary" type="button" data-pwa-history-back>Volver a la pantalla anterior</button>
+                    <a class="btn btn-outline-primary" href="/">Ir al inicio</a>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
