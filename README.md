@@ -54,7 +54,7 @@ uv run python manage.py runserver
 En ambos perfiles Django usa `config.settings.local`. `DB_ENGINE` selecciona
 `sqlite` o `postgres`; no hace falta modificar código para cambiar de motor.
 
-Para probar desde un teléfono conectado a la misma red Wi-Fi que la computadora:
+Para revisar el sitio web desde un teléfono conectado a la misma red Wi-Fi:
 
 ```bash
 uv run python manage.py runserver 0.0.0.0:8000
@@ -66,6 +66,13 @@ Después abrir desde el teléfono:
 http://192.168.18.138:8000
 ```
 
+Esa dirección HTTP sirve para revisar páginas responsive, pero **no sirve para
+probar la PWA**: un service worker necesita HTTPS o, durante desarrollo,
+`localhost`/loopback. La PWA se prueba localmente desde
+<http://127.0.0.1:8000/> en la misma computadora. Para Android o iOS reales se
+usa un staging HTTPS separado, con base, media, secreto y datos ficticios que
+nunca apuntan a Production.
+
 Usuarios ficticios creados sólo en desarrollo local:
 
 - Gestión/admin técnico: `admin` / `admin1234`
@@ -73,9 +80,23 @@ Usuarios ficticios creados sólo en desarrollo local:
 - Asociado de prueba: `asociado` / `asociado1234`
 - Comercio de prueba: `comercio` / `comercio1234`
 
-La app corre en http://127.0.0.1:8000
+La app corre en <http://127.0.0.1:8000/>.
 
 También queda habilitada para desarrollo local desde `http://192.168.18.138:8000`.
+
+## PWA
+
+Uni2 puede instalarse como una única aplicación desde `/`. Con conectividad
+limitada conserva el shell y contenido público seguro. Las páginas
+autenticadas no se guardan en el caché general.
+
+El asociado puede elegir guardar su credencial en ese dispositivo durante
+siete días. La copia se elimina al cerrar sesión, cambiar de usuario, vencer o
+usar “Quitar de este dispositivo”. El comercio siempre necesita conexión para
+validarla.
+
+Esta etapa no incluye notificaciones push ni correos transaccionales o por
+lote.
 
 ## Tests
 
@@ -85,6 +106,18 @@ uv run pytest
 
 # Verificación explícita con SQLite
 DB_ENGINE=sqlite uv run pytest
+
+# Contratos Django de la PWA
+DB_ENGINE=sqlite uv run pytest pwa/tests config/tests/test_pwa_config.py -q
+
+# Confirmar que no aparecieron migraciones
+DB_ENGINE=sqlite uv run python manage.py makemigrations --check --dry-run
+
+# Generar y revisar estáticos como en producción
+DJANGO_SETTINGS_MODULE=config.settings.production \
+SECRET_KEY=collectstatic-local \
+DATABASE_URL=sqlite:///:memory: \
+uv run python manage.py collectstatic --noinput
 ```
 
 Cada PR y cada actualización de `main` ejecutan la misma suite con SQLite en
@@ -116,6 +149,9 @@ La versión pública de Production está en
 Vercel acepta deploys automáticos únicamente desde `main`. Los previews de
 otros branches están deshabilitados hasta disponer de una base PostgreSQL
 separada de producción.
+
+Las pruebas móviles de PWA requieren primero un staging HTTPS aislado. No se
+habilita un Preview con `DATABASE_URL`, `SECRET_KEY` o storage de Production.
 
 Cuando la integración Git está habilitada, fusionar un PR en `main` inicia el
 deploy productivo. Como alternativa manual y controlada:
@@ -177,3 +213,32 @@ de una entrega.
 
 `carga_inicial` contiene usuarios y contenido ficticios. Sólo funciona con
 settings locales o de test y nunca se ejecuta sobre producción.
+
+### Verificación de la PWA desplegada
+
+Sobre la URL HTTPS de staging o Production:
+
+```bash
+curl -I https://DOMINIO/manifest.webmanifest
+curl -I https://DOMINIO/service-worker.js
+curl -I https://DOMINIO/sin-conexion/
+```
+
+El manifest debe usar `application/manifest+json`. El worker debe usar un tipo
+JavaScript, `Service-Worker-Allowed: /` y `Cache-Control` de revalidación. En
+DevTools se verifica además que el scope sea `/`, que los iconos existan y que
+Cache Storage no contenga HTML autenticado.
+
+Antes de promover se completa la matriz de
+[pruebas manuales PWA](especificacion/pruebas-manuales/pwa.md), incluida la
+privacidad al cambiar de usuario, POST offline, actualización con formulario y
+rollback.
+
+### Rollback de PWA
+
+No se elimina simplemente `/service-worker.js`: los dispositivos instalados
+conservarían la versión anterior. Para retirar la PWA se despliega en esa misma
+URL un worker de limpieza que borra cachés Uni2 y la credencial privada, se
+desregistra y deja el sitio funcionando como web normal. El procedimiento se
+ensaya primero en staging y se mantiene el endpoint el tiempo suficiente para
+alcanzar dispositivos que vuelvan a conectarse.

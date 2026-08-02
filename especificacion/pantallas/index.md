@@ -5,6 +5,7 @@
 * [Asociado](asociado.md) — Asociado
 * [Gestión](gestion.md) — Gestión
 * [Comercio](comercio.md) — Comercio
+* [Progressive Web App](pwa.md) — Instalación, conexión, actualización y credencial offline
 
 ## Regla de trabajo visual
 

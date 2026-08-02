@@ -77,6 +77,62 @@ permanecen detrás de Standard Protection de Vercel.
 Nunca se configura un Preview con `DATABASE_URL`, `SECRET_KEY` o credenciales
 de storage pertenecientes a Production.
 
+### Staging HTTPS para la PWA
+
+Las pruebas automáticas del service worker pueden usar `localhost`, que los
+navegadores tratan como contexto seguro. Una IP de red local servida por HTTP
+no es un contexto seguro y no permite validar la instalación desde un
+teléfono.
+
+Antes de habilitar previews o pruebas físicas se prepara un entorno staging
+separado con:
+
+- URL HTTPS estable;
+- PostgreSQL propio con datos ficticios;
+- `SECRET_KEY` propio;
+- bucket o prefijo de media propio;
+- hosts y orígenes CSRF propios;
+- ninguna variable copiada desde Production.
+
+Una URL estable es necesaria para instalar la versión A, desplegar la B sobre
+el mismo origen y probar el ciclo real de actualización. La protección de
+Vercel no debe impedir que el manifest, el worker y los estáticos se soliciten
+desde la sesión de prueba.
+
+### Controles PWA del despliegue
+
+En staging y después del deploy productivo se comprueba:
+
+- `/manifest.webmanifest` responde 200 como
+  `application/manifest+json`;
+- todos los iconos del manifest responden 200 y tienen el tamaño declarado;
+- `/service-worker.js` responde 200 como JavaScript, con
+  `Service-Worker-Allowed: /` y política de no caché;
+- el worker controla el scope `/` y usa el ID del commit desplegado;
+- `/sin-conexion/` abre sin datos de usuario;
+- una respuesta pública anónima lleva
+  `X-Uni2-PWA-Cacheable: public` y `Vary: Cookie`;
+- una respuesta autenticada lleva `Cache-Control: private, no-store`;
+- los estáticos no dependen de un CDN externo;
+- no existe una migración inesperada.
+
+La prueba manual completa está en
+[Progressive Web App](../pruebas-manuales/pwa.md). Chromium automatizado no
+reemplaza Android e iOS reales.
+
+### Gate de release PWA
+
+La PWA sólo puede pasar a Production cuando:
+
+1. pytest completo está aprobado;
+2. `collectstatic` contiene los recursos PWA y vendor;
+3. staging supera privacidad entre dos usuarios y expiración de siete días;
+4. un POST offline no se reenvía al recuperar conexión;
+5. la actualización no recarga un formulario;
+6. Android e iOS reales superan la matriz mínima;
+7. se ensayó el rollback en staging;
+8. especificación y README coinciden con el build.
+
 ### Migraciones
 
 Un PR con cambios de esquema debe incluir su migración y mantener
@@ -93,3 +149,23 @@ Los cambios destructivos se dividen en entregas compatibles. Un rollback de
 código no revierte automáticamente una migración.
 
 Los comandos concretos se mantienen en el [README](../../README.md).
+
+### Rollback de la PWA
+
+Revertir código o retirar `/service-worker.js` no desinstala workers ya
+registrados. Nunca se responde simplemente 404 en esa URL como estrategia de
+rollback.
+
+El rollback operativo publica primero, en la misma URL y alcance, un worker de
+limpieza que:
+
+1. borra los cachés cuyo prefijo pertenece a Uni2;
+2. borra el almacenamiento privado de credencial;
+3. avisa a las ventanas abiertas;
+4. se desregistra;
+5. deja continuar la navegación como web normal.
+
+El endpoint de limpieza se mantiene durante el período definido por operación
+para alcanzar dispositivos que vuelven a conectarse más tarde. Sólo después
+se retira el registro cliente. Ante una falla que no exige retirar la PWA, se
+despliega una corrección compatible conservando la misma URL del worker.
