@@ -52,6 +52,79 @@ Si el proveedor obliga a generar un archivo, se usa un volumen efímero cifrado
 y se lo destruye al terminar. Nunca se guarda en `/tmp` sin verificar cifrado,
 ni dentro del repositorio.
 
+#### Copia entre proyectos Supabase
+
+Supabase ya crea y administra esquemas propios en cada proyecto. Uni2 no copia
+`auth`, `storage`, `realtime`, `vault` ni otros esquemas del proveedor: copia
+únicamente `public`, donde viven las tablas Django. El destino debe tener cero
+tablas en `public` antes de comenzar.
+
+Para la operación se usan las URLs **Session pooler** de ambos proyectos,
+puerto `5432`. La URL productiva vive temporalmente en
+`UNI2_PRODUCTION_COPY_DATABASE_URL`; `DATABASE_URL` apunta al Session pooler de
+staging. Ambas quedan en `.env.staging`, ignorado por Git y con permisos `600`.
+Las contraseñas no se colocan como argumentos. El runtime serverless de Vercel
+usa después la URL **Transaction pooler**, puerto `6543`, y sus huellas se
+recalculan para esa URL exacta.
+
+El cliente `pg_dump` debe tener la misma versión mayor que Producción. La copia
+validada con PostgreSQL 17 transmite primero el esquema y después los datos,
+sin archivos intermedios:
+
+```bash
+set -o pipefail
+set -a
+. ./.env.staging
+set +a
+export PGOPTIONS='-c default_transaction_read_only=on'
+
+docker run --rm -i \
+  -e PGOPTIONS \
+  -e UNI2_PRODUCTION_COPY_DATABASE_URL \
+  postgres:17 \
+  sh -c 'exec pg_dump \
+    --dbname="$UNI2_PRODUCTION_COPY_DATABASE_URL" \
+    --schema=public \
+    --schema-only \
+    --no-owner \
+    --no-privileges' |
+sed '/^CREATE SCHEMA public;$/d' |
+docker run --rm -i \
+  -e DATABASE_URL \
+  postgres:17 \
+  sh -c 'exec psql \
+    --dbname="$DATABASE_URL" \
+    --single-transaction \
+    --set=ON_ERROR_STOP=1 \
+    --file=-'
+
+docker run --rm -i \
+  -e PGOPTIONS \
+  -e UNI2_PRODUCTION_COPY_DATABASE_URL \
+  postgres:17 \
+  sh -c 'exec pg_dump \
+    --dbname="$UNI2_PRODUCTION_COPY_DATABASE_URL" \
+    --schema=public \
+    --data-only \
+    --no-owner \
+    --no-privileges' |
+docker run --rm -i \
+  -e DATABASE_URL \
+  postgres:17 \
+  sh -c 'exec psql \
+    --dbname="$DATABASE_URL" \
+    --single-transaction \
+    --set=ON_ERROR_STOP=1 \
+    --command="SET session_replication_role = replica" \
+    --file=-'
+unset PGOPTIONS
+```
+
+La línea eliminada por `sed` es solamente `CREATE SCHEMA public;`: el proyecto
+Supabase nuevo ya contiene ese esquema. Cada restauración usa una transacción y
+`ON_ERROR_STOP`; ante un error no queda una carga parcial. Después se comparan
+los conteos exactos de todas las tablas y los valores de las secuencias.
+
 ### Endurecimiento
 
 Con `DATABASE_URL` apuntando al destino y los settings de staging completos,
@@ -130,7 +203,8 @@ Después de habilitar la base nueva:
 3. destruir cualquier artefacto temporal cifrado, si el proveedor obligó a
    crearlo;
 4. revocar la credencial productiva de sólo lectura;
-5. retirar del entorno las contraseñas temporales de creación de usuarios QA;
+5. retirar `UNI2_PRODUCTION_COPY_DATABASE_URL` y las contraseñas temporales de
+   creación de usuarios QA;
 6. registrar fecha, responsable, refresh ID, conteos y resultado, nunca datos.
 
 Una exposición de staging se trata como un incidente sobre datos productivos.
