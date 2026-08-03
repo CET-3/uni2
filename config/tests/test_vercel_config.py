@@ -16,7 +16,7 @@ def test_vercel_usa_django_zero_config_y_reserva_git_para_produccion():
 
     assert config["framework"] == "django"
     assert config["git"]["deploymentEnabled"] == {
-        "*": False,
+        "**": False,
         "main": True,
     }
     assert config["regions"] == ["gru1"]
