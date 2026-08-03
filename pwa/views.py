@@ -15,12 +15,25 @@ from django.views.decorators.http import require_GET
 DEFAULT_BUILD_ID = "development"
 
 
+def _cache_identifier(configured_id):
+    normalized_id = re.sub(r"[^a-zA-Z0-9._-]", "-", configured_id).strip("-")
+    return normalized_id or DEFAULT_BUILD_ID
+
+
 def _build_id():
     """Devuelve un identificador seguro para usar dentro de nombres de caché."""
 
-    configured_id = str(getattr(settings, "PWA_BUILD_ID", DEFAULT_BUILD_ID))
-    normalized_id = re.sub(r"[^a-zA-Z0-9._-]", "-", configured_id).strip("-")
-    return normalized_id or DEFAULT_BUILD_ID
+    return _cache_identifier(str(getattr(settings, "PWA_BUILD_ID", DEFAULT_BUILD_ID)))
+
+
+def _private_data_epoch():
+    return _cache_identifier(
+        str(getattr(settings, "PWA_PRIVATE_DATA_EPOCH", DEFAULT_BUILD_ID))
+    )
+
+
+def _icon_url(filename):
+    return static(f"{settings.PWA_ICON_DIRECTORY}/{filename}")
 
 
 def _precache_urls():
@@ -40,8 +53,8 @@ def _precache_urls():
         static("pwa/uni2-pwa.js"),
         static("pwa/uni2-private-storage.js"),
         static("pwa/uni2-credential.js"),
-        static("pwa/icons/icon-192.png"),
-        static("pwa/icons/icon-512.png"),
+        _icon_url("icon-192.png"),
+        _icon_url("icon-512.png"),
     ]
     configured_urls = getattr(settings, "PWA_PRECACHE_URLS", ())
     return list(dict.fromkeys([*shell_urls, *configured_urls]))
@@ -80,38 +93,38 @@ def _public_media_origin():
 def manifest(request):
     data = {
         "id": "/",
-        "name": "UNI2 - Mutual Escolar",
-        "short_name": "UNI2",
-        "description": "Gestión y servicios de la Mutual Escolar del CET 3.",
+        "name": settings.PWA_APP_NAME,
+        "short_name": settings.PWA_SHORT_NAME,
+        "description": settings.PWA_DESCRIPTION,
         "lang": "es-AR",
         "dir": "ltr",
         "start_url": "/",
         "scope": "/",
         "display": "standalone",
         "prefer_related_applications": False,
-        "theme_color": "#3f51b5",
-        "background_color": "#f7f9fc",
+        "theme_color": settings.PWA_THEME_COLOR,
+        "background_color": settings.PWA_BACKGROUND_COLOR,
         "icons": [
             {
-                "src": static("pwa/icons/icon-192.png"),
+                "src": _icon_url("icon-192.png"),
                 "sizes": "192x192",
                 "type": "image/png",
                 "purpose": "any",
             },
             {
-                "src": static("pwa/icons/icon-512.png"),
+                "src": _icon_url("icon-512.png"),
                 "sizes": "512x512",
                 "type": "image/png",
                 "purpose": "any",
             },
             {
-                "src": static("pwa/icons/icon-maskable-192.png"),
+                "src": _icon_url("icon-maskable-192.png"),
                 "sizes": "192x192",
                 "type": "image/png",
                 "purpose": "maskable",
             },
             {
-                "src": static("pwa/icons/icon-maskable-512.png"),
+                "src": _icon_url("icon-maskable-512.png"),
                 "sizes": "512x512",
                 "type": "image/png",
                 "purpose": "maskable",
@@ -147,6 +160,7 @@ def service_worker(request):
         "pwa/service-worker.js",
         {
             "pwa_build_id_json": json.dumps(_build_id()),
+            "pwa_private_data_epoch_json": json.dumps(_private_data_epoch()),
             "pwa_offline_url_json": json.dumps(reverse("pwa:offline")),
             "pwa_offline_action_url_json": json.dumps(reverse("pwa:offline_action")),
             "pwa_offline_credential_url_json": json.dumps(reverse("pwa:offline_credential")),

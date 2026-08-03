@@ -8,9 +8,11 @@ timestamp: 2026-08-01T00:00:00-03:00
 
 # Pruebas manuales de la PWA
 
-Usar staging HTTPS con datos ficticios. Preparar dos asociados distintos
-(`asociado_a` y `asociado_b`) y un comercio. No ejecutar estas pruebas de
-privacidad con datos reales.
+Usar staging HTTPS. Las pruebas con evidencia compartida y las que recorren dos
+identidades se hacen con `qa-asociado-a`, `qa-asociado-b` y `qa-comercio`, los
+perfiles ficticios creados durante el endurecimiento. Cuando staging contiene
+una copia de Producción, limitarse a esas cuentas y al admin QA autorizado: no
+descargar listados ni registrar capturas con datos personales.
 
 ## Matriz mínima
 
@@ -27,7 +29,8 @@ La emulación de WebKit en CI no reemplaza la prueba en un iPhone o iPad real.
 ## Instalación e identidad
 
 1. Abrir staging por HTTPS.
-2. Verificar nombre `UNI2`, icono, color e inicio `/`.
+2. Verificar nombre `UNI2 STG`, icono con insignia `STG`, color naranja e
+   inicio `/`.
 3. Instalar desde la acción disponible.
 4. Abrir desde el launcher y confirmar modo independiente.
 5. Probar icono normal y `maskable`.
@@ -46,7 +49,7 @@ La emulación de WebKit en CI no reemplaza la prueba en un iPhone o iPad real.
 
 ## Privacidad de la credencial
 
-1. Iniciar como `asociado_a` y abrir Mi credencial.
+1. Iniciar como `qa-asociado-a` y abrir Mi credencial.
 2. Sin aceptar guardar, pasar offline: la credencial no debe estar disponible.
 3. Volver online, aceptar y comprobar fecha de actualización y vencimiento.
 4. Pasar offline y abrirla: debe mostrar sólo los campos mínimos y el aviso de
@@ -54,18 +57,23 @@ La emulación de WebKit en CI no reemplaza la prueba en un iPhone o iPad real.
 5. Inspeccionar Cache Storage: no debe existir HTML con nombre o token.
 6. Usar “Quitar de este dispositivo” y comprobar que desaparece offline.
 7. Guardarla otra vez, cerrar sesión y comprobar que fue eliminada.
-8. Iniciar como `asociado_b`: nunca debe verse ningún dato de `asociado_a`.
+8. Iniciar como `qa-asociado-b`: nunca debe verse ningún dato de
+   `qa-asociado-a`.
 9. Simular una limpieza de logout incompleta y confirmar que la comparación de
    propietario elimina igualmente la copia de A.
 10. Adelantar la antigüedad a más de siete días: no debe representarse y debe
     pedir conexión.
 11. Limpiar almacenamiento del sitio: la aplicación debe explicar que no hay
     copia, sin romperse.
+12. Cambiar el epoch en el servidor. La copia anterior puede seguir visible
+    mientras el dispositivo permanezca completamente offline; al recuperar
+    conexión y cargar el código nuevo debe eliminarse. La ventana offline
+    nunca puede superar los siete días.
 
 ## Validación
 
 1. Con el teléfono del asociado offline, mostrar la copia guardada.
-2. Con el comercio online, validar el token contra Uni2.
+2. Con `qa-comercio` online, validar el token contra Uni2.
 3. Dar de baja o cambiar el estado en el servidor y repetir: el servidor debe
    decidir el estado vigente.
 4. Poner también al comercio offline: la validación debe rechazarse sin quedar

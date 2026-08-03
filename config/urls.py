@@ -3,7 +3,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
 
+from config.views import staging_readiness
+
 urlpatterns = [
+    path("__staging__/readiness/", staging_readiness, name="staging_readiness"),
     path("", include(("pwa.urls", "pwa"), namespace="pwa")),
     path("admin/", admin.site.urls),
     path("especificacion/", include(("especificacion.urls", "especificacion"), namespace="especificacion")),

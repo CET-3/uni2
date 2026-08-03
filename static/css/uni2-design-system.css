@@ -890,7 +890,40 @@ button.uni2-service-card:hover {
   padding: 8px 10px;
 }
 
-/* === NAVBAR === */
+/* === ENTORNOS Y NAVBAR === */
+.uni2-environment-banner {
+  align-items: center;
+  background: #a83a00;
+  color: #ffffff;
+  display: flex;
+  font-size: 0.78rem;
+  gap: 8px;
+  height: calc(32px + env(safe-area-inset-top));
+  justify-content: center;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  padding: calc(6px + env(safe-area-inset-top)) 16px 6px;
+  position: sticky;
+  text-align: center;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
+  z-index: 40;
+}
+
+[data-deployment-environment="staging"] .uni2-navbar {
+  top: calc(32px + env(safe-area-inset-top));
+}
+
+.uni2-navbar .navbar-brand .uni2-environment-badge {
+  background: #a83a00;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  padding: 5px 8px;
+}
+
 .uni2-navbar {
   align-items: center;
   backdrop-filter: blur(14px);
@@ -1653,6 +1686,10 @@ button.uni2-service-card:hover {
     padding-top: env(safe-area-inset-top);
   }
 
+  [data-deployment-environment="staging"] .uni2-navbar {
+    padding-top: 0;
+  }
+
   .uni2-navbar-inner {
     padding-left: max(clamp(18px, 5vw, 76px), env(safe-area-inset-left));
     padding-right: max(clamp(18px, 5vw, 76px), env(safe-area-inset-right));
@@ -1667,6 +1704,10 @@ button.uni2-service-card:hover {
 
 .uni2-is-standalone .uni2-navbar {
   padding-top: env(safe-area-inset-top);
+}
+
+.uni2-is-standalone[data-deployment-environment="staging"] .uni2-navbar {
+  padding-top: 0;
 }
 
 /* === DASHBOARD COMPONENTS === */

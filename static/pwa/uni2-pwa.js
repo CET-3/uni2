@@ -192,7 +192,10 @@
         }
         reloadRequested = true;
         applyButton.disabled = true;
-        if (message) message.textContent = 'Actualizando UNI2…';
+        if (message) {
+          const shortName = document.body.dataset.pwaShortName || 'UNI2';
+          message.textContent = 'Actualizando ' + shortName + '…';
+        }
         waitingWorker.postMessage({ type: 'SKIP_WAITING' });
       });
     }
@@ -253,9 +256,11 @@
   function updateThemeColor() {
     const meta = document.getElementById('uni2-theme-color');
     if (!meta) return;
+    const lightColor = document.body.dataset.pwaThemeColorLight || '#f7f9fc';
+    const darkColor = document.body.dataset.pwaThemeColorDark || '#080c16';
     meta.setAttribute(
       'content',
-      document.documentElement.getAttribute('data-theme') === 'dark' ? '#080c16' : '#f7f9fc'
+      document.documentElement.getAttribute('data-theme') === 'dark' ? darkColor : lightColor
     );
   }
 

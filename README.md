@@ -70,8 +70,9 @@ Esa dirección HTTP sirve para revisar páginas responsive, pero **no sirve para
 probar la PWA**: un service worker necesita HTTPS o, durante desarrollo,
 `localhost`/loopback. La PWA se prueba localmente desde
 <http://127.0.0.1:8000/> en la misma computadora. Para Android o iOS reales se
-usa un staging HTTPS separado, con base, media, secreto y datos ficticios que
-nunca apuntan a Production.
+usa un staging HTTPS separado. Su base puede partir de una copia productiva
+endurecida, pero nunca comparte conexión, sesiones, contraseñas, tokens,
+`SECRET_KEY` ni storage con Production.
 
 Usuarios ficticios creados sólo en desarrollo local:
 
@@ -93,7 +94,9 @@ autenticadas no se guardan en el caché general.
 El asociado puede elegir guardar su credencial en ese dispositivo durante
 siete días. La copia se elimina al cerrar sesión, cambiar de usuario, vencer o
 usar “Quitar de este dispositivo”. El comercio siempre necesita conexión para
-validarla.
+validarla. Si cambia el epoch de datos, la copia anterior se elimina cuando el
+dispositivo vuelve a conectarse; el offline absoluto no permite revocación
+remota antes del vencimiento local.
 
 Esta etapa no incluye notificaciones push ni correos transaccionales o por
 lote.
@@ -120,8 +123,10 @@ DATABASE_URL=sqlite:///:memory: \
 uv run python manage.py collectstatic --noinput
 ```
 
-Cada PR y cada actualización de `main` ejecutan la misma suite con SQLite en
-GitHub Actions. El check requerido se llama `pytest (SQLite)`.
+Cada PR y cada actualización de `main` ejecutan la suite con SQLite y los
+controles de endurecimiento sobre un PostgreSQL efímero. Un push a `staging`
+reutiliza esos mismos checks antes de desplegar. Los jobs se llaman
+`pytest (SQLite)` y `Endurecimiento staging (PostgreSQL)`.
 
 ## Colaboración
 
@@ -146,12 +151,14 @@ git add pyproject.toml uv.lock
 La versión pública de Production está en
 <https://uni2-ashy.vercel.app/>.
 
-Vercel acepta deploys automáticos únicamente desde `main`. Los previews de
-otros branches están deshabilitados hasta disponer de una base PostgreSQL
-separada de producción.
+Vercel acepta deploys Git automáticos únicamente desde `main`. Los previews de
+los PR permanecen deshabilitados.
 
-Las pruebas móviles de PWA requieren primero un staging HTTPS aislado. No se
-habilita un Preview con `DATABASE_URL`, `SECRET_KEY` o storage de Production.
+La rama permanente `staging` se despliega mediante GitHub Actions sobre el
+proyecto Vercel separado `uni2-staging`. El workflow espera ambos jobs de CI,
+despliega sin mover el dominio estable, prueba autorización, readiness,
+manifest, iconos, worker y pantalla offline, y recién entonces promueve la
+versión. Después comprueba el SHA sobre el dominio estable.
 
 Cuando la integración Git está habilitada, fusionar un PR en `main` inicia el
 deploy productivo. Como alternativa manual y controlada:
@@ -186,6 +193,54 @@ System Environment Variables**.
 una variable. `SECRET_KEY` debe ser un valor aleatorio largo; cambiarlo cierra
 las sesiones existentes.
 
+### Staging
+
+El proyecto `uni2-staging` usa `config.settings.staging`, una base PostgreSQL y
+un `SECRET_KEY` propios. También exige:
+
+- `UNI2_ENVIRONMENT=staging`
+- `UNI2_STAGING_ACCESS_USERNAME`
+- `UNI2_STAGING_ACCESS_PASSWORD`
+- `UNI2_STAGING_DATABASE_LABEL`
+- `UNI2_STAGING_DATABASE_FINGERPRINT`
+- `UNI2_PRODUCTION_DATABASE_FINGERPRINT`
+- `UNI2_STAGING_DATABASE_ROLE_FINGERPRINT`
+- `UNI2_PRODUCTION_DATABASE_ROLE_FINGERPRINT`
+- `UNI2_PRIVATE_DATA_EPOCH`
+
+El proyecto usa Vercel Authentication y el perfil agrega una segunda barrera
+HTTP, `noindex`, respuestas `private, no-store`, un banner visible, iconos con
+insignia `STG`, un nombre PWA distinto y bloquea correo transaccional, correo
+por lote y push. Si no existe un marcador de copia endurecida para el epoch
+actual, responde `503`.
+
+Los archivos media quedan deshabilitados por defecto. Un bucket staging
+opcional debe ser privado, exclusivo y configurarse solamente mediante
+variables `UNI2_STAGING_AWS_*`; nunca se heredan variables AWS productivas.
+
+La base puede clonarse desde Producción sólo mediante el
+[procedimiento de refresco](especificacion/arquitectura/refresco-staging.md).
+Antes de conectarla es obligatorio ejecutar:
+
+```bash
+DJANGO_SETTINGS_MODULE=config.settings.staging \
+uv run python manage.py preparar_copia_staging \
+  --refresh-id ID_DEL_REFRESCO \
+  --confirm-target uni2-staging
+```
+
+Antes del comando se aplican las migraciones compatibles a la base staging
+todavía desconectada. El comando elimina sesiones, invalida usuarios
+productivos, retira privilegios, regenera tokens de credencial y crea cuatro
+accesos exclusivos: un admin, dos asociados ficticios y un comercio ficticio.
+Esos perfiles permiten recorrer la matriz PWA sin vincular cuentas QA a
+personas reales. El marcador de readiness se escribe como último paso
+transaccional. Las contraseñas QA llegan por variables temporales y nunca por
+argumentos o archivos versionados.
+
+La configuración completa y el circuito de promoción están en
+[Entorno de staging](especificacion/arquitectura/staging.md).
+
 ### Migraciones en producción
 
 El arranque de la aplicación en Vercel no ejecuta migraciones ni comandos de
@@ -219,9 +274,12 @@ settings locales o de test y nunca se ejecuta sobre producción.
 Sobre la URL HTTPS de staging o Production:
 
 ```bash
-curl -I https://DOMINIO/manifest.webmanifest
-curl -I https://DOMINIO/service-worker.js
-curl -I https://DOMINIO/sin-conexion/
+curl --fail --silent --show-error --output /dev/null --dump-header - \
+  https://DOMINIO/manifest.webmanifest
+curl --fail --silent --show-error --output /dev/null --dump-header - \
+  https://DOMINIO/service-worker.js
+curl --fail --silent --show-error --output /dev/null --dump-header - \
+  https://DOMINIO/sin-conexion/
 ```
 
 El manifest debe usar `application/manifest+json`. El worker debe usar un tipo

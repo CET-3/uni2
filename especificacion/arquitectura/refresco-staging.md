@@ -1,0 +1,131 @@
+---
+type: "Arquitectura"
+title: "Refresco de datos de staging"
+description: "Procedimiento seguro para copiar Producción y endurecer el destino antes de habilitarlo."
+tags: [mvp, arquitectura, staging, postgresql, seguridad]
+timestamp: 2026-08-02T00:00:00-03:00
+---
+
+# Refresco de datos de staging
+
+Un refresco es manual y autorizado. Nunca existe sincronización continua entre
+las bases ni se restaura staging hacia Producción.
+
+### Preparación
+
+1. Elegir un identificador único, por ejemplo `2026-08-02-01`.
+2. Crear una base PostgreSQL nueva y vacía.
+3. Crear dos servicios libpq locales y no versionados:
+   `uni2_prod_dump`, con acceso productivo de sólo lectura, y
+   `uni2_staging_restore`, con acceso al destino.
+4. Confirmar por host, nombre, usuario y huellas de base y rol que origen y
+   destino difieren.
+5. Mantener el proyecto staging protegido o desconectado durante toda la copia.
+6. Configurar `UNI2_PRIVATE_DATA_EPOCH` con el mismo identificador del refresco.
+
+Las URLs, contraseñas y archivos de servicio libpq viven fuera del repositorio.
+No se habilita `set -x` ni se colocan secretos en argumentos documentados.
+
+### Copia
+
+La ruta recomendada transmite el dump directamente entre los dos clientes
+PostgreSQL y no deja una copia con datos reales en disco:
+
+```bash
+pg_dump \
+  --dbname="service=uni2_prod_dump" \
+  --format=custom \
+  --no-owner \
+  --no-privileges |
+pg_restore \
+  --dbname="service=uni2_staging_restore" \
+  --single-transaction \
+  --exit-on-error \
+  --no-owner \
+  --no-privileges
+```
+
+No se usan `--clean` ni `--create`: el destino debe ser una base nueva. Así,
+una equivocación no borra una base existente.
+
+Si el proveedor obliga a generar un archivo, se usa un volumen efímero cifrado
+y se lo destruye al terminar. Nunca se guarda en `/tmp` sin verificar cifrado,
+ni dentro del repositorio.
+
+### Endurecimiento
+
+Con `DATABASE_URL` apuntando al destino y los settings de staging completos,
+primero se revisa y aplica el esquema compatible:
+
+```bash
+DJANGO_SETTINGS_MODULE=config.settings.staging \
+uv run python manage.py migrate --plan
+
+DJANGO_SETTINGS_MODULE=config.settings.staging \
+uv run python manage.py migrate
+```
+
+Después se ejecuta el endurecimiento:
+
+```bash
+DJANGO_SETTINGS_MODULE=config.settings.staging \
+uv run python manage.py preparar_copia_staging \
+  --refresh-id 2026-08-02-01 \
+  --confirm-target uni2-staging
+```
+
+Las contraseñas QA llegan mediante variables temporales:
+
+- `UNI2_STAGING_QA_ADMIN_USERNAME`
+- `UNI2_STAGING_QA_ADMIN_PASSWORD`
+- `UNI2_STAGING_QA_ASOCIADO_A_USERNAME`
+- `UNI2_STAGING_QA_ASOCIADO_A_PASSWORD`
+- `UNI2_STAGING_QA_ASOCIADO_B_USERNAME`
+- `UNI2_STAGING_QA_ASOCIADO_B_PASSWORD`
+- `UNI2_STAGING_QA_COMERCIO_USERNAME`
+- `UNI2_STAGING_QA_COMERCIO_PASSWORD`
+
+No se pasan contraseñas como argumentos. El comando ejecuta todos los cambios
+en una transacción y revierte ante cualquier error. Como último cambio de esa
+misma transacción escribe `EstadoDatosStaging`; hasta entonces, el middleware y
+readiness responden `503`.
+
+Luego se verifica:
+
+- cero sesiones copiadas;
+- ningún usuario productivo activo;
+- contraseñas productivas inutilizables;
+- cero privilegios productivos `staff` o `superuser`;
+- tokens de credencial regenerados y únicos;
+- sólo cuatro cuentas QA habilitadas;
+- dos asociados y un comercio QA contienen datos ficticios inequívocos;
+- marcador `EstadoDatosStaging` igual al refresh ID;
+- conteos agregados razonables;
+- manifest `UNI2 STG`;
+- barrera HTTP y `noindex`;
+- correo y push deshabilitados.
+
+Cambiar una variable de Vercel no modifica deployments existentes. El cutover
+de la base y `UNI2_PRIVATE_DATA_EPOCH` siempre se completa con un deployment
+nuevo; no se promueve una versión que todavía renderice el epoch anterior.
+
+Las huellas no reversibles de la base y del rol se obtienen con:
+
+```bash
+uv run python manage.py huella_base
+uv run python manage.py huella_base --rol
+```
+
+### Cierre
+
+Después de habilitar la base nueva:
+
+1. ejecutar smoke tests y la matriz PWA;
+2. mantener el destino anterior desconectado durante la ventana de rollback;
+3. destruir cualquier artefacto temporal cifrado, si el proveedor obligó a
+   crearlo;
+4. revocar la credencial productiva de sólo lectura;
+5. retirar del entorno las contraseñas temporales de creación de usuarios QA;
+6. registrar fecha, responsable, refresh ID, conteos y resultado, nunca datos.
+
+Una exposición de staging se trata como un incidente sobre datos productivos.

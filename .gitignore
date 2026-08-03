@@ -2,6 +2,7 @@
 .env
 .env.prod
 .env.production
+.env.staging
 
 # Entornos, cachés y archivos locales de Python
 .venv/
@@ -19,6 +20,10 @@ analisis_padron/
 media/
 tmp/
 *.xlsx
+*.dump
+*.backup
+.pgpass
+pg_service.conf
 
 # Configuración local de asistentes y herramientas
 .agents/

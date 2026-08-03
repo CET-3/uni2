@@ -18,6 +18,7 @@ selecciona el motor.
 |---|---|---|
 | Alumnos | SQLite | Copiar `.env.example` como `.env` |
 | Desarrollo con PostgreSQL | PostgreSQL | Copiar `.env.postgres.example` como `.env` y completar las credenciales |
+| Staging | PostgreSQL | Usar `config.settings.staging` sobre una copia productiva endurecida |
 | Producción | PostgreSQL | Usar `config.settings.production` y definir `DATABASE_URL` |
 
 SQLite es el perfil recomendado para alumnos porque viene incluido con Python,
@@ -45,6 +46,10 @@ de datos y exige `DATABASE_URL`.
   recibe migraciones mediante el procedimiento operativo documentado y sus
   datos se administran por los flujos previstos; nunca carga usuarios con
   contraseñas de demostración.
+- Staging puede recibir una copia puntual de Producción, pero sólo sobre una
+  base independiente. Antes de conectarla se eliminan sesiones, se invalidan
+  accesos productivos y se regeneran tokens según el
+  [procedimiento de refresco](refresco-staging.md).
 
 Los comandos de instalación y puesta en marcha se mantienen en el
 [README del proyecto](../../README.md).

@@ -25,3 +25,31 @@ class Notificacion(models.Model):
     def __str__(self):
         return f"{self.titulo} - {self.usuario}"
 
+
+class EstadoDatosStaging(models.Model):
+    CLAVE_ACTUAL = "actual"
+
+    clave = models.CharField(
+        "clave",
+        max_length=20,
+        primary_key=True,
+        default=CLAVE_ACTUAL,
+        editable=False,
+        help_text="Identificador único del estado habilitado para staging.",
+    )
+    refresh_id = models.CharField(
+        "identificador del refresco",
+        max_length=64,
+        help_text="Debe coincidir con el epoch privado publicado por la PWA.",
+    )
+    listo_desde = models.DateTimeField(
+        "listo desde",
+        help_text="Momento en que terminó el endurecimiento completo de la copia.",
+    )
+
+    class Meta:
+        verbose_name = "estado de datos de staging"
+        verbose_name_plural = "estados de datos de staging"
+
+    def __str__(self):
+        return f"Staging listo: {self.refresh_id}"
