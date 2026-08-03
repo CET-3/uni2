@@ -58,6 +58,23 @@ def test_huella_base_puede_calcular_la_identidad_separada_del_rol():
     )
 
 
+def test_huella_base_distingue_proyectos_en_un_pooler_compartido():
+    common_connection = {
+        "HOST": "aws-0-sa-east-1.pooler.supabase.com",
+        "PORT": "6543",
+        "NAME": "postgres",
+    }
+
+    production_fingerprint = database_fingerprint(
+        {**common_connection, "USER": "postgres.production-ref"}
+    )
+    staging_fingerprint = database_fingerprint(
+        {**common_connection, "USER": "postgres.staging-ref"}
+    )
+
+    assert production_fingerprint != staging_fingerprint
+
+
 @pytest.mark.django_db
 @override_settings(ALLOW_DEMO_DATA=False)
 def test_carga_inicial_rechaza_entornos_sin_datos_demo():

@@ -116,6 +116,11 @@ uv run python manage.py huella_base
 uv run python manage.py huella_base --rol
 ```
 
+La huella de base considera usuario, host, puerto y nombre. El usuario es
+necesario porque los poolers compartidos de Supabase pueden usar el mismo host,
+puerto y nombre `postgres` para proyectos distintos, y codifican la referencia
+del proyecto en el usuario de conexión. Ninguna huella incluye la contraseña.
+
 ### Cierre
 
 Después de habilitar la base nueva:

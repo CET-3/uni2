@@ -2,12 +2,18 @@ import hashlib
 
 
 def database_fingerprint(database_config):
-    """Identifica una base sin incluir ni exponer su contraseña."""
+    """Identifica un destino de base sin incluir ni exponer su contraseña.
+
+    El usuario forma parte de la identidad porque algunos proveedores, como
+    Supabase, comparten host, puerto y nombre de base entre proyectos y llevan
+    el identificador del proyecto dentro del usuario del pooler.
+    """
 
     host = str(database_config.get("HOST") or "").strip().lower()
     port = str(database_config.get("PORT") or "5432").strip()
     name = str(database_config.get("NAME") or "").strip()
-    identity = f"{host}:{port}/{name}"
+    user = str(database_config.get("USER") or "").strip()
+    identity = f"{user}@{host}:{port}/{name}"
     return hashlib.sha256(identity.encode("utf-8")).hexdigest()
 
 
