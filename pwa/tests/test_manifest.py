@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from django.contrib.staticfiles import finders
+from django.test import override_settings
 from django.urls import resolve, reverse
 from PIL import Image
 
@@ -75,3 +76,33 @@ def test_manifest_solo_admite_get(client):
     response = client.post(reverse("pwa:manifest"))
 
     assert response.status_code == 405
+
+
+@override_settings(
+    PWA_APP_NAME="UNI2 - Entorno de prueba",
+    PWA_SHORT_NAME="UNI2 STG",
+    PWA_DESCRIPTION="Entorno protegido de prueba.",
+    PWA_THEME_COLOR="#a83a00",
+    PWA_BACKGROUND_COLOR="#fff4e8",
+    PWA_ICON_DIRECTORY="pwa/icons/staging",
+)
+def test_manifest_distingue_staging_sin_cambiar_la_identidad_por_origen(client):
+    manifest = client.get(reverse("pwa:manifest")).json()
+
+    assert manifest["id"] == "/"
+    assert manifest["name"] == "UNI2 - Entorno de prueba"
+    assert manifest["short_name"] == "UNI2 STG"
+    assert manifest["description"] == "Entorno protegido de prueba."
+    assert manifest["theme_color"] == "#a83a00"
+    assert manifest["background_color"] == "#fff4e8"
+    assert {icon["src"] for icon in manifest["icons"]} == {
+        "/static/pwa/icons/staging/icon-192.png",
+        "/static/pwa/icons/staging/icon-512.png",
+        "/static/pwa/icons/staging/icon-maskable-192.png",
+        "/static/pwa/icons/staging/icon-maskable-512.png",
+    }
+    for icon in manifest["icons"]:
+        found_path = finders.find(icon["src"].removeprefix("/static/"))
+        assert found_path is not None
+        with Image.open(found_path) as image:
+            assert image.size == tuple(int(value) for value in icon["sizes"].split("x"))

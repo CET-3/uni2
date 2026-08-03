@@ -1,9 +1,11 @@
 const BUILD_ID = {{ pwa_build_id_json|safe }};
+const DATA_EPOCH = {{ pwa_private_data_epoch_json|safe }};
+const CACHE_VERSION = `${BUILD_ID}-${DATA_EPOCH}`;
 const CACHE_PREFIX = "uni2-pwa-";
-const SHELL_CACHE = `${CACHE_PREFIX}shell-${BUILD_ID}`;
-const STATIC_CACHE = `${CACHE_PREFIX}static-${BUILD_ID}`;
-const PUBLIC_PAGES_CACHE = `${CACHE_PREFIX}public-pages-${BUILD_ID}`;
-const PUBLIC_IMAGES_CACHE = `${CACHE_PREFIX}public-images-${BUILD_ID}`;
+const SHELL_CACHE = `${CACHE_PREFIX}shell-${CACHE_VERSION}`;
+const STATIC_CACHE = `${CACHE_PREFIX}static-${CACHE_VERSION}`;
+const PUBLIC_PAGES_CACHE = `${CACHE_PREFIX}public-pages-${CACHE_VERSION}`;
+const PUBLIC_IMAGES_CACHE = `${CACHE_PREFIX}public-images-${CACHE_VERSION}`;
 const CURRENT_CACHES = new Set([
     SHELL_CACHE,
     STATIC_CACHE,

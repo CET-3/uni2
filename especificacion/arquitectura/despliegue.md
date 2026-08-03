@@ -55,14 +55,21 @@ el inicio de una función serverless nunca modifique la base de datos.
 
 `vercel.json` mantiene solamente las decisiones propias del proyecto: región y
 ramas desplegables. Habilita deploy automático para `main` y lo deshabilita
-para el resto de los branches. Los previews permanecen apagados mientras no
-exista una base PostgreSQL de Preview separada, con credenciales y datos
-ficticios.
+para el resto de los branches. Los previews de cada PR permanecen apagados.
 
-GitHub Actions ejecuta `pytest` con Python 3.12, las dependencias fijadas en
-`uv.lock` y SQLite para cada PR y cada actualización de `main`. El check
-`pytest (SQLite)` debe aprobarse antes de fusionar. El CI no recibe secretos ni
-credenciales de PostgreSQL.
+Staging usa un segundo proyecto Vercel llamado `uni2-staging`, sin integración
+Git. Un push a la rama permanente `staging` ejecuta primero la suite y, sólo si
+aprueba, un workflow selecciona ese proyecto por ID. Despliega sin mover el
+dominio estable, prueba autorización, readiness, manifest, iconos, service
+worker y pantalla offline, y después lo promueve. Finalmente vuelve a probar
+readiness sobre el dominio estable. Esto evita conectar el clon productivo a
+ramas arbitrarias.
+
+GitHub Actions ejecuta `pytest` con Python 3.12 y las dependencias fijadas en
+`uv.lock`. Cada PR y cada actualización de `main` corren la suite completa con
+SQLite y el endurecimiento focalizado contra un PostgreSQL 16 efímero. Un push
+a `staging` reutiliza ese workflow antes del deploy. Ningún job recibe secretos
+ni credenciales de bases remotas.
 
 El repositorio es público para que los estudiantes puedan clonarlo sin
 pertenecer a la organización. Todo cambio se entrega mediante un PR. La rama
@@ -84,15 +91,21 @@ navegadores tratan como contexto seguro. Una IP de red local servida por HTTP
 no es un contexto seguro y no permite validar la instalación desde un
 teléfono.
 
-Antes de habilitar previews o pruebas físicas se prepara un entorno staging
-separado con:
+Las pruebas físicas se realizan en un entorno staging separado con:
 
 - URL HTTPS estable;
-- PostgreSQL propio con datos ficticios;
+- Vercel Authentication sobre todos los deployments técnicos;
+- PostgreSQL propio que puede recibir una copia productiva endurecida;
 - `SECRET_KEY` propio;
 - bucket o prefijo de media propio;
 - hosts y orígenes CSRF propios;
-- ninguna variable copiada desde Production.
+- barrera HTTP delante de Django y login propio de Uni2;
+- ninguna credencial, sesión, contraseña ni token reutilizable de Production.
+
+La copia mantiene datos personales, por lo que staging se protege y opera con
+la misma sensibilidad que Producción. El
+[refresco de datos](refresco-staging.md) borra sesiones, invalida usuarios
+copiados, retira privilegios y regenera los tokens antes de conectar la base.
 
 Una URL estable es necesaria para instalar la versión A, desplegar la B sobre
 el mismo origen y probar el ciclo real de actualización. La protección de
@@ -103,9 +116,14 @@ desde la sesión de prueba.
 
 En staging y después del deploy productivo se comprueba:
 
+- el acceso anónimo queda detenido antes de las vistas de staging;
+- todas las respuestas staging llevan `X-Robots-Tag` restrictivo;
+- readiness confirma la conexión, el marcador de endurecimiento, el epoch y el
+  SHA exacto desplegado;
 - `/manifest.webmanifest` responde 200 como
   `application/manifest+json`;
 - todos los iconos del manifest responden 200 y tienen el tamaño declarado;
+- staging usa exclusivamente los iconos naranjas con insignia `STG`;
 - `/service-worker.js` responde 200 como JavaScript, con
   `Service-Worker-Allowed: /` y política de no caché;
 - el worker controla el scope `/` y usa el ID del commit desplegado;
@@ -115,6 +133,12 @@ En staging y después del deploy productivo se comprueba:
 - una respuesta autenticada lleva `Cache-Control: private, no-store`;
 - los estáticos no dependen de un CDN externo;
 - no existe una migración inesperada.
+
+Staging muestra un banner persistente, un nombre PWA propio y un color
+distintivo. `UNI2_PRIVATE_DATA_EPOCH` cambia con cada refresco para que una PWA
+instalada elimine cualquier credencial offline ligada a la copia anterior al
+volver a conectarse. Durante el offline absoluto no existe revocación remota;
+continúa aplicando el vencimiento local máximo de siete días.
 
 La prueba manual completa está en
 [Progressive Web App](../pruebas-manuales/pwa.md). Chromium automatizado no
@@ -147,6 +171,11 @@ compatibilidad temporal con la versión productiva anterior.
 
 Los cambios destructivos se dividen en entregas compatibles. Un rollback de
 código no revierte automáticamente una migración.
+
+En staging se aplica el mismo criterio antes de actualizar la rama estable:
+primero se revisa y aplica la migración compatible sobre la base staging y
+después se permite el deploy. El workflow no conoce `DATABASE_URL` y no ejecuta
+migraciones durante el build.
 
 Los comandos concretos se mantienen en el [README](../../README.md).
 

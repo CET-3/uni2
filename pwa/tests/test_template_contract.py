@@ -51,6 +51,35 @@ def test_base_expone_el_ttl_configurado_sin_duplicarlo_en_javascript(client):
 
 
 @pytest.mark.django_db
+@override_settings(
+    PWA_APP_NAME="UNI2 - Entorno de prueba",
+    PWA_SHORT_NAME="UNI2 STG",
+    PWA_PRIVATE_DATA_EPOCH="2026-08-02-01",
+    PWA_THEME_COLOR_LIGHT="#fff4e8",
+    PWA_THEME_COLOR_DARK="#2a1208",
+    PWA_ICON_DIRECTORY="pwa/icons/staging",
+    UNI2_DEPLOYMENT_ENVIRONMENT="staging",
+    UNI2_ENVIRONMENT_LABEL="STAGING · DATOS REALES",
+    UNI2_ENVIRONMENT_SHORT_LABEL="STAGING",
+)
+def test_base_identifica_staging_y_expone_epoch_para_datos_privados(client):
+    content = client.get(reverse("web:home")).content.decode()
+
+    assert 'data-deployment-environment="staging"' in content
+    assert "STAGING · DATOS REALES" in content
+    assert 'class="uni2-environment-badge">STAGING</span>' in content
+    assert "<title>Inicio | Uni2 · STAGING</title>" in content
+    assert 'content="UNI2 STG"' in content
+    assert 'data-pwa-private-data-epoch="2026-08-02-01"' in content
+    assert 'data-pwa-theme-color-light="#fff4e8"' in content
+    assert 'data-pwa-theme-color-dark="#2a1208"' in content
+    assert 'data-pwa-short-name="UNI2 STG"' in content
+    assert "/static/pwa/icons/staging/favicon-32.png" in content
+    assert "/static/pwa/icons/staging/icon-192.png" in content
+    assert "/static/pwa/icons/staging/apple-touch-icon-180.png" in content
+
+
+@pytest.mark.django_db
 def test_credencial_solo_expone_al_cliente_campos_offline_permitidos(client):
     asociado = create_asociado(
         nombre="Nora",

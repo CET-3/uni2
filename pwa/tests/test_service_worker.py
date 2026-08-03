@@ -9,7 +9,10 @@ def test_ruta_del_service_worker_es_raiz_y_estable():
     assert resolve("/service-worker.js").view_name == "pwa:service_worker"
 
 
-@override_settings(PWA_BUILD_ID="release/2026 08 01")
+@override_settings(
+    PWA_BUILD_ID="release/2026 08 01",
+    PWA_PRIVATE_DATA_EPOCH="refresh/2026 08 02",
+)
 def test_worker_declara_scope_headers_y_build_normalizado(client):
     response = client.get(reverse("pwa:service_worker"))
     source = response.content.decode()
@@ -21,6 +24,17 @@ def test_worker_declara_scope_headers_y_build_normalizado(client):
     assert response.headers["X-Content-Type-Options"] == "nosniff"
     assert "Vary" not in response.headers
     assert 'const BUILD_ID = "release-2026-08-01";' in source
+    assert 'const DATA_EPOCH = "refresh-2026-08-02";' in source
+    assert "const CACHE_VERSION = `${BUILD_ID}-${DATA_EPOCH}`;" in source
+
+
+@override_settings(PWA_ICON_DIRECTORY="pwa/icons/staging")
+def test_worker_precachea_los_iconos_exclusivos_de_staging(client):
+    source = client.get(reverse("pwa:service_worker")).content.decode()
+
+    assert "/static/pwa/icons/staging/icon-192.png" in source
+    assert "/static/pwa/icons/staging/icon-512.png" in source
+    assert "/static/pwa/icons/icon-192.png" not in source
 
 
 def test_worker_precachea_shell_y_assets_locales(client):

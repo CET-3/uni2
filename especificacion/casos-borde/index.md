@@ -13,3 +13,5 @@
 * [CB-credencial-offline-vencida](cb-credencial-offline-vencida.md) - Situación: la copia local tiene más de siete días.
 * [CB-cambio-usuario-en-dispositivo](cb-cambio-usuario-dispositivo.md) - Situación: otra persona inicia sesión donde había una credencial guardada.
 * [CB-actualizacion-PWA-con-formulario-abierto](cb-actualizacion-pwa.md) - Situación: llega una versión nueva con trabajo sin enviar.
+* [CB-refresco-staging-destino-equivocado](cb-refresco-staging-destino-equivocado.md) - Situación: el origen o destino no coincide con la base declarada.
+* [CB-refresco-staging-incompleto](cb-refresco-staging-incompleto.md) - Situación: la copia no completó su endurecimiento o verificaciones.

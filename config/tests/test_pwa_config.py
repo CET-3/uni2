@@ -70,6 +70,12 @@ def test_collectstatic_incluye_assets_pwa_vendor_e_iconos(tmp_path):
         "pwa/icons/icon-maskable-192.png",
         "pwa/icons/icon-maskable-512.png",
         "pwa/icons/apple-touch-icon-180.png",
+        "pwa/icons/staging/icon-192.png",
+        "pwa/icons/staging/icon-512.png",
+        "pwa/icons/staging/icon-maskable-192.png",
+        "pwa/icons/staging/icon-maskable-512.png",
+        "pwa/icons/staging/apple-touch-icon-180.png",
+        "pwa/icons/staging/favicon-32.png",
         "vendor/bootstrap/5.3.3/css/bootstrap.min.css",
         "vendor/bootstrap/5.3.3/js/bootstrap.bundle.min.js",
         "vendor/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css",
@@ -77,3 +83,11 @@ def test_collectstatic_incluye_assets_pwa_vendor_e_iconos(tmp_path):
         "vendor/qrcode-generator/1.4.4/qrcode.min.js",
     }
     assert expected_paths <= manifest["paths"].keys()
+
+
+def test_almacenamiento_privado_invalida_credenciales_al_cambiar_epoch():
+    source = (settings.BASE_DIR / "static/pwa/uni2-private-storage.js").read_text()
+
+    assert "dataEpoch: DATA_EPOCH" in source
+    assert "record.dataEpoch !== DATA_EPOCH" in source
+    assert "await deleteActiveCredential()" in source

@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+  workflow_call:
 
 permissions:
   contents: read
@@ -36,3 +37,49 @@ jobs:
 
       - name: Ejecutar la suite
         run: uv run --frozen pytest -q
+
+  staging-postgresql:
+    name: Endurecimiento staging (PostgreSQL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: uni2_test
+          POSTGRES_USER: uni2_test
+          POSTGRES_PASSWORD: uni2_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U uni2_test -d uni2_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DB_ENGINE: postgres
+      DB_NAME: uni2_test
+      DB_USER: uni2_test
+      DB_PASSWORD: uni2_test_password
+      DB_HOST: 127.0.0.1
+      DB_PORT: "5432"
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Instalar uv y Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: uv sync --locked --dev
+
+      - name: Probar endurecimiento y rollback en PostgreSQL
+        run: >-
+          uv run --frozen pytest
+          usuarios/tests/test_management_commands.py
+          -k preparar_copia_staging
+          -q

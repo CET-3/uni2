@@ -80,3 +80,15 @@ def test_shell_de_credencial_no_contiene_una_credencial_embebida(client):
     assert "data-offline-credential-name" in content
     assert "data-offline-credential-token" in content
     assert "value=" not in content
+
+
+@pytest.mark.parametrize("name", OFFLINE_ROUTES)
+@pytest.mark.django_db
+def test_shells_offline_conservan_la_advertencia_de_staging(client, name, settings):
+    settings.UNI2_DEPLOYMENT_ENVIRONMENT = "staging"
+    settings.UNI2_ENVIRONMENT_LABEL = "STAGING · DATOS REALES"
+    settings.UNI2_ENVIRONMENT_SHORT_LABEL = "STAGING"
+
+    content = client.get(reverse(f"pwa:{name}")).content.decode()
+
+    assert "STAGING · DATOS REALES" in content

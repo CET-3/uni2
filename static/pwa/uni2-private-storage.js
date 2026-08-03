@@ -9,6 +9,7 @@
   const ACTIVE_KEY = 'active';
   const SCHEMA_VERSION = 1;
   const CHANNEL_NAME = 'uni2-private-data';
+  const DATA_EPOCH = String(document.body.dataset.pwaPrivateDataEpoch || 'development');
 
   function openDatabase() {
     return new Promise(function (resolve, reject) {
@@ -91,6 +92,10 @@
       await deleteActiveCredential();
       return null;
     }
+    if (record && record.dataEpoch !== DATA_EPOCH) {
+      await deleteActiveCredential();
+      return null;
+    }
     if (!record || record.schemaVersion !== SCHEMA_VERSION) return null;
     return record;
   }
@@ -99,6 +104,7 @@
     const record = {
       key: ACTIVE_KEY,
       schemaVersion: SCHEMA_VERSION,
+      dataEpoch: DATA_EPOCH,
       ownerId: String(credential.ownerId),
       nombre: String(credential.nombre),
       apellido: String(credential.apellido),

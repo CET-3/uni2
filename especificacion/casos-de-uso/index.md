@@ -47,6 +47,10 @@
 
 ## Administrador
 
+### Operación de entornos
+
+* [CU-refrescar-staging](cu-refrescar-staging.md) - Actor: Responsable técnica autorizada.
+
 ### Asociados
 
 * [CU-dar-baja-asociado](cu-dar-baja-asociado.md) - Actor: Administrador

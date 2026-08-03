@@ -1,23 +1,23 @@
 {% load static %}
 <!doctype html>
-<html lang="es" data-theme="light" data-bs-theme="light">
+<html lang="es" data-theme="light" data-bs-theme="light" data-deployment-environment="{{ uni2_deployment_environment }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="color-scheme" content="light dark">
-    <meta id="uni2-theme-color" name="theme-color" content="#f7f9fc">
-    <meta name="application-name" content="UNI2">
+    <meta id="uni2-theme-color" name="theme-color" content="{{ pwa_theme_color_light }}">
+    <meta name="application-name" content="{{ pwa_short_name }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="UNI2">
+    <meta name="apple-mobile-web-app-title" content="{{ pwa_short_name }}">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>{% block title %}Uni2{% endblock %}</title>
+    <title>{% block title %}Uni2{% endblock %}{% if uni2_environment_short_label %} · {{ uni2_environment_short_label }}{% endif %}</title>
     {% if load_theme_script|default_if_none:True %}
         <script src="{% static 'js/uni2-theme.js' %}"></script>
     {% endif %}
     <link rel="manifest" href="{% url 'pwa:manifest' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'pwa/icons/favicon-32.png' %}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'pwa/icons/icon-192.png' %}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'pwa/icons/apple-touch-icon-180.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static pwa_favicon_path %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static pwa_icon_192_path %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static pwa_apple_touch_icon_path %}">
     <link rel="stylesheet" href="{% static 'vendor/bootstrap/5.3.3/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/uni2-design-system.css' %}">
@@ -27,8 +27,15 @@
     class="d-flex flex-column min-vh-100{% block body_class %}{% endblock %}"
     data-pwa-owner-source="{% if user.is_authenticated %}{{ user.pk }}{% endif %}"
     data-pwa-credential-ttl-days="{{ pwa_credential_offline_ttl_days|default:7 }}"
+    data-pwa-private-data-epoch="{{ pwa_private_data_epoch }}"
+    data-pwa-short-name="{{ pwa_short_name }}"
+    data-pwa-theme-color-light="{{ pwa_theme_color_light }}"
+    data-pwa-theme-color-dark="{{ pwa_theme_color_dark }}"
 >
     <a class="uni2-skip-link" href="#contenido-principal">Saltar al contenido principal</a>
+    {% if uni2_environment_label %}
+        {% include "components/environment_banner.html" %}
+    {% endif %}
     {% if show_site_chrome|default_if_none:True %}
         {% include "includes/navbar.html" %}
     {% endif %}

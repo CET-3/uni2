@@ -54,8 +54,11 @@ Los service workers funcionan en HTTPS y, como excepción de desarrollo, en
 `http://192.168.x.x:8000` no sirve para probar la PWA en un teléfono.
 
 Las pruebas físicas se realizan en un staging HTTPS separado, con base,
-storage, secreto y datos ficticios propios. Nunca se conectan previews ni
-staging a recursos de Production.
+storage, secreto y accesos propios. La base puede ser una copia puntual de
+Producción únicamente después del
+[endurecimiento de staging](refresco-staging.md): no conserva sesiones,
+contraseñas, privilegios ni tokens productivos. Los previews nunca reciben
+recursos remotos.
 
 ## Política de respuestas
 
@@ -87,9 +90,9 @@ El worker verifica los encabezados antes de escribir.
 | Credencial guardada | IndexedDB, no Cache Storage | Disponible hasta siete días |
 | POST, upload, pago o validación | network-only | Falla informada, sin reintento |
 
-Los cachés llevan `PWA_BUILD_ID`, derivado del commit de Vercel en producción
-y `development` como valor local. Al activarse una versión se eliminan
-solamente cachés PWA de builds anteriores.
+Los cachés llevan `PWA_BUILD_ID`, derivado del commit de Vercel en producción,
+y el epoch privado de la copia de datos. Al activarse una versión se eliminan
+solamente cachés PWA de builds o epochs anteriores.
 
 ## Actualización
 
@@ -116,6 +119,11 @@ Un registro con más de siete días no se muestra y se elimina. Al cerrar sesió
 se limpia el registro. Al iniciar con otra cuenta, la identidad recibida del
 servidor se compara antes de mostrar datos y cualquier registro ajeno se
 elimina. La interfaz también ofrece “Quitar de este dispositivo”.
+
+Un cambio de epoch sólo puede llegar a un dispositivo cuando vuelve a
+conectarse. Mientras permanezca completamente offline puede conservar la copia
+anterior hasta que venza el límite local de siete días; no se promete una
+revocación remota durante el offline absoluto.
 
 El QR se genera localmente desde el token. El almacenamiento local no
 convierte la credencial en vigente: la decisión de validez sigue perteneciendo
