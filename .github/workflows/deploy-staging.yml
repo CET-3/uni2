@@ -48,6 +48,7 @@ jobs:
               --skip-domain \
               --yes \
               --archive=tgz \
+              --scope="$VERCEL_ORG_ID" \
               --token="$VERCEL_TOKEN" \
               --build-env "PWA_BUILD_ID=$PWA_BUILD_ID" \
               --env "PWA_BUILD_ID=$PWA_BUILD_ID"
@@ -72,12 +73,14 @@ jobs:
             shift
             vercel curl "$path" \
               --deployment "$DEPLOYMENT_URL" \
+              --scope="$VERCEL_ORG_ID" \
               --token="$VERCEL_TOKEN" \
               -- "${curl_args[@]}" "$@"
           }
           anonymous_status="$(
             vercel curl "/" \
               --deployment "$DEPLOYMENT_URL" \
+              --scope="$VERCEL_ORG_ID" \
               --token="$VERCEL_TOKEN" \
               -- \
               --silent \
@@ -118,7 +121,11 @@ jobs:
           python -c 'html=open("/tmp/offline.html").read(); assert "STAGING · DATOS REALES" in html'
 
       - name: Promover el deployment aprobado
-        run: vercel promote "${{ steps.deploy.outputs.url }}" --yes --token="$VERCEL_TOKEN"
+        run: |
+          vercel promote "${{ steps.deploy.outputs.url }}" \
+            --yes \
+            --scope="$VERCEL_ORG_ID" \
+            --token="$VERCEL_TOKEN"
 
       - name: Verificar el dominio estable promovido
         env:
@@ -135,6 +142,7 @@ jobs:
           )
           vercel curl "/__staging__/readiness/" \
             --deployment "$STAGING_BASE_URL" \
+            --scope="$VERCEL_ORG_ID" \
             --token="$VERCEL_TOKEN" \
             -- "${curl_args[@]}" \
             --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \

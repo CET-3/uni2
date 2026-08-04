@@ -33,6 +33,9 @@ staging   -> PR a main    -> deploy en Producción
 El proyecto Vercel de staging no se conecta al repositorio. El workflow lo
 selecciona mediante un ID guardado en el Environment `staging` de GitHub. Esto
 evita que el mismo `vercel.json` habilite ramas cruzadas en los dos proyectos.
+Cada operación CLI declara además `--scope="$VERCEL_ORG_ID"`: un token puede
+tener un contexto personal predeterminado y no se permite que deploy, smoke o
+promoción resuelvan equipos diferentes.
 
 ### Datos
 

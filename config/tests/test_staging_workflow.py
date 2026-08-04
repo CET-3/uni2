@@ -31,6 +31,7 @@ def test_deploy_apunta_al_proyecto_staging_y_promueve_despues_del_smoke():
     assert "VERCEL_PROJECT_ID: ${{ secrets.VERCEL_STAGING_PROJECT_ID }}" in workflow
     assert "environment: staging" in workflow
     assert "--skip-domain" in workflow
+    assert '--scope="$VERCEL_ORG_ID"' in workflow
     assert "STAGING_ACCESS_PASSWORD" in workflow
     assert "vercel curl" in workflow
     assert "VERCEL_AUTOMATION_BYPASS_SECRET" not in workflow
