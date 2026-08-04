@@ -73,7 +73,8 @@ con URLs firmadas breves y sin dominio público.
 `config.settings.staging` exige:
 
 - Vercel Authentication delante de todos los deployments `.vercel.app`; sólo
-  GitHub Actions recibe el bypass de automatización;
+  GitHub Actions obtiene un bypass temporal mediante `vercel curl` y el token
+  dedicado del proyecto;
 - `DEBUG=False`;
 - `UNI2_ENVIRONMENT=staging`;
 - PostgreSQL obligatorio;
@@ -131,7 +132,6 @@ desplegar y ejecutar los smoke tests:
 - `VERCEL_ORG_ID`
 - `VERCEL_STAGING_PROJECT_ID`
 - `VERCEL_STAGING_TOKEN`
-- `VERCEL_AUTOMATION_BYPASS_SECRET`
 - `STAGING_ACCESS_USERNAME`
 - `STAGING_ACCESS_PASSWORD`
 
@@ -139,6 +139,8 @@ Además define la variable no secreta
 `STAGING_BASE_URL=https://uni2-staging.vercel.app`.
 
 Los secretos de base, Django y storage no se copian a GitHub.
+Tampoco se conserva un bypass estático adicional: Vercel CLI obtiene el bypass
+de protección durante cada smoke test usando `VERCEL_STAGING_TOKEN`.
 
 ### Migraciones y rollback
 

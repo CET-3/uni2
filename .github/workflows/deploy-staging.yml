@@ -59,47 +59,62 @@ jobs:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
           STAGING_ACCESS_PASSWORD: ${{ secrets.STAGING_ACCESS_PASSWORD }}
           STAGING_ACCESS_USERNAME: ${{ secrets.STAGING_ACCESS_USERNAME }}
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
-          bypass_args=(
+          curl_args=(
             --fail
             --silent
             --show-error
             --retry 5
             --retry-all-errors
-            --header "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET"
           )
+          vercel_request() {
+            local path="$1"
+            shift
+            vercel curl "$path" \
+              --deployment "$DEPLOYMENT_URL" \
+              --token="$VERCEL_TOKEN" \
+              -- "${curl_args[@]}" "$@"
+          }
           anonymous_status="$(
-            curl "${bypass_args[@]}" "$DEPLOYMENT_URL/" \
+            vercel curl "/" \
+              --deployment "$DEPLOYMENT_URL" \
+              --token="$VERCEL_TOKEN" \
+              -- \
+              --silent \
+              --show-error \
+              --retry 5 \
+              --retry-all-errors \
               --output /dev/null \
-              --write-out "%{http_code}" \
-              --fail-with-body 2>/dev/null || true
+              --write-out "%{http_code}"
           )"
           test "$anonymous_status" = "401"
 
-          common_args=(
-            "${bypass_args[@]}"
-            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD"
-          )
-          curl "${common_args[@]}" "$DEPLOYMENT_URL/__staging__/readiness/" \
+          vercel_request "/__staging__/readiness/" \
+            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --output /tmp/readiness.json
           python -c 'import json, os; data=json.load(open("/tmp/readiness.json")); assert data["ready"] is True; assert data["build_id"] == os.environ["PWA_BUILD_ID"]'
-          curl "${common_args[@]}" "$DEPLOYMENT_URL/manifest.webmanifest" \
+          vercel_request "/manifest.webmanifest" \
+            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --dump-header /tmp/manifest.headers \
             --output /tmp/manifest.json
           python -c 'import json; data=json.load(open("/tmp/manifest.json")); assert data["short_name"] == "UNI2 STG"; assert "/staging/" in data["icons"][0]["src"]'
           python -c 'headers=open("/tmp/manifest.headers").read().lower(); assert "application/manifest+json" in headers; assert "x-robots-tag: noindex" in headers; assert "cache-control: private, no-store" in headers'
           python -c 'import json; [print(icon["src"], icon["sizes"]) for icon in json.load(open("/tmp/manifest.json"))["icons"]]' |
           while read -r icon_path expected_size; do
-            curl "${common_args[@]}" "$DEPLOYMENT_URL$icon_path" --output /tmp/staging-icon.png
+            vercel_request "$icon_path" \
+              --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
+              --output /tmp/staging-icon.png
             python -c 'import struct, sys; data=open("/tmp/staging-icon.png", "rb").read(24); assert data[:8] == b"\x89PNG\r\n\x1a\n"; width, height=struct.unpack(">II", data[16:24]); assert f"{width}x{height}" == sys.argv[1]' "$expected_size"
           done
-          curl "${common_args[@]}" "$DEPLOYMENT_URL/service-worker.js" \
+          vercel_request "/service-worker.js" \
+            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --dump-header /tmp/service-worker.headers \
             --output /tmp/service-worker.js
           python -c 'import json, os; ready=json.load(open("/tmp/readiness.json")); worker=open("/tmp/service-worker.js").read(); assert "const BUILD_ID = " + json.dumps(os.environ["PWA_BUILD_ID"]) + ";" in worker; assert "const DATA_EPOCH = " + json.dumps(ready["data_epoch"]) + ";" in worker'
           python -c 'headers=open("/tmp/service-worker.headers").read().lower(); assert "service-worker-allowed: /" in headers; assert "cache-control: private, no-store" in headers'
-          curl "${common_args[@]}" "$DEPLOYMENT_URL/sin-conexion/" --output /tmp/offline.html
+          vercel_request "/sin-conexion/" \
+            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
+            --output /tmp/offline.html
           python -c 'html=open("/tmp/offline.html").read(); assert "STAGING · DATOS REALES" in html'
 
       - name: Promover el deployment aprobado
@@ -109,18 +124,19 @@ jobs:
         env:
           STAGING_ACCESS_PASSWORD: ${{ secrets.STAGING_ACCESS_PASSWORD }}
           STAGING_ACCESS_USERNAME: ${{ secrets.STAGING_ACCESS_USERNAME }}
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           test -n "$STAGING_BASE_URL"
-          common_args=(
+          curl_args=(
             --fail
             --silent
             --show-error
             --retry 5
             --retry-all-errors
-            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD"
-            --header "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET"
           )
-          curl "${common_args[@]}" "$STAGING_BASE_URL/__staging__/readiness/" \
+          vercel curl "/__staging__/readiness/" \
+            --deployment "$STAGING_BASE_URL" \
+            --token="$VERCEL_TOKEN" \
+            -- "${curl_args[@]}" \
+            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --output /tmp/stable-readiness.json
           python -c 'import json, os; data=json.load(open("/tmp/stable-readiness.json")); assert data["ready"] is True; assert data["build_id"] == os.environ["PWA_BUILD_ID"]'
