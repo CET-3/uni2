@@ -242,6 +242,8 @@ argumentos o archivos versionados.
 
 La configuración completa y el circuito de promoción están en
 [Entorno de staging](especificacion/arquitectura/staging.md).
+El inventario de variables y secretos está en
+[Configuración de deploy](especificacion/arquitectura/deploy.md).
 
 ### Migraciones en producción
 

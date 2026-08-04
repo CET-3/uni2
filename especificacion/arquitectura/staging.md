@@ -42,6 +42,10 @@ promoción resuelvan equipos diferentes.
 Para una explicación introductoria de estos términos y del circuito completo
 de releases, ver el [glosario de deploy y releases](glosario-deploy.md).
 
+El inventario de nombres, propósitos y clasificación de las variables de
+Vercel y GitHub está en [Configuración de deploy](deploy.md). Ese inventario no
+incluye valores reales ni credenciales.
+
 ### Datos
 
 La base de staging puede partir de una copia puntual de Producción autorizada
