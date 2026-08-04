@@ -97,7 +97,6 @@ jobs:
             --output /tmp/readiness.json
           python -c 'import json, os; data=json.load(open("/tmp/readiness.json")); assert data["ready"] is True; assert data["build_id"] == os.environ["PWA_BUILD_ID"]'
           vercel_request "/manifest.webmanifest" \
-            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --dump-header /tmp/manifest.headers \
             --output /tmp/manifest.json
           python -c 'import json; data=json.load(open("/tmp/manifest.json")); assert data["short_name"] == "UNI2 STG"; assert "/staging/" in data["icons"][0]["src"]'
@@ -105,18 +104,15 @@ jobs:
           python -c 'import json; [print(icon["src"], icon["sizes"]) for icon in json.load(open("/tmp/manifest.json"))["icons"]]' |
           while read -r icon_path expected_size; do
             vercel_request "$icon_path" \
-              --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
               --output /tmp/staging-icon.png
             python -c 'import struct, sys; data=open("/tmp/staging-icon.png", "rb").read(24); assert data[:8] == b"\x89PNG\r\n\x1a\n"; width, height=struct.unpack(">II", data[16:24]); assert f"{width}x{height}" == sys.argv[1]' "$expected_size"
           done
           vercel_request "/service-worker.js" \
-            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --dump-header /tmp/service-worker.headers \
             --output /tmp/service-worker.js
           python -c 'import json, os; ready=json.load(open("/tmp/readiness.json")); worker=open("/tmp/service-worker.js").read(); assert "const BUILD_ID = " + json.dumps(os.environ["PWA_BUILD_ID"]) + ";" in worker; assert "const DATA_EPOCH = " + json.dumps(ready["data_epoch"]) + ";" in worker'
           python -c 'headers=open("/tmp/service-worker.headers").read().lower(); assert "service-worker-allowed: /" in headers; assert "cache-control: private, no-store" in headers'
           vercel_request "/sin-conexion/" \
-            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --output /tmp/offline.html
           python -c 'html=open("/tmp/offline.html").read(); assert "STAGING · DATOS REALES" in html'
 
