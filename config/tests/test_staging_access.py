@@ -4,6 +4,7 @@ import json
 import pytest
 from django.http import HttpResponse
 from django.test import RequestFactory, override_settings
+from django.urls import reverse
 from django.utils import timezone
 
 from config.middleware import StagingAccessMiddleware
@@ -29,6 +30,63 @@ def test_staging_rechaza_pedidos_sin_credenciales_y_no_los_indexa():
     assert response.headers["Cache-Control"] == "private, no-store"
     assert response.headers["X-Robots-Tag"] == "noindex, nofollow, noarchive"
     assert b"privado" not in response.content
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/manifest.webmanifest",
+        "/service-worker.js",
+        "/sin-conexion/",
+        "/sin-conexion/accion-no-enviada/",
+        "/sin-conexion/credencial/",
+        "/static/pwa/icons/staging/icon-192.png",
+    ],
+)
+def test_staging_deja_disponible_solo_el_shell_pwa_neutro_sin_credenciales(path):
+    middleware = StagingAccessMiddleware(lambda request: HttpResponse("recurso PWA"))
+
+    response = middleware(RequestFactory().get(path))
+
+    assert response.status_code == 200
+    assert response.content == b"recurso PWA"
+    assert response.headers["Cache-Control"] == "private, no-store"
+    assert response.headers["X-Robots-Tag"] == "noindex, nofollow, noarchive"
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/",
+        "/media/comercios/foto.jpg",
+        "/service-worker.js/otro",
+        "/sin-conexion/privado/",
+    ],
+)
+@override_settings(
+    UNI2_STAGING_ACCESS_USERNAME="qa",
+    UNI2_STAGING_ACCESS_PASSWORD="clave-separada",
+)
+def test_staging_no_extiende_la_excepcion_pwa_a_otras_rutas(path):
+    middleware = StagingAccessMiddleware(lambda request: HttpResponse("privado"))
+
+    response = middleware(RequestFactory().get(path))
+
+    assert response.status_code == 401
+    assert b"privado" not in response.content
+
+
+@override_settings(
+    UNI2_STAGING_ACCESS_USERNAME="qa",
+    UNI2_STAGING_ACCESS_PASSWORD="clave-separada",
+)
+def test_staging_no_hace_publicas_mutaciones_sobre_rutas_pwa():
+    middleware = StagingAccessMiddleware(lambda request: HttpResponse("mutacion"))
+
+    response = middleware(RequestFactory().post(reverse("pwa:manifest")))
+
+    assert response.status_code == 401
+    assert b"mutacion" not in response.content
 
 
 @override_settings(

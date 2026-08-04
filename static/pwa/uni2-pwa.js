@@ -6,7 +6,9 @@
   let waitingWorker = null;
   let reloadRequested = false;
   let onlineMessageTimer = null;
+  let installPromotionDismissed = false;
 
+  const INSTALL_PROMOTION_DISMISSED_KEY = 'uni2-pwa-install-promotion-dismissed';
   const standaloneQuery = window.matchMedia('(display-mode: standalone)');
   const isIOS =
     /iPad|iPhone|iPod/.test(navigator.userAgent) ||
@@ -29,6 +31,7 @@
   function showInstallItems() {
     if (isStandalone()) return;
     installItems().forEach(function (item) {
+      if (item.id === 'uni2-install-promotion' && installPromotionDismissed) return;
       item.hidden = false;
     });
   }
@@ -39,31 +42,62 @@
     });
   }
 
-  function showIOSInstructions() {
+  function showInstallInstructions() {
     const modalElement = document.getElementById('uni2-install-instructions');
     if (!modalElement || !window.bootstrap) return;
-    const browserNote = modalElement.querySelector('[data-pwa-ios-browser-note]');
-    if (browserNote) browserNote.hidden = isIOSSafari;
+
+    const iosInstructions = modalElement.querySelector('[data-pwa-ios-install-instructions]');
+    const browserInstructions = modalElement.querySelector(
+      '[data-pwa-browser-install-instructions]'
+    );
+    const iosBrowserNote = modalElement.querySelector('[data-pwa-ios-browser-note]');
+    const browserNote = modalElement.querySelector('[data-pwa-browser-note]');
+    if (iosInstructions) iosInstructions.hidden = !isIOS;
+    if (browserInstructions) browserInstructions.hidden = isIOS;
+    if (iosBrowserNote) iosBrowserNote.hidden = !isIOS || isIOSSafari;
+    if (browserNote) browserNote.hidden = isIOS;
     window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
   }
 
   async function requestInstallation() {
     if (installPrompt) {
       installPrompt.prompt();
-      await installPrompt.userChoice;
+      const choice = await installPrompt.userChoice;
       installPrompt = null;
-      hideInstallItems();
+      if (choice.outcome === 'accepted') {
+        hideInstallItems();
+      } else {
+        showInstallItems();
+      }
       return;
     }
-    if (isIOS) showIOSInstructions();
+    showInstallInstructions();
   }
 
   function setupInstallation() {
     setStandaloneClass();
-    if (isIOS && !isStandalone()) showInstallItems();
+    try {
+      installPromotionDismissed =
+        window.sessionStorage.getItem(INSTALL_PROMOTION_DISMISSED_KEY) === 'true';
+    } catch (error) {
+      installPromotionDismissed = false;
+    }
+    if (!isStandalone()) showInstallItems();
 
     document.querySelectorAll('.js-pwa-install-trigger').forEach(function (button) {
       button.addEventListener('click', requestInstallation);
+    });
+    document.querySelectorAll('[data-pwa-install-dismiss]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        installPromotionDismissed = true;
+        try {
+          window.sessionStorage.setItem(INSTALL_PROMOTION_DISMISSED_KEY, 'true');
+        } catch (error) {
+          // La invitación igual puede ocultarse durante esta vista.
+        }
+        const promotion = document.getElementById('uni2-install-promotion');
+        if (promotion) promotion.hidden = true;
+      });
     });
 
     window.addEventListener('beforeinstallprompt', function (event) {

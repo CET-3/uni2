@@ -31,11 +31,14 @@ La emulación de WebKit en CI no reemplaza la prueba en un iPhone o iPad real.
 1. Abrir staging por HTTPS.
 2. Verificar nombre `UNI2 STG`, icono con insignia `STG`, color naranja e
    inicio `/`.
-3. Instalar desde la acción disponible.
+3. Confirmar que aparece una invitación visible para instalar. Si el navegador
+   no ofrece diálogo nativo, comprobar que la acción explica cómo hacerlo
+   desde su menú.
 4. Abrir desde el launcher y confirmar modo independiente.
 5. Probar icono normal y `maskable`.
 6. Descartar una sugerencia y comprobar que no reaparece insistentemente.
 7. En iOS seguir las instrucciones de “Agregar a pantalla de inicio”.
+8. Confirmar que la invitación desaparece al abrir la aplicación instalada.
 
 ## Navegación sin conexión
 

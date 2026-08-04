@@ -82,8 +82,8 @@ con URLs firmadas breves y sin dominio público.
 - `UNI2_ENVIRONMENT=staging`;
 - PostgreSQL obligatorio;
 - huellas diferentes para la base y el rol PostgreSQL de Producción y staging;
-- credenciales HTTP exclusivas delante de todas las vistas, con una contraseña
-  de al menos veinte caracteres que no reutiliza `SECRET_KEY`;
+- credenciales HTTP exclusivas delante de todas las vistas de negocio, con una
+  contraseña de al menos veinte caracteres que no reutiliza `SECRET_KEY`;
 - `X-Robots-Tag: noindex, nofollow, noarchive`;
 - `Cache-Control: private, no-store` y `Vary: Authorization` en todas las
   respuestas de staging;
@@ -97,6 +97,21 @@ Vercel Authentication, la barrera HTTP y el login de Uni2 son capas
 independientes: la primera limita el proyecto al equipo, la segunda protege
 Django con un secreto exclusivo y, finalmente, Uni2 aplica usuarios, grupos y
 permisos.
+
+El navegador descarga el service worker en un contexto que no garantiza el
+envío de la cabecera `Authorization` usada para abrir la página. Para que
+staging pueda probar instalación y offline de verdad, la barrera HTTP deja
+pasar sin esas credenciales únicamente recursos neutros:
+
+- manifest y service worker;
+- páginas offline sin sesión ni datos;
+- archivos estáticos versionados.
+
+La excepción admite sólo `GET` y `HEAD`. No incluye `/media/`, readiness,
+vistas públicas de negocio, login ni pantallas autenticadas. Todos esos
+recursos siguen detrás de la barrera. Vercel Authentication continúa delante
+del proyecto completo y las respuestas exceptuadas conservan `noindex` y
+`no-store`.
 
 Staging se identifica mediante nombre PWA, color, título, badge, banner
 persistente e iconos propios con la insignia `STG`. El origen HTTPS distinto

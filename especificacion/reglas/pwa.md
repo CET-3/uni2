@@ -16,7 +16,10 @@ instalación o service workers.
 ## PWA-002
 
 La instalación debe ser una decisión de la persona. No se debe abrir
-automáticamente un pedido de instalación.
+automáticamente un pedido de instalación. Mientras Uni2 se use desde el
+navegador debe ofrecer una acción visible: usa el diálogo nativo cuando está
+disponible y muestra instrucciones manuales como alternativa. La invitación
+puede descartarse y no aparece en modo instalado.
 
 ## PWA-003
 

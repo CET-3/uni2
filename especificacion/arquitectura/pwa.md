@@ -20,6 +20,10 @@ Un navegador sin service workers debe poder usar el sitio normalmente.
 - El service worker vive en la raíz para controlar todo el alcance `/`.
 - Un script cliente registra el worker y coordina instalación, conexión,
   actualización y almacenamiento privado.
+- Mientras se navega desde el browser y la aplicación no está instalada, una
+  invitación visible ofrece instalarla. Usa el diálogo nativo cuando el
+  navegador lo permite y, en los demás casos, explica la opción manual del
+  menú sin abrirla automáticamente.
 - La pantalla general offline no consulta la base ni contiene información de
   una sesión.
 - La credencial offline usa IndexedDB en la base `uni2-private-v1`, store

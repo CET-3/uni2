@@ -10,10 +10,23 @@ from django.utils.cache import patch_vary_headers
 class StagingAccessMiddleware:
     """Protege el clon de datos antes de ejecutar cualquier vista Django."""
 
+    PUBLIC_PWA_PATHS = frozenset(
+        {
+            "/manifest.webmanifest",
+            "/service-worker.js",
+            "/sin-conexion/",
+            "/sin-conexion/accion-no-enviada/",
+            "/sin-conexion/credencial/",
+        }
+    )
+
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
+        if self._is_public_pwa_resource(request):
+            return self._protect_response(self.get_response(request))
+
         credentials = self._credentials(request)
         expected = (
             settings.UNI2_STAGING_ACCESS_USERNAME,
@@ -42,6 +55,17 @@ class StagingAccessMiddleware:
 
         response = self.get_response(request)
         return self._protect_response(response)
+
+    @classmethod
+    def _is_public_pwa_resource(cls, request):
+        """Deja instalar el shell neutro sin abrir vistas ni datos del clon."""
+
+        if request.method not in {"GET", "HEAD"}:
+            return False
+
+        path = request.path_info
+        static_prefix = f"/{settings.STATIC_URL.lstrip('/')}"
+        return path in cls.PUBLIC_PWA_PATHS or path.startswith(static_prefix)
 
     @staticmethod
     def _credentials(request):

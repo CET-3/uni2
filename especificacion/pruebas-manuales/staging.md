@@ -35,6 +35,11 @@ timestamp: 2026-08-02T00:00:00-03:00
 
 ### PWA
 
+- [ ] Manifest, worker, shell offline y archivos estáticos cargan sin depender
+  de la cabecera HTTP Basic; ninguna vista de negocio queda exceptuada.
+- [ ] El service worker queda activo y controla la aplicación.
+- [ ] La invitación de instalación es visible al navegar y desaparece en modo
+  instalado.
 - [ ] El manifest usa `UNI2 STG` y los iconos llevan la insignia `STG`.
 - [ ] Staging y Producción pueden instalarse como aplicaciones separadas.
 - [ ] El banner también aparece en las pantallas offline.
