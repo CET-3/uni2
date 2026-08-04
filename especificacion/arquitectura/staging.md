@@ -39,6 +39,9 @@ Cada operación CLI declara además `--scope="$VERCEL_ORG_ID"`: un token puede
 tener un contexto personal predeterminado y no se permite que deploy, smoke o
 promoción resuelvan equipos diferentes.
 
+Para una explicación introductoria de estos términos y del circuito completo
+de releases, ver el [glosario de deploy y releases](glosario-deploy.md).
+
 ### Datos
 
 La base de staging puede partir de una copia puntual de Producción autorizada
