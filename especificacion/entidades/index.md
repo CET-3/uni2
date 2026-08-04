@@ -15,3 +15,4 @@
 * [ActividadComercial](actividad-comercial.md) - Clasifica el rubro o actividad principal de un comercio adherido.
 * [Comercio](comercio.md) - Comercio adherido a la mutual.
 * [EstadoDatosStaging](estado-datos-staging.md) - Marcador técnico que habilita una copia endurecida en staging.
+* [EventoAuditoria](evento-auditoria.md) - Hecho inmutable que identifica una operación y los cambios producidos sobre una entidad.

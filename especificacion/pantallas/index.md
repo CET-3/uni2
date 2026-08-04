@@ -6,6 +6,7 @@
 * [Gestión](gestion.md) — Gestión
 * [Comercio](comercio.md) — Comercio
 * [Progressive Web App](pwa.md) — Instalación, conexión, actualización y credencial offline
+* [Auditoría de gestión](auditoria.md) — Historial de operaciones de solo lectura
 
 ## Regla de trabajo visual
 
