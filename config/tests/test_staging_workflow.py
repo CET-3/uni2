@@ -47,6 +47,11 @@ def test_deploy_apunta_al_proyecto_staging_y_promueve_despues_del_smoke():
     assert 'data["build_id"] == os.environ["PWA_BUILD_ID"]' in workflow
     assert 'assert f"{width}x{height}" == sys.argv[1]' in workflow
     assert "STAGING_BASE_URL: ${{ vars.STAGING_BASE_URL }}" in workflow
+    pwa_public_block = workflow.split('vercel_request "/manifest.webmanifest"', 1)[1].split(
+        "- name: Promover el deployment aprobado",
+        1,
+    )[0]
+    assert '--user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD"' not in pwa_public_block
 
 
 def test_deploy_descarga_un_sha_completo_de_checkout():

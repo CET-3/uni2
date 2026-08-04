@@ -23,8 +23,10 @@ staging   -> PR a main    -> deploy en Producción
   sobre un PostgreSQL efímero.
 - Un push aprobado a `staging` dispara el workflow `Deploy staging`.
 - El workflow despliega primero sin mover el dominio estable.
-- La URL técnica debe rechazar el acceso anónimo y aprobar readiness, manifest,
-  iconos, service worker y pantalla offline.
+- La URL técnica debe rechazar el acceso anónimo a las vistas de negocio y
+  aprobar readiness con credenciales. Manifest, iconos, service worker y
+  pantalla offline deben responder sin la cabecera HTTP Basic que el worker no
+  puede garantizar.
 - Solamente después de esos controles se promueve el deployment.
 - El dominio estable vuelve a probar readiness y el SHA promovido.
 - Producción conserva su integración Git actual y sólo despliega `main`.
