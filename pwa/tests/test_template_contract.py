@@ -1,6 +1,8 @@
 from html.parser import HTMLParser
+from pathlib import Path
 
 import pytest
+from django.contrib.staticfiles import finders
 from django.test import override_settings
 from django.urls import reverse
 
@@ -35,11 +37,27 @@ def test_base_integra_manifest_worker_y_componentes_pwa(client):
     assert "/static/pwa/uni2-private-storage.js" in content
     assert "/static/pwa/uni2-pwa.js" in content
     assert 'id="uni2-connectivity-status"' in content
+    assert 'id="uni2-install-promotion"' in content
+    assert "Instalá UNI2" in content
+    assert "data-pwa-install-dismiss" in content
+    assert "data-pwa-browser-install-instructions" in content
     assert 'id="uni2-update-banner"' in content
     assert 'class="btn btn-primary" id="uni2-update-apply"' in content
     assert "cdn.jsdelivr.net" not in content
     assert "fonts.googleapis.com" not in content
     assert "fonts.gstatic.com" not in content
+
+
+def test_instalacion_ofrece_accion_visible_y_fallback_manual():
+    script_path = finders.find("pwa/uni2-pwa.js")
+    assert script_path is not None
+    source = Path(script_path).read_text(encoding="utf-8")
+
+    assert "if (!isStandalone()) showInstallItems();" in source
+    assert "showInstallInstructions();" in source
+    assert "choice.outcome === 'accepted'" in source
+    assert "data-pwa-install-dismiss" in source
+    assert "window.sessionStorage.setItem(INSTALL_PROMOTION_DISMISSED_KEY, 'true')" in source
 
 
 @pytest.mark.django_db

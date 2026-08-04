@@ -1420,9 +1420,68 @@ button.uni2-service-card:hover {
 
 /* === PWA: INSTALACIÓN, CONECTIVIDAD Y ACTUALIZACIONES === */
 .uni2-pwa-connectivity[hidden],
+.uni2-pwa-install[hidden],
 .uni2-pwa-update[hidden],
 .js-pwa-install-item[hidden] {
   display: none !important;
+}
+
+.uni2-pwa-install {
+  align-items: center;
+  background: var(--color-overlay-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 18px;
+  bottom: max(86px, calc(env(safe-area-inset-bottom) + 86px));
+  box-shadow: var(--shadow-floating);
+  color: var(--color-text);
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  left: 50%;
+  max-width: min(720px, calc(100vw - 32px));
+  padding: 16px;
+  position: fixed;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 1038;
+}
+
+.uni2-pwa-install-copy {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  min-width: 0;
+}
+
+.uni2-pwa-install-copy > i {
+  align-items: center;
+  background: rgba(63, 81, 181, 0.12);
+  border-radius: 999px;
+  color: var(--color-action-on-surface);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 1.35rem;
+  height: 44px;
+  justify-content: center;
+  width: 44px;
+}
+
+.uni2-pwa-install-copy strong,
+.uni2-pwa-install-copy span {
+  display: block;
+}
+
+.uni2-pwa-install-copy span {
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  margin-top: 2px;
+}
+
+.uni2-pwa-install-actions {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
 }
 
 .uni2-pwa-connectivity {
@@ -2466,6 +2525,21 @@ button.uni2-service-card:hover {
 }
 
 @media (max-width: 767.98px) {
+  .uni2-pwa-install {
+    align-items: stretch;
+    bottom: max(154px, calc(env(safe-area-inset-bottom) + 148px));
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .uni2-pwa-install-actions {
+    justify-content: space-between;
+  }
+
+  .uni2-pwa-install-actions .btn {
+    flex: 1 1 auto;
+  }
+
   .uni2-pwa-connectivity {
     border-radius: 16px;
     bottom: max(82px, calc(env(safe-area-inset-bottom) + 76px));
