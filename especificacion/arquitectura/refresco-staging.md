@@ -178,6 +178,53 @@ Luego se verifica:
 - barrera HTTP y `noindex`;
 - correo y push deshabilitados.
 
+### Copia de archivos media
+
+La copia PostgreSQL conserva las rutas de `Comercio.foto` y
+`Publicidad.foto`, pero no descarga los objetos del storage productivo. Para
+que la réplica sea visualmente representativa se usa un bucket privado,
+exclusivo de staging y con credenciales de escritura limitadas a ese bucket.
+No se conecta staging al bucket productivo.
+
+El storage se configura localmente y en el proyecto Vercel de staging con:
+
+- `UNI2_STAGING_AWS_STORAGE_BUCKET_NAME`;
+- `UNI2_STAGING_AWS_ACCESS_KEY_ID`;
+- `UNI2_STAGING_AWS_SECRET_ACCESS_KEY`;
+- `UNI2_STAGING_AWS_S3_ENDPOINT_URL`;
+- `UNI2_STAGING_AWS_S3_REGION_NAME`;
+- `UNI2_STAGING_STORAGE_FINGERPRINT`;
+- `UNI2_PRODUCTION_STORAGE_FINGERPRINT`.
+
+Las huellas identifican bucket, endpoint y dominio personalizado, pero no
+incluyen claves. Se calculan con:
+
+```bash
+uv run python manage.py huella_storage \
+  --bucket NOMBRE \
+  --endpoint URL_S3 \
+  --custom-domain DOMINIO_PUBLICO_OPCIONAL
+```
+
+Primero se revisa cuántas referencias vigentes copiará el comando:
+
+```bash
+DJANGO_SETTINGS_MODULE=config.settings.staging \
+uv run python manage.py copiar_media_staging \
+  --source-base-url https://DOMINIO_PUBLICO_PRODUCTIVO \
+  --confirm-target uni2-staging
+```
+
+Después se repite agregando `--confirmar`. El comando sólo considera rutas
+vigentes bajo `comercios/` y `publicidades/`, exige HTTPS e imágenes menores a
+10 MB, conserva el nombre registrado en la base y omite objetos que ya existen
+en staging. Si una descarga falla, informa una copia parcial y puede repetirse
+sin duplicar los objetos aprobados.
+
+Las credenciales productivas no participan: el origen son las mismas URLs
+públicas que ya entrega el sitio. El destino genera URLs firmadas breves,
+permanece sin dominio público y nunca usa las variables `AWS_*` productivas.
+
 Cambiar una variable de Vercel no modifica deployments existentes. El cutover
 de la base y `UNI2_PRIVATE_DATA_EPOCH` siempre se completa con un deployment
 nuevo; no se promueve una versión que todavía renderice el epoch anterior.
@@ -198,13 +245,15 @@ del proyecto en el usuario de conexión. Ninguna huella incluye la contraseña.
 
 Después de habilitar la base nueva:
 
-1. ejecutar smoke tests y la matriz PWA;
-2. mantener el destino anterior desconectado durante la ventana de rollback;
-3. destruir cualquier artefacto temporal cifrado, si el proveedor obligó a
+1. copiar y verificar los media referenciados cuando el bucket staging esté
+   habilitado;
+2. ejecutar smoke tests y la matriz PWA;
+3. mantener el destino anterior desconectado durante la ventana de rollback;
+4. destruir cualquier artefacto temporal cifrado, si el proveedor obligó a
    crearlo;
-4. revocar la credencial productiva de sólo lectura;
-5. retirar `UNI2_PRODUCTION_COPY_DATABASE_URL` y las contraseñas temporales de
+5. revocar la credencial productiva de sólo lectura;
+6. retirar `UNI2_PRODUCTION_COPY_DATABASE_URL` y las contraseñas temporales de
    creación de usuarios QA;
-6. registrar fecha, responsable, refresh ID, conteos y resultado, nunca datos.
+7. registrar fecha, responsable, refresh ID, conteos y resultado, nunca datos.
 
 Una exposición de staging se trata como un incidente sobre datos productivos.
