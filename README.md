@@ -216,7 +216,9 @@ actual, responde `503`.
 
 Los archivos media quedan deshabilitados por defecto. Un bucket staging
 opcional debe ser privado, exclusivo y configurarse solamente mediante
-variables `UNI2_STAGING_AWS_*`; nunca se heredan variables AWS productivas.
+variables `UNI2_STAGING_AWS_*`; nunca se heredan variables AWS productivas. El
+comando `copiar_media_staging` replica únicamente las imágenes vigentes desde
+su origen público y no necesita credenciales del bucket productivo.
 
 La base puede clonarse desde Producción sólo mediante el
 [procedimiento de refresco](especificacion/arquitectura/refresco-staging.md).
@@ -240,6 +242,8 @@ argumentos o archivos versionados.
 
 La configuración completa y el circuito de promoción están en
 [Entorno de staging](especificacion/arquitectura/staging.md).
+El inventario de variables y secretos está en
+[Configuración de deploy](especificacion/arquitectura/deploy.md).
 
 ### Migraciones en producción
 

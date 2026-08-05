@@ -12,3 +12,4 @@
 * [Publicidades](publicidades.md) - Reglas de negocio sobre publicidades destacadas en la home.
 * [Credenciales](credenciales.md) - Reglas de negocio sobre credenciales.
 * [Progressive Web App](pwa.md) - Instalación, caché, trabajo offline y actualización.
+* [Trazabilidad](trazabilidad.md) - Autoría, historial y control de bajas, anulaciones y eliminaciones.

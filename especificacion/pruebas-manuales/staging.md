@@ -31,6 +31,10 @@ timestamp: 2026-08-02T00:00:00-03:00
 - [ ] Ninguna cuenta QA está vinculada a una persona o comercio productivo.
 - [ ] El marcador persistente coincide con `UNI2_PRIVATE_DATA_EPOCH`.
 - [ ] El bucket productivo no está configurado en staging.
+- [ ] El bucket staging es privado, exclusivo y usa credenciales limitadas a
+  ese destino.
+- [ ] Todas las rutas `Comercio.foto` y `Publicidad.foto` vigentes existen en
+  el bucket staging y se muestran mediante URLs firmadas.
 - [ ] Correo transaccional, correo por lote y push están deshabilitados.
 
 ### PWA

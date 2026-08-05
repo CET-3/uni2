@@ -44,6 +44,7 @@
 ### Cuotas y pagos
 
 * [CU-registrar-pago-cuota](cu-registrar-pago-cuota.md) - Actor: Gestión con permiso para cobrar cuotas.
+* [CU-consultar-auditoria](cu-consultar-auditoria.md) - Actor: Gestión con permiso para ver auditoría.
 
 ## Administrador
 

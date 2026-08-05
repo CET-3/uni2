@@ -39,6 +39,13 @@ Cada operación CLI declara además `--scope="$VERCEL_ORG_ID"`: un token puede
 tener un contexto personal predeterminado y no se permite que deploy, smoke o
 promoción resuelvan equipos diferentes.
 
+Para una explicación introductoria de estos términos y del circuito completo
+de releases, ver el [glosario de deploy y releases](glosario-deploy.md).
+
+El inventario de nombres, propósitos y clasificación de las variables de
+Vercel y GitHub está en [Configuración de deploy](deploy.md). Ese inventario no
+incluye valores reales ni credenciales.
+
 ### Datos
 
 La base de staging puede partir de una copia puntual de Producción autorizada
@@ -144,7 +151,9 @@ El storage remoto es opcional. Si se usa, sólo admite variables con prefijo
 `UNI2_STAGING_AWS_*` y las huellas
 `UNI2_STAGING_STORAGE_FINGERPRINT` y
 `UNI2_PRODUCTION_STORAGE_FINGERPRINT`. Las variables productivas `AWS_*` nunca
-se heredan.
+se heredan. Las imágenes vigentes se copian desde sus URLs productivas públicas
+con `copiar_media_staging`; el comando escribe únicamente en el bucket privado
+configurado para staging y no necesita credenciales productivas.
 
 El Environment `staging` de GitHub contiene sólo credenciales necesarias para
 desplegar y ejecutar los smoke tests:
