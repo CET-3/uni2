@@ -163,6 +163,24 @@ en una transacción y revierte ante cualquier error. Como último cambio de esa
 misma transacción escribe `EstadoDatosStaging`; hasta entonces, el middleware y
 readiness responden `503`.
 
+### Rotación de contraseñas QA
+
+Cuando la copia ya está endurecida y las cuatro cuentas QA existen, no se debe
+volver a ejecutar `preparar_copia_staging`: ese comando crea cuentas nuevas y
+rechaza usernames que ya existen. Para cambiar solamente sus contraseñas se
+usa:
+
+```bash
+DJANGO_SETTINGS_MODULE=config.settings.staging \
+uv run python manage.py rotar_passwords_qa_staging
+```
+
+El comando toma los mismos ocho valores `UNI2_STAGING_QA_*` del entorno,
+verifica que cada username corresponda al perfil QA esperado y actualiza sólo
+las contraseñas dentro de una transacción. Las contraseñas deben ser distintas,
+tener al menos 8 caracteres y no coincidir con sus usernames. Si una
+validación falla, no se modifica ninguna cuenta.
+
 Luego se verifica:
 
 - cero sesiones copiadas;

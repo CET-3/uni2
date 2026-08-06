@@ -37,3 +37,12 @@ timestamp: 2026-08-02T00:00:00-03:00
 Staging conserva datos representativos de Producción, pero ninguna sesión,
 contraseña, privilegio ni token productivo permite autenticarse o validar una
 credencial allí.
+
+## Rotación posterior de credenciales QA
+
+Si sólo se necesitan contraseñas más fáciles de usar para las pruebas, la
+responsable actualiza las cuatro variables `UNI2_STAGING_QA_*_PASSWORD` y
+ejecuta `rotar_passwords_qa_staging`. El comando conserva los usernames QA,
+verifica que sigan asociados a los cuatro perfiles ficticios y cambia sólo sus
+contraseñas. No vuelve a copiar datos, no regenera tokens ni invalida cuentas
+productivas.
