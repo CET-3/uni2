@@ -274,3 +274,44 @@ def test_preparar_copia_staging_revierte_todo_si_falla_despues_de_invalidar(monk
     assert Session.objects.filter(session_key="sesion-productiva").exists()
     assert not EstadoDatosStaging.objects.exists()
     assert not get_user_model().objects.filter(username__startswith="qa-").exists()
+
+
+@pytest.mark.django_db
+@override_settings(
+    UNI2_ALLOW_STAGING_COMMAND_ON_SQLITE=True,
+    UNI2_DEPLOYMENT_ENVIRONMENT="staging",
+    UNI2_STAGING_DATABASE_LABEL="uni2-staging",
+    PWA_PRIVATE_DATA_EPOCH="2026-08-02-01",
+)
+def test_rotar_contraseñas_qa_staging_actualiza_solo_las_cuentas_qa(monkeypatch):
+    set_staging_qa_credentials(monkeypatch)
+    call_command(
+        "preparar_copia_staging",
+        refresh_id="2026-08-02-01",
+        confirm_target="uni2-staging",
+    )
+
+    nuevas = {
+        "UNI2_STAGING_QA_ADMIN_PASSWORD": "una-clave-admin-mas-amigable",
+        "UNI2_STAGING_QA_ASOCIADO_A_PASSWORD": "una-clave-asociado-a-amigable",
+        "UNI2_STAGING_QA_ASOCIADO_B_PASSWORD": "una-clave-asociado-b-amigable",
+        "UNI2_STAGING_QA_COMERCIO_PASSWORD": "una-clave-comercio-amigable",
+    }
+    for name, value in nuevas.items():
+        monkeypatch.setenv(name, value)
+
+    call_command("rotar_passwords_qa_staging")
+
+    user_model = get_user_model()
+    assert user_model.objects.get(username="qa-admin").check_password(
+        nuevas["UNI2_STAGING_QA_ADMIN_PASSWORD"]
+    )
+    assert user_model.objects.get(username="qa-asociado-a").check_password(
+        nuevas["UNI2_STAGING_QA_ASOCIADO_A_PASSWORD"]
+    )
+    assert user_model.objects.get(username="qa-asociado-b").check_password(
+        nuevas["UNI2_STAGING_QA_ASOCIADO_B_PASSWORD"]
+    )
+    assert user_model.objects.get(username="qa-comercio").check_password(
+        nuevas["UNI2_STAGING_QA_COMERCIO_PASSWORD"]
+    )
