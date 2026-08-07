@@ -71,17 +71,13 @@ jobs:
           vercel_request() {
             local path="$1"
             shift
-            vercel curl "$path" \
-              --deployment "$DEPLOYMENT_URL" \
-              --scope="$VERCEL_ORG_ID" \
-              --token="$VERCEL_TOKEN" \
-              "${curl_args[@]}" "$@"
+          vercel --scope="$VERCEL_ORG_ID" --token="$VERCEL_TOKEN" curl "$path" \
+            --deployment "$DEPLOYMENT_URL" \
+            "${curl_args[@]}" "$@"
           }
           anonymous_status="$(
-            vercel curl "/" \
+            vercel --scope="$VERCEL_ORG_ID" --token="$VERCEL_TOKEN" curl "/" \
               --deployment "$DEPLOYMENT_URL" \
-              --scope="$VERCEL_ORG_ID" \
-              --token="$VERCEL_TOKEN" \
               --silent \
               --show-error \
               --retry 5 \
@@ -135,10 +131,8 @@ jobs:
             --retry 5
             --retry-all-errors
           )
-          vercel curl "/__staging__/readiness/" \
+          vercel --scope="$VERCEL_ORG_ID" --token="$VERCEL_TOKEN" curl "/__staging__/readiness/" \
             --deployment "$STAGING_BASE_URL" \
-            --scope="$VERCEL_ORG_ID" \
-            --token="$VERCEL_TOKEN" \
             "${curl_args[@]}" \
             --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --output /tmp/stable-readiness.json
