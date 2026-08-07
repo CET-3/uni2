@@ -16,6 +16,7 @@ okf_version: "0.1"
 * [Pruebas manuales](pruebas-manuales/index.md) - Guías simples para verificar funcionalidades desde la interfaz.
 * [Pantallas](pantallas/index.md) - Pantallas previstas para cada experiencia.
 * [Arquitectura](arquitectura/index.md) - Organización actual del código y decisiones técnicas.
+* [Guía de inicio para Windows](guia-windows-python-django.md) - Instalación de Python y uv, tutoriales básicos de Python y Django, y puesta en marcha de Uni2.
 * [Versión 2](v2/index.md) - Diseño aprobado fuera del MVP.
 * [Roadmap](roadmap/index.md) - Evolución futura del producto.
 

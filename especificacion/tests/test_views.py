@@ -28,7 +28,9 @@ class TestEspecificacionIndice:
         client.force_login(_usuario_con_permiso())
         response = client.get(reverse("especificacion:indice"))
         assert response.status_code == 200
-        assert "Especificación Uni2" in response.content.decode()
+        content = response.content.decode()
+        assert "Especificación Uni2" in content
+        assert "/especificacion/guia-windows-python-django.md/" in content
 
 
 @pytest.mark.django_db
@@ -37,6 +39,17 @@ class TestEspecificacionArchivo:
         client.force_login(_usuario_con_permiso())
         response = client.get(reverse("especificacion:archivo", kwargs={"ruta": "proyecto/index.md"}))
         assert response.status_code == 200
+
+    def test_guia_de_inicio_se_sirve_desde_el_visualizador(self, client):
+        client.force_login(_usuario_con_permiso())
+        response = client.get(
+            reverse(
+                "especificacion:archivo",
+                kwargs={"ruta": "guia-windows-python-django.md"},
+            )
+        )
+        assert response.status_code == 200
+        assert "Instalar Python" in response.content.decode()
 
     def test_archivo_inexistente_404(self, client):
         client.force_login(_usuario_con_permiso())

@@ -7,6 +7,9 @@ Sistema de gestión para la Mutual Escolar del CET 3.
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
+Si es tu primera vez con Python, Windows o Django, seguí la
+[Guía para empezar con Python, uv y Django en Windows](especificacion/guia-windows-python-django.md).
+
 ## Setup local para alumnos (SQLite)
 
 SQLite viene incluido con Python y no requiere instalar ni configurar un
