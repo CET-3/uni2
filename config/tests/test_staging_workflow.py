@@ -34,6 +34,8 @@ def test_deploy_apunta_al_proyecto_staging_y_promueve_despues_del_smoke():
     assert '--scope="$VERCEL_ORG_ID"' in workflow
     assert "STAGING_ACCESS_PASSWORD" in workflow
     assert ' curl "$path"' in workflow
+    assert 'vercel --scope="$VERCEL_ORG_ID" curl' in workflow
+    assert 'vercel --scope="$VERCEL_ORG_ID" --token="$VERCEL_TOKEN" curl' not in workflow
     assert "VERCEL_AUTOMATION_BYPASS_SECRET" not in workflow
     assert "x-vercel-protection-bypass" not in workflow
     assert workflow.index("Probar seguridad, base, manifest y service worker") < workflow.index(
