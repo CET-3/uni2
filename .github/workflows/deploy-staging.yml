@@ -75,14 +75,13 @@ jobs:
               --deployment "$DEPLOYMENT_URL" \
               --scope="$VERCEL_ORG_ID" \
               --token="$VERCEL_TOKEN" \
-              -- "${curl_args[@]}" "$@"
+              "${curl_args[@]}" "$@"
           }
           anonymous_status="$(
             vercel curl "/" \
               --deployment "$DEPLOYMENT_URL" \
               --scope="$VERCEL_ORG_ID" \
               --token="$VERCEL_TOKEN" \
-              -- \
               --silent \
               --show-error \
               --retry 5 \
@@ -140,7 +139,7 @@ jobs:
             --deployment "$STAGING_BASE_URL" \
             --scope="$VERCEL_ORG_ID" \
             --token="$VERCEL_TOKEN" \
-            -- "${curl_args[@]}" \
+            "${curl_args[@]}" \
             --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --output /tmp/stable-readiness.json
           python -c 'import json, os; data=json.load(open("/tmp/stable-readiness.json")); assert data["ready"] is True; assert data["build_id"] == os.environ["PWA_BUILD_ID"]'
