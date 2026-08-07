@@ -37,7 +37,7 @@ jobs:
           ref: ${{ github.sha }}
 
       - name: Instalar Vercel CLI
-        run: npm install --global vercel@53.3.2
+        run: npm install --global vercel@58.7.1
 
       - name: Desplegar sin mover el dominio estable
         id: deploy

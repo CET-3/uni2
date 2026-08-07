@@ -242,12 +242,10 @@ Abrir <http://127.0.0.1:8000/>.
 
 Usuarios ficticios locales:
 
-| Perfil | Usuario | Contraseña |
-|---|---|---|
-| Gestión/admin técnico | `admin` | `admin1234` |
-| Atención de mutual | `atencion` | `atencion1234` |
-| Asociado | `asociado` | `asociado1234` |
-| Comercio | `comercio` | `comercio1234` |
+- **Gestión / admin técnico:** usuario `admin`, contraseña `admin1234`.
+- **Atención de mutual:** usuario `atencion`, contraseña `atencion1234`.
+- **Asociado:** usuario `asociado`, contraseña `asociado1234`.
+- **Comercio:** usuario `comercio`, contraseña `comercio1234`.
 
 La base local es `db.sqlite3`; no se sube a Git.
 
