@@ -52,4 +52,5 @@ de datos y exige `DATABASE_URL`.
   [procedimiento de refresco](refresco-staging.md).
 
 Los comandos de instalación y puesta en marcha se mantienen en el
-[README del proyecto](../../README.md).
+[README del proyecto](../../README.md). Para quienes recién empiezan, hay una
+[guía de inicio para Windows con Python, uv y Django](../guia-windows-python-django.md).
