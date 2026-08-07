@@ -85,8 +85,10 @@ con URLs firmadas breves y sin dominio público.
 `config.settings.staging` exige:
 
 - Vercel Authentication delante de todos los deployments `.vercel.app`; sólo
-  GitHub Actions obtiene un bypass temporal mediante `vercel curl` y el token
-  dedicado del proyecto;
+  GitHub Actions obtiene un bypass temporal mediante `vercel curl`. El token
+  dedicado se entrega a la CLI mediante `VERCEL_TOKEN`; no se pasa como una
+  opción de `curl`, porque Vercel CLI podría reenviarlo al binario HTTP y
+  provocar un fallo del smoke test;
 - `DEBUG=False`;
 - `UNI2_ENVIRONMENT=staging`;
 - PostgreSQL obligatorio;
