@@ -65,7 +65,7 @@
   /* Bootstrap consume estos tokens desde la misma fuente de verdad. */
   --bs-primary: var(--brand-blue);
   --bs-primary-rgb: 63, 81, 181;
-  --bs-font-sans-serif: 'Inter', system-ui, -apple-system, sans-serif;
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 [data-theme="dark"] {
@@ -249,9 +249,10 @@
 .uni2-benefit-fashion { --mix-bg: linear-gradient(135deg, var(--brand-blue-dark) 0%, var(--brand-blue) 42% 100%);    --mix-copy: #ffffff; --mix-text: #263796; }
 
 body {
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--bs-font-sans-serif);
   line-height: 1.55;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--color-page);
   color: var(--color-text);
   transition: background-color var(--motion-duration-slow) var(--motion-easing-standard), color var(--motion-duration-slow) var(--motion-easing-standard);
@@ -889,7 +890,40 @@ button.uni2-service-card:hover {
   padding: 8px 10px;
 }
 
-/* === NAVBAR === */
+/* === ENTORNOS Y NAVBAR === */
+.uni2-environment-banner {
+  align-items: center;
+  background: #a83a00;
+  color: #ffffff;
+  display: flex;
+  font-size: 0.78rem;
+  gap: 8px;
+  height: calc(32px + env(safe-area-inset-top));
+  justify-content: center;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  padding: calc(6px + env(safe-area-inset-top)) 16px 6px;
+  position: sticky;
+  text-align: center;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
+  z-index: 40;
+}
+
+[data-deployment-environment="staging"] .uni2-navbar {
+  top: calc(32px + env(safe-area-inset-top));
+}
+
+.uni2-navbar .navbar-brand .uni2-environment-badge {
+  background: #a83a00;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  padding: 5px 8px;
+}
+
 .uni2-navbar {
   align-items: center;
   backdrop-filter: blur(14px);
@@ -1329,8 +1363,8 @@ button.uni2-service-card:hover {
   height: 54px;
   place-items: center;
   position: fixed;
-  right: 18px;
-  bottom: 18px;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
   transition: transform var(--motion-duration-fast) var(--motion-easing-standard), background var(--motion-duration-fast) var(--motion-easing-standard);
   width: 54px;
   z-index: 120;
@@ -1382,6 +1416,357 @@ button.uni2-service-card:hover {
 [data-theme="dark"] .theme-toggle__icon--moon {
   opacity: 0;
   transform: rotate(35deg) scale(0.72);
+}
+
+/* === PWA: INSTALACIÓN, CONECTIVIDAD Y ACTUALIZACIONES === */
+.uni2-pwa-connectivity[hidden],
+.uni2-pwa-install[hidden],
+.uni2-pwa-update[hidden],
+.js-pwa-install-item[hidden] {
+  display: none !important;
+}
+
+.uni2-pwa-install {
+  align-items: center;
+  background: var(--color-overlay-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 18px;
+  bottom: max(86px, calc(env(safe-area-inset-bottom) + 86px));
+  box-shadow: var(--shadow-floating);
+  color: var(--color-text);
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  left: 50%;
+  max-width: min(720px, calc(100vw - 32px));
+  padding: 16px;
+  position: fixed;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 1038;
+}
+
+.uni2-pwa-install-copy {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  min-width: 0;
+}
+
+.uni2-pwa-install-copy > i {
+  align-items: center;
+  background: rgba(63, 81, 181, 0.12);
+  border-radius: 999px;
+  color: var(--color-action-on-surface);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 1.35rem;
+  height: 44px;
+  justify-content: center;
+  width: 44px;
+}
+
+.uni2-pwa-install-copy strong,
+.uni2-pwa-install-copy span {
+  display: block;
+}
+
+.uni2-pwa-install-copy span {
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  margin-top: 2px;
+}
+
+.uni2-pwa-install-actions {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+}
+
+.uni2-pwa-connectivity {
+  align-items: center;
+  background: #20283b;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  box-shadow: var(--shadow-floating);
+  color: var(--color-on-strong);
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  gap: 10px;
+  left: 50%;
+  max-width: min(680px, calc(100vw - 150px));
+  padding: 11px 16px;
+  position: fixed;
+  transform: translateX(-50%);
+  width: max-content;
+  z-index: 1040;
+}
+
+.uni2-pwa-connectivity-online {
+  background: #125c21;
+}
+
+.uni2-pwa-update {
+  align-items: center;
+  background: var(--color-overlay-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 18px;
+  bottom: max(86px, calc(env(safe-area-inset-bottom) + 86px));
+  box-shadow: var(--shadow-floating);
+  color: var(--color-text);
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  left: 50%;
+  max-width: min(680px, calc(100vw - 32px));
+  padding: 16px;
+  position: fixed;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 1039;
+}
+
+.uni2-pwa-modal {
+  background: var(--color-overlay-surface);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text);
+}
+
+/* === PWA: CREDENCIAL ONLINE Y OFFLINE === */
+.uni2-credential {
+  color: var(--color-text);
+}
+
+.uni2-credential-card {
+  background:
+    radial-gradient(circle at 92% 4%, rgba(255, 203, 48, 0.24), transparent 34%),
+    linear-gradient(145deg, rgba(63, 81, 181, 0.08), transparent 52%),
+    var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-floating);
+  overflow: hidden;
+}
+
+.uni2-credential-heading {
+  align-items: flex-start;
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.uni2-credential-kicker {
+  color: var(--color-action-on-surface);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.uni2-credential-state {
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1.2;
+  max-width: 13rem;
+  padding: 8px 11px;
+  text-align: center;
+}
+
+.uni2-credential-state-active {
+  background: rgba(76, 203, 74, 0.12);
+  color: var(--color-success-text);
+}
+
+.uni2-credential-state-inactive {
+  background: rgba(255, 43, 43, 0.1);
+  color: var(--color-danger-text);
+}
+
+.uni2-credential-body {
+  align-items: center;
+  display: grid;
+  gap: clamp(24px, 5vw, 44px);
+  grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.2fr);
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.uni2-credential-qr-wrap {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  text-align: center;
+}
+
+.uni2-credential-qr {
+  align-items: center;
+  aspect-ratio: 1;
+  background: #ffffff;
+  border: 1px solid #d7dbea;
+  border-radius: 16px;
+  color: #1a1a2e;
+  display: flex;
+  justify-content: center;
+  max-width: 280px;
+  min-height: 210px;
+  overflow: hidden;
+  padding: 14px;
+  width: 100%;
+}
+
+.uni2-credential-qr svg {
+  display: block;
+  height: auto;
+  max-height: 100%;
+  max-width: 100%;
+  width: 100%;
+}
+
+.uni2-credential-data {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.uni2-credential-data > div {
+  border-bottom: 1px solid var(--color-border-subtle);
+  min-width: 0;
+  padding-bottom: 14px;
+}
+
+.uni2-credential-data > div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.uni2-credential-data dt {
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.uni2-credential-data dd {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.uni2-credential-token {
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.uni2-credential-offline-panel {
+  align-items: center;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 18px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: clamp(18px, 3vw, 26px);
+}
+
+.uni2-credential-offline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.uni2-credential-offline-actions .btn {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.uni2-credential-storage-status {
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  grid-column: 1 / -1;
+}
+
+.uni2-credential-offline-warning {
+  align-items: flex-start;
+  background: rgba(255, 203, 48, 0.15);
+  border: 1px solid rgba(192, 144, 1, 0.5);
+  border-radius: 16px;
+  color: var(--color-warning-text);
+  display: flex;
+  font-weight: 700;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+}
+
+.uni2-offline-page {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
+  padding: clamp(28px, 6vw, 56px);
+  text-align: center;
+}
+
+.uni2-offline-page-warning {
+  border-color: rgba(192, 144, 1, 0.45);
+}
+
+.uni2-offline-icon {
+  align-items: center;
+  background: rgba(63, 81, 181, 0.1);
+  border-radius: 999px;
+  color: var(--color-action-on-surface);
+  display: inline-flex;
+  font-size: 1.6rem;
+  height: 58px;
+  justify-content: center;
+  margin-bottom: 18px;
+  width: 58px;
+}
+
+/* El área superior y los controles flotantes respetan el recorte de una PWA
+   instalada sin reducir los fondos a pantalla completa. */
+@media (display-mode: standalone) {
+  .uni2-navbar {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  [data-deployment-environment="staging"] .uni2-navbar {
+    padding-top: 0;
+  }
+
+  .uni2-navbar-inner {
+    padding-left: max(clamp(18px, 5vw, 76px), env(safe-area-inset-left));
+    padding-right: max(clamp(18px, 5vw, 76px), env(safe-area-inset-right));
+  }
+
+  .uni2-footer {
+    padding-bottom: max(96px, calc(env(safe-area-inset-bottom) + 78px));
+    padding-left: max(18px, env(safe-area-inset-left));
+    padding-right: max(18px, env(safe-area-inset-right));
+  }
+}
+
+.uni2-is-standalone .uni2-navbar {
+  padding-top: env(safe-area-inset-top);
+}
+
+.uni2-is-standalone[data-deployment-environment="staging"] .uni2-navbar {
+  padding-top: 0;
 }
 
 /* === DASHBOARD COMPONENTS === */
@@ -2136,6 +2521,69 @@ button.uni2-service-card:hover {
   .uni2-discount {
     font-size: 0.74rem;
     padding: 8px 10px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .uni2-pwa-install {
+    align-items: stretch;
+    bottom: max(154px, calc(env(safe-area-inset-bottom) + 148px));
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .uni2-pwa-install-actions {
+    justify-content: space-between;
+  }
+
+  .uni2-pwa-install-actions .btn {
+    flex: 1 1 auto;
+  }
+
+  .uni2-pwa-connectivity {
+    border-radius: 16px;
+    bottom: max(82px, calc(env(safe-area-inset-bottom) + 76px));
+    max-width: calc(100vw - 24px);
+    width: calc(100vw - 24px);
+  }
+
+  .uni2-pwa-update {
+    align-items: stretch;
+    bottom: max(154px, calc(env(safe-area-inset-bottom) + 148px));
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .uni2-pwa-update .btn {
+    flex: 1 1 auto;
+  }
+
+  .uni2-credential-heading,
+  .uni2-credential-offline-panel {
+    align-items: flex-start;
+    grid-template-columns: 1fr;
+  }
+
+  .uni2-credential-heading {
+    flex-direction: column;
+  }
+
+  .uni2-credential-body {
+    grid-template-columns: 1fr;
+  }
+
+  .uni2-credential-qr {
+    max-width: 260px;
+  }
+
+  .uni2-credential-offline-actions {
+    justify-content: stretch;
+    width: 100%;
+  }
+
+  .uni2-credential-offline-actions .btn {
+    justify-content: center;
+    width: 100%;
   }
 }
 

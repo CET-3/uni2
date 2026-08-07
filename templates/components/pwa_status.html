@@ -1,0 +1,74 @@
+<div
+    id="uni2-connectivity-status"
+    class="uni2-pwa-connectivity"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    tabindex="-1"
+    hidden
+>
+    <i class="bi bi-wifi-off" aria-hidden="true"></i>
+    <span data-pwa-connectivity-message>Sin conexión. Algunas funciones no están disponibles.</span>
+</div>
+
+<aside
+    id="uni2-install-promotion"
+    class="uni2-pwa-install js-pwa-install-item"
+    aria-labelledby="uni2-install-promotion-title"
+    hidden
+>
+    <div class="uni2-pwa-install-copy">
+        <i class="bi bi-phone" aria-hidden="true"></i>
+        <div>
+            <strong id="uni2-install-promotion-title">Instalá {{ pwa_short_name }}</strong>
+            <span>Usala desde tu pantalla de inicio y accedé a las funciones disponibles sin conexión.</span>
+        </div>
+    </div>
+    <div class="uni2-pwa-install-actions">
+        <button class="btn btn-primary btn-sm js-pwa-install-trigger" type="button">
+            Instalar
+        </button>
+        <button class="btn-close" type="button" data-pwa-install-dismiss aria-label="Cerrar invitación para instalar"></button>
+    </div>
+</aside>
+
+<div
+    class="modal fade"
+    id="uni2-install-instructions"
+    tabindex="-1"
+    aria-labelledby="uni2-install-instructions-title"
+    aria-describedby="uni2-install-instructions-description"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content uni2-pwa-modal">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="uni2-install-instructions-title">Instalar {{ pwa_short_name }} en este dispositivo</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div id="uni2-install-instructions-description">
+                    <p data-pwa-ios-install-instructions>
+                        En Safari, tocá <strong>Compartir</strong>
+                        <i class="bi bi-box-arrow-up" aria-hidden="true"></i>
+                        y después <strong>Agregar a inicio</strong>.
+                    </p>
+                    <p data-pwa-browser-install-instructions hidden>
+                        Abrí el menú de este navegador y elegí <strong>Instalar aplicación</strong>
+                        o <strong>Agregar a pantalla principal</strong>.
+                    </p>
+                    <p class="mb-0 text-secondary" data-pwa-ios-browser-note hidden>
+                        Si no ves esa opción, abrí esta página en Safari y repetí los pasos.
+                    </p>
+                    <p class="mb-0 text-secondary" data-pwa-browser-note hidden>
+                        Si el menú no ofrece la instalación, abrí staging con una versión
+                        actualizada de Chrome, Edge o Safari.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+            </div>
+        </div>
+    </div>
+</div>

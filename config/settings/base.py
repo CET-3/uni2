@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "cuotas",
     "comercios",
     "contenidos",
+    "pwa",
     "especificacion",
 ]
 
@@ -47,6 +48,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "pwa.middleware.PWACacheControlMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -65,6 +67,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "usuarios.context_processors.navigation_roles",
+                "pwa.context_processors.pwa_settings",
             ],
         },
     },
@@ -108,6 +111,37 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# La PWA usa un identificador de build para separar sus cachés. Los deploys
+# automáticos de Vercel exponen el SHA; el workflow de staging lo pasa de forma
+# explícita porque ese proyecto no está conectado al repositorio.
+PWA_BUILD_ID = (
+    os.getenv("PWA_BUILD_ID")
+    or os.getenv("VERCEL_GIT_COMMIT_SHA")
+    or "development"
+)
+PWA_CREDENTIAL_OFFLINE_TTL_DAYS = 7
+PWA_PRIVATE_DATA_EPOCH = os.getenv("UNI2_PRIVATE_DATA_EPOCH", "development")
+PWA_APP_NAME = "UNI2 - Mutual Escolar"
+PWA_SHORT_NAME = "UNI2"
+PWA_DESCRIPTION = "Gestión y servicios de la Mutual Escolar del CET 3."
+PWA_THEME_COLOR = "#3f51b5"
+PWA_THEME_COLOR_LIGHT = "#f7f9fc"
+PWA_THEME_COLOR_DARK = "#080c16"
+PWA_BACKGROUND_COLOR = "#f7f9fc"
+PWA_ICON_DIRECTORY = "pwa/icons"
+
+# Los templates usan estas variables para que un entorno no productivo sea
+# inequívoco, incluso dentro de la pantalla offline cacheada.
+UNI2_DEPLOYMENT_ENVIRONMENT = "development"
+UNI2_ENVIRONMENT_LABEL = ""
+UNI2_ENVIRONMENT_SHORT_LABEL = ""
+
+# Las integraciones todavía no están implementadas. Declarar la política desde
+# ahora evita que staging herede por accidente proveedores reales en el futuro.
+UNI2_TRANSACTIONAL_EMAIL_MODE = "disabled"
+UNI2_BATCH_EMAIL_MODE = "disabled"
+UNI2_WEB_PUSH_MODE = "disabled"
 
 # El admin técnico puede recibir acciones masivas sobre muchas cuotas luego de
 # importaciones iniciales. El valor por defecto de Django queda corto para ese uso.

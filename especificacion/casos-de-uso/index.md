@@ -10,11 +10,19 @@
 * [CU-listar-productos-servicios-publicos](cu-listar-productos-servicios-publicos.md) - Actor: Visitante
 * [CU-listar-comercios-publicos](cu-listar-comercios-publicos.md) - Actor: Visitante
 
+## PWA
+
+### Instalación y conectividad
+
+* [CU-instalar-Uni2](cu-instalar-uni2.md) - Actor: Persona que usa Uni2 desde un navegador compatible.
+* [CU-usar-Uni2-sin-conexion](cu-usar-uni2-sin-conexion.md) - Actor: Persona que pierde conectividad.
+
 ## Asociado
 
 ### Autoconsulta
 
 * [CU-ver-credencial](cu-ver-credencial.md) - Actor: Asociado
+* [CU-guardar-credencial-offline](cu-guardar-credencial-offline.md) - Actor: Asociado autenticado.
 * [CU-ver-estado-cuotas](cu-ver-estado-cuotas.md) - Actor: Asociado
 
 ## Comercio
@@ -36,8 +44,13 @@
 ### Cuotas y pagos
 
 * [CU-registrar-pago-cuota](cu-registrar-pago-cuota.md) - Actor: Gestión con permiso para cobrar cuotas.
+* [CU-consultar-auditoria](cu-consultar-auditoria.md) - Actor: Gestión con permiso para ver auditoría.
 
 ## Administrador
+
+### Operación de entornos
+
+* [CU-refrescar-staging](cu-refrescar-staging.md) - Actor: Responsable técnica autorizada.
 
 ### Asociados
 

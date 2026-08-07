@@ -27,7 +27,8 @@ Si hay diferencias entre implementación y documentación, hay que reducir esa b
 
 ## Objetivo
 
-Implementar y mantener el MVP de Uni2 respetando el alcance funcional definido en la especificación.
+Implementar y mantener el MVP de Uni2 y su etapa PWA respetando el alcance
+funcional definido en la especificación.
 
 No implementar todavía:
 
@@ -36,7 +37,6 @@ No implementar todavía:
 - PagoPedido
 - Tickets
 - Mensajería
-- PWA
 - Notificaciones push
 - Pago online
 - Mapa de comercios

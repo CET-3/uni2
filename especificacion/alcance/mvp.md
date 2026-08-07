@@ -39,8 +39,10 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Pago de pedidos.
 - Tickets de consultas.
 - Mensajería.
-- PWA.
+- PWA. Se implementa ahora como una etapa posterior, documentada por separado
+  en [Etapa PWA](pwa.md); no se reescribe el alcance histórico del MVP.
 - Push notifications.
+- Correos transaccionales y por lote.
 - Pago online.
 - Pantalla propia de gestión de comercios en el backoffice.
 - Saldo a favor.
