@@ -37,7 +37,7 @@ jobs:
           ref: ${{ github.sha }}
 
       - name: Instalar Vercel CLI
-        run: npm install --global vercel@53.3.2
+        run: npm install --global vercel@58.7.1
 
       - name: Desplegar sin mover el dominio estable
         id: deploy
@@ -71,18 +71,13 @@ jobs:
           vercel_request() {
             local path="$1"
             shift
-            vercel curl "$path" \
-              --deployment "$DEPLOYMENT_URL" \
-              --scope="$VERCEL_ORG_ID" \
-              --token="$VERCEL_TOKEN" \
-              -- "${curl_args[@]}" "$@"
+          vercel --scope="$VERCEL_ORG_ID" --token="$VERCEL_TOKEN" curl "$path" \
+            --deployment "$DEPLOYMENT_URL" \
+            "${curl_args[@]}" "$@"
           }
           anonymous_status="$(
-            vercel curl "/" \
+            vercel --scope="$VERCEL_ORG_ID" --token="$VERCEL_TOKEN" curl "/" \
               --deployment "$DEPLOYMENT_URL" \
-              --scope="$VERCEL_ORG_ID" \
-              --token="$VERCEL_TOKEN" \
-              -- \
               --silent \
               --show-error \
               --retry 5 \
@@ -136,11 +131,9 @@ jobs:
             --retry 5
             --retry-all-errors
           )
-          vercel curl "/__staging__/readiness/" \
+          vercel --scope="$VERCEL_ORG_ID" --token="$VERCEL_TOKEN" curl "/__staging__/readiness/" \
             --deployment "$STAGING_BASE_URL" \
-            --scope="$VERCEL_ORG_ID" \
-            --token="$VERCEL_TOKEN" \
-            -- "${curl_args[@]}" \
+            "${curl_args[@]}" \
             --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
             --output /tmp/stable-readiness.json
           python -c 'import json, os; data=json.load(open("/tmp/stable-readiness.json")); assert data["ready"] is True; assert data["build_id"] == os.environ["PWA_BUILD_ID"]'
