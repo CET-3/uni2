@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Group, Permission
 from django.urls import reverse
 
 from asociados.models import Asociado, CicloLectivo
@@ -16,6 +16,7 @@ from gestion.permissions import (
     GESTION_VER_AUDITORIA,
     GESTION_VER_MOVIMIENTOS_ASOCIADO,
 )
+from usuarios.roles import ATENCION_ASOCIADO_GROUP
 
 
 def crear_usuario_con_permisos(username, permisos):
@@ -37,6 +38,40 @@ def test_auditoria_rechaza_usuario_sin_permiso_y_oculta_acceso(client):
 
     assert dashboard.status_code == 200
     assert reverse("gestion:auditoria") not in dashboard.content.decode()
+    assert auditoria.status_code == 403
+
+
+@pytest.mark.django_db
+def test_atencion_ve_movimientos_de_ficha_pero_no_puede_abrir_auditoria_general(client):
+    usuario = get_user_model().objects.create_user(username="atencion_ficha", password="secreto123")
+    usuario.groups.add(Group.objects.get(name=ATENCION_ASOCIADO_GROUP))
+    asociado = Asociado.objects.create(
+        nombre="Julia",
+        apellido="Campos",
+        dni="40000888",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-08-09",
+        fecha_inicio_cobro="2026-08-01",
+        usuario=usuario,
+    )
+    EventoAuditoria.objects.create(
+        actor=usuario,
+        actor_etiqueta=usuario.username,
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+        entidad="asociados.Asociado",
+        objeto_id=str(asociado.pk),
+        objeto_descripcion=str(asociado),
+        cambios={"telefono": {"anterior": "111", "nuevo": "222"}},
+        origen=EventoAuditoria.ORIGEN_GESTION,
+    )
+    client.force_login(usuario)
+
+    detalle = client.get(reverse("gestion:asociado_detalle", args=[asociado.pk]))
+    auditoria = client.get(reverse("gestion:auditoria"))
+
+    assert detalle.status_code == 200
+    assert "Historial de auditoría" in detalle.content.decode()
+    assert "Ver historial completo" not in detalle.content.decode()
     assert auditoria.status_code == 403
 
 

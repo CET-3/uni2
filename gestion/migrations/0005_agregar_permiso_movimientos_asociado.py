@@ -3,10 +3,8 @@ from django.db import migrations
 
 PERMISSION_CODENAME = "ver_movimientos_asociado"
 PERMISSION_NAME = "Puede ver los movimientos de la ficha del asociado"
-GROUPS_WITH_PERMISSION = (
-    "Atención al asociado",
-    "Administrador de la mutual",
-)
+ATENCION_GROUP = "Atención al asociado"
+ADMINISTRADOR_MUTUAL_GROUP = "Administrador de la mutual"
 
 
 def crear_y_asignar_permiso(apps, schema_editor):
@@ -23,8 +21,16 @@ def crear_y_asignar_permiso(apps, schema_editor):
         codename=PERMISSION_CODENAME,
         defaults={"name": PERMISSION_NAME},
     )
-    for group in Group.objects.filter(name__in=GROUPS_WITH_PERMISSION):
+    for group in Group.objects.filter(name__in=(ATENCION_GROUP, ADMINISTRADOR_MUTUAL_GROUP)):
         group.permissions.add(permission)
+
+    auditoria_general = Permission.objects.filter(
+        content_type=content_type,
+        codename="ver_auditoria",
+    ).first()
+    atencion = Group.objects.filter(name=ATENCION_GROUP).first()
+    if auditoria_general is not None and atencion is not None:
+        atencion.permissions.remove(auditoria_general)
 
 
 def quitar_permiso(apps, schema_editor):
