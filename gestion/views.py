@@ -44,6 +44,7 @@ from cuotas.services import (
     crear_periodo_cuota,
     generar_cuotas_iniciales_para_asociado,
     generar_cuotas_para_periodo,
+    registrar_donacion,
     registrar_pago,
 )
 
@@ -620,25 +621,41 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
         else:
             asociado = Asociado.objects.filter(id=asociado_id).first()
         cuotas_queryset = get_cuotas_deudoras(asociado) if asociado else []
+        es_donacion_sin_deuda = asociado is not None and not cuotas_queryset.exists()
         form = CobroCuotaForm(request.POST, cuotas_queryset=cuotas_queryset)
         if form.is_valid():
             asociado = get_object_or_404(Asociado, id=form.cleaned_data["asociado_id"])
             try:
-                pago = registrar_pago(
-                    asociado=asociado,
-                    fecha=form.cleaned_data["fecha"],
-                    importe=form.cleaned_data["importe"],
-                    metodo=form.cleaned_data["metodo"],
-                    registrado_por=request.user,
-                    observaciones=form.cleaned_data["observaciones"],
-                    cuotas_ids=form.cleaned_data["cuotas_ids"],
-                )
+                datos_cobro = {
+                    "asociado": asociado,
+                    "fecha": form.cleaned_data["fecha"],
+                    "importe": form.cleaned_data["importe"],
+                    "metodo": form.cleaned_data["metodo"],
+                    "registrado_por": request.user,
+                    "observaciones": form.cleaned_data["observaciones"],
+                }
+                if es_donacion_sin_deuda:
+                    pago = registrar_donacion(**datos_cobro)
+                else:
+                    pago = registrar_pago(
+                        **datos_cobro,
+                        cuotas_ids=form.cleaned_data["cuotas_ids"],
+                    )
             except ValueError as exc:
                 messages.error(request, str(exc))
                 request._cobro_form = form
                 request._selected_asociado = asociado
             else:
-                messages.success(request, f"Pago #{pago.id} registrado para {asociado.apellido}, {asociado.nombre}.")
+                if es_donacion_sin_deuda:
+                    messages.success(
+                        request,
+                        f"Donación registrada para {asociado.apellido}, {asociado.nombre}.",
+                    )
+                else:
+                    messages.success(
+                        request,
+                        f"Pago #{pago.id} registrado para {asociado.apellido}, {asociado.nombre}.",
+                    )
                 return redirect(get_asociado_detail_url(asociado.id, get_asociados_return_url(request)))
         else:
             request._selected_asociado = asociado
@@ -662,6 +679,7 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
                 cuotas_deudoras.append(calcular_estado_cuota(cuota, fecha_referencia))
             context["cuotas_deudoras"] = cuotas_deudoras
             context["total_deuda"] = get_total_deuda(selected_asociado, fecha_referencia)
+            context["es_donacion_sin_deuda"] = not cuotas_deudoras
             context["fecha_referencia"] = fecha_referencia
         else:
             context["cuotas_deudoras"] = []

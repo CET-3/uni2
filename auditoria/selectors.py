@@ -26,6 +26,12 @@ class OperacionAuditoria:
         """Describe la operación con vocabulario de negocio cuando es posible."""
 
         tipos_evento = {(evento.entidad, evento.accion) for evento in self.eventos}
+        if (
+            ("cuotas.Pago", EventoAuditoria.ACCION_CREAR) in tipos_evento
+            and ("cuotas.Donacion", EventoAuditoria.ACCION_CREAR) in tipos_evento
+            and not any(evento.entidad == "cuotas.PagoCuota" for evento in self.eventos)
+        ):
+            return "Registro de donación"
         if ("cuotas.Pago", EventoAuditoria.ACCION_CREAR) in tipos_evento:
             return "Cobro de cuotas"
         if ("asociados.Asociado", EventoAuditoria.ACCION_CREAR) in tipos_evento:

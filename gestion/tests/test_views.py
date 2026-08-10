@@ -753,6 +753,45 @@ def test_cobros_gestion_permite_pago_mayor_y_genera_donacion(client):
 
 
 @pytest.mark.django_db
+def test_asociado_sin_deuda_puede_registrar_donacion_desde_su_detalle(client):
+    staff = crear_usuario_gestion("staff_donacion_sin_deuda")
+    asociado = create_asociado(
+        nombre="Ana",
+        apellido="Paz",
+        dni="46666112",
+        tipo="asociado",
+        fecha_alta="2026-05-10",
+    )
+    client.force_login(staff)
+
+    detalle = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
+    formulario = client.get(reverse("gestion:cobros"), {"asociado": asociado.id})
+    response = client.post(
+        reverse("gestion:cobros"),
+        {
+            "asociado_id": asociado.id,
+            "fecha": timezone.localdate().isoformat(),
+            "importe": "2500.00",
+            "metodo": Pago.METODO_BILLETERA,
+            "observaciones": "Donación voluntaria",
+        },
+        follow=True,
+    )
+
+    assert "Registrar donación" in detalle.content.decode()
+    contenido_formulario = formulario.content.decode()
+    assert formulario.status_code == 200
+    assert "El asociado no tiene cuotas pendientes" in contenido_formulario
+    assert "Importe de la donación" in contenido_formulario
+    assert "Cuotas a cobrar" not in contenido_formulario
+    assert response.status_code == 200
+    assert "Donación registrada para Paz, Ana" in response.content.decode()
+    pago = Pago.objects.get(asociado=asociado)
+    assert not pago.aplicaciones.exists()
+    assert Donacion.objects.get(pago=pago).importe == Decimal("2500")
+
+
+@pytest.mark.django_db
 def test_cobros_gestion_permite_cobrar_solo_cuotas_mas_viejas_seleccionadas(client):
     staff = crear_usuario_gestion("staff_cobro_parcial_de_lista")
     asociado = create_asociado(
@@ -1093,7 +1132,7 @@ def test_detalle_conserva_retorno_filtrado_en_edicion_y_cobro(client):
     content = response.content.decode()
     assert "Atención al asociado" in content
     assert "Editar asociado" in content
-    assert "Cobrar" in content
+    assert "Registrar donación" in content
     assert "Ver todas las cuotas" not in content
     assert "Ver auditoría" not in content
     assert "Crear usuario" not in content

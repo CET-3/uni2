@@ -22,7 +22,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Creación manual de usuarios para asociados.
 - Generación de cuotas.
 - Registro de pagos de cuotas.
-- Cobro de una o más cuotas completas, con excedente registrado como donación.
+- Cobro de una o más cuotas completas, con excedente registrado como donación, y donación directa cuando el asociado no tiene cuotas pendientes.
 - Deudores.
 - Credencial digital.
 - Validación de credencial por comercio.

@@ -20,7 +20,7 @@
             <a class="btn btn-outline-primary" href="{{ edit_url }}">Editar asociado</a>
         {% endif %}
         {% if perms.gestion.cobrar_cuotas %}
-            <a class="btn btn-primary" href="{{ cobro_url }}">Cobrar</a>
+            <a class="btn btn-primary" href="{{ cobro_url }}">{% if total_deuda > 0 %}Cobrar{% else %}Registrar donación{% endif %}</a>
         {% endif %}
     </div>
 </div>

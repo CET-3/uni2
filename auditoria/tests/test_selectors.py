@@ -84,6 +84,29 @@ def test_operacion_usa_un_titulo_de_negocio_para_un_cobro():
 
 
 @pytest.mark.django_db
+def test_operacion_usa_un_titulo_de_negocio_para_una_donacion_sin_cuotas():
+    operacion_id = uuid.uuid4()
+    for entidad, objeto_id, descripcion in (
+        ("cuotas.Pago", "42", "Pago 42"),
+        ("cuotas.Donacion", "43", "Donación 43"),
+    ):
+        EventoAuditoria.objects.create(
+            actor_etiqueta="Proceso de prueba",
+            accion=EventoAuditoria.ACCION_CREAR,
+            entidad=entidad,
+            objeto_id=objeto_id,
+            objeto_descripcion=descripcion,
+            cambios={},
+            origen=EventoAuditoria.ORIGEN_SISTEMA,
+            operacion_id=operacion_id,
+        )
+
+    operacion = obtener_operaciones([{"operacion_id": operacion_id}])[0]
+
+    assert operacion.titulo == "Registro de donación"
+
+
+@pytest.mark.django_db
 def test_busqueda_encuentra_el_nombre_de_usuario_actual():
     actor = get_user_model().objects.create_user(username="operadora_actual")
     EventoAuditoria.objects.create(

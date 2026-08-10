@@ -34,6 +34,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Reglas relacionadas:** [Pagos](../reglas/pagos.md).
 
-**Situaciones especiales:** pago exacto, pago de una cuota, pago de varias cuotas, pago mayor al mínimo calculado, importe recibido menor al mínimo calculado, asociado sin deuda.
+**Situaciones especiales:** pago exacto, pago de una cuota, pago de varias cuotas, pago mayor al mínimo calculado e importe recibido menor al mínimo calculado. Si el asociado no tiene deuda, se utiliza [CU-registrar-donacion](cu-registrar-donacion.md).
 
 **Modelos afectados:** Pago, PagoCuota, Cuota, Donacion.

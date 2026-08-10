@@ -21,7 +21,7 @@ timestamp: 2026-07-13T00:00:00-03:00
 - Cursos.
 - Períodos de cuota.
 - Generar cuotas.
-- Registrar pago exclusivamente desde el detalle de un asociado. La pantalla de cobro muestra cuotas pendientes ordenadas de la más vieja a la más nueva, permite seleccionar una o más cuotas a cobrar, valida que la selección sea continua desde la cuota pendiente más vieja, calcula automáticamente el mínimo a cobrar, prellena el importe recibido y registra como donación cualquier excedente. Cada checkbox de selección tiene como nombre accesible el período de su cuota. Cancelar o completar el cobro vuelve al detalle; abrir cobros sin asociado redirige a `Atención al asociado`.
+- Registrar pagos y donaciones exclusivamente desde el detalle de un asociado. Con deuda, la pantalla muestra cuotas pendientes ordenadas de la más vieja a la más nueva, permite seleccionar una o más cuotas a cobrar, valida que la selección sea continua desde la cuota pendiente más vieja, calcula automáticamente el mínimo a cobrar, prellena el importe recibido y registra como donación cualquier excedente. Sin deuda, la acción y la pantalla se presentan como `Registrar donación`, no muestran selección de cuotas e informan que todo el importe será donado. Cada checkbox de selección tiene como nombre accesible el período de su cuota. Cancelar o completar cualquiera de los recorridos vuelve al detalle; abrir cobros sin asociado redirige a `Atención al asociado`.
 - Deudores.
 - Acceso al admin técnico de Django solo para usuarios con `is_staff`.
 - La home oculta accesos para los que la persona no tiene permiso; los roles dedicados a convenios o publicidades pueden usar el acceso al admin sin recibir enlaces a asociados.
