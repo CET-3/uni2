@@ -86,6 +86,7 @@ El worker verifica los encabezados antes de escribir.
 | Recurso | Estrategia | Sin conexión |
 |---|---|---|
 | CSS, JavaScript, fuentes, logos e iconos versionados | cache-first | Disponible |
+| Archivos estáticos en desarrollo local | network-first con `cache: no-store` | Última copia obtenida |
 | Pantalla offline y shell mínimo | precache | Disponible |
 | Página pública anónima permitida | network-first | Última versión visitada |
 | Imagen pública permitida | stale-while-revalidate con límite | Disponible si fue vista |
@@ -98,6 +99,13 @@ Los cachés llevan `PWA_BUILD_ID`, derivado del commit de Vercel en producción,
 y el epoch privado de la copia de datos. Al activarse una versión se eliminan
 solamente cachés PWA de builds o epochs anteriores.
 
+En desarrollo local los archivos mantienen una URL estable y el build se llama
+`development`. Para que esa combinación no deje CSS o JavaScript viejos, el
+worker consulta siempre la red y actualiza su copia de respaldo. Una nueva
+versión del worker se activa inmediatamente en desarrollo. Staging y producción
+conservan archivos versionados, `cache-first` y actualización confirmada por la
+persona usuaria.
+
 ## Actualización
 
 El worker se registra desde `/static/pwa/uni2-pwa.js` con scope `/` y
@@ -105,6 +113,10 @@ El worker se registra desde `/static/pwa/uni2-pwa.js` con scope `/` y
 avisa y, al aceptar, envía el mensaje `SKIP_WAITING`. No se recarga una
 pantalla automáticamente mientras se completa un formulario. Después de
 `controllerchange` se permite una sola recarga.
+
+La espera y confirmación corresponden a staging y producción. En desarrollo el
+worker usa `skipWaiting` automáticamente para evitar que una implementación
+anterior continúe controlando los archivos estáticos locales.
 
 ## Privacidad de la credencial
 
@@ -117,6 +129,7 @@ El registro contiene:
 - propietario como SHA-256 del origen y el ID de usuario, nunca el ID crudo;
 - nombre, apellido, número, tipo y estado al guardar;
 - token de credencial;
+- URL absoluta de resolución de la credencial;
 - fechas de actualización y vencimiento.
 
 Un registro con más de siete días no se muestra y se elimina. Al cerrar sesión
@@ -129,7 +142,9 @@ conectarse. Mientras permanezca completamente offline puede conservar la copia
 anterior hasta que venza el límite local de siete días; no se promete una
 revocación remota durante el offline absoluto.
 
-El QR se genera localmente desde el token. El almacenamiento local no
+El QR se genera localmente desde la URL entregada por el servidor. Una copia
+anterior sin ese campo reconstruye la ruta desde su origen y token hasta que
+una visita online la actualiza. El almacenamiento local no
 convierte la credencial en vigente: la decisión de validez sigue perteneciendo
 al servidor cuando el comercio consulta el token.
 

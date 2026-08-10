@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load auditoria %}
+
+{% block title %}Auditoría de gestión | Uni2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+        <div>
+            <h1 class="h2 mb-1">Auditoría de gestión</h1>
+            {% if asociado_auditado %}
+                <p class="text-secondary mb-0">Movimientos relacionados con {{ asociado_auditado }}.</p>
+            {% else %}
+                <p class="text-secondary mb-0">Historial de operaciones registradas por Uni2.</p>
+            {% endif %}
+        </div>
+        <a class="btn btn-outline-primary" href="{% url 'web:home' %}?perfil=gestion">Volver al inicio</a>
+    </div>
+
+    <form method="get" class="card uni2-surface-card mb-4">
+        <div class="card-body">
+            {% if asociado_auditado %}<input type="hidden" name="asociado_id" value="{{ asociado_auditado.id }}">{% endif %}
+            <div class="row g-3 align-items-end">
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label" for="{{ form.actor.id_for_label }}">{{ form.actor.label }}</label>
+                    {{ form.actor }}
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label" for="{{ form.objeto.id_for_label }}">{{ form.objeto.label }}</label>
+                    {{ form.objeto }}
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label" for="{{ form.accion.id_for_label }}">{{ form.accion.label }}</label>
+                    {{ form.accion }}
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label" for="{{ form.entidad.id_for_label }}">{{ form.entidad.label }}</label>
+                    {{ form.entidad }}
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label" for="{{ form.objeto_id.id_for_label }}">{{ form.objeto_id.label }}</label>
+                    {{ form.objeto_id }}
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label" for="{{ form.origen.id_for_label }}">{{ form.origen.label }}</label>
+                    {{ form.origen }}
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label" for="{{ form.fecha_desde.id_for_label }}">{{ form.fecha_desde.label }}</label>
+                    {{ form.fecha_desde }}
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label" for="{{ form.fecha_hasta.id_for_label }}">{{ form.fecha_hasta.label }}</label>
+                    {{ form.fecha_hasta }}
+                </div>
+                <div class="col-md-6 col-lg-3 d-flex gap-2">
+                    <button class="btn btn-primary" type="submit">Filtrar</button>
+                    <a class="btn btn-outline-primary" href="{% url 'gestion:auditoria' %}">Limpiar</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% if page_obj %}
+        {% include "gestion/_lista_operaciones_auditoria.html" with operaciones=page_obj only %}
+
+        {% if page_obj.has_other_pages %}
+            <nav class="mt-4" aria-label="Paginación de auditoría">
+                <div class="d-flex justify-content-between align-items-center">
+                    {% if page_obj.has_previous %}
+                        <a class="btn btn-outline-primary" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Anterior</a>
+                    {% else %}<span></span>{% endif %}
+                    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                    {% if page_obj.has_next %}
+                        <a class="btn btn-outline-primary" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Siguiente</a>
+                    {% endif %}
+                </div>
+            </nav>
+        {% endif %}
+    {% else %}
+        {% include "components/alert.html" with variant="info" title="Sin resultados" message="No hay eventos para los filtros elegidos." only %}
+    {% endif %}
+</div>
+{% endblock %}

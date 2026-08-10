@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static formatos %}
 
 {% block title %}Inicio | Uni2{% endblock %}
 
@@ -8,18 +8,43 @@
 <section class="uni2-hero px-0" id="inicio" aria-labelledby="hero-title">
     <div class="container uni2-hero-layout">
         <div>
-            <span class="uni2-eyebrow">Mutual Escolar UNI2</span>
-            <h1 id="hero-title" class="uni2-titulo-principal">Tu mutual, más cerca que nunca</h1>
-            <p>Una comunidad comprometida con vos, con beneficios para cada momento</p>
-            <div class="uni2-hero-actions">
-                <a class="uni2-cta" href="#como-asociarse">Sumate</a>
-                <a class="uni2-cta uni2-cta-secondary" href="{% url 'usuarios:login' %}">Iniciar sesión</a>
-            </div>
+            <span class="uni2-eyebrow">{{ home_navigation.eyebrow }}</span>
+            <h1 id="hero-title" class="uni2-titulo-principal">{{ home_navigation.title }}</h1>
+            <p>{{ home_navigation.subtitle }}</p>
+            {% if home_navigation.primary_actions %}
+                <div class="uni2-hero-actions">
+                    {% for action in home_navigation.primary_actions %}
+                        <a class="uni2-cta{% if not forloop.first %} uni2-cta-secondary{% endif %}" href="{{ action.url }}">{{ action.label }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </div>
 </section>
 
 <div class="container py-5">
+
+    {% if home_navigation.extra_actions %}
+        <section class="mb-5" aria-labelledby="otros-accesos-title">
+            <div class="uni2-section-heading">
+                <div>
+                    <h2 id="otros-accesos-title" class="uni2-titulo-componente">Más accesos</h2>
+                </div>
+            </div>
+            <div class="row g-3">
+                {% for action in home_navigation.extra_actions %}
+                    <div class="col-md-6">
+                        <a class="uni2-service-card uni2-service-card-blue" href="{{ action.url }}">
+                            <div>
+                                <h3>{{ action.label }}</h3>
+                                {% if action.description %}<p>{{ action.description }}</p>{% endif %}
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
 
     <!-- SERVICIOS + BENEFICIOS -->
     <div class="mb-5">
@@ -62,7 +87,11 @@
                 <article class="uni2-step-card uni2-step-card-green">
                     <strong class="uni2-step-number">3</strong>
                     <h3>Sumate a la comunidad</h3>
-                    <p>Con una cuota social de solo $700 por mes, ya sos asociado.</p>
+                    {% if periodo_cuota_publicado %}
+                        <p>Con una cuota social de solo {{ periodo_cuota_publicado.importe|moneda }} por mes, ya sos asociado.</p>
+                    {% else %}
+                        <p>Consultá en la mutual el valor actual de la cuota social.</p>
+                    {% endif %}
                 </article>
             </div>
             <div class="col-6 col-md-3">
@@ -81,7 +110,11 @@
             </div>
             <div>
                 <h3>Cuota social</h3>
-                <p>$700 mensuales.</p>
+                {% if periodo_cuota_publicado %}
+                    <p>{{ periodo_cuota_publicado.importe|moneda }} mensuales.</p>
+                {% else %}
+                    <p>Consultá el valor vigente.</p>
+                {% endif %}
             </div>
             <div class="uni2-schedule-card">
                 <h3>Horarios de atención</h3>

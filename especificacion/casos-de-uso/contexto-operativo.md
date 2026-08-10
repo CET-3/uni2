@@ -8,7 +8,7 @@ timestamp: 2026-07-29T00:00:00-03:00
 
 # Orden operativo diario
 
-Sin contar importaciones iniciales, los casos de uso del backoffice se organizan por flujo diario de atención: buscar asociado, dar alta manual, ver detalle, editar datos o baja, cobrar cuota y consultar deuda. Las importaciones quedan como puesta en marcha y no forman parte de la atención cotidiana de mostrador.
+Sin contar importaciones iniciales, el flujo diario principal del backoffice es `Atención al asociado → detalle → cobrar o editar → detalle`. El alta manual también termina en el detalle. Las importaciones quedan como puesta en marcha y no forman parte de la atención cotidiana de mostrador.
 # Puesta en marcha
 
 Las importaciones iniciales de padrón, cuotas históricas y comercios son

@@ -51,6 +51,9 @@ aviso destacado:
 > confirmar la vigencia.
 
 Una copia vencida o de otra cuenta nunca se representa.
+El QR online y el guardado codifican la misma URL absoluta
+`/credenciales/<token UUID>/`. Mostrarla offline no evita que la validación
+necesite una sesión de comercio y conexión con el servidor.
 
 ## Actualización
 

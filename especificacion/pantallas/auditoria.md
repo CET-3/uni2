@@ -2,15 +2,15 @@
 type: "Pantalla"
 title: "Auditoría de gestión"
 description: "Consulta de solo lectura del historial de operaciones de Uni2."
-tags: [mvp, gestion, diseno-aprobado, pendiente]
-timestamp: 2026-08-01T00:00:00-03:00
+tags: [mvp, gestion, implementado]
+timestamp: 2026-08-09T00:00:00-03:00
 ---
 
 # Auditoría de gestión
 
 ## Estado
 
-Pantalla aprobada y pendiente de implementación.
+Pantalla implementada.
 
 ## Acceso
 
@@ -32,22 +32,46 @@ El listado muestra:
 - motivo cuando exista;
 - acceso al detalle de cambios.
 
-Las filas que comparten `operacion_id` se presentan agrupadas o con una
-identificación común. Esto permite entender como una sola operación un cobro o
-una importación que afectó varios objetos.
+Los eventos que comparten `operacion_id` se presentan dentro de una sola
+tarjeta de operación. La agrupación es solamente visual: cada evento conserva
+y muestra su frase, entidad, identificador, origen y detalle de cambios. No se
+resume ni se elimina información del historial persistido. Las operaciones que
+contienen un único evento mantienen la tarjeta simple.
+
+La cabecera de una operación compuesta usa un título de negocio obtenido de
+sus eventos, por ejemplo `Cobro de cuotas`, `Alta de asociado`, `Generación de
+cuotas` o `Creación y vinculación de usuario`. Cuando no existe una descripción
+específica usa `Cambios relacionados`. El UUID queda como referencia técnica
+secundaria y no compite con el título.
 
 ## Filtros
 
 - intervalo de fechas;
-- actor;
+- persona que realizó la acción mediante nombre, apellido o nombre de usuario;
+- objeto modificado mediante descripción o identificador parcial;
 - acción;
-- entidad;
+- entidad mediante un desplegable construido a partir de las entidades que ya
+  tienen eventos registrados;
 - origen;
-- identificador o texto del objeto;
-- `operacion_id` cuando se ingrese desde el detalle de una operación.
+- identificador exacto del objeto;
+- el `operacion_id` se muestra en las operaciones compuestas para facilitar su
+  identificación técnica.
 
-Los resultados se ordenan del más reciente al más antiguo y usan paginación.
-No se implementa exportación en la primera versión.
+La versión actual separa la búsqueda de la persona que realizó la acción de la
+búsqueda del objeto modificado. También permite filtrar por acción, entidad,
+identificador exacto del objeto, origen y fechas desde/hasta. La presentación de
+cada evento mantiene una oración con actor, acción, objeto y fecha. El actor se
+muestra con el nombre y apellido actuales cuando la cuenta sigue vinculada. Si
+no están cargados o la cuenta ya no existe, usa el nombre registrado en
+`actor_etiqueta`. Debajo aparecen entidad, identificador, origen y los cambios
+visibles en una tarjeta compacta con color lateral según la acción.
+
+Los resultados se ordenan del más reciente al más antiguo y se paginan por
+operación, no por evento. Así los eventos relacionados nunca quedan divididos
+entre dos páginas. Un filtro selecciona las operaciones que tengan al menos un
+evento coincidente; una vez encontrada la operación, se muestran todos sus
+eventos para no recortar su trazabilidad. No se implementa exportación en la
+primera versión.
 
 ## Detalle de cambios
 
@@ -62,16 +86,48 @@ Curso actual   2do 1ra CB TM        3ro 1ra CB TM
 Los valores excluidos por seguridad se muestran como `Valor protegido`. Nunca
 se muestran contraseñas, tokens o secretos.
 
+En una modificación se muestran valor anterior, flecha y valor nuevo. En una
+creación no se repite un valor anterior vacío: la sección `Datos cargados`
+muestra solamente valores nuevos y omite campos vacíos. En desktop usa dos
+columnas y en pantallas angostas pasa a una sola columna. No hay acordeones ni
+textos del tipo “1 cambio realizado”: cuando una operación es compuesta, sus
+eventos se agrupan en una tarjeta y permanecen visibles.
+
+En desktop, anterior y nuevo forman una secuencia compacta junto a la etiqueta
+del campo; no se distribuyen en extremos opuestos de la tarjeta. Los valores
+largos pueden envolver. En mobile la secuencia se apila para conservar la
+legibilidad. La etiqueta del campo se alinea con la primera línea del cambio,
+también cuando alguno de los valores ocupa varias líneas.
+
+Los eventos financieros usan frases de negocio: `registró un pago`, `aplicó un
+importe a la cuota` y `actualizó la cuota`. No muestran como título las
+representaciones técnicas de `Pago` o `PagoCuota`. Fechas, métodos e importes se
+presentan con etiquetas legibles; `registrado_por` se omite del detalle porque
+duplica al actor de la oración. Los importes respetan el formato monetario
+general `$ 1.000,00`. Las aplicaciones `PagoCuota` conservan además su sección
+de datos para que una operación agrupada no pierda ninguna relación registrada.
+
+La jerarquía tipográfica reserva semibold para el actor, el objeto y las
+etiquetas de campo. Metadatos y valores permanecen con peso normal; no se usa
+negrita simultáneamente en todos los elementos de la tarjeta.
+
 Si el objeto todavía existe y la persona tiene permiso para consultarlo, su
 descripción puede enlazar al detalle correspondiente. Si fue eliminado o ya no
 es accesible, el evento conserva la descripción sin ofrecer un enlace roto.
 
 ## Historial contextual
 
-Las pantallas de detalle prioritarias podrán mostrar una sección `Historial`
-con los mismos datos, filtrados por entidad e identificador. La primera
-integración será el detalle de asociado; pagos y comercios se incorporarán en
-etapas posteriores.
+El detalle de asociado muestra una sección `Historial de auditoría` al pie para
+usuarios con `gestion.ver_movimientos_asociado`. Incluye las diez operaciones más recientes
+que tengan un evento directo del asociado o una referencia estructurada hacia
+él. De este modo reúne cambios de la ficha, cuotas, pagos y donaciones sin
+depender de buscar el nombre en textos visibles. Recupera completos los eventos
+de cada operación para no recortar un cobro en sus imputaciones y cambios de
+cuota. Cuando una operación masiva contiene movimientos de varios asociados,
+solo presenta los eventos correspondientes a la ficha consultada.
+
+Un enlace de texto abre el mismo historial contextual completo, pero solo
+aparece para usuarios que también poseen `gestion.ver_auditoria`.
 
 ## Estados vacíos y casos especiales
 
@@ -86,7 +142,9 @@ etapas posteriores.
 - En desktop puede utilizar una tabla.
 - En mobile los eventos deben conservar fecha, actor, acción y objeto sin
   depender de scroll horizontal para comprender lo esencial.
+- El encabezado, identificador y detalle de cada operación se apilan sin
+  reservar alturas propias de la disposición de escritorio.
 - Los controles de filtros tienen etiquetas visibles.
-- El detalle desplegable informa su estado mediante `aria-expanded`.
+- La agrupación usa estructura semántica de sección y encabezado; no requiere
+  interacción para acceder a sus eventos.
 - Los cambios no se comunican solamente mediante color.
-

@@ -5,24 +5,39 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h1 class="h3 mb-3">Ingresar</h1>
-                    <form method="post">
+        <div class="col-sm-10 col-md-7 col-lg-5 col-xl-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-sm-5">
+                    <div class="text-center mb-4">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fs-3 mb-3" style="width: 3.5rem; height: 3.5rem;" aria-hidden="true">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <h1 class="h3 mb-2">Ingresar a Uni2</h1>
+                        <p class="text-secondary mb-0">Usá los datos de acceso de tu cuenta.</p>
+                    </div>
+                    <form method="post" novalidate>
                         {% csrf_token %}
                         {% if form.non_field_errors %}
                             {% include "components/alert.html" with variant="danger" title="No pudimos iniciar sesión" message=form.non_field_errors only %}
                         {% endif %}
                         <div class="mb-3">
-                            <label class="form-label" for="{{ form.username.id_for_label }}">Usuario</label>
+                            <label class="form-label fw-semibold" for="{{ form.username.id_for_label }}">Usuario</label>
                             {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger small mt-1">{{ form.username.errors|join:", " }}</div>
+                            {% endif %}
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="{{ form.password.id_for_label }}">Contraseña</label>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold" for="{{ form.password.id_for_label }}">Contraseña</label>
                             {{ form.password }}
+                            {% if form.password.errors %}
+                                <div class="text-danger small mt-1">{{ form.password.errors|join:", " }}</div>
+                            {% endif %}
                         </div>
-                        <button class="btn btn-primary w-100" type="submit">Ingresar</button>
+                        <button class="btn btn-primary w-100 py-2" type="submit">
+                            Ingresar
+                            <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
+                        </button>
                     </form>
                 </div>
             </div>

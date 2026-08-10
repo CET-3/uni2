@@ -1,0 +1,60 @@
+{% load auditoria %}
+<article class="uni2-audit-event uni2-audit-event-{{ evento.accion }}{% if evento_agrupado %} uni2-audit-event-nested{% endif %}">
+    <div class="uni2-audit-event-main">
+        <div class="uni2-audit-subject">
+            {% if contextual %}<h3>{% else %}<h2>{% endif %}
+                <span class="uni2-audit-icon{% if evento.accion == 'crear' %} uni2-audit-icon-create{% endif %}" aria-hidden="true">
+                    <i class="bi {% if evento.accion == 'crear' %}bi-plus-lg{% else %}bi-pencil{% endif %}"></i>
+                </span>
+                <span>
+                    <strong class="uni2-audit-actor">{{ evento|actor_evento_auditoria }}</strong>
+                    {{ evento|verbo_evento_auditoria }}
+                    <strong class="uni2-audit-object">{{ evento|objeto_evento_auditoria }}</strong>
+                    el día {{ evento.fecha|date:"d/m/Y" }} a las {{ evento.fecha|date:"H:i" }}.
+                </span>
+            {% if contextual %}</h3>{% else %}</h2>{% endif %}
+            <p class="uni2-audit-meta">
+                <span>Entidad: {{ evento.entidad|etiqueta_entidad_auditoria }}</span>
+                <span>ID: {{ evento.objeto_id }}</span>
+                <span>Origen: {{ evento.get_origen_display }}</span>
+                {% if evento.motivo %}<span>Motivo: {{ evento.motivo }}</span>{% endif %}
+            </p>
+        </div>
+    </div>
+
+    {% if evento.cambios %}
+        <div class="uni2-audit-details">
+            {% if evento.accion == "crear" %}
+                <p class="uni2-audit-details-title">Datos cargados</p>
+                <div class="uni2-audit-created-values">
+                    {% for campo, detalle in evento.cambios.items %}
+                        {% if detalle.nuevo != None and detalle.nuevo != "" and campo|mostrar_campo_auditoria:evento.entidad %}
+                            {% valor_campo_auditoria detalle.nuevo campo evento.entidad as valor_nuevo %}
+                            <div class="uni2-audit-created-field">
+                                <strong>{{ campo|etiqueta_campo_auditoria:evento.entidad }}</strong>
+                                <span>{{ valor_nuevo }}</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="uni2-audit-changes">
+                    {% for campo, detalle in evento.cambios.items %}
+                        {% if campo|mostrar_campo_auditoria:evento.entidad %}
+                            {% valor_campo_auditoria detalle.anterior campo evento.entidad as valor_anterior %}
+                            {% valor_campo_auditoria detalle.nuevo campo evento.entidad as valor_nuevo %}
+                            <div class="uni2-audit-change">
+                                <strong>{{ campo|etiqueta_campo_auditoria:evento.entidad }}</strong>
+                                <div class="uni2-audit-values">
+                                    <span class="uni2-audit-value-old">{{ valor_anterior }}</span>
+                                    <i class="bi bi-arrow-right" aria-label="cambió a"></i>
+                                    <span class="uni2-audit-value-new">{{ valor_nuevo }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</article>

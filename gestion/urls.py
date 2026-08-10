@@ -6,10 +6,10 @@ from .views import (
     GestionAsociadoCuotasView,
     GestionAsociadoNuevoView,
     GestionAsociadosView,
+    GestionAuditoriaView,
     GestionCobrosView,
     GestionCrearUsuariosAsociadosFaltantesView,
     GestionCrearUsuarioAsociadoView,
-    GestionDashboardView,
     GestionDeudoresView,
     GestionDescargarAsociadosRevisarView,
     GestionDescargarCuotasHistoricasRevisarView,
@@ -23,7 +23,7 @@ from .views import (
 app_name = "gestion"
 
 urlpatterns = [
-    path("gestion/", GestionDashboardView.as_view(), name="dashboard"),
+    path("gestion/auditoria/", GestionAuditoriaView.as_view(), name="auditoria"),
     path("gestion/asociados/", GestionAsociadosView.as_view(), name="asociados"),
     path("gestion/asociados/nuevo/", GestionAsociadoNuevoView.as_view(), name="asociado_nuevo"),
     path("gestion/asociados/exportar.xlsx", GestionExportarAsociadosView.as_view(), name="exportar_asociados"),

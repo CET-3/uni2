@@ -21,3 +21,10 @@ timestamp: 2026-06-22T00:00:00-03:00
 3. El importe recibido no puede ser menor que el total exigible de las cuotas incluidas.
 4. Si el importe recibido supera el total exigible, el excedente se registra como donación. El MVP no maneja saldo a favor.
 5. Los métodos de pago permitidos en el MVP son efectivo y billetera virtual.
+
+## Donación sin deuda
+
+1. Si el asociado no tiene cuotas pendientes, gestión puede registrar un aporte voluntario desde su detalle.
+2. El sistema crea un `Pago` sin aplicaciones `PagoCuota` y una `Donacion` por el importe total recibido.
+3. Si existen cuotas pendientes, no se permite una donación aislada: primero deben incluirse las cuotas más antiguas y solo el excedente se registra como donación.
+4. La donación debe ser mayor que cero y no genera saldo a favor.

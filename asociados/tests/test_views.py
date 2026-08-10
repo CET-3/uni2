@@ -12,13 +12,13 @@ from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publi
 
 
 @pytest.mark.django_db
-def test_panel_asociado_requiere_login(client):
-    response = client.get(reverse("asociados:dashboard"))
-    assert response.status_code == 302
+def test_ruta_anterior_del_panel_asociado_fue_retirada(client):
+    response = client.get("/asociado/panel/")
+    assert response.status_code == 404
 
 
 @pytest.mark.django_db
-def test_panel_asociado_responde_con_usuario_vinculado(client):
+def test_home_asociado_responde_con_usuario_vinculado(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="aso2", password="secreto123")
     asociado = create_asociado(
@@ -32,14 +32,14 @@ def test_panel_asociado_responde_con_usuario_vinculado(client):
     asociado.save(update_fields=["usuario"])
 
     client.force_login(user)
-    response = client.get(reverse("asociados:dashboard"))
+    response = client.get(reverse("web:home"))
 
     assert response.status_code == 200
     assert "Nora" in response.content.decode()
 
 
 @pytest.mark.django_db
-def test_panel_asociado_incluye_secciones_home(client):
+def test_home_asociado_incluye_secciones_publicas(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="aso3", password="secreto123")
     asociado = create_asociado(
@@ -76,11 +76,10 @@ def test_panel_asociado_incluye_secciones_home(client):
     )
 
     client.force_login(user)
-    response = client.get(reverse("asociados:dashboard"))
+    response = client.get(reverse("web:home"))
     content = response.content.decode()
 
     assert response.status_code == 200
     assert "Servicios que suman" in content
     assert "Librerías" in content
     assert "20% OFF" in content
-

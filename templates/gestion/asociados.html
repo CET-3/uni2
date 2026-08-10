@@ -1,21 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Asociados | Uni2{% endblock %}
+{% block title %}Atención al asociado | Uni2{% endblock %}
 
 {% block content %}
 <div class="container py-5">
 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
     <div>
-        <h1 class="h2 mb-1">Gestión de asociados</h1>
+        <h1 class="h2 mb-1">Atención al asociado</h1>
         <p class="text-secondary mb-0">Buscá por texto libre y acotá con filtros de estado, tipo, curso, usuario o deuda.</p>
     </div>
     <div class="uni2-page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
         {% if perms.gestion.exportar_asociados %}
             <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">Exportar asociados</a>
-        {% endif %}
-        {% if perms.gestion.importar_asociados %}
-            <a class="btn btn-outline-primary" href="{% url 'gestion:importar_asociados' %}">Importar padrón inicial</a>
         {% endif %}
         {% if perms.gestion.editar_asociados %}
             <a class="btn btn-primary" href="{% url 'gestion:asociado_nuevo' %}">Nuevo asociado</a>
@@ -73,26 +69,21 @@
                             <th>Curso</th>
                             <th>Estado</th>
                             <th>Usuario</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for asociado in asociados %}
-                            <tr>
-                                <td>{{ asociado.apellido }}, {{ asociado.nombre }}</td>
+                            <tr class="uni2-clickable-row">
+                                <td>
+                                    <a class="uni2-row-link" href="{% url 'gestion:asociado_detalle' asociado.id %}?volver={{ request.get_full_path|urlencode }}">
+                                        {{ asociado.apellido }}, {{ asociado.nombre }}
+                                    </a>
+                                </td>
                                 <td>{{ asociado.numero_asociado }}</td>
                                 <td>{{ asociado.dni }}</td>
                                 <td>{{ asociado.curso_actual|default:"-" }}</td>
                                 <td>{{ asociado.get_estado_display }}</td>
                                 <td>{% if asociado.usuario %}{{ asociado.usuario.username }}{% else %}-{% endif %}</td>
-                                <td class="text-lg-end">
-                                    <div class="d-flex flex-column flex-sm-row justify-content-lg-end gap-2">
-                                        <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:asociado_detalle' asociado.id %}">Ver detalle</a>
-                                        {% if perms.gestion.cobrar_cuotas %}
-                                            <a class="btn btn-primary btn-sm" href="{% url 'gestion:cobros' %}?asociado={{ asociado.id }}">Cobrar</a>
-                                        {% endif %}
-                                    </div>
-                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

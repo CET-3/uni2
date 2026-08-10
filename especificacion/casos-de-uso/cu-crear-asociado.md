@@ -20,11 +20,13 @@ timestamp: 2026-06-22T00:00:00-03:00
 4.  El sistema calcula `fecha_inicio_cobro` según la fecha de alta.
 5.  Guarda el asociado.
 6.  El sistema genera cuotas iniciales para los períodos de cuota existentes entre `fecha_inicio_cobro` y la fecha de alta.
-7.  Si la persona de gestión también tiene permiso para cobrar cuotas, redirige a la pantalla de cobro con el asociado preseleccionado.
-8.  Si no tiene permiso para cobrar cuotas, redirige al detalle operativo del asociado.
+7.  El sistema informa el alta y la cantidad de cuotas iniciales generadas.
+8.  Siempre redirige al detalle operativo del asociado, donde la persona decide si quiere cobrar o editar.
 
 **Reglas relacionadas:** [Asociados](../reglas/asociados.md), [Altas de asociado](../reglas/altas-de-asociado.md).
 
-**Situaciones especiales:** DNI duplicado, curso inexistente, alta después del día 15, asociado sin usuario, períodos de cuota faltantes, usuario sin permiso para cobrar cuotas.
+**Cancelación:** vuelve a `Atención al asociado` sin crear registros.
+
+**Situaciones especiales:** DNI duplicado, curso inexistente, alta después del día 15, asociado sin usuario y períodos de cuota faltantes.
 
 **Modelos afectados:** Asociado, Curso, PeríodoCuota, Cuota.

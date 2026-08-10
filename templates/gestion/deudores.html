@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load formatos %}
 
 {% block title %}Deudores | Uni2{% endblock %}
 
@@ -10,7 +11,7 @@
         <p class="text-secondary mb-0">Listado de asociados con deuda vigente y acceso directo al cobro.</p>
     </div>
     <div class="uni2-page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
+        <a class="btn btn-outline-primary" href="{% url 'web:home' %}?perfil=gestion">Volver al inicio</a>
         <a class="btn btn-primary" href="{% url 'gestion:cobros' %}">Cobrar cuotas</a>
     </div>
 </div>
@@ -38,7 +39,7 @@
                             <td>{{ item.asociado.dni }}</td>
                             <td>{{ item.asociado.curso_actual|default:"-" }}</td>
                             <td>{{ item.asociado.get_estado_display }}</td>
-                            <td>${{ item.deuda }}</td>
+                            <td>{{ item.deuda|moneda }}</td>
                             <td class="text-lg-end">
                                 <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:cobros' %}?asociado={{ item.asociado.id }}">Cobrar</a>
                             </td>

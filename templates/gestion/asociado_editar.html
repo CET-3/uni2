@@ -9,13 +9,11 @@
         <h1 class="h2 mb-1">Editar asociado</h1>
         <p class="text-secondary mb-0">{{ asociado.apellido }}, {{ asociado.nombre }} · DNI {{ asociado.dni }}</p>
     </div>
-    <div class="uni2-page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'gestion:asociado_detalle' asociado.id %}">Volver al detalle</a>
-    </div>
 </div>
 
 <form method="post" class="card uni2-surface-card" novalidate>
     {% csrf_token %}
+    <input type="hidden" name="volver" value="{{ return_url }}">
     <div class="card-body">
         <div class="row g-3">
             <div class="col-md-6">
@@ -83,7 +81,7 @@
 
         <div class="mt-4 d-flex flex-column flex-sm-row gap-2">
             <button class="btn btn-primary" type="submit">Guardar cambios</button>
-            <a class="btn btn-outline-primary" href="{% url 'gestion:asociado_detalle' asociado.id %}">Cancelar</a>
+            <a class="btn btn-outline-primary" href="{{ detail_url }}">Cancelar</a>
         </div>
     </div>
 </form>

@@ -39,6 +39,14 @@ def test_validacion_de_credencial_activa(asociado, comercio):
 
 
 @pytest.mark.django_db
+def test_validacion_manual_de_credencial_por_dni(asociado, comercio):
+    resultado = validar_credencial(comercio=comercio, identificador=asociado.dni)
+
+    assert resultado["valida"] is True
+    assert resultado["apellido"] == "Cruz"
+
+
+@pytest.mark.django_db
 def test_rechazo_de_credencial_inactiva(asociado, comercio):
     asociado.estado = Asociado.ESTADO_INACTIVO
     asociado.save(update_fields=["estado"])

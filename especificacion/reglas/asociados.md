@@ -17,3 +17,6 @@ timestamp: 2026-06-22T00:00:00-03:00
 7. El número de asociado debe generarse automáticamente.
 8. Un asociado puede existir sin usuario de acceso.
 9. Al crear un asociado se puede crear también un usuario de acceso vinculado.
+10. La edición ordinaria no muestra ni acepta `estado`, `fecha_baja` o
+    `motivo_baja`. Mientras no exista el caso de uso específico de baja, esos
+    campos quedan visibles únicamente para el superusuario técnico en el admin.

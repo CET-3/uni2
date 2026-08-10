@@ -13,7 +13,8 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
 ### Apps principales
 
 - `usuarios`: login, logout, helpers de roles y navegación.
-- `gestion`: dashboard simple de accesos, cobros, deudores, asociados y períodos de cuota.
+- `gestion`: cobros, deudores, asociados, auditoría y períodos de cuota; sus accesos se presentan desde la home común.
+- `auditoria`: historial inmutable, serialización segura y soporte común para services y admin.
 - `asociados`: experiencia del asociado autenticado y su dominio.
 - `comercios`: validación y panel del comercio adherido.
 - `cuotas`: modelos y servicios de cuotas, deuda y pagos.
@@ -45,32 +46,33 @@ Si una prueba necesita datos personales, debe usar información ficticia o anoni
 - `pantallas/` describe qué se ve, desde dónde se opera y qué acciones ofrece cada experiencia.
 - Las entidades pueden tener notas funcionales breves solo para orientar lectura, pero no deben repetir reglas de negocio completas.
 
-### Inicio inteligente
+### Home única
 
-La raíz (`/`) redirige según el perfil del usuario (ver [USUARIO-018](../reglas/usuarios.md#usuario-018--inicio-inteligente)). El logo de la aplicación sigue el mismo comportamiento. El menú de usuario incluye "Sitio público" para volver a la home pública desde cualquier experiencia.
+La raíz (`/`) siempre renderiza `web/home.html` (ver [USUARIO-018](../reglas/usuarios.md#usuario-018--home-única-por-experiencia)). `usuarios/home_navigation.py` compone la presentación y las acciones autorizadas sin colocar esa decisión en el template. La vista `web` agrega los contenidos públicos y coordina ambas partes.
 
-El sistema no recuerda el último panel en el MVP. Cada visita a `/` o al logo vuelve a evaluar las experiencias disponibles.
+El logo y el login vuelven a `/`. Un usuario multiperfil puede elegir una experiencia mediante `?perfil=`, pero el sistema no la guarda en sesión. No existen una home pública paralela, un selector separado ni dashboards por dominio.
 
-### Dashboards y entradas
+### Experiencias y entradas
 
-- Gestión: dashboard simple de `gestion` con accesos a las tareas permitidas para el usuario.
-- El dashboard de gestión separa las tareas de operación diaria de las importaciones iniciales de puesta en marcha.
-- Asociado autenticado: panel simple de `asociados` con accesos a credencial, cuotas, productos, servicios y comercios.
-- Comercio autenticado: panel simple de `comercios` con acceso a validar credenciales.
-- La navegación superior muestra el nombre del usuario autenticado como menú desplegable. El menú se organiza en secciones visuales: `Paneles`, `Herramientas` y `Cuenta`. Si tiene una sola experiencia, `Paneles` muestra el acceso directo a ese panel; si tiene más de una, lista los paneles disponibles. El acceso a gestión se muestra como `Panel de gestión`. `Herramientas` agrupa el admin técnico para usuarios `is_staff`, la especificación para usuarios con `gestion.ver_especificacion` y el design system para usuarios con `gestion.ver_design_system`. La sección `Cuenta` incluye "Sitio público" para todas las experiencias.
+- La variante de asociado enlaza directamente a credencial y cuotas.
+- La variante de comercio enlaza directamente a validación de credenciales.
+- La variante administrativa construye una lista ordenada de acciones según permisos. El hero toma las primeras dos y `Más accesos` muestra el resto.
+- La navegación superior muestra el nombre del usuario autenticado como menú desplegable. El menú se organiza en `Experiencias`, `Herramientas` y `Cuenta`. `Experiencias` enlaza a las variantes de la home; `Herramientas` conserva admin técnico, especificación y design system según permisos; `Cuenta` contiene instalación PWA y cierre de sesión.
 
 ### Objetivo de la app gestión
 
 - Evitar que tareas frecuentes dependan del admin genérico de Django.
 - En el MVP, la gestión de productos, servicios, publicidades, comercios y actividades comerciales queda como excepción documentada y se resuelve desde el admin técnico de Django.
 - Ofrecer pantallas operativas orientadas a flujo: buscar asociado, dar alta manual, ver detalle, editar datos, cobrar, ver deudores y administrar cuotas.
-- No cargar el dashboard del MVP con métricas, rankings o reportes avanzados.
+- No cargar la home administrativa con métricas, rankings o reportes avanzados.
 - Permitir una UX propia para escritorio y mobile sin contaminar la app de autenticación.
 - Hacer más claro el mantenimiento: auth y roles en `usuarios`, backoffice en `gestion`.
 - Registrar los permisos propios mediante un modelo técnico no gestionado por Django llamado `PermisoGestion`. Este modelo no representa una tabla de negocio: sirve para que las migraciones creen permisos personalizados de la app `gestion`.
-- Controlar cada pantalla de gestión con permisos Django propios: ver dashboard de gestión, consultar asociados, editar asociados, importar asociados, exportar asociados, cobrar cuotas, ver deudores, administrar períodos de cuota e importar cuotas históricas.
-- El comando `carga_inicial` crea datos ficticios para desarrollo local: 4 categorías de servicios (Fotocopias, Uniformes, Bicicleta solidaria, Cuadernillos y anillado) con productos asociados, 6 rubros de actividad comercial (Gastronomía, Actividad física, Belleza, Vestimenta, Educación, Tecnología y accesorios), 7 comercios adheridos con beneficios, 3 publicidades sin foto, grupos y permisos, cursos, un usuario admin, un usuario de atención de mutual vinculado también a un asociado de prueba, un usuario asociado vinculado a un asociado de prueba y un usuario comercio vinculado al comercio Librería Sur. El setting explícito `ALLOW_DEMO_DATA` lo habilita solamente en desarrollo local y tests; producción lo rechaza.
+- Controlar cada pantalla de gestión con permisos Django propios. El permiso histórico `ver_dashboard_gestion` identifica una experiencia administrativa aunque el dashboard separado ya no exista; las demás capacidades controlan consulta y edición de asociados, importaciones, exportación, cobros, deudores, períodos, documentación y auditoría.
+- El comando `carga_inicial` crea datos ficticios para desarrollo local: 4 categorías de servicios (Fotocopias, Uniformes, Bicicleta solidaria, Cuadernillos y anillado) con productos asociados, 6 rubros de actividad comercial (Gastronomía, Actividad física, Belleza, Vestimenta, Educación, Tecnología y accesorios), 7 comercios adheridos con beneficios, 3 publicidades sin foto, los grupos y su matriz de permisos, cursos, un superusuario en `Administrador de la app`, un usuario de Atención al asociado vinculado también a un asociado de prueba, un usuario asociado y un usuario comercio vinculado al comercio Librería Sur. El setting explícito `ALLOW_DEMO_DATA` lo habilita solamente en desarrollo local y tests; producción lo rechaza.
 - El comando `importar_comercios_xlsx` realiza la carga inicial real de comercios desde una planilla local. Sin `--confirmar` solo analiza y valida; con `--confirmar` crea o actualiza comercios y actividades, y guarda las imágenes embebidas mediante el storage configurado. La lectura y las reglas de importación viven en `comercios/importers.py`, mientras que el comando se limita a coordinar la entrada y mostrar el resultado.
+- El formato monetario visible se centraliza en `config/formatting.py`. Los templates usan el filtro `moneda` de `web/templatetags/formatos.py`; los valores técnicos de inputs, JavaScript e importadores no se localizan.
+- `usuarios.services.sincronizar_acceso_admin()` deriva `is_staff` del permiso `usuarios.acceder_admin_tecnico`, no de nombres de grupos. `Uni2UserAdmin` lo ejecuta después de guardar los grupos y antes de registrar el evento de auditoría, de modo que grupo y acceso queden trazados juntos. Un grupo futuro obtiene esta capacidad mediante configuración de permisos, sin cambiar Python. No se usa un signal implícito.
 - Las fotos cargadas por admin técnico usan la configuración de archivos media documentada en [Archivos media](media.md).
 - El límite técnico `DATA_UPLOAD_MAX_NUMBER_FIELDS` se eleva a `10000` para permitir acciones masivas razonables en el admin técnico luego de importaciones iniciales con muchas cuotas.
 - En desarrollo local, `config.settings.local` acepta `localhost`, `127.0.0.1` y `192.168.18.138` como hosts permitidos. Esto permite levantar `runserver` en `0.0.0.0:8000` y probar la app desde un teléfono conectado a la misma red Wi-Fi.

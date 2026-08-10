@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load formatos %}
 
 {% block title %}Períodos de cuota | Uni2{% endblock %}
 
@@ -10,7 +11,7 @@
         <p class="text-secondary mb-0">Crea el período mensual y genera las cuotas para los asociados alcanzados.</p>
     </div>
     <div class="uni2-page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
+        <a class="btn btn-outline-primary" href="{% url 'web:home' %}?perfil=gestion">Volver al inicio</a>
         <a class="btn btn-primary" href="{% url 'gestion:cobros' %}">Cobrar cuotas</a>
     </div>
 </div>
@@ -86,9 +87,9 @@
                             {% for periodo in periodos %}
                                 <tr>
                                     <td>{{ periodo }}</td>
-                                    <td>${{ periodo.importe }}</td>
-                                    <td>${{ periodo.importe_recargo_mes }}</td>
-                                    <td>${{ periodo.importe_recargo_mes_siguiente }}</td>
+                                    <td>{{ periodo.importe|moneda }}</td>
+                                    <td>{{ periodo.importe_recargo_mes|moneda }}</td>
+                                    <td>{{ periodo.importe_recargo_mes_siguiente|moneda }}</td>
                                     <td>{{ periodo.fecha_vencimiento|date:"d/m/Y" }}</td>
                                     <td>{{ periodo.cuotas.count }}</td>
                                     <td>{% if periodo.activo %}Activo{% else %}Inactivo{% endif %}</td>

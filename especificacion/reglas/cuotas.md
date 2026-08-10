@@ -25,3 +25,16 @@ Cada mes, el administrador del sistema crea el próximo período de cuota desde 
 1. Si la cuota ya existe para el asociado y período, no debe generarse otra.
 2. Los dos valores de recargo (por vencimiento y por mora) deben copiarse desde `PeriodoCuota` a `Cuota` al momento de generarla.
 3. Al crear un nuevo asociado, se generan automáticamente las cuotas que le corresponden según las [reglas de alta de asociado](altas-de-asociado.md).
+
+## Importe publicado
+
+La cuota social informada en el sitio público toma el importe del
+`PeriodoCuota` correspondiente al mes y año actuales. El campo `activo` no se
+usa para esta consulta porque controla la generación de cuotas, no la vigencia
+informativa del importe.
+
+Si no existe un período para el mes actual —por ejemplo durante vacaciones— se
+usa el período cronológicamente anterior más reciente. Si todavía no hay un
+período anterior pero existe alguno configurado, se usa el último disponible.
+Si no existe ningún período, la interfaz invita a consultar el valor vigente y
+nunca muestra un importe fijo.

@@ -15,9 +15,16 @@ from asociados.models import Asociado
 from comercios.models import ActividadComercial, Comercio
 from config.database_identity import database_fingerprint, database_role_fingerprint
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
-from gestion.permissions import GESTION_COBRAR_CUOTAS, GESTION_IMPORTAR_ASOCIADOS, GESTION_VER_DESIGN_SYSTEM
+from gestion.permissions import (
+    GESTION_COBRAR_CUOTAS,
+    GESTION_IMPORTAR_ASOCIADOS,
+    GESTION_VER_AUDITORIA,
+    GESTION_VER_MOVIMIENTOS_ASOCIADO,
+    GESTION_VER_DESIGN_SYSTEM,
+)
 from usuarios.models import EstadoDatosStaging
 from usuarios.services import ASOCIADO_GROUP, COMERCIO_GROUP
+from usuarios.roles import ADMINISTRADOR_APP_GROUP, ATENCION_ASOCIADO_GROUP
 
 
 SERVICIOS_VERCEL = {"Fotocopias", "Uniformes", "Bicicleta solidaria", "Cuadernillos y anillado"}
@@ -95,16 +102,19 @@ def test_carga_inicial_crea_usuarios_de_prueba():
     asociado_user = user_model.objects.get(username="asociado")
     comercio_user = user_model.objects.get(username="comercio")
 
-    assert admin.groups.filter(name="Administradores").exists()
-    assert atencion_user.groups.filter(name="Atención de mutual").exists()
+    assert admin.groups.filter(name=ADMINISTRADOR_APP_GROUP).exists()
+    assert atencion_user.groups.filter(name=ATENCION_ASOCIADO_GROUP).exists()
     assert atencion_user.groups.filter(name="Asociados").exists()
     assert atencion_user.has_perm(GESTION_COBRAR_CUOTAS)
-    assert atencion_user.has_perm(GESTION_VER_DESIGN_SYSTEM)
+    assert not atencion_user.has_perm(GESTION_VER_DESIGN_SYSTEM)
     assert admin.has_perm(GESTION_VER_DESIGN_SYSTEM)
+    assert admin.has_perm(GESTION_VER_AUDITORIA)
     assert not atencion_user.has_perm(GESTION_IMPORTAR_ASOCIADOS)
+    assert not atencion_user.has_perm(GESTION_VER_AUDITORIA)
+    assert atencion_user.has_perm(GESTION_VER_MOVIMIENTOS_ASOCIADO)
     assert asociado_user.groups.filter(name="Asociados").exists()
     assert comercio_user.groups.filter(name="Comercios").exists()
-    assert Group.objects.filter(name="Atención de mutual").exists()
+    assert Group.objects.filter(name=ATENCION_ASOCIADO_GROUP).exists()
     assert Asociado.objects.get(dni="40111223").usuario == atencion_user
     assert Asociado.objects.get(dni="40111222").usuario == asociado_user
     assert Comercio.objects.get(nombre="Librería Sur").usuario == comercio_user
