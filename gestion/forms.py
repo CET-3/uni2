@@ -1,10 +1,62 @@
 from django import forms
 from django.utils import timezone
 
+from auditoria.models import EventoAuditoria
+from auditoria.presentacion import etiqueta_entidad
+from auditoria.selectors import listar_entidades_auditadas
 from asociados.models import Asociado
 from asociados.models import Curso
 from asociados.services import create_asociado
 from cuotas.models import Pago, PeriodoCuota
+
+
+class FiltroAuditoriaForm(forms.Form):
+    actor = forms.CharField(required=False, label="Persona que realizó la acción")
+    objeto = forms.CharField(required=False, label="Objeto modificado")
+    accion = forms.ChoiceField(
+        required=False,
+        choices=[("", "Todas las acciones")] + EventoAuditoria.ACCIONES,
+        label="Acción",
+    )
+    entidad = forms.ChoiceField(required=False, choices=(), label="Entidad")
+    objeto_id = forms.CharField(required=False, label="ID exacto del objeto")
+    origen = forms.ChoiceField(
+        required=False,
+        choices=[("", "Todos los orígenes")] + EventoAuditoria.ORIGENES,
+        label="Origen",
+    )
+    fecha_desde = forms.DateField(required=False, label="Desde")
+    fecha_hasta = forms.DateField(required=False, label="Hasta")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["actor"].widget.attrs.update(
+            {
+                "class": "form-control form-control-sm",
+                "placeholder": "Nombre, apellido o usuario",
+            }
+        )
+        self.fields["objeto"].widget.attrs.update(
+            {
+                "class": "form-control form-control-sm",
+                "placeholder": "Nombre, descripción o ID",
+            }
+        )
+        self.fields["accion"].widget.attrs.update({"class": "form-select form-select-sm"})
+        entidades = listar_entidades_auditadas()
+        entidad_solicitada = self.data.get("entidad", "") if self.is_bound else ""
+        if entidad_solicitada and entidad_solicitada not in entidades:
+            entidades.append(entidad_solicitada)
+        self.fields["entidad"].choices = [("", "Todas las entidades")] + [
+            (entidad, etiqueta_entidad(entidad)) for entidad in entidades
+        ]
+        self.fields["entidad"].widget.attrs.update({"class": "form-select form-select-sm"})
+        self.fields["objeto_id"].widget.attrs.update({"class": "form-control form-control-sm"})
+        self.fields["origen"].widget.attrs.update({"class": "form-select form-select-sm"})
+        for field_name in ("fecha_desde", "fecha_hasta"):
+            self.fields[field_name].widget.attrs.update(
+                {"class": "form-control form-control-sm", "type": "date"}
+            )
 
 
 class CobroCuotaForm(forms.Form):
@@ -60,11 +112,8 @@ class AsociadoGestionForm(forms.ModelForm):
             "direccion",
             "tipo",
             "curso_actual",
-            "estado",
             "fecha_alta",
             "fecha_inicio_cobro",
-            "fecha_baja",
-            "motivo_baja",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -76,22 +125,8 @@ class AsociadoGestionForm(forms.ModelForm):
                 field.widget.attrs.update({"class": "form-select"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
-            if field_name in {"fecha_alta", "fecha_inicio_cobro", "fecha_baja"}:
+            if field_name in {"fecha_alta", "fecha_inicio_cobro"}:
                 field.widget.attrs.update({"type": "date"})
-
-    def clean(self):
-        cleaned_data = super().clean()
-        estado = cleaned_data.get("estado")
-        fecha_baja = cleaned_data.get("fecha_baja")
-        motivo_baja = cleaned_data.get("motivo_baja")
-        if estado == Asociado.ESTADO_INACTIVO and not fecha_baja:
-            self.add_error("fecha_baja", "La baja requiere fecha de baja.")
-        if estado == Asociado.ESTADO_INACTIVO and not motivo_baja:
-            self.add_error("motivo_baja", "La baja requiere motivo.")
-        if estado != Asociado.ESTADO_INACTIVO:
-            cleaned_data["fecha_baja"] = None
-            cleaned_data["motivo_baja"] = ""
-        return cleaned_data
 
 
 class AsociadoAltaForm(forms.ModelForm):
@@ -121,7 +156,7 @@ class AsociadoAltaForm(forms.ModelForm):
             if field_name == "fecha_alta":
                 field.widget.attrs.update({"type": "date"})
 
-    def save(self, commit=True):
+    def save(self, commit=True, actor=None):
         data = self.cleaned_data
         return create_asociado(
             nombre=data["nombre"],
@@ -133,6 +168,7 @@ class AsociadoAltaForm(forms.ModelForm):
             email=data["email"],
             telefono=data["telefono"],
             direccion=data["direccion"],
+            actor=actor,
         )
 
 

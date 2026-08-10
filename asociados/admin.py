@@ -1,18 +1,22 @@
 from django import forms
 from django.contrib import admin
 
+from auditoria.admin_mixins import AuditoriaAdminMixin
+
 from .services import calculate_fecha_inicio_cobro
 from .models import Asociado, CicloLectivo, Curso
 
 
 @admin.register(CicloLectivo)
-class CicloLectivoAdmin(admin.ModelAdmin):
+class CicloLectivoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    audit_fields = ("anio",)
     list_display = ("anio",)
     search_fields = ("anio",)
 
 
 @admin.register(Curso)
-class CursoAdmin(admin.ModelAdmin):
+class CursoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    audit_fields = ("anio", "curso", "division", "turno", "activo")
     list_display = ("anio", "curso", "division", "turno", "activo")
     list_filter = ("division", "turno", "activo")
     search_fields = ("anio", "curso")
@@ -41,7 +45,24 @@ class AsociadoAdminForm(forms.ModelForm):
 
 
 @admin.register(Asociado)
-class AsociadoAdmin(admin.ModelAdmin):
+class AsociadoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    audit_fields = (
+        "nombre",
+        "apellido",
+        "dni",
+        "email",
+        "telefono",
+        "direccion",
+        "tipo",
+        "numero_asociado",
+        "curso_actual",
+        "estado",
+        "fecha_alta",
+        "fecha_inicio_cobro",
+        "fecha_baja",
+        "motivo_baja",
+        "usuario",
+    )
     form = AsociadoAdminForm
     autocomplete_fields = ("usuario",)
     list_select_related = ("curso_actual", "usuario")
@@ -91,6 +112,25 @@ class AsociadoAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+    def get_fieldsets(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_fieldsets(request, obj)
+        return (
+            self.fieldsets[0],
+            (
+                "Datos mutuales",
+                {
+                    "fields": (
+                        "numero_asociado",
+                        "curso_actual",
+                        "fecha_alta",
+                        "fecha_inicio_cobro",
+                        "token_credencial",
+                    )
+                },
+            ),
+        )
 
     @admin.display(description="Ultimo acceso")
     def last_login_display(self, obj):

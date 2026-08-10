@@ -8,31 +8,13 @@ from django.core.management.base import BaseCommand, CommandError
 from asociados.models import Asociado, Curso
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publicidad
-from gestion.permissions import (
-    GESTION_COBRAR_CUOTAS,
-    GESTION_CONSULTAR_ASOCIADOS,
-    GESTION_DASHBOARD,
-    GESTION_EDITAR_ASOCIADOS,
-    GESTION_PERMISSIONS,
-    GESTION_VER_DESIGN_SYSTEM,
-    GESTION_VER_ESPECIFICACION,
-)
+from usuarios.roles import ADMINISTRADOR_APP_GROUP, PERMISOS_POR_GRUPO
 from usuarios.services import (
     ADMIN_GROUP,
     ASOCIADO_GROUP,
     ATENCION_MUTUAL_GROUP,
     COMERCIO_GROUP,
     ensure_default_groups,
-)
-
-
-ATENCION_MUTUAL_PERMISSIONS = (
-    GESTION_DASHBOARD,
-    GESTION_CONSULTAR_ASOCIADOS,
-    GESTION_EDITAR_ASOCIADOS,
-    GESTION_COBRAR_CUOTAS,
-    GESTION_VER_ESPECIFICACION,
-    GESTION_VER_DESIGN_SYSTEM,
 )
 
 
@@ -47,16 +29,20 @@ class Command(BaseCommand):
             )
 
         ensure_default_groups()
-        permisos_gestion = Permission.objects.filter(
-            content_type__app_label="gestion",
-            codename__in=[permission.split(".", 1)[1] for permission in GESTION_PERMISSIONS],
-        )
-        Group.objects.get(name=ADMIN_GROUP).permissions.add(*permisos_gestion)
-        permisos_atencion = Permission.objects.filter(
-            content_type__app_label="gestion",
-            codename__in=[permission.split(".", 1)[1] for permission in ATENCION_MUTUAL_PERMISSIONS],
-        )
-        Group.objects.get(name=ATENCION_MUTUAL_GROUP).permissions.add(*permisos_atencion)
+        permisos_disponibles = {
+            f"{permiso.content_type.app_label}.{permiso.codename}": permiso
+            for permiso in Permission.objects.select_related("content_type")
+        }
+        for nombre_grupo, permisos in PERMISOS_POR_GRUPO.items():
+            Group.objects.get(name=nombre_grupo).permissions.set(
+                permisos_disponibles[permiso]
+                for permiso in permisos
+                if permiso in permisos_disponibles
+            )
+
+        # El grupo identifica a los superusuarios técnicos. is_superuser sigue
+        # siendo la autoridad real y no se obtiene por pertenecer al grupo.
+        Group.objects.get(name=ADMINISTRADOR_APP_GROUP).permissions.clear()
 
         # Cursos
         cursos_data = [
@@ -345,7 +331,7 @@ class Command(BaseCommand):
         # ── Publicidades ──
 
         Publicidad.objects.get_or_create(
-            titulo="Fotocopia simple desde $50",
+            titulo="Fotocopia simple desde $ 50,00",
             defaults={
                 "descripcion": "Aprovechá el precio especial para asociados en todas las fotocopias.",
                 "etiqueta_principal": "Servicio",

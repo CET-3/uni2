@@ -2,18 +2,24 @@
 type: "Arquitectura"
 title: "Trazabilidad y auditoría"
 description: "Diseño técnico aprobado para identificar autores, conservar cambios y controlar operaciones destructivas."
-tags: [mvp, arquitectura, diseno-aprobado, pendiente]
-timestamp: 2026-08-01T00:00:00-03:00
+tags: [mvp, arquitectura, diseno-aprobado, implementacion-parcial]
+timestamp: 2026-08-09T00:00:00-03:00
 ---
 
 # Trazabilidad y auditoría
 
 ## Estado
 
-Este documento describe el diseño aprobado para incorporar trazabilidad a Uni2.
-Todavía no describe una funcionalidad disponible en producción. La implementación
-debe hacerse por etapas y mantener actualizada esta especificación a medida que
-cada etapa quede terminada.
+La infraestructura de eventos, la consulta web y la auditoría de las escrituras
+normales del MVP están implementadas. La implementación actual cubre altas y
+modificaciones de asociados desde gestión; creación de usuarios y vinculaciones;
+períodos y generación de cuotas; cobros y sus pagos, aplicaciones, cuotas y
+donaciones relacionadas; y CRUD simples realizados desde el admin de Django.
+
+Los importadores de padrón, cuotas históricas y comercios quedan expresamente
+fuera de esta etapa. Tampoco existe todavía el flujo funcional de anulación de
+pagos. `ModeloTrazable` está disponible como base abstracta, pero los campos de
+autoría actual todavía no fueron incorporados a todos los modelos operativos.
 
 ## Objetivo
 
@@ -164,8 +170,13 @@ Por ejemplo, registrar un pago puede:
 - actualizar una o más `Cuota`;
 - crear una `Donacion`.
 
-Todos esos eventos compartirán el mismo `operacion_id`. La interfaz podrá
-presentarlos como una sola operación desplegable, sin perder el detalle.
+Todos esos eventos compartirán el mismo `operacion_id`. La interfaz los
+presenta dentro de una sola tarjeta de operación, sin desplegables y sin perder
+el detalle de ninguna fila. Los filtros primero identifican operaciones por sus
+eventos coincidentes y luego el selector recupera todos los eventos de cada
+operación. La paginación se realiza sobre operaciones para no dividir sus
+eventos entre páginas. Esta composición pertenece a `auditoria.selectors`; la
+vista solamente pagina los resultados y el template los representa.
 
 En una importación, todas las filas compartirán además el mismo identificador de
 operación o lote. Cada fila se confirmará en una transacción independiente
@@ -224,17 +235,20 @@ admin. Ese registro se mantiene como ayuda técnica, pero no es la fuente de
 verdad de Uni2 porque no cubre las pantallas de gestión, services, importadores
 ni procesos automáticos.
 
-Para catálogos con edición CRUD simple se podrá usar un
-`ModeloTrazableAdminMixin`. Su `save_model()`:
+Para catálogos con edición CRUD simple se usa `AuditoriaAdminMixin`. El mixin
+captura el estado persistido antes de guardar y registra el evento después de
+`save_related()`, para incluir también relaciones muchos a muchos como grupos y
+permisos. Su flujo:
 
 1. obtiene el objeto anterior cuando existe;
 2. toma los campos modificados desde `form.changed_data`;
-3. asigna `creado_por` en el alta;
-4. asigna `modificado_por` en cada cambio;
-5. guarda el objeto;
-6. registra el evento con origen `admin`.
+3. deja que el `ModelAdmin` guarde el objeto y sus relaciones;
+4. registra el evento con origen `admin` y el usuario de la request como actor.
 
-Los campos de autoría se mostrarán mediante `readonly_fields`.
+`ModeloTrazable` define campos de autoría reutilizables, pero todavía no fue
+incorporado a los modelos de negocio. En la implementación actual la fuente de
+autoría es `EventoAuditoria`; el mixin no supone que el modelo tenga campos
+`creado_por` o `modificado_por`.
 
 Para acciones sensibles, el admin no duplicará la regla: utilizará el mismo
 service que la pantalla de gestión o quedará como consulta de solo lectura. Hay
@@ -317,23 +331,30 @@ corresponda.
 
 ## Permisos previstos
 
-Se agregarán permisos de gestión específicos:
+El permiso implementado es:
 
 - `gestion.ver_auditoria`;
+
+Quedan previstos para sus flujos futuros:
+
 - `gestion.dar_baja_asociados`;
 - `gestion.anular_pagos`.
 
 El permiso de edición no concede automáticamente baja, anulación ni borrado.
 Inicialmente:
 
-- Administradores reciben los tres permisos;
-- Atención de mutual no recibe `ver_auditoria` ni acciones destructivas salvo
-  una decisión funcional posterior;
+- Administrador de permisos y Administrador de la mutual reciben
+  `gestion.ver_auditoria`;
+- Atención al asociado, Gestión de convenios y Gestión de publicidades no
+  reciben `ver_auditoria` ni acciones destructivas;
+- `auditoria.view_eventoauditoria` controla la consulta en el admin técnico,
+  mientras `gestion.ver_auditoria` controla la pantalla propia de gestión;
 - el borrado físico excepcional queda reservado al superusuario técnico y no se
   presenta como una tarea normal de gestión.
 
-Los nombres definitivos deben agregarse a `gestion/permissions.py`, al modelo
-técnico `PermisoGestion`, a las migraciones de grupos y a las pruebas.
+`gestion.ver_auditoria` está registrado en `gestion/permissions.py`, en el modelo
+técnico `PermisoGestion`, en la migración de grupos y en las pruebas. Los otros
+dos permisos se agregarán cuando se implementen sus operaciones.
 
 ## Pantallas previstas
 
@@ -346,7 +367,7 @@ Además, el detalle de entidades importantes podrá incluir una sección
 
 ## Plan de implementación
 
-### Etapa 1: infraestructura
+### Etapa 1: infraestructura — implementada
 
 1. Crear la app `auditoria` y registrarla en `INSTALLED_APPS`.
 2. Implementar `ModeloTrazable` y `EventoAuditoria`.
@@ -358,7 +379,7 @@ Además, el detalle de entidades importantes podrá incluir una sección
 **Resultado verificable:** es posible crear y consultar eventos desde un test,
 pero todavía no se modificaron todos los dominios.
 
-### Etapa 2: asociados
+### Etapa 2: asociados — parcial
 
 1. Incorporar campos trazables a `Asociado`.
 2. Cambiar `create_asociado()` para recibir actor y origen.
@@ -373,7 +394,7 @@ pero todavía no se modificaron todos los dominios.
 **Resultado verificable:** se puede reconstruir la historia de un asociado
 creado o modificado después de esta etapa, desde gestión o desde el admin.
 
-### Etapa 3: cuotas y pagos
+### Etapa 3: cuotas y pagos — parcial
 
 1. Auditar generación y modificación de períodos de cuota.
 2. Hacer que `registrar_pago()` comparta un `operacion_id` entre pago,
@@ -387,7 +408,7 @@ creado o modificado después de esta etapa, desde gestión o desde el admin.
 **Resultado verificable:** cada cobro explica quién lo registró y todos los
 cambios contables simples que produjo.
 
-### Etapa 4: comercios, contenidos y catálogos
+### Etapa 4: comercios, contenidos y catálogos — parcial
 
 1. Incorporar trazabilidad a comercios, actividades, productos, categorías y
    publicidades.
@@ -396,7 +417,7 @@ cambios contables simples que produjo.
 4. Usar estados `activo` o `baja` antes que eliminación física.
 5. Agregar pruebas de admin, services e importación.
 
-### Etapa 5: usuarios, permisos y consulta
+### Etapa 5: usuarios, permisos y consulta — implementada
 
 1. Auditar creación, vinculación, cambio de grupos, permisos y desactivación de
    usuarios sin registrar contraseñas.
@@ -422,6 +443,21 @@ cambios contables simples que produjo.
 - Asociados, usuarios y registros financieros no ofrecen borrado físico normal.
 - Los registros anteriores muestran autor desconocido sin inventar datos.
 
+## Cobertura implementada
+
+- Una alta o edición de asociado desde gestión registra actor y cambios.
+- La creación y vinculación de un usuario comparte un `operacion_id`.
+- La creación de períodos y la generación de cuotas identifican al actor o al
+  proceso automático.
+- Un cobro agrupa mediante `operacion_id` los eventos de `Pago`, `PagoCuota`,
+  `Cuota` y `Donacion`.
+- El admin audita asociados, ciclos, cursos, períodos, actividades comerciales,
+  comercios, categorías, productos, publicidades, usuarios, grupos y permisos.
+- Cuotas, pagos, aplicaciones y donaciones son de solo lectura en el admin.
+- Las contraseñas no forman parte de las listas de campos auditables.
+- La consulta `/gestion/auditoria/` requiere permiso, permite filtros y ofrece
+  acceso contextual desde el detalle de asociado.
+
 ## Riesgos y decisiones pendientes
 
 - Antes de la etapa financiera hay que diseñar la anulación de pagos y su efecto
@@ -434,4 +470,3 @@ cambios contables simples que produjo.
   no quedan cubiertos solamente por `save_model()`.
 - Debe revisarse cada nuevo campo personal antes de incluir sus valores
   anteriores en el historial.
-

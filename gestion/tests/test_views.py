@@ -25,6 +25,7 @@ from gestion.permissions import (
     GESTION_DASHBOARD,
 )
 from usuarios.services import ASOCIADO_GROUP
+from usuarios.roles import ADMINISTRADOR_APP_GROUP
 
 
 def crear_usuario_gestion(username="usuario_gestion", permisos=None):
@@ -175,6 +176,30 @@ def test_dashboard_separa_importaciones_iniciales(client):
     assert "Crear usuarios faltantes" in content
     assert reverse("gestion:crear_usuarios_asociados_faltantes") in content
     assert "Importar cuotas históricas" in content
+
+
+@pytest.mark.django_db
+def test_grupo_administrador_app_sin_superusuario_no_habilita_importacion(client):
+    user = get_user_model().objects.create_user(username="app_sin_super", password="secreto123")
+    user.groups.add(Group.objects.get(name=ADMINISTRADOR_APP_GROUP))
+
+    client.force_login(user)
+    response = client.get(reverse("gestion:importar_asociados"))
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_superusuario_administrador_app_puede_abrir_importacion(client):
+    user = get_user_model().objects.create_superuser(
+        username="app_super", password="secreto123", email="app@example.com"
+    )
+    user.groups.add(Group.objects.get(name=ADMINISTRADOR_APP_GROUP))
+
+    client.force_login(user)
+    response = client.get(reverse("gestion:importar_asociados"))
+
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
@@ -1071,7 +1096,7 @@ def test_asociado_detalle_muestra_a_que_corresponde_pago_reciente(client):
     content = response.content.decode()
     assert "Pagos recientes" in content
     assert "Cuotas: 03/2026" in content
-    assert "Donación: $500.00" in content
+    assert "Donación: $ 500,00" in content
 
 
 @pytest.mark.django_db
@@ -1375,6 +1400,46 @@ def test_asociado_detalle_permite_editar_fecha_inicio_cobro(client):
     assert str(asociado.fecha_inicio_cobro) == "2026-05-01"
     assert asociado.email == "milena@example.com"
     assert "Asociado actualizado correctamente" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_edicion_cotidiana_no_expone_ni_modifica_la_baja(client):
+    staff = crear_usuario_gestion("staff_sin_baja")
+    asociado = create_asociado(
+        nombre="Mila", apellido="Ríos", dni="30000112", tipo="asociado", fecha_alta="2026-05-22"
+    )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:asociado_editar", args=[asociado.id]))
+
+    assert response.status_code == 200
+    assert "fecha_baja" not in response.context["form"].fields
+    assert "motivo_baja" not in response.context["form"].fields
+    assert "estado" not in response.context["form"].fields
+
+    client.post(
+        reverse("gestion:asociado_editar", args=[asociado.id]),
+        {
+            "nombre": asociado.nombre,
+            "apellido": asociado.apellido,
+            "dni": asociado.dni,
+            "email": asociado.email,
+            "telefono": asociado.telefono,
+            "direccion": asociado.direccion,
+            "tipo": asociado.tipo,
+            "curso_actual": "",
+            "estado": Asociado.ESTADO_INACTIVO,
+            "fecha_alta": asociado.fecha_alta,
+            "fecha_inicio_cobro": asociado.fecha_inicio_cobro,
+            "fecha_baja": "2026-08-09",
+            "motivo_baja": "No debe aplicarse",
+        },
+    )
+
+    asociado.refresh_from_db()
+    assert asociado.estado == Asociado.ESTADO_ACTIVO
+    assert asociado.fecha_baja is None
+    assert asociado.motivo_baja == ""
 
 
 @pytest.mark.django_db

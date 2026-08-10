@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "web",
     "usuarios",
     "gestion",
+    "auditoria",
     "asociados",
     "cuotas",
     "comercios",

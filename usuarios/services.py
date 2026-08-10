@@ -1,3 +1,4 @@
+import uuid
 from dataclasses import dataclass, field
 
 from django.contrib.auth import get_user_model
@@ -6,15 +7,88 @@ from django.db import IntegrityError
 from django.db import transaction
 
 from asociados.models import Asociado
+from auditoria.models import EventoAuditoria
+from auditoria.services import construir_cambios, registrar_evento
 from comercios.models import Comercio
 from gestion.permissions import user_has_any_gestion_permission
+from usuarios.roles import (
+    ADMINISTRADOR_APP_GROUP,
+    ASOCIADO_GROUP,
+    ATENCION_ASOCIADO_GROUP,
+    COMERCIO_GROUP,
+    DEFAULT_GROUPS,
+    ACCESO_ADMIN_TECNICO,
+)
 
 
-ADMIN_GROUP = "Administradores"
-ATENCION_MUTUAL_GROUP = "Atención de mutual"
-ASOCIADO_GROUP = "Asociados"
-COMERCIO_GROUP = "Comercios"
-DEFAULT_GROUPS = (ADMIN_GROUP, ATENCION_MUTUAL_GROUP, ASOCIADO_GROUP, COMERCIO_GROUP)
+# Alias de transición para los llamadores existentes.
+ADMIN_GROUP = ADMINISTRADOR_APP_GROUP
+ATENCION_MUTUAL_GROUP = ATENCION_ASOCIADO_GROUP
+AUDIT_FIELDS_USER = ("username", "email", "first_name", "last_name", "is_active", "is_staff", "groups")
+
+
+def _snapshot_user(user):
+    return {
+        "username": user.username,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "is_active": user.is_active,
+        "is_staff": user.is_staff,
+        "groups": list(user.groups.order_by("pk")),
+    }
+
+
+def _registrar_usuario_creado(*, user, actor, operacion_id):
+    nuevos = _snapshot_user(user)
+    registrar_evento(
+        actor=actor,
+        actor_etiqueta="Sistema: creación de usuario",
+        accion=EventoAuditoria.ACCION_CREAR,
+        entidad=user._meta.label,
+        objeto_id=user.pk,
+        objeto_descripcion=user.get_username(),
+        cambios=construir_cambios(
+            anteriores={field: None for field in AUDIT_FIELDS_USER},
+            nuevos=nuevos,
+            campos=AUDIT_FIELDS_USER,
+        ),
+        origen=EventoAuditoria.ORIGEN_GESTION if actor else EventoAuditoria.ORIGEN_SISTEMA,
+        operacion_id=operacion_id,
+    )
+
+
+def _registrar_vinculacion(*, objeto, user, actor, operacion_id):
+    registrar_evento(
+        actor=actor,
+        actor_etiqueta="Sistema: vinculación de usuario",
+        accion=EventoAuditoria.ACCION_VINCULAR,
+        entidad=objeto._meta.label,
+        objeto_id=objeto.pk,
+        objeto_descripcion=str(objeto),
+        cambios={
+            "usuario": {
+                "anterior": None,
+                "nuevo": {"id": user.pk, "texto": user.get_username()},
+            }
+        },
+        origen=EventoAuditoria.ORIGEN_GESTION if actor else EventoAuditoria.ORIGEN_SISTEMA,
+        operacion_id=operacion_id,
+    )
+
+
+@transaction.atomic
+def _vincular_usuario_existente(*, asociado, user, group, actor):
+    asociado.usuario = user
+    asociado.save(update_fields=["usuario"])
+    user.groups.add(group)
+    if actor is not None:
+        _registrar_vinculacion(
+            objeto=asociado,
+            user=user,
+            actor=actor,
+            operacion_id=uuid.uuid4(),
+        )
 
 
 @dataclass
@@ -32,6 +106,21 @@ class MissingAsociadoUsersResult:
 def ensure_default_groups():
     for group_name in DEFAULT_GROUPS:
         Group.objects.get_or_create(name=group_name)
+
+
+def sincronizar_acceso_admin(user):
+    """Alinea ``is_staff`` con la capacidad explícita de acceso al admin."""
+
+    # La instancia puede conservar caches de permisos anteriores al guardado de
+    # la relación M2M. Se invalidan para evaluar la asignación recién persistida.
+    for cache_name in ("_perm_cache", "_group_perm_cache", "_user_perm_cache"):
+        if hasattr(user, cache_name):
+            delattr(user, cache_name)
+    requiere_admin = user.is_superuser or user.has_perm(ACCESO_ADMIN_TECNICO)
+    if user.is_staff != requiere_admin:
+        user.is_staff = requiere_admin
+        user.save(update_fields=["is_staff"])
+    return user
 
 
 def user_has_group(user, group_name: str) -> bool:
@@ -65,7 +154,14 @@ def get_available_experiences(user) -> list[str]:
 
 
 @transaction.atomic
-def create_user_for_asociado(asociado: Asociado, password: str, email: str | None = None):
+def create_user_for_asociado(
+    asociado: Asociado,
+    password: str,
+    email: str | None = None,
+    *,
+    actor=None,
+    operacion_id=None,
+):
     if asociado.usuario_id:
         raise ValueError("El asociado ya tiene un usuario vinculado.")
 
@@ -86,10 +182,19 @@ def create_user_for_asociado(asociado: Asociado, password: str, email: str | Non
     asociado.save(update_fields=["usuario"])
     group = Group.objects.get(name=ASOCIADO_GROUP)
     user.groups.add(group)
+    if actor is not None:
+        operacion_id = operacion_id or uuid.uuid4()
+        _registrar_usuario_creado(user=user, actor=actor, operacion_id=operacion_id)
+        _registrar_vinculacion(objeto=asociado, user=user, actor=actor, operacion_id=operacion_id)
     return user
 
 
-def create_missing_users_for_asociados(batch_size: int | None = None, after_id: int = 0) -> MissingAsociadoUsersResult:
+def create_missing_users_for_asociados(
+    batch_size: int | None = None,
+    after_id: int = 0,
+    *,
+    actor=None,
+) -> MissingAsociadoUsersResult:
     result = MissingAsociadoUsersResult()
     result.omitidos = Asociado.objects.filter(usuario__isnull=False).count()
     asociados_qs = Asociado.objects.filter(usuario__isnull=True, id__gt=after_id).order_by("id")
@@ -113,14 +218,20 @@ def create_missing_users_for_asociados(batch_size: int | None = None, after_id: 
             if hasattr(existing_user, "asociado"):
                 result.errores.append(f"Asociado {asociado.dni}: el usuario existente ya está vinculado a otro asociado.")
                 continue
-            asociado.usuario = existing_user
-            asociado.save(update_fields=["usuario"])
-            existing_user.groups.add(asociado_group)
+            _vincular_usuario_existente(
+                asociado=asociado,
+                user=existing_user,
+                group=asociado_group,
+                actor=actor,
+            )
             result.vinculados += 1
             continue
 
         try:
-            user = create_user_for_asociado(asociado=asociado, password=username)
+            crear_kwargs = {"asociado": asociado, "password": username}
+            if actor is not None:
+                crear_kwargs["actor"] = actor
+            user = create_user_for_asociado(**crear_kwargs)
         except ValueError as exc:
             result.errores.append(f"Asociado {asociado.dni}: {exc}")
         except IntegrityError:
@@ -131,9 +242,12 @@ def create_missing_users_for_asociados(batch_size: int | None = None, after_id: 
             if hasattr(existing_user, "asociado"):
                 result.errores.append(f"Asociado {asociado.dni}: el usuario existente ya está vinculado a otro asociado.")
                 continue
-            asociado.usuario = existing_user
-            asociado.save(update_fields=["usuario"])
-            existing_user.groups.add(asociado_group)
+            _vincular_usuario_existente(
+                asociado=asociado,
+                user=existing_user,
+                group=asociado_group,
+                actor=actor,
+            )
             usuarios_existentes[username] = existing_user
             result.vinculados += 1
         else:
@@ -146,7 +260,13 @@ def create_missing_users_for_asociados(batch_size: int | None = None, after_id: 
 
 
 @transaction.atomic
-def create_user_for_comercio(comercio: Comercio, password: str, email: str | None = None):
+def create_user_for_comercio(
+    comercio: Comercio,
+    password: str,
+    email: str | None = None,
+    *,
+    actor=None,
+):
     if comercio.usuario_id:
         raise ValueError("El comercio ya tiene un usuario vinculado.")
 
@@ -167,4 +287,8 @@ def create_user_for_comercio(comercio: Comercio, password: str, email: str | Non
     comercio.save(update_fields=["usuario"])
     group = Group.objects.get(name=COMERCIO_GROUP)
     user.groups.add(group)
+    if actor is not None:
+        operacion_id = uuid.uuid4()
+        _registrar_usuario_creado(user=user, actor=actor, operacion_id=operacion_id)
+        _registrar_vinculacion(objeto=comercio, user=user, actor=actor, operacion_id=operacion_id)
     return user

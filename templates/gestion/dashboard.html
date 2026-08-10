@@ -12,16 +12,19 @@
             <span class="uni2-eyebrow">Administración interna</span>
             <h1 id="hero-title" class="uni2-titulo-principal">Panel de gestión</h1>
             <p>Accesos directos a las tareas principales del MVP.</p>
+            {% if perms.gestion.consultar_asociados %}
             <div class="uni2-hero-actions">
                 <a class="uni2-cta" href="{% url 'gestion:asociados' %}">Cobrar cuota</a>
                 <a class="uni2-cta uni2-cta-secondary" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
             </div>
+            {% endif %}
         </div>
     </div>
 </section>
 
 <div class="container py-5">
 
+    {% if perms.gestion.consultar_asociados or perms.gestion.administrar_periodos_cuota %}
     <section class="mb-5" aria-labelledby="operacion-title">
         <div class="uni2-section-heading">
             <div>
@@ -29,6 +32,7 @@
             </div>
         </div>
         <div class="row g-3">
+            {% if perms.gestion.consultar_asociados %}
             <div class="col-md-6">
                 <a class="uni2-service-card uni2-service-card-blue" href="{% url 'gestion:asociados' %}">
                     <div>
@@ -37,6 +41,7 @@
                     </div>
                 </a>
             </div>
+            {% endif %}
             {% if perms.gestion.administrar_periodos_cuota %}
             <div class="col-md-6">
                 <a class="uni2-service-card uni2-service-card-green" href="{% url 'gestion:periodos_cuota' %}">
@@ -49,6 +54,7 @@
             {% endif %}
         </div>
     </section>
+    {% endif %}
 
     {% if perms.gestion.importar_asociados or perms.gestion.importar_cuotas_historicas %}
     <section class="mb-5" aria-labelledby="marcha-title">
@@ -89,6 +95,26 @@
                 </a>
             </div>
             {% endif %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if perms.gestion.ver_auditoria %}
+    <section class="mb-5" aria-labelledby="control-title">
+        <div class="uni2-section-heading">
+            <div>
+                <h2 id="control-title" class="uni2-titulo-componente">Control</h2>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <a class="uni2-service-card uni2-service-card-purple" href="{% url 'gestion:auditoria' %}">
+                    <div>
+                        <h3>Auditoría</h3>
+                        <p>Consultar quién creó o modificó información desde gestión.</p>
+                    </div>
+                </a>
+            </div>
         </div>
     </section>
     {% endif %}

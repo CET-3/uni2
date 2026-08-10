@@ -1,21 +1,82 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+from django.contrib.auth.admin import GroupAdmin
+from django.contrib.auth.models import Group, User
 
+from auditoria.admin_mixins import AuditoriaAdminMixin
+from .roles import ADMINISTRADOR_APP_GROUP
+from .services import sincronizar_acceso_admin
 from .models import Notificacion
 
 
 admin.site.unregister(User)
+admin.site.unregister(Group)
 
 
 @admin.register(User)
-class Uni2UserAdmin(UserAdmin):
+class Uni2UserAdmin(AuditoriaAdminMixin, UserAdmin):
+    audit_fields = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "is_active",
+        "is_staff",
+        "is_superuser",
+        "groups",
+        "user_permissions",
+    )
     list_display = ("username", "email", "first_name", "last_name", "is_staff", "mostrar_grupos")
 
     @admin.display(description="Grupos")
     def mostrar_grupos(self, obj):
         grupos = obj.groups.order_by("name").values_list("name", flat=True)
         return ", ".join(grupos) or "-"
+
+    def preparar_objeto_para_auditoria(self, request, obj):
+        sincronizar_acceso_admin(obj)
+
+    def get_fieldsets(self, request, obj=None):
+        if request.user.is_superuser or obj is None:
+            return super().get_fieldsets(request, obj)
+        return (
+            (None, {"fields": ("username", "password")}),
+            ("Información personal", {"fields": ("first_name", "last_name", "email")}),
+            ("Acceso", {"fields": ("is_active", "is_staff", "groups")}),
+            ("Fechas importantes", {"fields": ("last_login", "date_joined")}),
+        )
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "groups" and not request.user.is_superuser:
+            kwargs["queryset"] = Group.objects.exclude(name=ADMINISTRADOR_APP_GROUP)
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
+
+    def has_change_permission(self, request, obj=None):
+        permitido = super().has_change_permission(request, obj)
+        if not permitido or request.user.is_superuser or obj is None:
+            return permitido
+        return not (
+            obj.is_superuser
+            or obj.groups.filter(name=ADMINISTRADOR_APP_GROUP).exists()
+        )
+
+
+@admin.register(Group)
+class Uni2GroupAdmin(AuditoriaAdminMixin, GroupAdmin):
+    audit_fields = ("name", "permissions")
+
+    def has_change_permission(self, request, obj=None):
+        if not request.user.is_superuser:
+            return False
+        return super().has_change_permission(request, obj)
+
+    def has_add_permission(self, request):
+        if not request.user.is_superuser:
+            return False
+        return super().has_add_permission(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Notificacion)

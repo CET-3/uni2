@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load formatos %}
 
 {% block title %}Detalle de asociado | Uni2{% endblock %}
 
@@ -12,6 +13,9 @@
     <div class="uni2-page-header-actions">
         <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Volver al listado</a>
         <a class="btn btn-outline-primary" href="{{ cuotas_url }}">Ver todas las cuotas</a>
+        {% if perms.gestion.ver_auditoria %}
+            <a class="btn btn-outline-primary" href="{% url 'gestion:auditoria' %}?entidad=asociados.Asociado&amp;objeto_id={{ asociado.id }}">Ver auditoría</a>
+        {% endif %}
         {% if perms.gestion.editar_asociados %}
             <a class="btn btn-outline-primary" href="{% url 'gestion:asociado_editar' asociado.id %}">Editar datos</a>
             {% if not asociado.usuario %}
@@ -50,7 +54,7 @@
     <div class="col-lg-4">
         <div class="card uni2-surface-card h-100"><div class="card-body">
             <h2 class="h5 mb-3">Deuda</h2>
-            <p class="display-6 mb-2">${{ total_deuda }}</p>
+            <p class="display-6 mb-2">{{ total_deuda|moneda }}</p>
             <p class="text-secondary mb-0">Calculada al {{ fecha_referencia|date:"d/m/Y" }}</p>
         </div></div>
     </div>
@@ -67,9 +71,9 @@
                         {% for item in cuotas_anio_actual %}
                             <tr>
                                 <td>{{ item.cuota.periodo }}</td>
-                                <td>${{ item.importe_original }}</td>
-                                <td>${{ item.importe_pagado }}</td>
-                                <td>${{ item.saldo }}</td>
+                                <td>{{ item.importe_original|moneda }}</td>
+                                <td>{{ item.importe_pagado|moneda }}</td>
+                                <td>{{ item.saldo|moneda }}</td>
                                 <td>{{ item.estado_display }}</td>
                             </tr>
                         {% empty %}
@@ -88,7 +92,7 @@
                     <li class="list-group-item px-0">
                         <div class="d-flex justify-content-between gap-3">
                             <span>{{ pago.pago.fecha|date:"d/m/Y" }} · {{ pago.pago.get_metodo_display }}</span>
-                            <strong>${{ pago.pago.importe }}</strong>
+                            <strong>{{ pago.pago.importe|moneda }}</strong>
                         </div>
                         <div class="small text-secondary mt-1">
                             {% for linea in pago.lineas %}

@@ -59,15 +59,29 @@ def test_worker_precachea_shell_y_assets_locales(client):
     assert len(precache_urls) == len(set(precache_urls))
 
 
-def test_worker_solo_activa_version_nueva_por_mensaje_explicito(client):
+@override_settings(UNI2_DEPLOYMENT_ENVIRONMENT="production")
+def test_worker_productivo_solo_activa_version_nueva_por_mensaje_explicito(client):
     source = client.get(reverse("pwa:service_worker")).content.decode()
 
+    assert "const DEVELOPMENT_MODE = false;" in source
     assert 'event.data.type === "SKIP_WAITING"' in source
-    assert source.count("self.skipWaiting()") == 1
     install_block = source.split('self.addEventListener("install"', 1)[1].split(
         'self.addEventListener("activate"', 1
     )[0]
-    assert "skipWaiting" not in install_block
+    assert "event.waitUntil(DEVELOPMENT_MODE ?" in install_block
+
+
+@override_settings(UNI2_DEPLOYMENT_ENVIRONMENT="development")
+def test_worker_desarrollo_actualiza_estaticos_desde_la_red(client):
+    source = client.get(reverse("pwa:service_worker")).content.decode()
+
+    assert "const DEVELOPMENT_MODE = true;" in source
+    assert 'fetch(request, {cache: "no-store"})' in source
+    assert "networkFirstStaticInDevelopment(request)" in source
+    install_block = source.split('self.addEventListener("install"', 1)[1].split(
+        'self.addEventListener("activate"', 1
+    )[0]
+    assert "self.skipWaiting()" in install_block
 
 
 def test_worker_no_encola_mutaciones_y_solo_cachea_paginas_marcadas(client):

@@ -103,6 +103,17 @@ El breadcrumb es un componente de navegación contextual, no una primitiva: comb
 
 Se usa en páginas de detalle con rutas de dos o tres niveles. No se usa en la home ni en dashboards. Por defecto, la página actual no enlaza y declara `aria-current="page"`; los nombres largos pueden envolver en mobile. En el detalle de un comercio, el breadcrumb muestra solamente los dos ancestros navegables (`Comercios > actividad comercial`) porque el nombre del comercio ya es el título de la pantalla. No se agrega un icono de inicio porque el texto ya comunica el destino y el separador no necesita exponerse a tecnologías asistivas.
 
+## Formato monetario
+
+Todo importe visible usa formato argentino, símbolo separado, punto de miles y
+dos decimales: `$ 1.000,00`. La función compartida
+`config.formatting.formatear_moneda()` es la fuente para textos Python y admin;
+el filtro `moneda` de `web.templatetags.formatos` la reutiliza en templates.
+
+Los valores técnicos de formularios, atributos `data-*`, planillas y payloads no
+se convierten al formato visual: conservan el decimal que necesita su parser.
+Esto evita que una mejora de presentación cambie cálculos o validaciones.
+
 El partial resuelve `Inicio` y su URL como valores por defecto. Las páginas pasan explícitamente `parent_url`, `parent_label` y `current_label`; también pueden reemplazar `home_url`, `home_label` y `aria_label`. `hide_home` omite el primer nivel, `parent_fragment` agrega un ancla al enlace padre y `current_url` convierte el último nivel en otro ancestro navegable. Esta interfaz cubre la jerarquía corta del MVP sin introducir listas armadas en las views.
 
 Las páginas de categoría, producto/servicio, actividad comercial, comercio disponible y comercio no disponible usan este componente. Las pantallas de actividad comercial y comercio comparten la jerarquía `Comercios > actividad`, sin el nivel `Inicio`. En el detalle del comercio ambos niveles son ancestros navegables; en la página de la actividad, su propio nombre es el nivel actual y no enlaza.

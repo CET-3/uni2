@@ -1,16 +1,19 @@
 ---
 type: "Caso de uso"
 title: "CU-importar-padron-inicial"
-description: "Actor: Administrador"
+description: "Actor: Administrador de la app"
 tags: [mvp, caso-de-uso]
 timestamp: 2026-06-22T00:00:00-03:00
 ---
 
 # CU-importar-padron-inicial
 
-**Actor:** Administrador
+**Actor:** Administrador de la app (`is_superuser`)
 
 **Alcance:** importación inicial para la puesta en marcha desde la planilla heredada. No define el formato regular futuro de intercambio de datos.
+
+**Permiso:** `gestion.importar_asociados`, reservado al superusuario. No se
+asigna a Atención al asociado ni al Administrador de la mutual.
 
 **Flujo principal:**
 
