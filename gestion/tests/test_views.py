@@ -981,6 +981,9 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert "Editar asociado" in content
     assert "Guardar cambios" not in content
     assert "Cuotas del año actual" in content
+    assert '<th class="text-end">Importe</th>' in content
+    assert '<th class="text-end">Pagado</th>' in content
+    assert '<th class="text-end">Saldo</th>' in content
     assert "06/2025" not in content
     assert "05/2026" in content
     assert "Pagada" in content

@@ -14,6 +14,7 @@ from gestion.permissions import (
     GESTION_DASHBOARD,
     GESTION_EDITAR_ASOCIADOS,
     GESTION_VER_AUDITORIA,
+    GESTION_VER_MOVIMIENTOS_ASOCIADO,
 )
 
 
@@ -200,7 +201,7 @@ def test_auditoria_presenta_relaciones_y_campos_en_formato_legible(client):
 def test_detalle_asociado_muestra_auditoria_contextual_segun_permiso(client):
     con_permiso = crear_usuario_con_permisos(
         "detalle_con_auditoria",
-        [GESTION_CONSULTAR_ASOCIADOS, GESTION_VER_AUDITORIA],
+        [GESTION_CONSULTAR_ASOCIADOS, GESTION_VER_MOVIMIENTOS_ASOCIADO],
     )
     sin_permiso = crear_usuario_con_permisos(
         "detalle_sin_auditoria",
@@ -244,8 +245,42 @@ def test_detalle_asociado_muestra_auditoria_contextual_segun_permiso(client):
     assert "detalle_con_auditoria" in contenido_con_permiso
     assert "Teléfono" in contenido_con_permiso
     assert "Otro asociado" not in contenido_con_permiso
-    assert "Ver historial completo" in contenido_con_permiso
+    assert "Ver historial completo" not in contenido_con_permiso
     assert "Historial de auditoría" not in contenido_sin_permiso
+
+
+@pytest.mark.django_db
+def test_enlace_al_historial_completo_requiere_permiso_de_auditoria_general(client):
+    solo_auditoria_general = crear_usuario_con_permisos(
+        "solo_auditoria_general",
+        [GESTION_CONSULTAR_ASOCIADOS, GESTION_VER_AUDITORIA],
+    )
+    ambos_permisos = crear_usuario_con_permisos(
+        "auditoria_general_y_ficha",
+        [
+            GESTION_CONSULTAR_ASOCIADOS,
+            GESTION_VER_AUDITORIA,
+            GESTION_VER_MOVIMIENTOS_ASOCIADO,
+        ],
+    )
+    asociado = Asociado.objects.create(
+        nombre="Julia",
+        apellido="Campos",
+        dni="40000998",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-08-09",
+        fecha_inicio_cobro="2026-08-01",
+    )
+    url_detalle = reverse("gestion:asociado_detalle", args=[asociado.pk])
+
+    client.force_login(solo_auditoria_general)
+    contenido_solo_general = client.get(url_detalle).content.decode()
+    client.force_login(ambos_permisos)
+    contenido_ambos = client.get(url_detalle).content.decode()
+
+    assert "Historial de auditoría" not in contenido_solo_general
+    assert "Historial de auditoría" in contenido_ambos
+    assert "Ver historial completo" in contenido_ambos
 
 
 @pytest.mark.django_db

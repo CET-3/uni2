@@ -115,7 +115,7 @@ El logo y el resultado exitoso del login enlazan a `/`. La selección no se guar
 
 | Grupo | Gestión propia | Admin técnico | Exclusiones principales |
 |---|---|---|---|
-| Atención al asociado | Consulta y edición ordinaria de asociados; cobros | No requerido | Baja, importaciones, exportación, deudores, períodos y auditoría general |
+| Atención al asociado | Consulta y edición ordinaria de asociados; cobros; últimos movimientos de la ficha | No requerido | Baja, importaciones, exportación, deudores, períodos y auditoría general |
 | Administrador de permisos | Home administrativa y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No modifica la definición de grupos, no edita superusuarios ni puede asignar `Administrador de la app` |
 | Gestión de convenios | Home administrativa | Actividades comerciales y comercios | Usuarios, asociados, publicidades y auditoría general |
 | Gestión de publicidades | Home administrativa | Categorías, productos/servicios y publicidades; consulta comercios para vincular | Modificación de comercios, usuarios, asociados y auditoría general |

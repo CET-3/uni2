@@ -32,6 +32,7 @@ PERMISOS_POR_GRUPO = {
         "gestion.consultar_asociados",
         "gestion.editar_asociados",
         "gestion.cobrar_cuotas",
+        "gestion.ver_movimientos_asociado",
     ),
     ADMINISTRADOR_PERMISOS_GROUP: (
         ACCESO_ADMIN_TECNICO,
@@ -78,6 +79,7 @@ PERMISOS_POR_GRUPO = {
         "gestion.administrar_periodos_cuota",
         "gestion.ver_especificacion",
         "gestion.ver_auditoria",
+        "gestion.ver_movimientos_asociado",
         "asociados.view_asociado",
         "asociados.add_asociado",
         "asociados.change_asociado",

@@ -334,6 +334,7 @@ corresponda.
 El permiso implementado es:
 
 - `gestion.ver_auditoria`;
+- `gestion.ver_movimientos_asociado`;
 
 Quedan previstos para sus flujos futuros:
 
@@ -344,7 +345,9 @@ El permiso de edición no concede automáticamente baja, anulación ni borrado.
 Inicialmente:
 
 - Administrador de permisos y Administrador de la mutual reciben
-  `gestion.ver_auditoria`;
+  `gestion.ver_auditoria` para la consulta completa;
+- Atención al asociado y Administrador de la mutual reciben
+  `gestion.ver_movimientos_asociado` para el historial de la ficha;
 - Atención al asociado, Gestión de convenios y Gestión de publicidades no
   reciben `ver_auditoria` ni acciones destructivas;
 - `auditoria.view_eventoauditoria` controla la consulta en el admin técnico,
@@ -352,9 +355,9 @@ Inicialmente:
 - el borrado físico excepcional queda reservado al superusuario técnico y no se
   presenta como una tarea normal de gestión.
 
-`gestion.ver_auditoria` está registrado en `gestion/permissions.py`, en el modelo
-técnico `PermisoGestion`, en la migración de grupos y en las pruebas. Los otros
-dos permisos se agregarán cuando se implementen sus operaciones.
+Ambos permisos de lectura están registrados en `gestion/permissions.py`, en el
+modelo técnico `PermisoGestion`, en las migraciones de grupos y en las pruebas.
+Los permisos de baja y anulación se agregarán cuando se implementen sus operaciones.
 
 ## Pantallas previstas
 

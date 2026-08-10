@@ -60,14 +60,14 @@
             <h2 class="h5 mb-3">Cuotas del año actual</h2>
             <div class="table-responsive">
                 <table class="table table-soft align-middle mb-0">
-                    <thead><tr><th>Periodo</th><th>Importe</th><th>Pagado</th><th>Saldo</th><th>Estado</th></tr></thead>
+                    <thead><tr><th>Periodo</th><th class="text-end">Importe</th><th class="text-end">Pagado</th><th class="text-end">Saldo</th><th>Estado</th></tr></thead>
                     <tbody>
                         {% for item in cuotas_anio_actual %}
                             <tr>
                                 <td>{{ item.cuota.periodo }}</td>
-                                <td>{{ item.importe_original|moneda }}</td>
-                                <td>{{ item.importe_pagado|moneda }}</td>
-                                <td>{{ item.saldo|moneda }}</td>
+                                <td class="text-end">{{ item.importe_original|moneda }}</td>
+                                <td class="text-end">{{ item.importe_pagado|moneda }}</td>
+                                <td class="text-end">{{ item.saldo|moneda }}</td>
                                 <td>{{ item.estado_display }}</td>
                             </tr>
                         {% empty %}
@@ -102,14 +102,14 @@
     </div>
 </div>
 
-{% if puede_ver_auditoria %}
+{% if puede_ver_movimientos_asociado %}
     <section class="mt-5" aria-labelledby="historial-auditoria">
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-end gap-2 mb-3">
             <div>
                 <h2 class="h4 mb-1" id="historial-auditoria">Historial de auditoría</h2>
                 <p class="text-secondary mb-0">Últimas operaciones registradas para este asociado.</p>
             </div>
-            <a href="{{ auditoria_url }}">Ver historial completo</a>
+            {% if auditoria_url %}<a href="{{ auditoria_url }}">Ver historial completo</a>{% endif %}
         </div>
         {% if operaciones_auditoria %}
             {% include "gestion/_lista_operaciones_auditoria.html" with operaciones=operaciones_auditoria contextual=True only %}

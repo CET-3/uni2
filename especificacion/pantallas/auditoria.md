@@ -118,11 +118,12 @@ es accesible, el evento conserva la descripción sin ofrecer un enlace roto.
 ## Historial contextual
 
 El detalle de asociado muestra una sección `Historial de auditoría` al pie para
-usuarios con `gestion.ver_auditoria`. Incluye las diez operaciones más recientes
+usuarios con `gestion.ver_movimientos_asociado`. Incluye las diez operaciones más recientes
 que tengan al menos un evento del asociado y recupera completos los eventos de
 cada operación para no recortar cobros, altas u otros cambios compuestos. Un
 enlace de texto abre el historial completo con entidad e identificador ya
-filtrados. Pagos y comercios podrán incorporarse en etapas posteriores.
+filtrados, pero solo aparece para usuarios que también poseen
+`gestion.ver_auditoria`. Pagos y comercios podrán incorporarse en etapas posteriores.
 
 ## Estados vacíos y casos especiales
 

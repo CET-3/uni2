@@ -6,6 +6,7 @@ from gestion.permissions import (
     GESTION_IMPORTAR_ASOCIADOS,
     GESTION_IMPORTAR_CUOTAS_HISTORICAS,
     GESTION_VER_AUDITORIA,
+    GESTION_VER_MOVIMIENTOS_ASOCIADO,
 )
 from usuarios.roles import (
     ACCESO_ADMIN_TECNICO,
@@ -39,6 +40,7 @@ def test_atencion_solo_recibe_permisos_de_operacion_diaria():
     grupo = Group.objects.get(name=ATENCION_ASOCIADO_GROUP)
 
     assert _tiene_permiso(grupo, GESTION_COBRAR_CUOTAS)
+    assert _tiene_permiso(grupo, GESTION_VER_MOVIMIENTOS_ASOCIADO)
     assert not _tiene_permiso(grupo, GESTION_VER_AUDITORIA)
     assert not _tiene_permiso(grupo, GESTION_IMPORTAR_ASOCIADOS)
 
@@ -65,6 +67,7 @@ def test_administrador_permisos_gestiona_cuentas_sin_editar_grupos():
     assert _tiene_permiso(grupo, "auth.view_group")
     assert not _tiene_permiso(grupo, "auth.change_group")
     assert _tiene_permiso(grupo, GESTION_VER_AUDITORIA)
+    assert not _tiene_permiso(grupo, GESTION_VER_MOVIMIENTOS_ASOCIADO)
 
 
 @pytest.mark.django_db
@@ -72,6 +75,7 @@ def test_administrador_mutual_no_recibe_importaciones_masivas():
     grupo = Group.objects.get(name=ADMINISTRADOR_MUTUAL_GROUP)
 
     assert _tiene_permiso(grupo, GESTION_VER_AUDITORIA)
+    assert _tiene_permiso(grupo, GESTION_VER_MOVIMIENTOS_ASOCIADO)
     assert _tiene_permiso(grupo, "cuotas.view_pago")
     assert _tiene_permiso(grupo, "contenidos.change_publicidad")
     assert not _tiene_permiso(grupo, GESTION_IMPORTAR_ASOCIADOS)
