@@ -169,6 +169,9 @@ def service_worker(request):
             "pwa_static_url_json": json.dumps(settings.STATIC_URL),
             "pwa_media_url_json": json.dumps(settings.MEDIA_URL),
             "pwa_public_media_origin_json": json.dumps(_public_media_origin()),
+            "pwa_development_mode_json": json.dumps(
+                settings.UNI2_DEPLOYMENT_ENVIRONMENT == "development"
+            ),
         },
     )
     # El worker no usa sesión ni contexto de navegación. Renderizarlo sin

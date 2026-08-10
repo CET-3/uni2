@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load formatos %}
 
 {% block title %}Productos y servicios | Uni2{% endblock %}
 
@@ -40,9 +41,9 @@
                 <p>{{ item.descripcion }}</p>
                 <dl class="row mb-0 small">
                   <dt class="col-6">Asociados</dt>
-                  <dd class="col-6 text-end">${{ item.precio_asociados }}</dd>
+                  <dd class="col-6 text-end">{{ item.precio_asociados|moneda }}</dd>
                   <dt class="col-6">No asociados</dt>
-                  <dd class="col-6 text-end">${{ item.precio_no_asociados }}</dd>
+                  <dd class="col-6 text-end">{{ item.precio_no_asociados|moneda }}</dd>
                 </dl>
               </div>
             </article>

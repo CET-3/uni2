@@ -380,7 +380,7 @@ def test_productos_servicios_publicos_muestran_activos_ordenados_y_cta_linkeable
     assert "Inactivo" not in contenido
     assert "Categoria inactiva" not in contenido
     assert "Servicio" in contenido
-    assert "$400,00" in contenido
+    assert "$ 400,00" in contenido
     assert "mailto:uni2mutual@gmail.com" in contenido
 
 
@@ -671,7 +671,7 @@ def test_detalle_producto_servicio_publico_muestra_producto_activo(client):
     contenido = response.content.decode()
     assert response.status_code == 200
     assert "Anillado" in contenido
-    assert "$600,00" in contenido
+    assert "$ 600,00" in contenido
     assert 'class="uni2-breadcrumbs"' in contenido
     assert 'aria-current="page">Anillado' in contenido
     assert reverse("web:productos_servicios") in contenido
@@ -842,7 +842,7 @@ def test_categoria_detalle_muestra_sus_productos_activos(client):
     assert "Fotocopias" in contenido
     assert "Fotocopia simple" in contenido
     assert "Inactivo" not in contenido
-    assert "$50,00" in contenido
+    assert "$ 50,00" in contenido
     assert "Consultá en la mutual" in contenido
     assert 'class="uni2-breadcrumbs"' in contenido
     assert 'aria-current="page">Fotocopias' in contenido

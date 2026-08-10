@@ -128,4 +128,4 @@ def test_describe_pago_con_cuotas_y_donacion(cuota_marzo):
 
     resumen = describir_pago(pago)
 
-    assert resumen.lineas == ["Cuotas: 03/2026", "Donación: $500.00"]
+    assert resumen.lineas == ["Cuotas: 03/2026", "Donación: $ 500,00"]

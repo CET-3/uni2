@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from datetime import date
 
 from asociados.models import Asociado
+from config.formatting import formatear_moneda
 
 from .models import Cuota, Pago
 
@@ -65,7 +66,7 @@ def describir_pago(pago: Pago) -> ResumenPago:
         lineas.append(f"Cuotas: {', '.join(periodos)}")
 
     for donacion in pago.donaciones.order_by("id"):
-        lineas.append(f"Donación: ${donacion.importe}")
+        lineas.append(f"Donación: {formatear_moneda(donacion.importe)}")
 
     if not lineas:
         lineas.append("Sin aplicaciones registradas")

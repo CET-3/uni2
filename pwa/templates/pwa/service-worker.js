@@ -1,5 +1,6 @@
 const BUILD_ID = {{ pwa_build_id_json|safe }};
 const DATA_EPOCH = {{ pwa_private_data_epoch_json|safe }};
+const DEVELOPMENT_MODE = {{ pwa_development_mode_json|safe }};
 const CACHE_VERSION = `${BUILD_ID}-${DATA_EPOCH}`;
 const CACHE_PREFIX = "uni2-pwa-";
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${CACHE_VERSION}`;
@@ -108,6 +109,20 @@ async function cacheFirstStatic(request) {
     return response;
 }
 
+async function networkFirstStaticInDevelopment(request) {
+    try {
+        const response = await fetch(request, {cache: "no-store"});
+        if (isCacheableStaticResponse(response)) {
+            const cache = await caches.open(STATIC_CACHE);
+            await cache.put(request, response.clone());
+            await trimCache(STATIC_CACHE, MAX_RUNTIME_STATIC_FILES);
+        }
+        return response;
+    } catch (error) {
+        return caches.match(request).then((cached) => cached || Response.error());
+    }
+}
+
 async function fetchAndCachePublicImage(request, url) {
     const response = await fetch(request);
     if (isCacheablePublicImageResponse(response, url)) {
@@ -158,9 +173,8 @@ async function networkOnlyMutation(request) {
 }
 
 self.addEventListener("install", (event) => {
-    event.waitUntil(
-        caches.open(SHELL_CACHE).then((cache) => cache.addAll(PRECACHE_URLS))
-    );
+    const installation = caches.open(SHELL_CACHE).then((cache) => cache.addAll(PRECACHE_URLS));
+    event.waitUntil(DEVELOPMENT_MODE ? installation.then(() => self.skipWaiting()) : installation);
 });
 
 self.addEventListener("activate", (event) => {
@@ -209,6 +223,10 @@ self.addEventListener("fetch", (event) => {
     }
 
     if (isSameOriginStatic(url)) {
-        event.respondWith(cacheFirstStatic(request));
+        event.respondWith(
+            DEVELOPMENT_MODE
+                ? networkFirstStaticInDevelopment(request)
+                : cacheFirstStatic(request)
+        );
     }
 });

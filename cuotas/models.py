@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 
 from asociados.models import Asociado, CicloLectivo
+from config.formatting import formatear_moneda
 
 
 class PeriodoCuota(models.Model):
@@ -180,4 +181,4 @@ class Donacion(models.Model):
         ordering = ["-fecha", "-id"]
 
     def __str__(self):
-        return f"Donación ${self.importe} - {self.asociado}"
+        return f"Donación {formatear_moneda(self.importe)} - {self.asociado}"

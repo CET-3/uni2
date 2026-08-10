@@ -243,7 +243,7 @@ Abrir <http://127.0.0.1:8000/>.
 Usuarios ficticios locales:
 
 - **Gestión / admin técnico:** usuario `admin`, contraseña `admin1234`.
-- **Atención de mutual:** usuario `atencion`, contraseña `atencion1234`.
+- **Atención al asociado:** usuario `atencion`, contraseña `atencion1234`.
 - **Asociado:** usuario `asociado`, contraseña `asociado1234`.
 - **Comercio:** usuario `comercio`, contraseña `comercio1234`.
 

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load l10n %}
+{% load l10n formatos %}
 
 {% block title %}Cobrar cuotas | Uni2{% endblock %}
 
@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-sm-auto ms-sm-auto">
                     <span class="text-secondary small">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</span>
-                    <div class="fw-semibold">${{ total_deuda }}</div>
+                    <div class="fw-semibold">{{ total_deuda|moneda }}</div>
                 </div>
                 <div class="col-sm-auto">
                     <a class="btn btn-outline-secondary btn-sm" href="{% url 'gestion:asociado_detalle' selected_asociado.id %}">Ver detalle</a>
@@ -88,11 +88,11 @@
                                     </td>
                                     <td>{{ cuota.cuota.periodo }}</td>
                                     <td>{{ cuota.cuota.periodo.fecha_vencimiento|date:"d/m/Y" }}</td>
-                                    <td>${{ cuota.importe_original }}</td>
-                                    <td>${{ cuota.recargo }}</td>
-                                    <td>${{ cuota.total_exigible }}</td>
-                                    <td>${{ cuota.importe_pagado }}</td>
-                                    <td>${{ cuota.saldo }}</td>
+                                    <td>{{ cuota.importe_original|moneda }}</td>
+                                    <td>{{ cuota.recargo|moneda }}</td>
+                                    <td>{{ cuota.total_exigible|moneda }}</td>
+                                    <td>{{ cuota.importe_pagado|moneda }}</td>
+                                    <td>{{ cuota.saldo|moneda }}</td>
                                     <td>{{ cuota.estado_display }}</td>
                                 </tr>
                             {% empty %}

@@ -1,11 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import TemplateView
 
+from auditoria.selectors import buscar_operaciones, obtener_operaciones
 from asociados.exporters import build_asociados_formato_uni2_xlsx
 from asociados.importers import (
     PADRON_IMPORT_SESSION_KEY,
@@ -16,6 +18,7 @@ from asociados.importers import (
 )
 from asociados.models import Asociado
 from asociados.selectors import filter_asociados, get_asociados_for_export
+from asociados.services import actualizar_asociado
 from cuotas.importers import (
     CUOTAS_HISTORICAS_SESSION_KEY,
     CuotasHistoricasPreview,
@@ -32,12 +35,18 @@ from cuotas.selectors import (
     get_cuotas_del_asociado,
     get_total_deuda,
 )
-from cuotas.services import generar_cuotas_iniciales_para_asociado, generar_cuotas_para_periodo, registrar_pago
+from cuotas.services import (
+    crear_periodo_cuota,
+    generar_cuotas_iniciales_para_asociado,
+    generar_cuotas_para_periodo,
+    registrar_pago,
+)
 
 from .forms import (
     AsociadoAltaForm,
     AsociadoGestionForm,
     CobroCuotaForm,
+    FiltroAuditoriaForm,
     ImportarCuotasHistoricasForm,
     ImportarPadronAsociadosForm,
     FiltroAsociadosForm,
@@ -51,6 +60,7 @@ from .permissions import (
     GESTION_EXPORTAR_ASOCIADOS,
     GESTION_IMPORTAR_ASOCIADOS,
     GESTION_IMPORTAR_CUOTAS_HISTORICAS,
+    GESTION_VER_AUDITORIA,
     GESTION_VER_DEUDORES,
     user_has_any_gestion_permission,
 )
@@ -73,6 +83,36 @@ class GestionPermissionRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class GestionDashboardView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/dashboard.html"
+
+
+class GestionAuditoriaView(GestionPermissionRequiredMixin, TemplateView):
+    template_name = "gestion/auditoria.html"
+    permission_required = GESTION_VER_AUDITORIA
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = FiltroAuditoriaForm(self.request.GET or None)
+        filtros = {}
+        if form.is_valid():
+            filtros = {
+                "actor_query": form.cleaned_data["actor"],
+                "objeto_query": form.cleaned_data["objeto"],
+                "accion": form.cleaned_data["accion"],
+                "entidad": form.cleaned_data["entidad"],
+                "objeto_id": form.cleaned_data["objeto_id"],
+                "origen": form.cleaned_data["origen"],
+                "fecha_desde": form.cleaned_data["fecha_desde"],
+                "fecha_hasta": form.cleaned_data["fecha_hasta"],
+            }
+        operaciones = buscar_operaciones(**filtros)
+        context["form"] = form
+        page_obj = Paginator(operaciones, 25).get_page(self.request.GET.get("page"))
+        page_obj.object_list = obtener_operaciones(page_obj.object_list)
+        context["page_obj"] = page_obj
+        query_params = self.request.GET.copy()
+        query_params.pop("page", None)
+        context["querystring"] = query_params.urlencode()
+        return context
 
 
 class GestionDeudoresView(GestionPermissionRequiredMixin, TemplateView):
@@ -122,10 +162,11 @@ class GestionAsociadoNuevoView(GestionPermissionRequiredMixin, TemplateView):
         if request.method == "POST":
             form = AsociadoAltaForm(request.POST)
             if form.is_valid():
-                asociado = form.save()
+                asociado = form.save(actor=request.user)
                 cuotas_generadas = generar_cuotas_iniciales_para_asociado(
                     asociado=asociado,
                     fecha_referencia=asociado.fecha_alta,
+                    actor=request.user,
                 )
                 if cuotas_generadas:
                     messages.success(
@@ -261,6 +302,7 @@ class GestionCrearUsuariosAsociadosFaltantesView(GestionPermissionRequiredMixin,
         result = create_missing_users_for_asociados(
             batch_size=self.usuarios_batch_size,
             after_id=state["cursor"],
+            actor=request.user,
         )
 
         state["creados"] += result.creados
@@ -476,7 +518,12 @@ class GestionAsociadoEditarView(GestionPermissionRequiredMixin, TemplateView):
         if request.method == "POST":
             form = AsociadoGestionForm(request.POST, instance=self.asociado)
             if form.is_valid():
-                form.save()
+                actualizar_asociado(
+                    asociado=self.asociado,
+                    datos=form.cleaned_data,
+                    campos_modificados=form.changed_data,
+                    actor=request.user,
+                )
                 messages.success(request, "Asociado actualizado correctamente.")
                 return redirect("gestion:asociado_detalle", asociado_id=self.asociado.id)
             request._asociado_form = form
@@ -502,6 +549,7 @@ class GestionCrearUsuarioAsociadoView(GestionPermissionRequiredMixin, TemplateVi
             user = create_user_for_asociado(
                 asociado=asociado,
                 password=request.POST.get("password", str(asociado.dni)),
+                actor=request.user,
             )
             messages.success(request, f"Usuario «{user.username}» creado y vinculado a {asociado.apellido}, {asociado.nombre}.")
         except ValueError as exc:
@@ -595,13 +643,13 @@ class GestionPeriodosCuotaView(GestionPermissionRequiredMixin, TemplateView):
             if action == "crear_periodo":
                 form = PeriodoCuotaForm(request.POST)
                 if form.is_valid():
-                    periodo = form.save()
+                    periodo = crear_periodo_cuota(datos=form.cleaned_data, actor=request.user)
                     messages.success(request, f"Periodo {periodo} creado correctamente.")
                     return redirect("gestion:periodos_cuota")
                 request._periodo_form = form
             elif action == "generar_cuotas":
                 periodo = get_object_or_404(PeriodoCuota, id=request.POST.get("periodo_id"))
-                creadas = generar_cuotas_para_periodo(periodo)
+                creadas = generar_cuotas_para_periodo(periodo, actor=request.user)
                 messages.success(request, f"Generacion completada para {periodo}: {creadas} cuotas creadas.")
                 return redirect("gestion:periodos_cuota")
         return super().dispatch(request, *args, **kwargs)

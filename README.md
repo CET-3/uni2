@@ -80,7 +80,7 @@ endurecida, pero nunca comparte conexión, sesiones, contraseñas, tokens,
 Usuarios ficticios creados sólo en desarrollo local:
 
 - Gestión/admin técnico: `admin` / `admin1234`
-- Atención de mutual y asociado de prueba: `atencion` / `atencion1234`
+- Atención al asociado y asociado de prueba: `atencion` / `atencion1234`
 - Asociado de prueba: `asociado` / `asociado1234`
 - Comercio de prueba: `comercio` / `comercio1234`
 

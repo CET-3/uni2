@@ -3,8 +3,8 @@ type: "Entidad"
 title: "EventoAuditoria"
 description: "Hecho inmutable que identifica una operación y los cambios producidos sobre una entidad."
 resource: "auditoria.models.EventoAuditoria"
-tags: [mvp, modelo-de-datos, diseno-aprobado, pendiente]
-timestamp: 2026-08-01T00:00:00-03:00
+tags: [mvp, modelo-de-datos, implementado]
+timestamp: 2026-08-09T00:00:00-03:00
 ---
 
 # EventoAuditoria
@@ -19,8 +19,9 @@ origen y los campos que cambiaron.
 - fecha\*: fecha y hora asignada automáticamente al crear el evento.
 - actor: usuario autenticado que realizó la acción. Puede quedar vacío para
   procesos automáticos o datos cuyo autor no pueda determinarse.
-- actor_etiqueta\*: copia legible del username o nombre del proceso en el
-  momento del evento.
+- actor_etiqueta\*: copia legible del nombre y apellido del usuario en el
+  momento del evento. Si no tiene nombre completo cargado, usa el username; para
+  una operación automática usa el nombre del proceso.
 - accion\*: tipo de operación realizada.
 - entidad\*: nombre técnico estable, por ejemplo `asociados.Asociado`.
 - objeto_id\*: identificador del objeto convertido a texto.
@@ -87,10 +88,11 @@ origen y los campos que cambiaron.
   `(accion, fecha)` y `operacion_id`.
 
 **Admin técnico:** se registra únicamente para consulta. No permite alta,
-modificación ni eliminación.
+modificación ni eliminación. `actor_etiqueta` se presenta como `Nombre
+registrado del actor` y explica que es una copia histórica, para diferenciarla
+de la relación `Actor` con el usuario Django actual.
 
 **Referencias funcionales:** ver
 [reglas de trazabilidad](../reglas/trazabilidad.md),
 [arquitectura de trazabilidad](../arquitectura/trazabilidad.md) y
 [consulta de auditoría](../casos-de-uso/cu-consultar-auditoria.md).
-

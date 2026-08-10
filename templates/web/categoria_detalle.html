@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load formatos %}
 
 {% block title %}{{ categoria.nombre }} | Uni2{% endblock %}
 
@@ -37,8 +38,8 @@
                 {% for item in categoria.productos_servicios.all %}
                   <tr>
                     <th>{{ item.nombre }}</th>
-                    <td>${{ item.precio_asociados }}</td>
-                    <td>${{ item.precio_no_asociados }}</td>
+                    <td>{{ item.precio_asociados|moneda }}</td>
+                    <td>{{ item.precio_no_asociados|moneda }}</td>
                   </tr>
                 {% endfor %}
               </tbody>

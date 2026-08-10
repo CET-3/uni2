@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load formatos %}
 
 {% block title %}{{ producto_servicio.nombre }} | Uni2{% endblock %}
 
@@ -33,11 +34,11 @@
             <tbody>
               <tr>
                 <th>Asociados</th>
-                <td>${{ producto_servicio.precio_asociados }}</td>
+                <td>{{ producto_servicio.precio_asociados|moneda }}</td>
               </tr>
               <tr>
                 <th>No asociados</th>
-                <td>${{ producto_servicio.precio_no_asociados }}</td>
+                <td>{{ producto_servicio.precio_no_asociados|moneda }}</td>
               </tr>
             </tbody>
           </table>
