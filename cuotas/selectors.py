@@ -1,11 +1,14 @@
-from decimal import Decimal
 from dataclasses import dataclass
 from datetime import date
+from decimal import Decimal
+
+from django.db.models import Q
+from django.utils import timezone
 
 from asociados.models import Asociado
 from config.formatting import formatear_moneda
 
-from .models import Cuota, Pago
+from .models import Cuota, Pago, PeriodoCuota
 
 
 @dataclass(frozen=True)
@@ -25,6 +28,39 @@ class EstadoCuota:
 class ResumenPago:
     pago: Pago
     lineas: list[str]
+
+
+def get_periodo_cuota_para_publicar(fecha_referencia=None):
+    """Obtiene el período actual o el último anterior disponible.
+
+    ``PeriodoCuota.activo`` controla la generación de cuotas, no la vigencia
+    pública de su importe. Por eso esta consulta se guía por año y mes.
+    """
+
+    fecha_referencia = fecha_referencia or timezone.localdate()
+    periodos = PeriodoCuota.objects.select_related("ciclo_lectivo")
+    periodo_actual = periodos.filter(
+        ciclo_lectivo__anio=fecha_referencia.year,
+        mes=fecha_referencia.month,
+    ).first()
+    if periodo_actual:
+        return periodo_actual
+
+    periodo_anterior = (
+        periodos.filter(
+            Q(ciclo_lectivo__anio__lt=fecha_referencia.year)
+            | Q(
+                ciclo_lectivo__anio=fecha_referencia.year,
+                mes__lt=fecha_referencia.month,
+            )
+        )
+        .order_by("-ciclo_lectivo__anio", "-mes")
+        .first()
+    )
+    if periodo_anterior:
+        return periodo_anterior
+
+    return periodos.order_by("-ciclo_lectivo__anio", "-mes").first()
 
 
 def calcular_estado_cuota(cuota: Cuota, fecha_referencia) -> EstadoCuota:
@@ -93,8 +129,6 @@ def get_cuotas_del_anio(asociado: Asociado, anio: int):
 
 def get_total_deuda(asociado: Asociado, fecha_referencia=None):
     if fecha_referencia is None:
-        from django.utils import timezone
-
         fecha_referencia = timezone.localdate()
     return sum(
         (cuota.get_saldo_pendiente(fecha_referencia) for cuota in get_cuotas_deudoras(asociado)),

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static formatos %}
 
 {% block title %}Design System | Uni2{% endblock %}
 
@@ -364,9 +364,9 @@
                         <table class="table table-sm table-hover align-middle mb-0">
                             <thead><tr><th>Asociado</th><th>Período</th><th>Vencimiento</th><th>Estado</th><th class="text-end">Importe</th><th></th></tr></thead>
                             <tbody>
-                                <tr><td>Pérez, Martina</td><td>Marzo 2026</td><td>31/03/2026</td><td>Pagada</td><td class="text-end">$ 700,00</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
-                                <tr><td>López, Juan</td><td>Abril 2026</td><td>30/04/2026</td><td>Pendiente</td><td class="text-end">$ 700,00</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
-                                <tr><td>Gómez, Sofía</td><td>Mayo 2026</td><td>31/05/2026</td><td>Vencida</td><td class="text-end">$ 700,00</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
+                                <tr><td>Pérez, Martina</td><td>Marzo 2026</td><td>31/03/2026</td><td>Pagada</td><td class="text-end">{% if periodo_cuota_publicado %}{{ periodo_cuota_publicado.importe|moneda }}{% else %}A definir{% endif %}</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
+                                <tr><td>López, Juan</td><td>Abril 2026</td><td>30/04/2026</td><td>Pendiente</td><td class="text-end">{% if periodo_cuota_publicado %}{{ periodo_cuota_publicado.importe|moneda }}{% else %}A definir{% endif %}</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
+                                <tr><td>Gómez, Sofía</td><td>Mayo 2026</td><td>31/05/2026</td><td>Vencida</td><td class="text-end">{% if periodo_cuota_publicado %}{{ periodo_cuota_publicado.importe|moneda }}{% else %}A definir{% endif %}</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#componentes">Ver</a></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -589,7 +589,7 @@
                             <article class="uni2-step-card uni2-step-card-green">
                                 <strong class="uni2-step-number">3</strong>
                                 <h3>Sumate a la comunidad</h3>
-                                <p>Cuota de $ 700,00 por mes.</p>
+                                <p>Cuota de {% if periodo_cuota_publicado %}{{ periodo_cuota_publicado.importe|moneda }}{% else %}importe a definir{% endif %} por mes.</p>
                             </article>
                         </div>
                         <div class="col-6 col-md-3">
@@ -747,12 +747,12 @@
                 <div class="row g-3 mt-1">
                     <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-blue"><strong class="uni2-step-number">1</strong><h3>Acercate a la mutual</h3><p>Visitá UNI2 en nuestros horarios.</p></article></div>
                     <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-yellow"><strong class="uni2-step-number">2</strong><h3>Completá tu inscripción</h3><p>Registrá tus datos.</p></article></div>
-                    <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-green"><strong class="uni2-step-number">3</strong><h3>Sumate a la comunidad</h3><p>Cuota de $ 700,00 por mes.</p></article></div>
+                    <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-green"><strong class="uni2-step-number">3</strong><h3>Sumate a la comunidad</h3><p>Cuota de {% if periodo_cuota_publicado %}{{ periodo_cuota_publicado.importe|moneda }}{% else %}importe a definir{% endif %} por mes.</p></article></div>
                     <div class="col-6 col-md-3"><article class="uni2-step-card uni2-step-card-red"><strong class="uni2-step-number">4</strong><h3>Disfrutá tus beneficios</h3><p>Accesos y descuentos exclusivos.</p></article></div>
                 </div>
                 <div class="uni2-info-box mt-3">
                     <div><h3>Asociación</h3><p>Presencial en la mutual.</p></div>
-                    <div><h3>Cuota social</h3><p>$ 700,00 mensuales.</p></div>
+                    <div><h3>Cuota social</h3><p>{% if periodo_cuota_publicado %}{{ periodo_cuota_publicado.importe|moneda }} mensuales.{% else %}Consultá el valor vigente.{% endif %}</p></div>
                     <div class="uni2-schedule-card">
                         <h3>Horarios de atención</h3>
                         <table class="uni2-hours-table uni2-hours-table-compact" style="display:table">

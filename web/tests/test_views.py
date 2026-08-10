@@ -7,9 +7,12 @@ from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.staticfiles import finders
 from django.urls import reverse
+from django.utils import timezone
 
+from asociados.models import CicloLectivo
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publicidad
+from cuotas.models import PeriodoCuota
 
 
 @pytest.mark.django_db
@@ -24,6 +27,31 @@ from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publi
 def test_paginas_publicas_responden(client, url_name):
     response = client.get(reverse(url_name))
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_home_muestra_el_importe_del_periodo_actual(client):
+    hoy = timezone.localdate()
+    ciclo = CicloLectivo.objects.create(anio=hoy.year)
+    PeriodoCuota.objects.create(
+        mes=hoy.month,
+        ciclo_lectivo=ciclo,
+        importe="1234.56",
+        fecha_vencimiento=hoy.replace(day=10),
+    )
+
+    contenido = client.get(reverse("web:home")).content.decode()
+
+    assert "$ 1.234,56" in contenido
+    assert "$ 700,00" not in contenido
+
+
+@pytest.mark.django_db
+def test_home_sin_periodos_no_inventa_un_importe(client):
+    contenido = client.get(reverse("web:home")).content.decode()
+
+    assert "Consultá en la mutual el valor actual de la cuota social." in contenido
+    assert "Consultá el valor vigente." in contenido
 
 
 def test_url_beneficios_no_se_mantiene(client):
@@ -69,12 +97,21 @@ def test_design_system_con_permiso_responde(client):
     user = user_model.objects.create_user(username="con_design_system", password="secreto123")
     permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_design_system")
     user.user_permissions.add(permiso)
+    hoy = timezone.localdate()
+    ciclo = CicloLectivo.objects.create(anio=hoy.year)
+    PeriodoCuota.objects.create(
+        mes=hoy.month,
+        ciclo_lectivo=ciclo,
+        importe="1234.56",
+        fecha_vencimiento=hoy.replace(day=10),
+    )
     client.force_login(user)
 
     response = client.get(reverse("web:design-system"))
 
     assert response.status_code == 200
     assert "Sistema visual UNI2" in response.content.decode()
+    assert "$ 1.234,56" in response.content.decode()
 
 
 @pytest.mark.django_db

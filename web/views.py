@@ -7,6 +7,7 @@ from comercios.selectors import get_comercios_firmados, get_rubros_con_comercios
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
 from contenidos.selectors import get_categorias_productos_servicios_publicas, get_publicidades_home
+from cuotas.selectors import get_periodo_cuota_para_publicar
 from gestion.permissions import GESTION_VER_DESIGN_SYSTEM, user_has_gestion_permission
 from usuarios.home_navigation import build_home_navigation
 
@@ -20,6 +21,7 @@ class HomeView(TemplateView):
         context["publicidades"] = get_publicidades_home()
         context["rubros_beneficio"] = get_rubros_con_comercios()
         context["comercios"] = get_comercios_firmados()[:3]
+        context["periodo_cuota_publicado"] = get_periodo_cuota_para_publicar()
         context["home_navigation"] = build_home_navigation(
             self.request.user,
             requested_profile=self.request.GET.get("perfil"),
@@ -110,7 +112,10 @@ class VerDesignSystemRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 class DesignSystemView(VerDesignSystemRequiredMixin, TemplateView):
     template_name = "web/design-system.html"
 
-    pass
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["periodo_cuota_publicado"] = get_periodo_cuota_para_publicar()
+        return context
 
 
 class DesignSystemEstructuraView(VerDesignSystemRequiredMixin, TemplateView):

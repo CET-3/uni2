@@ -6,7 +6,7 @@ import pytest
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
 from cuotas.models import Cuota, Pago, PagoCuota, PeriodoCuota
-from cuotas.selectors import calcular_estado_cuota, describir_pago
+from cuotas.selectors import calcular_estado_cuota, describir_pago, get_periodo_cuota_para_publicar
 
 
 @pytest.fixture
@@ -40,6 +40,51 @@ def cuota_marzo(asociado_activo):
         importe_recargo_mes=periodo.importe_recargo_mes,
         importe_recargo_mes_siguiente=periodo.importe_recargo_mes_siguiente,
     )
+
+
+def crear_periodo(*, anio, mes, importe):
+    ciclo, _ = CicloLectivo.objects.get_or_create(anio=anio)
+    return PeriodoCuota.objects.create(
+        mes=mes,
+        ciclo_lectivo=ciclo,
+        importe=importe,
+        fecha_vencimiento=date(anio, mes, 10),
+    )
+
+
+@pytest.mark.django_db
+def test_periodo_para_publicar_prefiere_el_mes_actual():
+    crear_periodo(anio=2026, mes=7, importe="800")
+    actual = crear_periodo(anio=2026, mes=8, importe="900")
+    crear_periodo(anio=2026, mes=9, importe="1000")
+
+    periodo = get_periodo_cuota_para_publicar(date(2026, 8, 10))
+
+    assert periodo == actual
+
+
+@pytest.mark.django_db
+def test_periodo_para_publicar_usa_el_ultimo_anterior_durante_vacaciones():
+    anterior = crear_periodo(anio=2026, mes=12, importe="900")
+    crear_periodo(anio=2027, mes=2, importe="1100")
+
+    periodo = get_periodo_cuota_para_publicar(date(2027, 1, 15))
+
+    assert periodo == anterior
+
+
+@pytest.mark.django_db
+def test_periodo_para_publicar_devuelve_none_si_nunca_se_configuro_uno():
+    assert get_periodo_cuota_para_publicar(date(2026, 8, 10)) is None
+
+
+@pytest.mark.django_db
+def test_periodo_para_publicar_usa_el_disponible_si_solo_hay_uno_futuro():
+    disponible = crear_periodo(anio=2027, mes=3, importe="1200")
+
+    periodo = get_periodo_cuota_para_publicar(date(2026, 8, 10))
+
+    assert periodo == disponible
 
 
 @pytest.mark.django_db
