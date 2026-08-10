@@ -485,6 +485,17 @@ class GestionAsociadoDetalleView(GestionPermissionRequiredMixin, TemplateView):
             f"{reverse('gestion:cobros')}?asociado={asociado.id}",
             return_url,
         )
+        if self.request.user.has_perm(GESTION_VER_AUDITORIA):
+            context["puede_ver_auditoria"] = True
+            resumenes_auditoria = buscar_operaciones(
+                entidad="asociados.Asociado",
+                objeto_id=str(asociado.id),
+            )[:10]
+            context["operaciones_auditoria"] = obtener_operaciones(resumenes_auditoria)
+            context["auditoria_url"] = (
+                f"{reverse('gestion:auditoria')}?"
+                f"entidad=asociados.Asociado&objeto_id={asociado.id}"
+            )
         return context
 
 

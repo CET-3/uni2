@@ -6,6 +6,8 @@ Implementado sobre la rama `staging` en el mismo trabajo que la home única.
 
 Este documento conserva las decisiones que guiaron la implementación. La especificación OKF fue actualizada en el mismo trabajo y vuelve a ser la fuente de verdad del comportamiento vigente.
 
+**Ajuste posterior:** la auditoría ya no aparece como botón en el encabezado, pero se incorporó al pie del detalle como historial contextual para usuarios con permiso. Se muestran las diez operaciones más recientes y un enlace de texto al historial completo filtrado.
+
 ## Dependencias y orden
 
 - Depende de `plan-home-unica.md`.

@@ -101,5 +101,22 @@
         </div></div>
     </div>
 </div>
+
+{% if puede_ver_auditoria %}
+    <section class="mt-5" aria-labelledby="historial-auditoria">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-end gap-2 mb-3">
+            <div>
+                <h2 class="h4 mb-1" id="historial-auditoria">Historial de auditoría</h2>
+                <p class="text-secondary mb-0">Últimas operaciones registradas para este asociado.</p>
+            </div>
+            <a href="{{ auditoria_url }}">Ver historial completo</a>
+        </div>
+        {% if operaciones_auditoria %}
+            {% include "gestion/_lista_operaciones_auditoria.html" with operaciones=operaciones_auditoria contextual=True only %}
+        {% else %}
+            {% include "components/alert.html" with variant="info" message="Todavía no hay operaciones registradas para este asociado." only %}
+        {% endif %}
+    </section>
+{% endif %}
 </div>
 {% endblock %}

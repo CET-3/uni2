@@ -30,7 +30,7 @@ timestamp: 2026-08-09T00:00:00-03:00
 **Permisos:** requiere `gestion.ver_auditoria`. El permiso es independiente de
 consultar o editar asociados y de las acciones de baja o anulación.
 
-**Acceso temporal:** la auditoría general continúa disponible desde la home administrativa. El acceso filtrado por asociado fue retirado del detalle; la ruta y sus filtros se conservan para un recorrido futuro.
+**Acceso contextual:** la auditoría general continúa disponible desde la home administrativa. El detalle de asociado muestra al pie las diez operaciones más recientes relacionadas con ese asociado y ofrece un enlace de texto a esta pantalla con los filtros de entidad e identificador aplicados. Ambos accesos requieren `gestion.ver_auditoria`.
 
 **Situaciones especiales:** evento de proceso automático, usuario desactivado,
 objeto eliminado excepcionalmente, valor protegido, dato anterior a la

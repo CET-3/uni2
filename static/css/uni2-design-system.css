@@ -1891,7 +1891,8 @@ button.uni2-service-card:hover {
   width: 2rem;
 }
 
-.uni2-audit-operation-header h2 {
+.uni2-audit-operation-header h2,
+.uni2-audit-operation-header h3 {
   color: var(--color-text);
   font-size: 0.95rem;
   font-weight: 600;
@@ -1972,7 +1973,8 @@ button.uni2-service-card:hover {
   min-width: 0;
 }
 
-.uni2-audit-subject h2 {
+.uni2-audit-subject h2,
+.uni2-audit-subject h3 {
   align-items: center;
   display: flex;
   font-size: 0.95rem;
@@ -1982,7 +1984,8 @@ button.uni2-service-card:hover {
   line-height: 1.4;
 }
 
-.uni2-audit-subject h2 strong {
+.uni2-audit-subject h2 strong,
+.uni2-audit-subject h3 strong {
   font-weight: 600;
 }
 

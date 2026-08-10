@@ -197,7 +197,7 @@ def test_auditoria_presenta_relaciones_y_campos_en_formato_legible(client):
 
 
 @pytest.mark.django_db
-def test_detalle_asociado_no_expone_acceso_contextual_a_auditoria(client):
+def test_detalle_asociado_muestra_auditoria_contextual_segun_permiso(client):
     con_permiso = crear_usuario_con_permisos(
         "detalle_con_auditoria",
         [GESTION_CONSULTAR_ASOCIADOS, GESTION_VER_AUDITORIA],
@@ -214,14 +214,38 @@ def test_detalle_asociado_no_expone_acceso_contextual_a_auditoria(client):
         fecha_alta="2026-08-09",
         fecha_inicio_cobro="2026-08-01",
     )
+    EventoAuditoria.objects.create(
+        actor=con_permiso,
+        actor_etiqueta=con_permiso.username,
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+        entidad="asociados.Asociado",
+        objeto_id=str(asociado.pk),
+        objeto_descripcion="Campos, Julia",
+        cambios={"telefono": {"anterior": "111", "nuevo": "222"}},
+        origen=EventoAuditoria.ORIGEN_GESTION,
+    )
+    EventoAuditoria.objects.create(
+        actor=con_permiso,
+        actor_etiqueta=con_permiso.username,
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+        entidad="asociados.Asociado",
+        objeto_id="999",
+        objeto_descripcion="Otro asociado",
+        cambios={},
+        origen=EventoAuditoria.ORIGEN_GESTION,
+    )
     url_detalle = reverse("gestion:asociado_detalle", args=[asociado.pk])
     client.force_login(con_permiso)
     contenido_con_permiso = client.get(url_detalle).content.decode()
     client.force_login(sin_permiso)
     contenido_sin_permiso = client.get(url_detalle).content.decode()
 
-    assert "Ver auditoría" not in contenido_con_permiso
-    assert "Ver auditoría" not in contenido_sin_permiso
+    assert "Historial de auditoría" in contenido_con_permiso
+    assert "detalle_con_auditoria" in contenido_con_permiso
+    assert "Teléfono" in contenido_con_permiso
+    assert "Otro asociado" not in contenido_con_permiso
+    assert "Ver historial completo" in contenido_con_permiso
+    assert "Historial de auditoría" not in contenido_sin_permiso
 
 
 @pytest.mark.django_db
