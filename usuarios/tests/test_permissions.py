@@ -15,7 +15,9 @@ from usuarios.roles import (
     ADMINISTRADOR_PERMISOS_GROUP,
     ATENCION_ASOCIADO_GROUP,
     DEFAULT_GROUPS,
+    EQUIPO_PROYECTO_GROUP,
     GESTION_CONVENIOS_GROUP,
+    GESTION_PRODUCTOS_SERVICIOS_GROUP,
     GESTION_PUBLICIDADES_GROUP,
 )
 
@@ -48,12 +50,17 @@ def test_atencion_solo_recibe_permisos_de_operacion_diaria():
 @pytest.mark.django_db
 def test_grupos_de_dominio_reciben_solo_su_admin_tecnico():
     convenios = Group.objects.get(name=GESTION_CONVENIOS_GROUP)
+    productos = Group.objects.get(name=GESTION_PRODUCTOS_SERVICIOS_GROUP)
     publicidades = Group.objects.get(name=GESTION_PUBLICIDADES_GROUP)
 
     assert _tiene_permiso(convenios, "comercios.change_comercio")
     assert _tiene_permiso(convenios, ACCESO_ADMIN_TECNICO)
     assert not _tiene_permiso(convenios, "contenidos.change_publicidad")
+    assert _tiene_permiso(productos, "contenidos.change_productoservicio")
+    assert not _tiene_permiso(productos, "contenidos.change_publicidad")
     assert _tiene_permiso(publicidades, "contenidos.change_publicidad")
+    assert _tiene_permiso(publicidades, "contenidos.view_productoservicio")
+    assert not _tiene_permiso(publicidades, "contenidos.change_productoservicio")
     assert _tiene_permiso(publicidades, "comercios.view_comercio")
     assert not _tiene_permiso(publicidades, "comercios.change_comercio")
 
@@ -81,6 +88,19 @@ def test_administrador_mutual_no_recibe_importaciones_masivas():
     assert not _tiene_permiso(grupo, GESTION_IMPORTAR_ASOCIADOS)
     assert not _tiene_permiso(grupo, GESTION_IMPORTAR_CUOTAS_HISTORICAS)
     assert not _tiene_permiso(grupo, "auth.change_user")
+    assert not _tiene_permiso(grupo, "gestion.ver_especificacion")
+
+
+@pytest.mark.django_db
+def test_equipo_proyecto_solo_recibe_herramientas_de_documentacion():
+    grupo = Group.objects.get(name=EQUIPO_PROYECTO_GROUP)
+
+    assert _tiene_permiso(grupo, "gestion.ver_especificacion")
+    assert _tiene_permiso(grupo, "gestion.ver_design_system")
+    assert _tiene_permiso(grupo, "gestion.ver_dashboard_gestion")
+    assert not _tiene_permiso(grupo, ACCESO_ADMIN_TECNICO)
+    assert not _tiene_permiso(grupo, GESTION_VER_AUDITORIA)
+    assert not _tiene_permiso(grupo, "asociados.view_asociado")
 
 
 @pytest.mark.django_db

@@ -2,19 +2,18 @@ from datetime import date
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand, CommandError
 
 from asociados.models import Asociado, Curso
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publicidad
-from usuarios.roles import ADMINISTRADOR_APP_GROUP, PERMISOS_POR_GRUPO
+from usuarios.group_configuration import sync_group_configuration
 from usuarios.services import (
     ADMIN_GROUP,
     ASOCIADO_GROUP,
     ATENCION_MUTUAL_GROUP,
     COMERCIO_GROUP,
-    ensure_default_groups,
 )
 
 
@@ -28,21 +27,7 @@ class Command(BaseCommand):
                 "no debe ejecutarse sobre producción."
             )
 
-        ensure_default_groups()
-        permisos_disponibles = {
-            f"{permiso.content_type.app_label}.{permiso.codename}": permiso
-            for permiso in Permission.objects.select_related("content_type")
-        }
-        for nombre_grupo, permisos in PERMISOS_POR_GRUPO.items():
-            Group.objects.get(name=nombre_grupo).permissions.set(
-                permisos_disponibles[permiso]
-                for permiso in permisos
-                if permiso in permisos_disponibles
-            )
-
-        # El grupo identifica a los superusuarios técnicos. is_superuser sigue
-        # siendo la autoridad real y no se obtiene por pertenecer al grupo.
-        Group.objects.get(name=ADMINISTRADOR_APP_GROUP).permissions.clear()
+        sync_group_configuration()
 
         # Cursos
         cursos_data = [
@@ -201,11 +186,15 @@ class Command(BaseCommand):
 
         gastronomia, _ = ActividadComercial.objects.get_or_create(
             nombre="Gastronomía",
-            defaults={"descripcion": "Sabores y opciones para disfrutar en cada momento."},
+            defaults={
+                "descripcion": "Sabores y opciones para disfrutar en cada momento."
+            },
         )
         act_fisica, _ = ActividadComercial.objects.get_or_create(
             nombre="Actividad física",
-            defaults={"descripcion": "Espacios y propuestas para moverse, entrenar y sentirse bien."},
+            defaults={
+                "descripcion": "Espacios y propuestas para moverse, entrenar y sentirse bien."
+            },
         )
         belleza, _ = ActividadComercial.objects.get_or_create(
             nombre="Belleza",
@@ -213,15 +202,21 @@ class Command(BaseCommand):
         )
         vestimenta, _ = ActividadComercial.objects.get_or_create(
             nombre="Vestimenta",
-            defaults={"descripcion": "Indumentaria y accesorios con beneficios para asociados."},
+            defaults={
+                "descripcion": "Indumentaria y accesorios con beneficios para asociados."
+            },
         )
         educacion, _ = ActividadComercial.objects.get_or_create(
             nombre="Educación",
-            defaults={"descripcion": "Materiales y servicios para acompañar el aprendizaje."},
+            defaults={
+                "descripcion": "Materiales y servicios para acompañar el aprendizaje."
+            },
         )
         tecnologia, _ = ActividadComercial.objects.get_or_create(
             nombre="Tecnología y accesorios",
-            defaults={"descripcion": "Tecnología, accesorios y soluciones para todos los días."},
+            defaults={
+                "descripcion": "Tecnología, accesorios y soluciones para todos los días."
+            },
         )
 
         # ── Comercios ──
@@ -336,7 +331,9 @@ class Command(BaseCommand):
                 "descripcion": "Aprovechá el precio especial para asociados en todas las fotocopias.",
                 "etiqueta_principal": "Servicio",
                 "etiqueta_secundaria": "50% OFF",
-                "producto_servicio": ProductoServicio.objects.get(nombre="Fotocopia simple"),
+                "producto_servicio": ProductoServicio.objects.get(
+                    nombre="Fotocopia simple"
+                ),
                 "activa": True,
                 "orden": 1,
             },
@@ -347,7 +344,9 @@ class Command(BaseCommand):
                 "descripcion": "Sumate al programa de préstamo gratuito de bicicletas.",
                 "etiqueta_principal": "Programa",
                 "etiqueta_secundaria": "Gratuito",
-                "producto_servicio": ProductoServicio.objects.get(nombre="Préstamo de bicicleta"),
+                "producto_servicio": ProductoServicio.objects.get(
+                    nombre="Préstamo de bicicleta"
+                ),
                 "activa": True,
                 "orden": 2,
             },
@@ -375,7 +374,9 @@ class Command(BaseCommand):
             )
             admin.groups.add(admin.groups.model.objects.get(name=ADMIN_GROUP))
 
-        curso_asociado = Curso.objects.get(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
+        curso_asociado = Curso.objects.get(
+            anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM
+        )
 
         atencion_user, created = user_model.objects.get_or_create(
             username="atencion",
@@ -406,7 +407,9 @@ class Command(BaseCommand):
                 "direccion": "Mutual Escolar CET 3",
             },
         )
-        if atencion_asociado.usuario_id is None and not hasattr(atencion_user, "asociado"):
+        if atencion_asociado.usuario_id is None and not hasattr(
+            atencion_user, "asociado"
+        ):
             atencion_asociado.usuario = atencion_user
             atencion_asociado.save(update_fields=["usuario"])
 
@@ -460,4 +463,6 @@ class Command(BaseCommand):
             libreria_sur.usuario = comercio_user
             libreria_sur.save(update_fields=["usuario"])
 
-        self.stdout.write(self.style.SUCCESS(f"Datos iniciales cargados al {date.today()}"))
+        self.stdout.write(
+            self.style.SUCCESS(f"Datos iniciales cargados al {date.today()}")
+        )

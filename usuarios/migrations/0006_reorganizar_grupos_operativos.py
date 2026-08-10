@@ -1,45 +1,21 @@
-"""Nombres y permisos de los roles iniciales de Uni2.
+from django.db import migrations
+from django.db.models import Q
 
-Los grupos son acumulables: una persona puede participar de más de un área.
-Los permisos se expresan como ``app_label.codename`` para que la matriz sea
-fácil de leer y reutilizar desde la carga inicial.
-"""
-
-ATENCION_ASOCIADO_GROUP = "Atención al asociado"
-ADMINISTRADOR_PERMISOS_GROUP = "Administrador de permisos"
-GESTION_CONVENIOS_GROUP = "Gestión de convenios"
-GESTION_PRODUCTOS_SERVICIOS_GROUP = "Gestión de productos y servicios"
-GESTION_PUBLICIDADES_GROUP = "Gestión de publicidades"
-EQUIPO_PROYECTO_GROUP = "Equipo del proyecto"
-ADMINISTRADOR_MUTUAL_GROUP = "Administrador de la mutual"
-ADMINISTRADOR_APP_GROUP = "Administrador de la app"
-ASOCIADO_GROUP = "Asociados"
-COMERCIO_GROUP = "Comercios"
-ACCESO_ADMIN_TECNICO = "usuarios.acceder_admin_tecnico"
-
-GRUPOS_OPERATIVOS = (
-    ATENCION_ASOCIADO_GROUP,
-    ADMINISTRADOR_PERMISOS_GROUP,
-    GESTION_CONVENIOS_GROUP,
-    GESTION_PRODUCTOS_SERVICIOS_GROUP,
-    GESTION_PUBLICIDADES_GROUP,
-    EQUIPO_PROYECTO_GROUP,
-    ADMINISTRADOR_MUTUAL_GROUP,
-    ADMINISTRADOR_APP_GROUP,
-)
-
-DEFAULT_GROUPS = GRUPOS_OPERATIVOS + (ASOCIADO_GROUP, COMERCIO_GROUP)
+ACCESO_ADMIN = "usuarios.acceder_admin_tecnico"
+PUBLICIDADES = "Gestión de publicidades"
+PRODUCTOS = "Gestión de productos y servicios"
+EQUIPO = "Equipo del proyecto"
 
 PERMISOS_POR_GRUPO = {
-    ATENCION_ASOCIADO_GROUP: (
+    "Atención al asociado": (
         "gestion.ver_dashboard_gestion",
         "gestion.consultar_asociados",
         "gestion.editar_asociados",
         "gestion.cobrar_cuotas",
         "gestion.ver_movimientos_asociado",
     ),
-    ADMINISTRADOR_PERMISOS_GROUP: (
-        ACCESO_ADMIN_TECNICO,
+    "Administrador de permisos": (
+        ACCESO_ADMIN,
         "gestion.ver_dashboard_gestion",
         "gestion.ver_auditoria",
         "auth.view_user",
@@ -48,8 +24,8 @@ PERMISOS_POR_GRUPO = {
         "auth.view_group",
         "auditoria.view_eventoauditoria",
     ),
-    GESTION_CONVENIOS_GROUP: (
-        ACCESO_ADMIN_TECNICO,
+    "Gestión de convenios": (
+        ACCESO_ADMIN,
         "gestion.ver_dashboard_gestion",
         "comercios.view_actividadcomercial",
         "comercios.add_actividadcomercial",
@@ -58,8 +34,8 @@ PERMISOS_POR_GRUPO = {
         "comercios.add_comercio",
         "comercios.change_comercio",
     ),
-    GESTION_PRODUCTOS_SERVICIOS_GROUP: (
-        ACCESO_ADMIN_TECNICO,
+    PRODUCTOS: (
+        ACCESO_ADMIN,
         "gestion.ver_dashboard_gestion",
         "contenidos.view_categoriaproductoservicio",
         "contenidos.add_categoriaproductoservicio",
@@ -68,8 +44,8 @@ PERMISOS_POR_GRUPO = {
         "contenidos.add_productoservicio",
         "contenidos.change_productoservicio",
     ),
-    GESTION_PUBLICIDADES_GROUP: (
-        ACCESO_ADMIN_TECNICO,
+    PUBLICIDADES: (
+        ACCESO_ADMIN,
         "gestion.ver_dashboard_gestion",
         "contenidos.view_productoservicio",
         "contenidos.view_publicidad",
@@ -77,13 +53,13 @@ PERMISOS_POR_GRUPO = {
         "contenidos.change_publicidad",
         "comercios.view_comercio",
     ),
-    EQUIPO_PROYECTO_GROUP: (
+    EQUIPO: (
         "gestion.ver_dashboard_gestion",
         "gestion.ver_especificacion",
         "gestion.ver_design_system",
     ),
-    ADMINISTRADOR_MUTUAL_GROUP: (
-        ACCESO_ADMIN_TECNICO,
+    "Administrador de la mutual": (
+        ACCESO_ADMIN,
         "gestion.ver_dashboard_gestion",
         "gestion.consultar_asociados",
         "gestion.editar_asociados",
@@ -127,9 +103,52 @@ PERMISOS_POR_GRUPO = {
         "auditoria.view_eventoauditoria",
         "auth.view_user",
     ),
-    # Estos grupos describen una identidad o una responsabilidad técnica. No
-    # otorgan permisos por sí solos.
-    ADMINISTRADOR_APP_GROUP: (),
-    ASOCIADO_GROUP: (),
-    COMERCIO_GROUP: (),
+    "Administrador de la app": (),
+    "Asociados": (),
+    "Comercios": (),
 }
+
+
+def reorganizar_grupos(apps, schema_editor):
+    Group = apps.get_model("auth", "Group")
+    Permission = apps.get_model("auth", "Permission")
+    User = apps.get_model("auth", "User")
+
+    publicidad, _ = Group.objects.get_or_create(name=PUBLICIDADES)
+    productos, _ = Group.objects.get_or_create(name=PRODUCTOS)
+
+    # El grupo anterior administraba ambos dominios. Copiar sus integrantes al
+    # grupo nuevo conserva el acceso hasta que se revisen los perfiles reales.
+    for user in publicidad.user_set.all():
+        user.groups.add(productos)
+
+    available = {
+        f"{permission.content_type.app_label}.{permission.codename}": permission
+        for permission in Permission.objects.select_related("content_type")
+    }
+    for group_name, permission_names in PERMISOS_POR_GRUPO.items():
+        group, _ = Group.objects.get_or_create(name=group_name)
+        group.permissions.set(available[name] for name in permission_names)
+
+    admin_permission = available[ACCESO_ADMIN]
+    should_be_staff = (
+        Q(is_superuser=True)
+        | Q(groups__permissions=admin_permission)
+        | Q(user_permissions=admin_permission)
+    )
+    staff_ids = User.objects.filter(should_be_staff).values("pk")
+    User.objects.filter(pk__in=staff_ids).update(is_staff=True)
+    User.objects.filter(is_staff=True, is_superuser=False).exclude(
+        pk__in=staff_ids
+    ).update(is_staff=False)
+
+
+class Migration(migrations.Migration):
+    dependencies = [
+        ("usuarios", "0005_capacidad_acceso_admin"),
+        ("gestion", "0005_agregar_permiso_movimientos_asociado"),
+    ]
+
+    operations = [
+        migrations.RunPython(reorganizar_grupos, migrations.RunPython.noop),
+    ]

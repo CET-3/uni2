@@ -13,7 +13,7 @@ from gestion.permissions import (
     GESTION_VER_ESPECIFICACION,
 )
 from usuarios.home_navigation import build_home_navigation
-from usuarios.roles import ACCESO_ADMIN_TECNICO
+from usuarios.roles import ACCESO_ADMIN_TECNICO, EQUIPO_PROYECTO_GROUP
 from usuarios.services import COMERCIO_GROUP
 
 
@@ -76,7 +76,9 @@ def test_login_redirige_a_home_con_variante_comercio(client):
 def test_login_usuario_con_grupo_comercio_sin_perfil_redirige_a_home(client):
     group = Group.objects.get_or_create(name=COMERCIO_GROUP)[0]
     user_model = get_user_model()
-    user = user_model.objects.create_user(username="com_sin_perfil", password="secreto123")
+    user = user_model.objects.create_user(
+        username="com_sin_perfil", password="secreto123"
+    )
     user.groups.add(group)
 
     response = client.post(
@@ -95,7 +97,9 @@ def test_login_usuario_con_permiso_redirige_a_home(client):
         username="admin_gestion",
         password="secreto123",
     )
-    permiso = Permission.objects.get(content_type__app_label="gestion", codename="cobrar_cuotas")
+    permiso = Permission.objects.get(
+        content_type__app_label="gestion", codename="cobrar_cuotas"
+    )
     user.user_permissions.add(permiso)
 
     response = client.post(
@@ -146,7 +150,13 @@ def test_home_muestra_variante_publica_sin_sesion(client):
 def test_home_muestra_variante_asociado_con_esa_experiencia(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="aso_smart", password="secreto123")
-    asociado = create_asociado(nombre="S", apellido="Mart", dni="46111999", tipo="asociado", fecha_alta="2026-06-01")
+    asociado = create_asociado(
+        nombre="S",
+        apellido="Mart",
+        dni="46111999",
+        tipo="asociado",
+        fecha_alta="2026-06-01",
+    )
     asociado.usuario = user
     asociado.save(update_fields=["usuario"])
 
@@ -165,7 +175,9 @@ def test_home_muestra_variante_asociado_con_esa_experiencia(client):
 def test_home_muestra_variante_gestion_con_esa_experiencia(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="gest_smart", password="secreto123")
-    permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_dashboard_gestion")
+    permiso = Permission.objects.get(
+        content_type__app_label="gestion", codename="ver_dashboard_gestion"
+    )
     user.user_permissions.add(permiso)
 
     client.force_login(user)
@@ -182,7 +194,9 @@ def test_home_muestra_variante_comercio_con_esa_experiencia(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="com_smart", password="secreto123")
     actividad = ActividadComercial.objects.create(nombre="Libros")
-    Comercio.objects.create(nombre="Libreria", direccion="Av 1", actividad_comercial=actividad, usuario=user)
+    Comercio.objects.create(
+        nombre="Libreria", direccion="Av 1", actividad_comercial=actividad, usuario=user
+    )
 
     client.force_login(user)
     response = client.get(reverse("web:home"))
@@ -198,10 +212,18 @@ def test_home_muestra_variante_comercio_con_esa_experiencia(client):
 def test_home_muestra_selector_con_dos_experiencias(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="multi_smart", password="secreto123")
-    asociado = create_asociado(nombre="M", apellido="Ulti", dni="47111999", tipo="asociado", fecha_alta="2026-06-01")
+    asociado = create_asociado(
+        nombre="M",
+        apellido="Ulti",
+        dni="47111999",
+        tipo="asociado",
+        fecha_alta="2026-06-01",
+    )
     asociado.usuario = user
     asociado.save(update_fields=["usuario"])
-    permiso = Permission.objects.get(content_type__app_label="gestion", codename="cobrar_cuotas")
+    permiso = Permission.objects.get(
+        content_type__app_label="gestion", codename="cobrar_cuotas"
+    )
     user.user_permissions.add(permiso)
 
     client.force_login(user)
@@ -239,7 +261,9 @@ def test_home_permite_elegir_una_experiencia_disponible(client):
     )
     asociado.usuario = user
     asociado.save(update_fields=["usuario"])
-    permiso = Permission.objects.get(content_type__app_label="gestion", codename="cobrar_cuotas")
+    permiso = Permission.objects.get(
+        content_type__app_label="gestion", codename="cobrar_cuotas"
+    )
     user.user_permissions.add(permiso)
 
     client.force_login(user)
@@ -255,7 +279,9 @@ def test_home_permite_elegir_una_experiencia_disponible(client):
 @pytest.mark.django_db
 def test_home_multiperfil_limita_el_hero_a_dos_cta_y_muestra_el_tercero_debajo(client):
     user_model = get_user_model()
-    user = user_model.objects.create_user(username="tres_perfiles", password="secreto123")
+    user = user_model.objects.create_user(
+        username="tres_perfiles", password="secreto123"
+    )
     asociado = create_asociado(
         nombre="Tres",
         apellido="Perfiles",
@@ -271,7 +297,9 @@ def test_home_multiperfil_limita_el_hero_a_dos_cta_y_muestra_el_tercero_debajo(c
         actividad_comercial=actividad,
         usuario=user,
     )
-    permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_dashboard_gestion")
+    permiso = Permission.objects.get(
+        content_type__app_label="gestion", codename="ver_dashboard_gestion"
+    )
     user.user_permissions.add(permiso)
 
     client.force_login(user)
@@ -284,14 +312,18 @@ def test_home_multiperfil_limita_el_hero_a_dos_cta_y_muestra_el_tercero_debajo(c
         "Mi cuenta de asociado",
         "Mi comercio",
     ]
-    assert [action.label for action in navigation["extra_actions"]] == ["Administración"]
+    assert [action.label for action in navigation["extra_actions"]] == [
+        "Administración"
+    ]
     assert "Más accesos" in response.content.decode()
 
 
 @pytest.mark.django_db
 def test_home_multiperfil_rechaza_un_perfil_no_disponible(client):
     user_model = get_user_model()
-    user = user_model.objects.create_user(username="perfil_invalido", password="secreto123")
+    user = user_model.objects.create_user(
+        username="perfil_invalido", password="secreto123"
+    )
     asociado = create_asociado(
         nombre="Perfil",
         apellido="Inválido",
@@ -301,7 +333,9 @@ def test_home_multiperfil_rechaza_un_perfil_no_disponible(client):
     )
     asociado.usuario = user
     asociado.save(update_fields=["usuario"])
-    permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_dashboard_gestion")
+    permiso = Permission.objects.get(
+        content_type__app_label="gestion", codename="ver_dashboard_gestion"
+    )
     user.user_permissions.add(permiso)
 
     client.force_login(user)
@@ -368,7 +402,9 @@ def test_navbar_muestra_todas_las_experiencias_disponibles(client):
     )
     asociado.usuario = user
     asociado.save(update_fields=["usuario"])
-    permiso = Permission.objects.get(content_type__app_label="gestion", codename="cobrar_cuotas")
+    permiso = Permission.objects.get(
+        content_type__app_label="gestion", codename="cobrar_cuotas"
+    )
     user.user_permissions.add(permiso)
 
     client.force_login(user)
@@ -454,6 +490,20 @@ def test_is_staff_sin_capacidad_no_muestra_admin_tecnico(client):
 
 
 @pytest.mark.django_db
+def test_equipo_proyecto_ve_documentacion_pero_no_admin_tecnico(client):
+    user = get_user_model().objects.create_user(username="equipo-proyecto")
+    user.groups.add(Group.objects.get(name=EQUIPO_PROYECTO_GROUP))
+    client.force_login(user)
+
+    response = client.get(reverse("web:home") + "?perfil=gestion")
+
+    assertContains(response, "Especificación")
+    assertContains(response, "Design system")
+    assertNotContains(response, "Admin técnico")
+    assert client.get(reverse("admin:index")).status_code == 302
+
+
+@pytest.mark.django_db
 def test_superusuario_muestra_admin_tecnico(client):
     user = get_user_model().objects.create_superuser(
         username="superusuario_nav",
@@ -488,7 +538,9 @@ def test_home_no_ofrece_ver_deudores_aunque_el_usuario_tenga_permiso():
 @pytest.mark.django_db
 def test_navbar_no_muestra_design_system_sin_permiso(client):
     user_model = get_user_model()
-    user = user_model.objects.create_user(username="sin_doc_visual", password="secreto123")
+    user = user_model.objects.create_user(
+        username="sin_doc_visual", password="secreto123"
+    )
 
     client.force_login(user)
     response = client.get(reverse("web:home"))
