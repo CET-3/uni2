@@ -71,7 +71,7 @@ El chrome compartido de Django se organiza en `base.html`, `includes/navbar.html
 
 La cabecera global contiene solo marca, navegación principal, acceso de usuario y entradas internas según permisos. No incluye horario de atención, WhatsApp, Instagram ni otros datos de contacto; esos contenidos viven en secciones específicas de la home, páginas de detalle o footer cuando correspondan.
 
-El menú de usuario de la cabecera usa el componente productivo `uni2-user-menu`. Las opciones internas se agrupan como `Paneles`, `Herramientas` y `Cuenta` para diferenciar experiencias operativas, herramientas técnicas y salida de sesión.
+El menú de usuario de la cabecera usa el componente productivo `uni2-user-menu`. Las opciones internas se agrupan como `Experiencias`, `Herramientas` y `Cuenta` para diferenciar las variantes de la home, las herramientas técnicas y la salida de sesión.
 
 En desktop, `uni2-user-menu` funciona como dropdown de Bootstrap. En mobile, las mismas entradas se muestran como enlaces directos dentro de la lista abierta por la hamburguesa, con el mismo comportamiento visual que "Productos y servicios" y "Comercios". Esto evita un segundo nivel de apertura y mantiene la navegación principal como una lista plana.
 
@@ -101,7 +101,7 @@ El catálogo presenta `uni2-breadcrumbs` en la capa de componentes y usa el mism
 
 El breadcrumb es un componente de navegación contextual, no una primitiva: combina una lista ordenada, enlaces, separadores y el estado de página actual dentro de un `nav` con nombre accesible. Usa la estructura base de Bootstrap, un separador textual decorativo `›`, enlaces con el color de acción y la página actual con color de texto secundario.
 
-Se usa en páginas de detalle con rutas de dos o tres niveles. No se usa en la home ni en dashboards. Por defecto, la página actual no enlaza y declara `aria-current="page"`; los nombres largos pueden envolver en mobile. En el detalle de un comercio, el breadcrumb muestra solamente los dos ancestros navegables (`Comercios > actividad comercial`) porque el nombre del comercio ya es el título de la pantalla. No se agrega un icono de inicio porque el texto ya comunica el destino y el separador no necesita exponerse a tecnologías asistivas.
+Se usa en páginas de detalle con rutas de dos o tres niveles. No se usa en la home. Por defecto, la página actual no enlaza y declara `aria-current="page"`; los nombres largos pueden envolver en mobile. En el detalle de un comercio, el breadcrumb muestra solamente los dos ancestros navegables (`Comercios > actividad comercial`) porque el nombre del comercio ya es el título de la pantalla. No se agrega un icono de inicio porque el texto ya comunica el destino y el separador no necesita exponerse a tecnologías asistivas.
 
 ## Formato monetario
 

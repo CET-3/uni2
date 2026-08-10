@@ -14,7 +14,7 @@
         <li class="nav-item"><a class="nav-link py-1" href="#patrones">Patrones</a></li>
         <li class="nav-item"><a class="nav-link py-1" href="#paginas">Páginas</a></li>
         <li class="nav-item"><a class="nav-link py-1" href="#django">Django</a></li>
-        <li class="nav-item ms-auto"><a class="nav-link py-1" href="{% url 'web:inicio' %}">Ver sitio</a></li>
+        <li class="nav-item ms-auto"><a class="nav-link py-1" href="{% url 'web:home' %}">Ver sitio</a></li>
     </ul>
     </div>
 </nav>
@@ -494,7 +494,7 @@
                     {% include "components/breadcrumbs.html" with home_url="#componentes" parent_url="#componentes" parent_label="Productos y servicios" current_label="Fotocopias e impresiones" aria_label="Ruta de navegación de ejemplo" only %}
                     <hr>
                     <ul class="small text-muted mb-0">
-                        <li>Se usa en páginas de detalle, no en la home ni en dashboards.</li>
+                        <li>Se usa en páginas de detalle, no en la home.</li>
                         <li>La página actual se muestra como texto y usa <code>aria-current="page"</code>.</li>
                         <li>El separador <code>›</code> es decorativo; no se agrega un icono.</li>
                         <li>La ruta recomendada tiene entre dos y tres niveles y puede envolver en mobile.</li>
@@ -520,7 +520,7 @@
         <!-- HERO -->
         <div class="col-12">
             <p class="h6 text-muted mb-2">Hero</p>
-            <p class="small text-muted mb-3"><code>.uni2-hero</code> — sección de apertura con eyebrow, título y acciones. Aparece en la home y en todos los dashboards.</p>
+            <p class="small text-muted mb-3"><code>.uni2-hero</code> — sección de apertura con eyebrow, título y acciones. La home cambia su contenido según la experiencia elegida.</p>
             <div class="card">
                 <div class="card-body p-0 overflow-hidden" style="border-radius:var(--bs-card-border-radius)">
                     <section class="uni2-hero">
@@ -543,7 +543,7 @@
         <!-- SERVICE CARD -->
         <div class="col-12">
             <p class="h6 text-muted mb-2">Service Card</p>
-            <p class="small text-muted mb-3"><code>.uni2-service-card</code> + variante de color — tarjeta de acceso o servicio. Usada en la home, comercios y dashboards.</p>
+            <p class="small text-muted mb-3"><code>.uni2-service-card</code> + variante de color — tarjeta de acceso o servicio. Usada en la home y en páginas de detalle.</p>
             <div class="card">
                 <div class="card-body">
                     <div class="row g-3">
@@ -676,7 +676,7 @@
         <!-- 1. SERVICIOS QUE SUMAN -->
         <div>
             <p class="h6 text-muted mb-2">Servicios que suman</p>
-            <p class="small text-muted mb-3">Heading + grid de service cards. Include <code>includes/servicios_grid.html</code>. Aparece en la home y en los dashboards.</p>
+            <p class="small text-muted mb-3">Heading + grid de service cards. Include <code>includes/servicios_grid.html</code>. Aparece en todas las variantes de la home.</p>
             <div class="border rounded-3 p-4 bg-body">
                 <div class="uni2-section-heading">
                     <div><h2 class="uni2-titulo-seccion">Servicios que suman</h2></div>
@@ -980,10 +980,10 @@
             </div>
         </div>
 
-        <!-- PANEL DE ASOCIADO -->
+        <!-- HOME CON EXPERIENCIA DE ASOCIADO -->
         <div>
-            <p class="h6 text-muted mb-1">Panel del asociado</p>
-            <p class="small text-muted mb-3">Template: <code>asociados/dashboard.html</code> · URL: <code>/asociado/panel/</code></p>
+            <p class="h6 text-muted mb-1">Home del asociado</p>
+            <p class="small text-muted mb-3">Template: <code>web/home.html</code> · URL: <code>/?perfil=asociado</code></p>
             <div class="d-flex flex-column gap-2">
                         <div class="border rounded-3 p-3 bg-body">
                             <p class="small fw-semibold mb-1">Hero compacto</p>
@@ -1000,10 +1000,10 @@
             </div>
         </div>
 
-        <!-- PANEL DE GESTIÓN -->
+        <!-- HOME CON EXPERIENCIA DE GESTIÓN -->
         <div>
-            <p class="h6 text-muted mb-1">Panel de gestión</p>
-            <p class="small text-muted mb-3">Template: <code>gestion/dashboard.html</code> · URL: <code>/gestion/</code></p>
+            <p class="h6 text-muted mb-1">Home de administración</p>
+            <p class="small text-muted mb-3">Template: <code>web/home.html</code> · URL: <code>/?perfil=gestion</code></p>
             <div class="d-flex flex-column gap-2">
                         <div class="border rounded-3 p-3 bg-body">
                             <p class="small fw-semibold mb-1">Hero compacto</p>
@@ -1024,10 +1024,10 @@
             </div>
         </div>
 
-        <!-- PANEL DE COMERCIO -->
+        <!-- HOME CON EXPERIENCIA DE COMERCIO -->
         <div>
-            <p class="h6 text-muted mb-1">Panel del comercio</p>
-            <p class="small text-muted mb-3">Template: <code>comercios/dashboard.html</code> · URL: <code>/comercio/panel/</code></p>
+            <p class="h6 text-muted mb-1">Home del comercio</p>
+            <p class="small text-muted mb-3">Template: <code>web/home.html</code> · URL: <code>/?perfil=comercio</code></p>
             <div class="d-flex flex-column gap-2">
                 <div class="border rounded-3 p-3 bg-body">
                     <p class="small fw-semibold mb-1">Hero compacto</p>
@@ -1070,7 +1070,7 @@
     </div>
 
     <div class="mt-4">
-        <p class="small fw-semibold mb-2">Uso en <code>web/home.html</code> y <code>asociados/dashboard.html</code></p>
+        <p class="small fw-semibold mb-2">Uso en <code>web/home.html</code></p>
         <pre class="bg-body-tertiary border rounded p-3 small mb-0"><code>{% verbatim %}{% include 'includes/servicios_grid.html' %}
 {% include 'includes/beneficios_grid.html' %}
 {% include 'includes/publicidades_grid.html' %}{% endverbatim %}</code></pre>

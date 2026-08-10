@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container py-3">
-  {% url "web:inicio" as breadcrumb_comercios_url %}
+  {% url "web:home" as breadcrumb_comercios_url %}
   {% include "components/breadcrumbs.html" with hide_home=True parent_url=breadcrumb_comercios_url parent_fragment="beneficios" parent_label="Comercios" current_label=actividad_comercial.nombre only %}
 </div>
 

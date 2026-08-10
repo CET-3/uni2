@@ -18,20 +18,20 @@
                 {% if user.is_authenticated %}
                     {% if cantidad_experiencias > 1 %}
                         {% if tiene_perfil_asociado %}
-                            <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'asociados:dashboard' %}">Mi panel</a></li>
+                            <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:home' %}?perfil=asociado">Mi cuenta de asociado</a></li>
                         {% endif %}
                         {% if tiene_gestion %}
-                            <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'gestion:dashboard' %}">Panel de gestión</a></li>
+                            <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:home' %}?perfil=gestion">Administración</a></li>
                         {% endif %}
                         {% if tiene_perfil_comercio %}
-                            <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'comercios:dashboard' %}">Mi comercio</a></li>
+                            <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:home' %}?perfil=comercio">Mi comercio</a></li>
                         {% endif %}
                     {% elif tiene_gestion %}
-                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'gestion:dashboard' %}">Panel de gestión</a></li>
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:home' %}?perfil=gestion">Administración</a></li>
                     {% elif tiene_perfil_asociado %}
-                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'asociados:dashboard' %}">Mi panel</a></li>
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:home' %}?perfil=asociado">Mi cuenta de asociado</a></li>
                     {% elif tiene_perfil_comercio %}
-                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'comercios:dashboard' %}">Mi comercio</a></li>
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:home' %}?perfil=comercio">Mi comercio</a></li>
                     {% endif %}
                     {% if es_staff %}
                         <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'admin:index' %}">Admin técnico</a></li>
@@ -42,7 +42,6 @@
                     {% if perms.gestion.ver_design_system %}
                         <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:design-system' %}">Design system</a></li>
                     {% endif %}
-                    <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:inicio' %}">Sitio público</a></li>
                     <li class="nav-item d-lg-none js-pwa-install-item" hidden>
                         <button class="nav-link uni2-mobile-nav-button js-pwa-install-trigger" type="button">
                             <i class="bi bi-download me-2" aria-hidden="true"></i>Instalar {{ pwa_short_name }}
@@ -71,23 +70,23 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end uni2-user-menu">
                             <li class="uni2-user-menu-section">
-                                <span class="uni2-user-menu-label">Paneles</span>
+                                <span class="uni2-user-menu-label">Experiencias</span>
                                 {% if cantidad_experiencias > 1 %}
                                     {% if tiene_perfil_asociado %}
-                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'asociados:dashboard' %}"><i class="bi bi-person-badge" aria-hidden="true"></i><span>Mi panel</span></a>
+                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:home' %}?perfil=asociado"><i class="bi bi-person-badge" aria-hidden="true"></i><span>Mi cuenta de asociado</span></a>
                                     {% endif %}
                                     {% if tiene_gestion %}
-                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'gestion:dashboard' %}"><i class="bi bi-speedometer2" aria-hidden="true"></i><span>Panel de gestión</span></a>
+                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:home' %}?perfil=gestion"><i class="bi bi-speedometer2" aria-hidden="true"></i><span>Administración</span></a>
                                     {% endif %}
                                     {% if tiene_perfil_comercio %}
-                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'comercios:dashboard' %}"><i class="bi bi-shop" aria-hidden="true"></i><span>Mi comercio</span></a>
+                                        <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:home' %}?perfil=comercio"><i class="bi bi-shop" aria-hidden="true"></i><span>Mi comercio</span></a>
                                     {% endif %}
                                 {% elif tiene_gestion %}
-                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'gestion:dashboard' %}"><i class="bi bi-speedometer2" aria-hidden="true"></i><span>Panel de gestión</span></a>
+                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:home' %}?perfil=gestion"><i class="bi bi-speedometer2" aria-hidden="true"></i><span>Administración</span></a>
                                 {% elif tiene_perfil_asociado %}
-                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'asociados:dashboard' %}"><i class="bi bi-person-badge" aria-hidden="true"></i><span>Mi panel</span></a>
+                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:home' %}?perfil=asociado"><i class="bi bi-person-badge" aria-hidden="true"></i><span>Mi cuenta de asociado</span></a>
                                 {% elif tiene_perfil_comercio %}
-                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'comercios:dashboard' %}"><i class="bi bi-shop" aria-hidden="true"></i><span>Mi comercio</span></a>
+                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:home' %}?perfil=comercio"><i class="bi bi-shop" aria-hidden="true"></i><span>Mi comercio</span></a>
                                 {% endif %}
                             </li>
                             {% if es_staff or perms.gestion.ver_especificacion or perms.gestion.ver_design_system %}
@@ -108,7 +107,6 @@
                             <li><hr class="dropdown-divider"></li>
                             <li class="uni2-user-menu-section">
                                 <span class="uni2-user-menu-label">Cuenta</span>
-                                <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:inicio' %}"><i class="bi bi-globe" aria-hidden="true"></i><span>Sitio público</span></a>
                                 <button class="dropdown-item uni2-user-menu-link js-pwa-install-trigger js-pwa-install-item" type="button" hidden>
                                     <i class="bi bi-download" aria-hidden="true"></i><span>Instalar {{ pwa_short_name }}</span>
                                 </button>

@@ -29,16 +29,6 @@ class ValidarCredencialForm(forms.Form):
     token = forms.UUIDField(label="Token de credencial")
 
 
-class ComercioDashboardView(ComercioRequiredMixin, TemplateView):
-    template_name = "comercios/dashboard.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        comercio = self.request.user.comercio
-        context["comercio"] = comercio
-        return context
-
-
 class ValidarCredencialView(ComercioRequiredMixin, FormView):
     template_name = "comercios/validar_credencial.html"
     form_class = ValidarCredencialForm

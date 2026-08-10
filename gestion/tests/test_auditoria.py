@@ -31,7 +31,7 @@ def test_auditoria_rechaza_usuario_sin_permiso_y_oculta_acceso(client):
     usuario = crear_usuario_con_permisos("sin_auditoria", [GESTION_DASHBOARD])
     client.force_login(usuario)
 
-    dashboard = client.get(reverse("gestion:dashboard"))
+    dashboard = client.get(reverse("web:home"))
     auditoria = client.get(reverse("gestion:auditoria"))
 
     assert dashboard.status_code == 200
@@ -54,7 +54,7 @@ def test_auditoria_muestra_acceso_y_eventos_con_permiso(client):
     )
     client.force_login(usuario)
 
-    dashboard = client.get(reverse("gestion:dashboard"))
+    dashboard = client.get(reverse("web:home"))
     auditoria = client.get(reverse("gestion:auditoria"))
 
     assert reverse("gestion:auditoria") in dashboard.content.decode()
@@ -197,7 +197,7 @@ def test_auditoria_presenta_relaciones_y_campos_en_formato_legible(client):
 
 
 @pytest.mark.django_db
-def test_detalle_asociado_muestra_boton_auditoria_segun_permiso(client):
+def test_detalle_asociado_no_expone_acceso_contextual_a_auditoria(client):
     con_permiso = crear_usuario_con_permisos(
         "detalle_con_auditoria",
         [GESTION_CONSULTAR_ASOCIADOS, GESTION_VER_AUDITORIA],
@@ -215,17 +215,12 @@ def test_detalle_asociado_muestra_boton_auditoria_segun_permiso(client):
         fecha_inicio_cobro="2026-08-01",
     )
     url_detalle = reverse("gestion:asociado_detalle", args=[asociado.pk])
-    url_auditoria = (
-        f'{reverse("gestion:auditoria")}?entidad=asociados.Asociado&amp;objeto_id={asociado.pk}'
-    )
-
     client.force_login(con_permiso)
     contenido_con_permiso = client.get(url_detalle).content.decode()
     client.force_login(sin_permiso)
     contenido_sin_permiso = client.get(url_detalle).content.decode()
 
-    assert "Ver auditoría" in contenido_con_permiso
-    assert url_auditoria in contenido_con_permiso
+    assert "Ver auditoría" not in contenido_con_permiso
     assert "Ver auditoría" not in contenido_sin_permiso
 
 

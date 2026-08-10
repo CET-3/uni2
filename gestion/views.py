@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView
 
@@ -17,7 +17,7 @@ from asociados.importers import (
     import_padron_preview,
 )
 from asociados.models import Asociado
-from asociados.selectors import filter_asociados, get_asociados_for_export
+from asociados.selectors import get_asociados_for_export
 from asociados.services import actualizar_asociado
 from cuotas.importers import (
     CUOTAS_HISTORICAS_SESSION_KEY,
@@ -52,6 +52,7 @@ from .forms import (
     FiltroAsociadosForm,
     PeriodoCuotaForm,
 )
+from .navigation import add_asociados_return, get_asociado_detail_url, get_asociados_return_url
 from .permissions import (
     GESTION_ADMINISTRAR_PERIODOS_CUOTA,
     GESTION_COBRAR_CUOTAS,
@@ -79,10 +80,6 @@ class GestionPermissionRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
         if self.permission_required is None:
             return user_has_any_gestion_permission(self.request.user)
         return self.request.user.has_perm(self.permission_required)
-
-
-class GestionDashboardView(GestionPermissionRequiredMixin, TemplateView):
-    template_name = "gestion/dashboard.html"
 
 
 class GestionAuditoriaView(GestionPermissionRequiredMixin, TemplateView):
@@ -158,30 +155,24 @@ class GestionAsociadoNuevoView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/asociado_form.html"
     permission_required = GESTION_EDITAR_ASOCIADOS
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.method == "POST":
-            form = AsociadoAltaForm(request.POST)
-            if form.is_valid():
-                asociado = form.save(actor=request.user)
-                cuotas_generadas = generar_cuotas_iniciales_para_asociado(
-                    asociado=asociado,
-                    fecha_referencia=asociado.fecha_alta,
-                    actor=request.user,
-                )
-                if cuotas_generadas:
-                    messages.success(
-                        request,
-                        f"Asociado creado correctamente. Se generaron {len(cuotas_generadas)} cuotas iniciales.",
-                    )
-                else:
-                    messages.success(request, "Asociado creado correctamente. No se generaron cuotas iniciales.")
-                if request.user.has_perm(GESTION_COBRAR_CUOTAS):
-                    return redirect(f"{reverse('gestion:cobros')}?asociado={asociado.id}")
-                return redirect("gestion:asociado_detalle", asociado_id=asociado.id)
-            request._asociado_form = form
-        return super().dispatch(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
+        form = AsociadoAltaForm(request.POST)
+        if form.is_valid():
+            asociado = form.save(actor=request.user)
+            cuotas_generadas = generar_cuotas_iniciales_para_asociado(
+                asociado=asociado,
+                fecha_referencia=asociado.fecha_alta,
+                actor=request.user,
+            )
+            if cuotas_generadas:
+                messages.success(
+                    request,
+                    f"Asociado creado correctamente. Se generaron {len(cuotas_generadas)} cuotas iniciales.",
+                )
+            else:
+                messages.success(request, "Asociado creado correctamente. No se generaron cuotas iniciales.")
+            return redirect("gestion:asociado_detalle", asociado_id=asociado.id)
+        request._asociado_form = form
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
 
@@ -484,8 +475,16 @@ class GestionAsociadoDetalleView(GestionPermissionRequiredMixin, TemplateView):
         context["cuotas_anio_actual"] = cuotas_anio_actual
         pagos_recientes = Pago.objects.filter(asociado=asociado).order_by("-fecha", "-id")[:10]
         context["pagos_recientes"] = [describir_pago(pago) for pago in pagos_recientes]
-        context["cobro_url"] = f"{reverse('gestion:cobros')}?asociado={asociado.id}"
-        context["cuotas_url"] = reverse("gestion:asociado_cuotas", args=[asociado.id])
+        return_url = get_asociados_return_url(self.request)
+        context["return_url"] = return_url
+        context["edit_url"] = add_asociados_return(
+            reverse("gestion:asociado_editar", args=[asociado.id]),
+            return_url,
+        )
+        context["cobro_url"] = add_asociados_return(
+            f"{reverse('gestion:cobros')}?asociado={asociado.id}",
+            return_url,
+        )
         return context
 
 
@@ -515,21 +514,20 @@ class GestionAsociadoEditarView(GestionPermissionRequiredMixin, TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         self.asociado = get_object_or_404(Asociado, id=kwargs["asociado_id"])
-        if request.method == "POST":
-            form = AsociadoGestionForm(request.POST, instance=self.asociado)
-            if form.is_valid():
-                actualizar_asociado(
-                    asociado=self.asociado,
-                    datos=form.cleaned_data,
-                    campos_modificados=form.changed_data,
-                    actor=request.user,
-                )
-                messages.success(request, "Asociado actualizado correctamente.")
-                return redirect("gestion:asociado_detalle", asociado_id=self.asociado.id)
-            request._asociado_form = form
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        form = AsociadoGestionForm(request.POST, instance=self.asociado)
+        if form.is_valid():
+            actualizar_asociado(
+                asociado=self.asociado,
+                datos=form.cleaned_data,
+                campos_modificados=form.changed_data,
+                actor=request.user,
+            )
+            messages.success(request, "Asociado actualizado correctamente.")
+            return redirect(get_asociado_detail_url(self.asociado.id, get_asociados_return_url(request)))
+        request._asociado_form = form
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
 
@@ -537,6 +535,8 @@ class GestionAsociadoEditarView(GestionPermissionRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["asociado"] = self.asociado
         context["form"] = getattr(self.request, "_asociado_form", AsociadoGestionForm(instance=self.asociado))
+        context["return_url"] = get_asociados_return_url(self.request)
+        context["detail_url"] = get_asociado_detail_url(self.asociado.id, context["return_url"])
         return context
 
 
@@ -564,41 +564,55 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
     template_name = "gestion/cobrar_cuotas.html"
     permission_required = GESTION_COBRAR_CUOTAS
 
+    def get(self, request, *args, **kwargs):
+        asociado_id = request.GET.get("asociado")
+        try:
+            asociado_id = int(asociado_id)
+        except (TypeError, ValueError):
+            asociado = None
+        else:
+            asociado = Asociado.objects.filter(id=asociado_id).select_related("curso_actual", "usuario").first()
+        if asociado is None:
+            messages.info(request, "Elegí un asociado desde Atención al asociado para iniciar el cobro.")
+            return redirect("gestion:asociados")
+        request._selected_asociado = asociado
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
+        asociado = None
+        asociado_id = request.POST.get("asociado_id")
+        try:
+            asociado_id = int(asociado_id)
+        except (TypeError, ValueError):
+            pass
+        else:
+            asociado = Asociado.objects.filter(id=asociado_id).first()
+        cuotas_queryset = get_cuotas_deudoras(asociado) if asociado else []
+        form = CobroCuotaForm(request.POST, cuotas_queryset=cuotas_queryset)
+        if form.is_valid():
+            asociado = get_object_or_404(Asociado, id=form.cleaned_data["asociado_id"])
+            try:
+                pago = registrar_pago(
+                    asociado=asociado,
+                    fecha=form.cleaned_data["fecha"],
+                    importe=form.cleaned_data["importe"],
+                    metodo=form.cleaned_data["metodo"],
+                    registrado_por=request.user,
+                    observaciones=form.cleaned_data["observaciones"],
+                    cuotas_ids=form.cleaned_data["cuotas_ids"],
+                )
+            except ValueError as exc:
+                messages.error(request, str(exc))
+                request._cobro_form = form
+                request._selected_asociado = asociado
+            else:
+                messages.success(request, f"Pago #{pago.id} registrado para {asociado.apellido}, {asociado.nombre}.")
+                return redirect(get_asociado_detail_url(asociado.id, get_asociados_return_url(request)))
+        else:
+            request._selected_asociado = asociado
+            request._cobro_form = form
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
-
-    def dispatch(self, request, *args, **kwargs):
-        if request.method == "POST":
-            asociado = None
-            asociado_id = request.POST.get("asociado_id")
-            if asociado_id:
-                asociado = Asociado.objects.filter(id=asociado_id).first()
-            cuotas_queryset = get_cuotas_deudoras(asociado) if asociado else []
-            form = CobroCuotaForm(request.POST, cuotas_queryset=cuotas_queryset)
-            if form.is_valid():
-                asociado = get_object_or_404(Asociado, id=form.cleaned_data["asociado_id"])
-                try:
-                    pago = registrar_pago(
-                        asociado=asociado,
-                        fecha=form.cleaned_data["fecha"],
-                        importe=form.cleaned_data["importe"],
-                        metodo=form.cleaned_data["metodo"],
-                        registrado_por=request.user,
-                        observaciones=form.cleaned_data["observaciones"],
-                        cuotas_ids=form.cleaned_data["cuotas_ids"],
-                    )
-                except ValueError as exc:
-                    messages.error(request, str(exc))
-                    request._cobro_form = form
-                    request._selected_asociado = asociado
-                else:
-                    messages.success(request, f"Pago #{pago.id} registrado para {asociado.apellido}, {asociado.nombre}.")
-                    return redirect(f"{reverse_lazy('gestion:cobros')}?asociado={asociado.id}")
-            else:
-                request._selected_asociado = asociado
-                request._cobro_form = form
-        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -630,6 +644,9 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
             ),
         )
         context["selected_cuotas_ids"] = set(context["cobro_form"].data.getlist("cuotas_ids"))
+        context["return_url"] = get_asociados_return_url(self.request)
+        if selected_asociado:
+            context["detail_url"] = get_asociado_detail_url(selected_asociado.id, context["return_url"])
         return context
 
 

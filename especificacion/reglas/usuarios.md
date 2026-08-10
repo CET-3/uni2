@@ -34,11 +34,11 @@ En el admin técnico de Django, el listado de usuarios debe mostrar los grupos a
 
 ## USUARIO-007
 
-El panel de asociado se habilita por vínculo con `Asociado`, el panel de comercio por vínculo con `Comercio` y el panel de gestión por permisos operativos de la app `gestion`.
+La experiencia de asociado se habilita por vínculo con `Asociado`, la de comercio por vínculo con `Comercio` y la administrativa por permisos operativos de la app `gestion`. Las tres experiencias comparten la misma home y cambian solamente la presentación y los accesos del hero.
 
 ## USUARIO-008
 
-Si un usuario tiene más de una experiencia disponible, luego del login ve una pantalla para elegir entre asociado, comercio y gestión.
+Si un usuario tiene más de una experiencia disponible, luego del login ve en la home el hero `Elegí cómo querés ingresar`. Puede elegir asociado, comercio o administración mediante `?perfil=` sin salir de la home.
 
 ## USUARIO-009
 
@@ -51,7 +51,7 @@ diaria. Puede abrir gestión, consultar y editar datos ordinarios de asociados y
 cobrar cuotas. No puede dar de baja, importar, exportar, consultar deudores,
 administrar períodos ni ver la auditoría general. En la carga inicial, el
 usuario `atencion` también queda vinculado a un asociado de prueba para probar
-el selector de paneles.
+la variante multiperfil de la home.
 
 ## USUARIO-011
 
@@ -89,36 +89,36 @@ superusuario.
 
 El design system del proyecto se sirve en `/design-system/` y requiere el permiso `gestion.ver_design_system`. El enlace "Design system" aparece en el menú de usuario solo cuando la persona tiene ese permiso. Este permiso está separado de `gestion.ver_especificacion`: una cosa es leer la especificación funcional y otra consultar la referencia visual para construir pantallas.
 
-## USUARIO-018 — Inicio inteligente
+## USUARIO-018 — Home única por experiencia
 
-La raíz del sitio (`/`) funciona como inicio inteligente: en lugar de servir siempre la home pública, evalúa la sesión actual y redirige al destino más útil.
+La raíz del sitio (`/`) siempre renderiza la misma home. No redirige a dashboards ni a una pantalla selectora. La sesión actual determina solamente el contenido del hero; las secciones públicas de servicios, beneficios, publicidades y asociación permanecen debajo para todas las variantes.
 
-| Situación | Destino |
+| Situación | Hero |
 |---|---|
-| Visitante sin sesión | Home pública (`web:home`) |
-| Usuario autenticado con 1 experiencia (asociado, gestión o comercio) | Home de esa experiencia |
-| Usuario autenticado con 2+ experiencias | Pantalla Elegir panel |
-| Usuario autenticado sin ninguna experiencia (solo tiene usuario pero sin vínculos) | Home pública (`web:home`) |
+| Visitante sin sesión | Presentación pública con `Sumate` e `Iniciar sesión` |
+| Usuario autenticado con una experiencia | Presentación y hasta dos CTA de esa experiencia |
+| Usuario autenticado con dos o más experiencias, sin `perfil` válido | `Elegí cómo querés ingresar` y hasta dos accesos de perfil |
+| Usuario multiperfil con `?perfil=asociado`, `comercio` o `gestion` autorizado | Presentación de la experiencia elegida |
+| Usuario autenticado sin experiencias | Presentación pública sin CTA de login |
 
 Las experiencias se determinan así:
-- **Asociado**: el usuario tiene un `Asociado` vinculado y pertenece al grupo `Asociados`.
-- **Gestión**: el usuario tiene el permiso `gestion.ver_dashboard_gestion`.
-- **Comercio**: el usuario tiene un `Comercio` vinculado y pertenece al grupo `Comercios`.
 
-El logo de la aplicación (arriba a la izquierda) enlaza a `/`, respetando el mismo criterio de inicio inteligente.
+- **Asociado**: existe un `Asociado` vinculado al usuario.
+- **Comercio**: existe un `Comercio` vinculado al usuario.
+- **Administración**: el usuario tiene al menos un permiso operativo de la app `gestion`.
 
-El enlace "Sitio público" está disponible en el menú de usuario autenticado para acceder a la home pública en cualquier momento.
+El hero admite como máximo dos CTA. Los perfiles o acciones autorizadas restantes se muestran en `Más accesos`, inmediatamente debajo del hero. La selección solicitada por `?perfil=` se acepta solamente si pertenece a las experiencias disponibles; un valor ausente, inválido o no autorizado vuelve al selector multiperfil.
 
-En el MVP el sistema no recuerda el último panel elegido. Cada visita a `/` o al logo vuelve a evaluar las experiencias disponibles.
+El logo y el resultado exitoso del login enlazan a `/`. La selección no se guarda en sesión: cada visita a `/` sin parámetro vuelve a evaluar las experiencias. Ya no existen `/inicio/`, `/paneles/`, `/asociado/panel/`, `/comercio/panel/` ni `/gestion/`, y el menú no necesita un acceso separado llamado `Sitio público`.
 
 ## USUARIO-019 — Matriz inicial de grupos
 
 | Grupo | Gestión propia | Admin técnico | Exclusiones principales |
 |---|---|---|---|
 | Atención al asociado | Consulta y edición ordinaria de asociados; cobros | No requerido | Baja, importaciones, exportación, deudores, períodos y auditoría general |
-| Administrador de permisos | Dashboard y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No modifica la definición de grupos, no edita superusuarios ni puede asignar `Administrador de la app` |
-| Gestión de convenios | Dashboard | Actividades comerciales y comercios | Usuarios, asociados, publicidades y auditoría general |
-| Gestión de publicidades | Dashboard | Categorías, productos/servicios y publicidades; consulta comercios para vincular | Modificación de comercios, usuarios, asociados y auditoría general |
+| Administrador de permisos | Home administrativa y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No modifica la definición de grupos, no edita superusuarios ni puede asignar `Administrador de la app` |
+| Gestión de convenios | Home administrativa | Actividades comerciales y comercios | Usuarios, asociados, publicidades y auditoría general |
+| Gestión de publicidades | Home administrativa | Categorías, productos/servicios y publicidades; consulta comercios para vincular | Modificación de comercios, usuarios, asociados y auditoría general |
 | Administrador de la mutual | Toda la operación regular, reportes y auditoría | Dominios de asociados, cuotas, convenios y contenidos; finanzas en solo lectura; usuarios en consulta | Importaciones masivas, permisos técnicos, superusuarios y borrados |
 | Administrador de la app | Todos los accesos por `is_superuser` | Administración técnica completa con las restricciones de integridad del sistema | No es un rol operativo delegable |
 

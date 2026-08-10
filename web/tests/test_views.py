@@ -103,8 +103,7 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "ds-metric" not in content
     assert "ds-status" not in content
     assert "uni2-service-grid" not in content
-    assert "asociados/dashboard.html" in content
-    assert "gestion/dashboard.html" in content
+    assert "web/home.html" in content
     assert "uni2-info-modal" not in content
     assert 'class="card-body"' in content
     assert 'class="service-grid"' not in content
@@ -713,7 +712,7 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
     assert "Visitar sitio" not in contenido
     assert 'class="uni2-breadcrumbs"' in contenido
     breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
-    assert f'href="{reverse("web:inicio")}#beneficios">Comercios</a>' in breadcrumb
+    assert f'href="{reverse("web:home")}#beneficios">Comercios</a>' in breadcrumb
     assert (
         f'href="{reverse("web:actividad_comercial_detalle", args=[actividad.pk])}">'
         "Librería</a>"
@@ -729,7 +728,7 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
         contenido_pendiente,
         re.DOTALL,
     ).group()
-    assert f'href="{reverse("web:inicio")}#beneficios">Comercios</a>' in breadcrumb_pendiente
+    assert f'href="{reverse("web:home")}#beneficios">Comercios</a>' in breadcrumb_pendiente
     assert (
         f'href="{reverse("web:actividad_comercial_detalle", args=[actividad.pk])}">'
         "Librería</a>"
@@ -913,7 +912,7 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     assert "uni2-discount" in contenido
     assert 'class="uni2-breadcrumbs"' in contenido
     breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
-    assert f'href="{reverse("web:inicio")}#beneficios">Comercios</a>' in breadcrumb
+    assert f'href="{reverse("web:home")}#beneficios">Comercios</a>' in breadcrumb
     assert 'aria-current="page">Gastronomía' in breadcrumb
     assert f'href="{url}">Gastronomía</a>' not in breadcrumb
     assert "Inicio" not in breadcrumb

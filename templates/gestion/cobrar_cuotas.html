@@ -10,10 +10,6 @@
         <h1 class="h2 mb-1">Cobro de cuotas</h1>
         <p class="text-secondary mb-0">Revisá la deuda y registrá el pago del asociado seleccionado.</p>
     </div>
-    <div class="uni2-page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
-        <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
-    </div>
 </div>
 
 {% if selected_asociado %}
@@ -40,9 +36,6 @@
                     <span class="text-secondary small">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</span>
                     <div class="fw-semibold">{{ total_deuda|moneda }}</div>
                 </div>
-                <div class="col-sm-auto">
-                    <a class="btn btn-outline-secondary btn-sm" href="{% url 'gestion:asociado_detalle' selected_asociado.id %}">Ver detalle</a>
-                </div>
             </div>
         </div>
     </div>
@@ -53,6 +46,7 @@
             <form method="post" novalidate>
                 {% csrf_token %}
                 {{ cobro_form.asociado_id }}
+                <input type="hidden" name="volver" value="{{ return_url }}">
                 <h3 class="h6 mb-3">Cuotas a cobrar</h3>
                 <div class="table-responsive mb-3">
                     <table class="table table-soft align-middle mb-0">
@@ -125,8 +119,9 @@
                     </div>
                 </div>
                 {% for error in cobro_form.non_field_errors %}<div class="text-danger small mt-2">{{ error }}</div>{% endfor %}
-                <div class="mt-3">
+                <div class="mt-3 d-flex flex-column flex-sm-row gap-2">
                     <button class="btn btn-primary" type="submit" {% if total_deuda <= 0 %}disabled{% endif %}>Confirmar cobro</button>
+                    <a class="btn btn-outline-primary" href="{{ detail_url }}">Cancelar</a>
                 </div>
             </form>
         </div>
@@ -151,14 +146,6 @@
             updateImporte();
         });
     </script>
-{% else %}
-    <div class="card uni2-surface-card">
-        <div class="card-body">
-            <h2 class="h5 mb-3">Seleccioná un asociado</h2>
-            <p class="text-secondary">Los cobros se inician desde la consulta de asociados para mantener una única búsqueda operativa.</p>
-            <a class="btn btn-primary" href="{% url 'gestion:asociados' %}">Buscar asociado</a>
-        </div>
-    </div>
 {% endif %}
 </div>
 {% endblock %}

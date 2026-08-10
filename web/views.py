@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Prefetch
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, TemplateView
 
@@ -9,7 +8,7 @@ from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
 from contenidos.selectors import get_categorias_productos_servicios_publicas, get_publicidades_home
 from gestion.permissions import GESTION_VER_DESIGN_SYSTEM, user_has_gestion_permission
-from usuarios.services import get_available_experiences
+from usuarios.home_navigation import build_home_navigation
 
 
 class HomeView(TemplateView):
@@ -21,26 +20,11 @@ class HomeView(TemplateView):
         context["publicidades"] = get_publicidades_home()
         context["rubros_beneficio"] = get_rubros_con_comercios()
         context["comercios"] = get_comercios_firmados()[:3]
+        context["home_navigation"] = build_home_navigation(
+            self.request.user,
+            requested_profile=self.request.GET.get("perfil"),
+        )
         return context
-
-
-class SmartStartView(HomeView):
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            experiences = get_available_experiences(request.user)
-            if len(experiences) > 1:
-                return redirect("usuarios:selector_panel")
-            if experiences == ["gestion"]:
-                return redirect("gestion:dashboard")
-            if experiences == ["asociado"]:
-                return redirect("asociados:dashboard")
-            if experiences == ["comercio"]:
-                return redirect("comercios:dashboard")
-        return super().dispatch(request, *args, **kwargs)
-
-
-class PublicHomeView(HomeView):
-    pass
 
 
 class ProductosServiciosPublicosView(TemplateView):

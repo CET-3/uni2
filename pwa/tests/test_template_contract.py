@@ -146,6 +146,6 @@ def test_logout_esta_marcado_para_limpiar_credencial_privada(client):
     )
     client.force_login(asociado.usuario)
 
-    content = client.get(reverse("asociados:dashboard")).content.decode()
+    content = client.get(reverse("web:home")).content.decode()
 
     assert content.count("data-pwa-logout") >= 2

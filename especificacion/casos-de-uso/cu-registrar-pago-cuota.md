@@ -10,12 +10,12 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Actor:** Gestión con permiso para cobrar cuotas.
 
-**Alcance:** el cobro no tiene búsqueda propia de asociados. La búsqueda se realiza en [CU-consultar-asociados](../casos-de-uso/cu-consultar-asociados.md) y desde allí se accede a registrar el pago del asociado seleccionado.
+**Alcance:** el cobro no tiene búsqueda propia de asociados. La búsqueda se realiza en [CU-consultar-asociados](../casos-de-uso/cu-consultar-asociados.md), se revisa el detalle y desde allí se accede a registrar el pago del asociado seleccionado.
 
 **Flujo principal:**
 
 1.  Busca el asociado desde la consulta operativa de asociados.
-2.  Selecciona la acción de cobrar.
+2.  Abre el detalle y selecciona `Cobrar`.
 3.  El sistema muestra las cuotas pendientes del asociado, ordenadas de la más vieja a la más nueva.
 4.  Para cada cuota pendiente, el sistema muestra período, importe original, recargo aplicable a la fecha de cobro, total exigible actual, importe pagado, saldo a cubrir y estado.
 5.  La persona de gestión selecciona una o más cuotas para cobrar.
@@ -28,6 +28,9 @@ timestamp: 2026-06-22T00:00:00-03:00
 12. Actualiza las cuotas seleccionadas como pagadas.
 13. Crea `PagoCuota` por cada cuota cubierta.
 14. Si el importe recibido supera el mínimo calculado, registra el excedente como `Donacion`.
+15. El sistema muestra la confirmación y vuelve al detalle del asociado.
+
+**Cancelación y errores:** `Cancelar` vuelve al detalle sin registrar cambios. Un formulario inválido permanece en cobro y conserva el asociado, las cuotas elegidas y los datos ingresados. Si se abre la ruta de cobros sin asociado, el sistema redirige a `Atención al asociado` con un mensaje orientativo.
 
 **Reglas relacionadas:** [Pagos](../reglas/pagos.md).
 
