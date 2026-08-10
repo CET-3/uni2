@@ -8,13 +8,18 @@
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
         <div>
             <h1 class="h2 mb-1">Auditoría de gestión</h1>
-            <p class="text-secondary mb-0">Historial de operaciones registradas por Uni2.</p>
+            {% if asociado_auditado %}
+                <p class="text-secondary mb-0">Movimientos relacionados con {{ asociado_auditado }}.</p>
+            {% else %}
+                <p class="text-secondary mb-0">Historial de operaciones registradas por Uni2.</p>
+            {% endif %}
         </div>
-        <a class="btn btn-outline-primary" href="{% url 'gestion:dashboard' %}">Volver al panel</a>
+        <a class="btn btn-outline-primary" href="{% url 'web:home' %}?perfil=gestion">Volver al inicio</a>
     </div>
 
     <form method="get" class="card uni2-surface-card mb-4">
         <div class="card-body">
+            {% if asociado_auditado %}<input type="hidden" name="asociado_id" value="{{ asociado_auditado.id }}">{% endif %}
             <div class="row g-3 align-items-end">
                 <div class="col-md-6 col-lg-3">
                     <label class="form-label" for="{{ form.actor.id_for_label }}">{{ form.actor.label }}</label>
@@ -57,37 +62,7 @@
     </form>
 
     {% if page_obj %}
-        <div class="uni2-audit-list">
-            {% for operacion in page_obj %}
-                {% if operacion.es_compuesta %}
-                    <section class="uni2-audit-operation" aria-labelledby="operacion-{{ operacion.operacion_id }}">
-                        <header class="uni2-audit-operation-header">
-                            <div class="uni2-audit-operation-title">
-                                <span class="uni2-audit-operation-icon" aria-hidden="true">
-                                    <i class="bi bi-layers"></i>
-                                </span>
-                                <div>
-                                    <h2 id="operacion-{{ operacion.operacion_id }}">{{ operacion.titulo }}</h2>
-                                    <p>
-                                        {{ operacion.eventos.0|actor_evento_auditoria }} ·
-                                        {{ operacion.eventos|length }} eventos relacionados ·
-                                        {{ operacion.fecha|date:"d/m/Y" }} {{ operacion.fecha|date:"H:i" }}
-                                    </p>
-                                </div>
-                            </div>
-                            <span class="uni2-audit-operation-id">Operación {{ operacion.operacion_id }}</span>
-                        </header>
-                        <div class="uni2-audit-operation-events">
-                            {% for evento in operacion.eventos %}
-                                {% include "gestion/_evento_auditoria.html" with evento=evento evento_agrupado=True only %}
-                            {% endfor %}
-                        </div>
-                    </section>
-                {% else %}
-                    {% include "gestion/_evento_auditoria.html" with evento=operacion.eventos.0 only %}
-                {% endif %}
-            {% endfor %}
-        </div>
+        {% include "gestion/_lista_operaciones_auditoria.html" with operaciones=page_obj only %}
 
         {% if page_obj.has_other_pages %}
             <nav class="mt-4" aria-label="Paginación de auditoría">

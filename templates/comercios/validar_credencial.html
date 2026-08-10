@@ -9,14 +9,14 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <h1 class="h3 mb-3">Validar credencial</h1>
-                    <p class="text-secondary">Ingresá el token de la credencial para verificar su validez.</p>
+                    <p class="text-secondary">Ingresá el DNI del asociado o el token escrito en la credencial.</p>
                     <form method="post">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label class="form-label" for="{{ form.token.id_for_label }}">{{ form.token.label }}</label>
-                            {{ form.token }}
-                            {% if form.token.errors %}
-                                <div class="text-danger small mt-1">{{ form.token.errors|join:", " }}</div>
+                            <label class="form-label fw-semibold" for="{{ form.identificador.id_for_label }}">{{ form.identificador.label }}</label>
+                            {{ form.identificador }}
+                            {% if form.identificador.errors %}
+                                <div class="text-danger small mt-1">{{ form.identificador.errors|join:", " }}</div>
                             {% endif %}
                         </div>
                         <button class="btn btn-primary" type="submit">Validar</button>

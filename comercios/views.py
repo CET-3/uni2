@@ -26,17 +26,17 @@ class ComercioRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 
 class ValidarCredencialForm(forms.Form):
-    token = forms.UUIDField(label="Token de credencial")
-
-
-class ComercioDashboardView(ComercioRequiredMixin, TemplateView):
-    template_name = "comercios/dashboard.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        comercio = self.request.user.comercio
-        context["comercio"] = comercio
-        return context
+    identificador = forms.CharField(
+        label="DNI o token de credencial",
+        max_length=64,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "autocomplete": "off",
+                "placeholder": "Ej. 40123456 o UUID de la credencial",
+            }
+        ),
+    )
 
 
 class ValidarCredencialView(ComercioRequiredMixin, FormView):
@@ -46,7 +46,10 @@ class ValidarCredencialView(ComercioRequiredMixin, FormView):
     def form_valid(self, form):
         comercio = self.request.user.comercio
         try:
-            resultado = validar_credencial(comercio=comercio, token=form.cleaned_data["token"])
+            resultado = validar_credencial(
+                comercio=comercio,
+                identificador=form.cleaned_data["identificador"],
+            )
         except ValueError as exc:
             messages.error(self.request, str(exc))
             return self.form_invalid(form)

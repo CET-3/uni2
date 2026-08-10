@@ -11,7 +11,7 @@ from usuarios.services import COMERCIO_GROUP
 
 
 @pytest.mark.django_db
-def test_login_redirige_a_panel_asociado(client):
+def test_login_redirige_a_home_con_variante_asociado(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="aso", password="secreto123")
     asociado = create_asociado(
@@ -30,11 +30,21 @@ def test_login_redirige_a_panel_asociado(client):
     )
 
     assert response.status_code == 302
-    assert response.url == reverse("asociados:dashboard")
+    assert response.url == reverse("web:home")
+
+
+def test_login_presenta_controles_claros_y_autocompletables(client):
+    response = client.get(reverse("usuarios:login"))
+    content = response.content.decode()
+
+    assert 'class="form-control"' in content
+    assert 'autocomplete="username"' in content
+    assert 'autocomplete="current-password"' in content
+    assert "Ingresar a Uni2" in content
 
 
 @pytest.mark.django_db
-def test_login_redirige_a_panel_comercio(client):
+def test_login_redirige_a_home_con_variante_comercio(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="com", password="secreto123")
     actividad = ActividadComercial.objects.create(nombre="Libreria")
@@ -52,7 +62,7 @@ def test_login_redirige_a_panel_comercio(client):
     )
 
     assert response.status_code == 302
-    assert response.url == reverse("comercios:dashboard")
+    assert response.url == reverse("web:home")
 
 
 @pytest.mark.django_db
@@ -72,7 +82,7 @@ def test_login_usuario_con_grupo_comercio_sin_perfil_redirige_a_home(client):
 
 
 @pytest.mark.django_db
-def test_login_usuario_con_permiso_redirige_a_dashboard_de_gestion(client):
+def test_login_usuario_con_permiso_redirige_a_home(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(
         username="admin_gestion",
@@ -87,11 +97,11 @@ def test_login_usuario_con_permiso_redirige_a_dashboard_de_gestion(client):
     )
 
     assert response.status_code == 302
-    assert response.url == reverse("gestion:dashboard")
+    assert response.url == reverse("web:home")
 
 
 @pytest.mark.django_db
-def test_login_con_asociado_y_permiso_gestion_redirige_a_selector(client):
+def test_login_con_asociado_y_permiso_gestion_redirige_a_home(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="aso_gestion", password="secreto123")
     asociado = create_asociado(
@@ -115,18 +125,18 @@ def test_login_con_asociado_y_permiso_gestion_redirige_a_selector(client):
     )
 
     assert response.status_code == 302
-    assert response.url == reverse("usuarios:selector_panel")
+    assert response.url == reverse("web:home")
 
 
 @pytest.mark.django_db
-def test_smart_start_muestra_home_publica_sin_sesion(client):
+def test_home_muestra_variante_publica_sin_sesion(client):
     response = client.get(reverse("web:home"))
     assert response.status_code == 200
     assert "UNI2" in response.content.decode()
 
 
 @pytest.mark.django_db
-def test_smart_start_redirige_a_asociado_con_esa_experiencia(client):
+def test_home_muestra_variante_asociado_con_esa_experiencia(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="aso_smart", password="secreto123")
     asociado = create_asociado(nombre="S", apellido="Mart", dni="46111999", tipo="asociado", fecha_alta="2026-06-01")
@@ -136,12 +146,16 @@ def test_smart_start_redirige_a_asociado_con_esa_experiencia(client):
     client.force_login(user)
     response = client.get(reverse("web:home"))
 
-    assert response.status_code == 302
-    assert response.url == reverse("asociados:dashboard")
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Hola, S." in content
+    assert "Mi credencial" in content
+    assert "Mis cuotas" in content
+    assert "Cómo ser parte de nuestra comunidad" in content
 
 
 @pytest.mark.django_db
-def test_smart_start_redirige_a_gestion_con_esa_experiencia(client):
+def test_home_muestra_variante_gestion_con_esa_experiencia(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="gest_smart", password="secreto123")
     permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_dashboard_gestion")
@@ -150,12 +164,14 @@ def test_smart_start_redirige_a_gestion_con_esa_experiencia(client):
     client.force_login(user)
     response = client.get(reverse("web:home"))
 
-    assert response.status_code == 302
-    assert response.url == reverse("gestion:dashboard")
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Panel de gestión" in content
+    assert "Cómo ser parte de nuestra comunidad" in content
 
 
 @pytest.mark.django_db
-def test_smart_start_redirige_a_comercio_con_esa_experiencia(client):
+def test_home_muestra_variante_comercio_con_esa_experiencia(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="com_smart", password="secreto123")
     actividad = ActividadComercial.objects.create(nombre="Libros")
@@ -164,12 +180,15 @@ def test_smart_start_redirige_a_comercio_con_esa_experiencia(client):
     client.force_login(user)
     response = client.get(reverse("web:home"))
 
-    assert response.status_code == 302
-    assert response.url == reverse("comercios:dashboard")
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Libreria" in content
+    assert "Validar credencial" in content
+    assert "Cómo ser parte de nuestra comunidad" in content
 
 
 @pytest.mark.django_db
-def test_smart_start_redirige_a_selector_con_dos_experiencias(client):
+def test_home_muestra_selector_con_dos_experiencias(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="multi_smart", password="secreto123")
     asociado = create_asociado(nombre="M", apellido="Ulti", dni="47111999", tipo="asociado", fecha_alta="2026-06-01")
@@ -181,12 +200,16 @@ def test_smart_start_redirige_a_selector_con_dos_experiencias(client):
     client.force_login(user)
     response = client.get(reverse("web:home"))
 
-    assert response.status_code == 302
-    assert response.url == reverse("usuarios:selector_panel")
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Elegí cómo querés ingresar" in content
+    assert "Hola" not in content
+    assert "Mi cuenta de asociado" in content
+    assert "Administración" in content
 
 
 @pytest.mark.django_db
-def test_smart_start_muestra_home_publica_sin_experiencias(client):
+def test_home_muestra_variante_publica_sin_experiencias(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="sin_exp", password="secreto123")
 
@@ -197,7 +220,7 @@ def test_smart_start_muestra_home_publica_sin_experiencias(client):
 
 
 @pytest.mark.django_db
-def test_selector_panel_muestra_experiencias_disponibles(client):
+def test_home_permite_elegir_una_experiencia_disponible(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="selector", password="secreto123")
     asociado = create_asociado(
@@ -213,12 +236,81 @@ def test_selector_panel_muestra_experiencias_disponibles(client):
     user.user_permissions.add(permiso)
 
     client.force_login(user)
-    response = client.get(reverse("usuarios:selector_panel"))
+    response = client.get(reverse("web:home"), {"perfil": "asociado"})
 
     assert response.status_code == 200
     content = response.content.decode()
-    assert "Mi cuenta de asociado" in content
-    assert "Gestión" in content
+    assert "Hola, Noa." in content
+    assert "Mi credencial" in content
+    assert "Elegí cómo querés ingresar" not in content
+
+
+@pytest.mark.django_db
+def test_home_multiperfil_limita_el_hero_a_dos_cta_y_muestra_el_tercero_debajo(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="tres_perfiles", password="secreto123")
+    asociado = create_asociado(
+        nombre="Tres",
+        apellido="Perfiles",
+        dni="42111998",
+        tipo="asociado",
+        fecha_alta="2026-05-10",
+    )
+    asociado.usuario = user
+    asociado.save(update_fields=["usuario"])
+    actividad = ActividadComercial.objects.create(nombre="Servicios")
+    Comercio.objects.create(
+        nombre="Comercio múltiple",
+        actividad_comercial=actividad,
+        usuario=user,
+    )
+    permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_dashboard_gestion")
+    user.user_permissions.add(permiso)
+
+    client.force_login(user)
+    response = client.get(reverse("web:home"))
+
+    navigation = response.context["home_navigation"]
+    assert response.status_code == 200
+    assert navigation["variant"] == "multiperfil"
+    assert [action.label for action in navigation["primary_actions"]] == [
+        "Mi cuenta de asociado",
+        "Mi comercio",
+    ]
+    assert [action.label for action in navigation["extra_actions"]] == ["Administración"]
+    assert "Más accesos" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_home_multiperfil_rechaza_un_perfil_no_disponible(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="perfil_invalido", password="secreto123")
+    asociado = create_asociado(
+        nombre="Perfil",
+        apellido="Inválido",
+        dni="42111997",
+        tipo="asociado",
+        fecha_alta="2026-05-10",
+    )
+    asociado.usuario = user
+    asociado.save(update_fields=["usuario"])
+    permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_dashboard_gestion")
+    user.user_permissions.add(permiso)
+
+    client.force_login(user)
+    response = client.get(reverse("web:home"), {"perfil": "comercio"})
+
+    assert response.context["home_navigation"]["variant"] == "multiperfil"
+    assert "Elegí cómo querés ingresar" in response.content.decode()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "path",
+    ["/inicio/", "/paneles/", "/comercio/panel/"],
+)
+def test_rutas_anteriores_de_inicio_y_paneles_fueron_retiradas(client, path):
+    assert client.get(path).status_code == 404
 
 
 @pytest.mark.django_db
@@ -241,18 +333,18 @@ def test_navbar_muestra_nombre_y_panel_unico(client):
     asociado.save(update_fields=["usuario"])
 
     client.force_login(user)
-    response = client.get(reverse("web:inicio"))
+    response = client.get(reverse("web:home"))
 
     assert response.status_code == 200
     content = response.content.decode()
     assert "Ana Perez" in content
     assert "dropdown-menu" in content
-    assert "Mi panel" in content
+    assert "Mi cuenta de asociado" in content
     assert "Cambiar panel" not in content
 
 
 @pytest.mark.django_db
-def test_navbar_muestra_cambiar_panel_si_hay_mas_de_una_experiencia(client):
+def test_navbar_muestra_todas_las_experiencias_disponibles(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(
         username="atencion_nav",
@@ -273,14 +365,14 @@ def test_navbar_muestra_cambiar_panel_si_hay_mas_de_una_experiencia(client):
     user.user_permissions.add(permiso)
 
     client.force_login(user)
-    response = client.get(reverse("web:inicio"))
+    response = client.get(reverse("web:home"))
 
     assert response.status_code == 200
     content = response.content.decode()
     assert "Atención Mutual" in content
     assert "dropdown-menu" in content
-    assert "Mi panel" in content
-    assert "Panel de gestión" in content
+    assert "Mi cuenta de asociado" in content
+    assert "Administración" in content
     assert "Cambiar panel" not in content
 
 
@@ -295,7 +387,7 @@ def test_navbar_muestra_design_system_si_tiene_permiso(client):
     user.user_permissions.add(permiso)
 
     client.force_login(user)
-    response = client.get(reverse("web:inicio"))
+    response = client.get(reverse("web:home"))
 
     assert response.status_code == 200
     content = response.content.decode()
@@ -322,7 +414,7 @@ def test_navbar_agrupa_herramientas_internas_para_staff(client):
     user.user_permissions.add(*permisos)
 
     client.force_login(user)
-    response = client.get(reverse("web:inicio"))
+    response = client.get(reverse("web:home"))
 
     assert response.status_code == 200
     content = response.content.decode()

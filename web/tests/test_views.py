@@ -7,9 +7,12 @@ from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.staticfiles import finders
 from django.urls import reverse
+from django.utils import timezone
 
+from asociados.models import CicloLectivo
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publicidad
+from cuotas.models import PeriodoCuota
 
 
 @pytest.mark.django_db
@@ -26,10 +29,47 @@ def test_paginas_publicas_responden(client, url_name):
     assert response.status_code == 200
 
 
+@pytest.mark.django_db
+def test_home_muestra_el_importe_del_periodo_actual(client):
+    hoy = timezone.localdate()
+    ciclo = CicloLectivo.objects.create(anio=hoy.year)
+    PeriodoCuota.objects.create(
+        mes=hoy.month,
+        ciclo_lectivo=ciclo,
+        importe="1234.56",
+        fecha_vencimiento=hoy.replace(day=10),
+    )
+
+    contenido = client.get(reverse("web:home")).content.decode()
+
+    assert "$ 1.234,56" in contenido
+    assert "$ 700,00" not in contenido
+
+
+@pytest.mark.django_db
+def test_home_sin_periodos_no_inventa_un_importe(client):
+    contenido = client.get(reverse("web:home")).content.decode()
+
+    assert "Consultá en la mutual el valor actual de la cuota social." in contenido
+    assert "Consultá el valor vigente." in contenido
+
+
 def test_url_beneficios_no_se_mantiene(client):
     response = client.get("/beneficios/")
 
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_navbar_publica_apunta_a_las_secciones_de_la_home(client):
+    content = client.get(reverse("web:home")).content.decode()
+
+    assert f'href="{reverse("web:home")}#productos-servicios"' in content
+    assert f'href="{reverse("web:home")}#beneficios"' in content
+    assert f'href="{reverse("web:productos_servicios")}">Productos y servicios' not in content
+    assert f'href="{reverse("web:comercios")}">Comercios' not in content
+    assert 'id="productos-servicios"' in content
+    assert 'id="beneficios"' in content
 
 
 @pytest.mark.django_db
@@ -57,12 +97,21 @@ def test_design_system_con_permiso_responde(client):
     user = user_model.objects.create_user(username="con_design_system", password="secreto123")
     permiso = Permission.objects.get(content_type__app_label="gestion", codename="ver_design_system")
     user.user_permissions.add(permiso)
+    hoy = timezone.localdate()
+    ciclo = CicloLectivo.objects.create(anio=hoy.year)
+    PeriodoCuota.objects.create(
+        mes=hoy.month,
+        ciclo_lectivo=ciclo,
+        importe="1234.56",
+        fecha_vencimiento=hoy.replace(day=10),
+    )
     client.force_login(user)
 
     response = client.get(reverse("web:design-system"))
 
     assert response.status_code == 200
     assert "Sistema visual UNI2" in response.content.decode()
+    assert "$ 1.234,56" in response.content.decode()
 
 
 @pytest.mark.django_db
@@ -103,8 +152,7 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "ds-metric" not in content
     assert "ds-status" not in content
     assert "uni2-service-grid" not in content
-    assert "asociados/dashboard.html" in content
-    assert "gestion/dashboard.html" in content
+    assert "web/home.html" in content
     assert "uni2-info-modal" not in content
     assert 'class="card-body"' in content
     assert 'class="service-grid"' not in content
@@ -546,6 +594,32 @@ def test_paginas_de_detalle_comparten_el_componente_breadcrumbs():
         assert '<nav aria-label="breadcrumb">' not in template
 
 
+def test_breadcrumbs_no_agrega_inicio_ni_conserva_parametros_implicitos():
+    project_root = Path(__file__).resolve().parents[2]
+    component = (project_root / "templates/components/breadcrumbs.html").read_text(encoding="utf-8")
+
+    assert "Inicio" not in component
+    assert "hide_home" not in component
+    assert "current_url" not in component
+    assert "parent_fragment" not in component
+    assert "root_url" in component
+    assert "ancestor_url" in component
+    assert 'aria-current="page"' in component
+
+
+def test_anclas_publicas_reservan_espacio_y_permiten_titulos_largos_en_mobile():
+    css_path = finders.find("css/uni2-design-system.css")
+    assert css_path is not None
+    css = Path(css_path).read_text(encoding="utf-8")
+
+    assert ".uni2-anchor-section" in css
+    assert 'data-deployment-environment="staging"' in css
+    assert "scroll-margin-top" in css
+    assert "#productos-servicios .uni2-titulo-seccion" in css
+    assert "#beneficios .uni2-titulo-seccion" in css
+    assert "overflow-wrap: anywhere" in css
+
+
 def test_templates_usan_una_sola_familia_productiva_de_alertas():
     project_root = Path(__file__).resolve().parents[2]
     templates_root = project_root / "templates"
@@ -674,7 +748,11 @@ def test_detalle_producto_servicio_publico_muestra_producto_activo(client):
     assert "$ 600,00" in contenido
     assert 'class="uni2-breadcrumbs"' in contenido
     assert 'aria-current="page">Anillado' in contenido
-    assert reverse("web:productos_servicios") in contenido
+    breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
+    assert f'href="{reverse("web:home")}#productos-servicios">Productos y servicios</a>' in breadcrumb
+    assert f'href="{reverse("web:categoria_detalle", args=[categoria.pk])}">Impresiones</a>' in breadcrumb
+    assert "Inicio" not in breadcrumb
+    assert f'href="{reverse("web:home")}#productos-servicios" class="uni2-cta uni2-cta-secondary">← Todos los productos</a>' in contenido
 
 
 @pytest.mark.django_db
@@ -713,14 +791,13 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
     assert "Visitar sitio" not in contenido
     assert 'class="uni2-breadcrumbs"' in contenido
     breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
-    assert f'href="{reverse("web:inicio")}#beneficios">Comercios</a>' in breadcrumb
+    assert f'href="{reverse("web:home")}#beneficios">Comercios</a>' in breadcrumb
     assert (
         f'href="{reverse("web:actividad_comercial_detalle", args=[actividad.pk])}">'
         "Librería</a>"
     ) in breadcrumb
     assert "Inicio" not in breadcrumb
-    assert "Librería Sur" not in breadcrumb
-    assert 'aria-current="page"' not in breadcrumb
+    assert 'aria-current="page">Librería Sur' in breadcrumb
     assert response_pendiente.status_code == 200
     contenido_pendiente = response_pendiente.content.decode()
     assert "próximamente" in contenido_pendiente
@@ -729,13 +806,14 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
         contenido_pendiente,
         re.DOTALL,
     ).group()
-    assert f'href="{reverse("web:inicio")}#beneficios">Comercios</a>' in breadcrumb_pendiente
+    assert f'href="{reverse("web:home")}#beneficios">Comercios</a>' in breadcrumb_pendiente
     assert (
         f'href="{reverse("web:actividad_comercial_detalle", args=[actividad.pk])}">'
         "Librería</a>"
     ) in breadcrumb_pendiente
     assert "Inicio" not in breadcrumb_pendiente
-    assert "Librería Pendiente" not in breadcrumb_pendiente
+    assert 'aria-current="page">Librería Pendiente' in breadcrumb_pendiente
+    assert f'href="{reverse("web:home")}#beneficios" class="uni2-cta uni2-cta-secondary">← Todos los comercios</a>' in contenido_pendiente
 
 
 @pytest.mark.django_db
@@ -913,7 +991,7 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     assert "uni2-discount" in contenido
     assert 'class="uni2-breadcrumbs"' in contenido
     breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
-    assert f'href="{reverse("web:inicio")}#beneficios">Comercios</a>' in breadcrumb
+    assert f'href="{reverse("web:home")}#beneficios">Comercios</a>' in breadcrumb
     assert 'aria-current="page">Gastronomía' in breadcrumb
     assert f'href="{url}">Gastronomía</a>' not in breadcrumb
     assert "Inicio" not in breadcrumb

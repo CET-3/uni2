@@ -1,0 +1,36 @@
+{% load auditoria %}
+<div class="uni2-audit-list">
+    {% for operacion in operaciones %}
+        {% if operacion.es_compuesta %}
+            <section class="uni2-audit-operation" aria-labelledby="operacion-{{ operacion.operacion_id }}">
+                <header class="uni2-audit-operation-header">
+                    <div class="uni2-audit-operation-title">
+                        <span class="uni2-audit-operation-icon" aria-hidden="true">
+                            <i class="bi bi-layers"></i>
+                        </span>
+                        <div>
+                            {% if contextual %}
+                                <h3 id="operacion-{{ operacion.operacion_id }}">{{ operacion.titulo }}</h3>
+                            {% else %}
+                                <h2 id="operacion-{{ operacion.operacion_id }}">{{ operacion.titulo }}</h2>
+                            {% endif %}
+                            <p>
+                                {{ operacion.eventos.0|actor_evento_auditoria }} ·
+                                {{ operacion.eventos|length }} eventos relacionados ·
+                                {{ operacion.fecha|date:"d/m/Y" }} {{ operacion.fecha|date:"H:i" }}
+                            </p>
+                        </div>
+                    </div>
+                    <span class="uni2-audit-operation-id">Operación {{ operacion.operacion_id }}</span>
+                </header>
+                <div class="uni2-audit-operation-events">
+                    {% for evento in operacion.eventos %}
+                        {% include "gestion/_evento_auditoria.html" with evento=evento evento_agrupado=True contextual=contextual only %}
+                    {% endfor %}
+                </div>
+            </section>
+        {% else %}
+            {% include "gestion/_evento_auditoria.html" with evento=operacion.eventos.0 contextual=contextual only %}
+        {% endif %}
+    {% endfor %}
+</div>

@@ -113,6 +113,10 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Las URLs de credenciales contienen un UUID privado. No deben viajar como
+# referente cuando la persona sigue enlaces hacia otro origen.
+SECURE_REFERRER_POLICY = "same-origin"
+
 # La PWA usa un identificador de build para separar sus cachés. Los deploys
 # automáticos de Vercel exponen el SHA; el workflow de staging lo pasa de forma
 # explícita porque ese proyecto no está conectado al repositorio.

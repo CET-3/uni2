@@ -282,6 +282,14 @@ html {
   scroll-padding-top: 92px;
 }
 
+.uni2-anchor-section {
+  scroll-margin-top: calc(100px + env(safe-area-inset-top));
+}
+
+[data-deployment-environment="staging"] .uni2-anchor-section {
+  scroll-margin-top: calc(132px + env(safe-area-inset-top));
+}
+
 /* === BREADCRUMBS (PROPUESTA EN CATÁLOGO) === */
 .uni2-breadcrumbs {
   --bs-breadcrumb-divider: "›";
@@ -290,6 +298,7 @@ html {
 
 .uni2-breadcrumbs .breadcrumb {
   align-items: center;
+  flex-wrap: wrap;
   margin: 0;
   row-gap: 0.35rem;
 }
@@ -297,6 +306,13 @@ html {
 .uni2-breadcrumbs .breadcrumb-item {
   color: var(--color-text-muted);
   min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#productos-servicios .uni2-titulo-seccion,
+#beneficios .uni2-titulo-seccion {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .uni2-breadcrumbs .breadcrumb-item + .breadcrumb-item::before {
@@ -1891,7 +1907,8 @@ button.uni2-service-card:hover {
   width: 2rem;
 }
 
-.uni2-audit-operation-header h2 {
+.uni2-audit-operation-header h2,
+.uni2-audit-operation-header h3 {
   color: var(--color-text);
   font-size: 0.95rem;
   font-weight: 600;
@@ -1972,7 +1989,8 @@ button.uni2-service-card:hover {
   min-width: 0;
 }
 
-.uni2-audit-subject h2 {
+.uni2-audit-subject h2,
+.uni2-audit-subject h3 {
   align-items: center;
   display: flex;
   font-size: 0.95rem;
@@ -1982,7 +2000,8 @@ button.uni2-service-card:hover {
   line-height: 1.4;
 }
 
-.uni2-audit-subject h2 strong {
+.uni2-audit-subject h2 strong,
+.uni2-audit-subject h3 strong {
   font-weight: 600;
 }
 
@@ -2115,6 +2134,7 @@ button.uni2-service-card:hover {
   }
 
   .uni2-audit-operation-id {
+    flex: none;
     text-align: left;
   }
 
@@ -2868,6 +2888,47 @@ button.uni2-service-card:hover {
   .uni2-audit-values i {
     transform: rotate(90deg);
   }
+}
+
+.uni2-clickable-row {
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.16s ease;
+}
+
+.uni2-clickable-row:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.08);
+}
+
+.uni2-row-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.uni2-row-link::after {
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.uni2-row-link:focus-visible {
+  outline: none;
+}
+
+.uni2-row-link:focus-visible::after {
+  border-radius: 0.25rem;
+  outline: 3px solid rgba(var(--bs-primary-rgb), 0.55);
+  outline-offset: -3px;
+}
+
+.uni2-context-navigation {
+  align-items: center;
+  color: var(--bs-secondary-color);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  gap: 0.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

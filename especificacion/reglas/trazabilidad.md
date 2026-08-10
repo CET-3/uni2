@@ -33,7 +33,7 @@ timestamp: 2026-08-09T00:00:00-03:00
 5. El historial es de solo lectura para usuarios de la aplicación.
 6. La auditoría conserva los datos mínimos necesarios y excluye contraseñas,
    tokens, secretos, binarios y contenido completo de archivos importados.
-7. Ver la auditoría requiere el permiso `gestion.ver_auditoria`.
+7. Ver la consulta general de auditoría requiere `gestion.ver_auditoria`; ver los movimientos recientes dentro de la ficha de un asociado requiere `gestion.ver_movimientos_asociado`. Ese historial contextual incluye eventos directos y relaciones estructuradas con el asociado; nunca infiere relaciones por coincidencias de texto ni expone eventos de otras personas dentro de operaciones masivas.
 
 ## Bajas, anulaciones y eliminación
 
@@ -60,13 +60,15 @@ timestamp: 2026-08-09T00:00:00-03:00
 
 ## Permisos iniciales
 
-- `gestion.ver_auditoria`: consulta el historial general y contextual.
+- `gestion.ver_auditoria`: consulta el historial general.
+- `gestion.ver_movimientos_asociado`: consulta los últimos movimientos dentro de la ficha del asociado.
 - `gestion.dar_baja_asociados`: ejecuta la baja de un asociado.
 - `gestion.anular_pagos`: se utilizará cuando esté diseñado e implementado el
   flujo de anulación.
 
 `Administrador de permisos` y `Administrador de la mutual` reciben actualmente
-`gestion.ver_auditoria`. Atención al asociado, Gestión de convenios y Gestión de
+`gestion.ver_auditoria`. Atención al asociado y Administrador de la mutual reciben
+`gestion.ver_movimientos_asociado`. Atención al asociado, Gestión de convenios y Gestión de
 publicidades no reciben consulta general de auditoría ni acciones destructivas.
 Los permisos de baja y anulación se asignarán cuando existan esos flujos. El
 superusuario técnico conserva las tareas excepcionales de soporte, pero el admin

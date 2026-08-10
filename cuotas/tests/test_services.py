@@ -9,6 +9,7 @@ from cuotas.models import Cuota, Donacion, Pago, PeriodoCuota
 from cuotas.services import (
     generar_cuotas_iniciales_para_asociado,
     generar_cuotas_para_periodo,
+    registrar_donacion,
     registrar_pago,
 )
 
@@ -252,6 +253,39 @@ def test_asociado_sin_deuda_rechaza_pago(asociado_activo):
             importe=Decimal("3000"),
             metodo=Pago.METODO_EFECTIVO,
         )
+
+
+@pytest.mark.django_db
+def test_asociado_sin_deuda_puede_registrar_una_donacion(asociado_activo):
+    pago = registrar_donacion(
+        asociado=asociado_activo,
+        fecha=date(2026, 3, 5),
+        importe=Decimal("3000"),
+        metodo=Pago.METODO_EFECTIVO,
+        observaciones="Aporte voluntario",
+    )
+
+    assert pago.importe == Decimal("3000")
+    assert not pago.aplicaciones.exists()
+    donacion = Donacion.objects.get(pago=pago)
+    assert donacion.asociado == asociado_activo
+    assert donacion.importe == Decimal("3000")
+    assert donacion.observaciones == "Aporte voluntario"
+
+
+@pytest.mark.django_db
+def test_no_permite_registrar_donacion_si_hay_cuotas_pendientes(asociado_activo, periodos):
+    generar_cuotas_para_periodo(periodos[0])
+
+    with pytest.raises(ValueError, match="tiene cuotas pendientes"):
+        registrar_donacion(
+            asociado=asociado_activo,
+            fecha=date(2026, 3, 5),
+            importe=Decimal("3000"),
+            metodo=Pago.METODO_EFECTIVO,
+        )
+
+    assert not Pago.objects.exists()
 
 
 @pytest.mark.django_db

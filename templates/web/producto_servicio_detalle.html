@@ -7,8 +7,9 @@
 
 {% block content %}
 <div class="container py-3">
-  {% url "web:productos_servicios" as breadcrumb_parent_url %}
-  {% include "components/breadcrumbs.html" with parent_url=breadcrumb_parent_url parent_label="Productos y servicios" current_label=producto_servicio.nombre only %}
+  {% url "web:home" as breadcrumb_home_url %}
+  {% url "web:categoria_detalle" producto_servicio.categoria_id as breadcrumb_categoria_url %}
+  {% include "components/breadcrumbs.html" with root_url=breadcrumb_home_url|add:"#productos-servicios" root_label="Productos y servicios" ancestor_url=breadcrumb_categoria_url ancestor_label=producto_servicio.categoria.nombre current_label=producto_servicio.nombre only %}
 </div>
 
 <section class="uni2-service-detail" aria-labelledby="ps-title">
@@ -18,7 +19,7 @@
         <span class="uni2-eyebrow">{{ producto_servicio.categoria.nombre }}</span>
         <h1 id="ps-title" class="uni2-titulo-principal">{{ producto_servicio.nombre }}</h1>
         <p>{{ producto_servicio.descripcion }}</p>
-        <a href="{% url 'web:productos_servicios' %}" class="uni2-cta uni2-cta-secondary">← Todos los productos</a>
+        <a href="{% url 'web:home' %}#productos-servicios" class="uni2-cta uni2-cta-secondary">← Todos los productos</a>
       </div>
 
       <div class="uni2-detail-panel">

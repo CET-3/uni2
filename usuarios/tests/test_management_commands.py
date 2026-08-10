@@ -19,6 +19,7 @@ from gestion.permissions import (
     GESTION_COBRAR_CUOTAS,
     GESTION_IMPORTAR_ASOCIADOS,
     GESTION_VER_AUDITORIA,
+    GESTION_VER_MOVIMIENTOS_ASOCIADO,
     GESTION_VER_DESIGN_SYSTEM,
 )
 from usuarios.models import EstadoDatosStaging
@@ -110,6 +111,7 @@ def test_carga_inicial_crea_usuarios_de_prueba():
     assert admin.has_perm(GESTION_VER_AUDITORIA)
     assert not atencion_user.has_perm(GESTION_IMPORTAR_ASOCIADOS)
     assert not atencion_user.has_perm(GESTION_VER_AUDITORIA)
+    assert atencion_user.has_perm(GESTION_VER_MOVIMIENTOS_ASOCIADO)
     assert asociado_user.groups.filter(name="Asociados").exists()
     assert comercio_user.groups.filter(name="Comercios").exists()
     assert Group.objects.filter(name=ATENCION_ASOCIADO_GROUP).exists()

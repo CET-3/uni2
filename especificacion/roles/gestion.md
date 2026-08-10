@@ -11,7 +11,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 Usuario con uno o más permisos operativos de gestión. Puede acceder solo a las tareas autorizadas:
 
 - Gestionar asociados e importarlos.
-- Crear usuarios para asociados desde el detalle del asociado.
+- Crear usuarios para asociados mediante las herramientas administrativas habilitadas.
 - Gestionar cuotas y registrar pagos.
 - Consultar reportes.
 - Ver la especificación del proyecto.

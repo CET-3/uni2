@@ -10,13 +10,12 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Actor:** Gestión con permiso para consultar asociados.
 
-**Alcance:** pantalla de lectura que muestra todas las cuotas del asociado seleccionado desde el detalle, sin filtrar por estado.
+**Alcance:** pantalla de lectura que muestra todas las cuotas del asociado, sin filtrar por estado. La ruta y el permiso se conservan temporalmente, pero la pantalla no tiene acceso desde el detalle mientras se diseña la consulta de cuotas.
 
 **Flujo principal:**
 
-1.  El usuario entra al detalle de un asociado.
-2.  Selecciona *Ver todas las cuotas*.
-3.  El sistema muestra el historial completo de cuotas del asociado, ordenado del período más reciente al más antiguo.
-4.  La pantalla conserva el contexto del asociado y muestra la deuda total acumulada.
+1.  Un usuario autorizado abre directamente la ruta histórica de un asociado.
+2.  El sistema muestra el historial completo de cuotas, ordenado del período más reciente al más antiguo.
+3.  La pantalla conserva el contexto del asociado y muestra la deuda total acumulada.
 
 **Modelos afectados:** Asociado, Cuota, PeríodoCuota.

@@ -19,10 +19,12 @@ que considera seguro.
 2. Uni2 explica qué datos se guardarán, que durarán siete días y que cerrar
    sesión los eliminará.
 3. El asociado elige “Guardar en este dispositivo”.
-4. Uni2 guarda una representación mínima y confirma la fecha de vencimiento.
+4. Uni2 guarda una representación mínima, incluida la misma URL absoluta del
+   QR, y confirma la fecha de vencimiento.
 5. Sin conexión, el asociado entra a Mi credencial.
 6. Uni2 muestra la copia, la fecha de última actualización y el aviso de que
    el comercio debe validar su vigencia online.
+   El QR offline abre la misma ruta neutral y no afirma vigencia por sí solo.
 7. Al volver la conexión, una visita correcta a la credencial puede renovar
    la copia y su plazo cuando se conserva el consentimiento.
 

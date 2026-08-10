@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Group, Permission
 from django.urls import reverse
 
 from asociados.models import Asociado, CicloLectivo
@@ -14,7 +14,9 @@ from gestion.permissions import (
     GESTION_DASHBOARD,
     GESTION_EDITAR_ASOCIADOS,
     GESTION_VER_AUDITORIA,
+    GESTION_VER_MOVIMIENTOS_ASOCIADO,
 )
+from usuarios.roles import ATENCION_ASOCIADO_GROUP
 
 
 def crear_usuario_con_permisos(username, permisos):
@@ -31,11 +33,45 @@ def test_auditoria_rechaza_usuario_sin_permiso_y_oculta_acceso(client):
     usuario = crear_usuario_con_permisos("sin_auditoria", [GESTION_DASHBOARD])
     client.force_login(usuario)
 
-    dashboard = client.get(reverse("gestion:dashboard"))
+    dashboard = client.get(reverse("web:home"))
     auditoria = client.get(reverse("gestion:auditoria"))
 
     assert dashboard.status_code == 200
     assert reverse("gestion:auditoria") not in dashboard.content.decode()
+    assert auditoria.status_code == 403
+
+
+@pytest.mark.django_db
+def test_atencion_ve_movimientos_de_ficha_pero_no_puede_abrir_auditoria_general(client):
+    usuario = get_user_model().objects.create_user(username="atencion_ficha", password="secreto123")
+    usuario.groups.add(Group.objects.get(name=ATENCION_ASOCIADO_GROUP))
+    asociado = Asociado.objects.create(
+        nombre="Julia",
+        apellido="Campos",
+        dni="40000888",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-08-09",
+        fecha_inicio_cobro="2026-08-01",
+        usuario=usuario,
+    )
+    EventoAuditoria.objects.create(
+        actor=usuario,
+        actor_etiqueta=usuario.username,
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+        entidad="asociados.Asociado",
+        objeto_id=str(asociado.pk),
+        objeto_descripcion=str(asociado),
+        cambios={"telefono": {"anterior": "111", "nuevo": "222"}},
+        origen=EventoAuditoria.ORIGEN_GESTION,
+    )
+    client.force_login(usuario)
+
+    detalle = client.get(reverse("gestion:asociado_detalle", args=[asociado.pk]))
+    auditoria = client.get(reverse("gestion:auditoria"))
+
+    assert detalle.status_code == 200
+    assert "Historial de auditoría" in detalle.content.decode()
+    assert "Ver historial completo" not in detalle.content.decode()
     assert auditoria.status_code == 403
 
 
@@ -54,7 +90,7 @@ def test_auditoria_muestra_acceso_y_eventos_con_permiso(client):
     )
     client.force_login(usuario)
 
-    dashboard = client.get(reverse("gestion:dashboard"))
+    dashboard = client.get(reverse("web:home"))
     auditoria = client.get(reverse("gestion:auditoria"))
 
     assert reverse("gestion:auditoria") in dashboard.content.decode()
@@ -197,10 +233,10 @@ def test_auditoria_presenta_relaciones_y_campos_en_formato_legible(client):
 
 
 @pytest.mark.django_db
-def test_detalle_asociado_muestra_boton_auditoria_segun_permiso(client):
+def test_detalle_asociado_muestra_auditoria_contextual_segun_permiso(client):
     con_permiso = crear_usuario_con_permisos(
         "detalle_con_auditoria",
-        [GESTION_CONSULTAR_ASOCIADOS, GESTION_VER_AUDITORIA],
+        [GESTION_CONSULTAR_ASOCIADOS, GESTION_VER_MOVIMIENTOS_ASOCIADO],
     )
     sin_permiso = crear_usuario_con_permisos(
         "detalle_sin_auditoria",
@@ -214,19 +250,72 @@ def test_detalle_asociado_muestra_boton_auditoria_segun_permiso(client):
         fecha_alta="2026-08-09",
         fecha_inicio_cobro="2026-08-01",
     )
-    url_detalle = reverse("gestion:asociado_detalle", args=[asociado.pk])
-    url_auditoria = (
-        f'{reverse("gestion:auditoria")}?entidad=asociados.Asociado&amp;objeto_id={asociado.pk}'
+    EventoAuditoria.objects.create(
+        actor=con_permiso,
+        actor_etiqueta=con_permiso.username,
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+        entidad="asociados.Asociado",
+        objeto_id=str(asociado.pk),
+        objeto_descripcion="Campos, Julia",
+        cambios={"telefono": {"anterior": "111", "nuevo": "222"}},
+        origen=EventoAuditoria.ORIGEN_GESTION,
     )
-
+    EventoAuditoria.objects.create(
+        actor=con_permiso,
+        actor_etiqueta=con_permiso.username,
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+        entidad="asociados.Asociado",
+        objeto_id="999",
+        objeto_descripcion="Otro asociado",
+        cambios={},
+        origen=EventoAuditoria.ORIGEN_GESTION,
+    )
+    url_detalle = reverse("gestion:asociado_detalle", args=[asociado.pk])
     client.force_login(con_permiso)
     contenido_con_permiso = client.get(url_detalle).content.decode()
     client.force_login(sin_permiso)
     contenido_sin_permiso = client.get(url_detalle).content.decode()
 
-    assert "Ver auditoría" in contenido_con_permiso
-    assert url_auditoria in contenido_con_permiso
-    assert "Ver auditoría" not in contenido_sin_permiso
+    assert "Historial de auditoría" in contenido_con_permiso
+    assert "detalle_con_auditoria" in contenido_con_permiso
+    assert "Teléfono" in contenido_con_permiso
+    assert "Otro asociado" not in contenido_con_permiso
+    assert "Ver historial completo" not in contenido_con_permiso
+    assert "Historial de auditoría" not in contenido_sin_permiso
+
+
+@pytest.mark.django_db
+def test_enlace_al_historial_completo_requiere_permiso_de_auditoria_general(client):
+    solo_auditoria_general = crear_usuario_con_permisos(
+        "solo_auditoria_general",
+        [GESTION_CONSULTAR_ASOCIADOS, GESTION_VER_AUDITORIA],
+    )
+    ambos_permisos = crear_usuario_con_permisos(
+        "auditoria_general_y_ficha",
+        [
+            GESTION_CONSULTAR_ASOCIADOS,
+            GESTION_VER_AUDITORIA,
+            GESTION_VER_MOVIMIENTOS_ASOCIADO,
+        ],
+    )
+    asociado = Asociado.objects.create(
+        nombre="Julia",
+        apellido="Campos",
+        dni="40000998",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-08-09",
+        fecha_inicio_cobro="2026-08-01",
+    )
+    url_detalle = reverse("gestion:asociado_detalle", args=[asociado.pk])
+
+    client.force_login(solo_auditoria_general)
+    contenido_solo_general = client.get(url_detalle).content.decode()
+    client.force_login(ambos_permisos)
+    contenido_ambos = client.get(url_detalle).content.decode()
+
+    assert "Historial de auditoría" not in contenido_solo_general
+    assert "Historial de auditoría" in contenido_ambos
+    assert "Ver historial completo" in contenido_ambos
 
 
 @pytest.mark.django_db
@@ -253,6 +342,82 @@ def test_auditoria_contextual_filtra_por_asociado(client):
 
     assert "Campos, Julia" in contenido
     assert "Rivas, Mora" not in contenido
+
+
+@pytest.mark.django_db
+def test_historial_contextual_incluye_cuotas_y_pagos_del_asociado(client):
+    usuario = crear_usuario_con_permisos(
+        "auditoria_relacionada",
+        [
+            GESTION_CONSULTAR_ASOCIADOS,
+            GESTION_VER_AUDITORIA,
+            GESTION_VER_MOVIMIENTOS_ASOCIADO,
+        ],
+    )
+    asociado = Asociado.objects.create(
+        nombre="Julia",
+        apellido="Campos",
+        dni="40000997",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-08-09",
+        fecha_inicio_cobro="2026-08-01",
+    )
+    otro_asociado = Asociado.objects.create(
+        nombre="Mora",
+        apellido="Rivas",
+        dni="40000996",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-08-09",
+        fecha_inicio_cobro="2026-08-01",
+    )
+    for entidad, objeto_id, descripcion, asociado_evento in (
+        ("cuotas.Cuota", "90", "Cuota 08/2026 de Campos, Julia", asociado),
+        ("cuotas.Pago", "91", "Pago de Campos, Julia", asociado),
+        ("cuotas.Pago", "92", "Pago de Rivas, Mora", otro_asociado),
+    ):
+        EventoAuditoria.objects.create(
+            actor=usuario,
+            actor_etiqueta=usuario.username,
+            accion=EventoAuditoria.ACCION_CREAR,
+            entidad=entidad,
+            objeto_id=objeto_id,
+            objeto_descripcion=descripcion,
+            cambios={
+                "asociado": {
+                    "anterior": None,
+                    "nuevo": {"id": asociado_evento.id, "texto": str(asociado_evento)},
+                }
+            },
+            origen=EventoAuditoria.ORIGEN_GESTION,
+        )
+    client.force_login(usuario)
+
+    detalle = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
+    historial = client.get(
+        reverse("gestion:auditoria"),
+        {"asociado_id": asociado.id},
+    )
+    contenido_detalle = detalle.content.decode()
+    contenido_historial = historial.content.decode()
+    entidades_detalle = {
+        evento.entidad
+        for operacion in detalle.context["operaciones_auditoria"]
+        for evento in operacion.eventos
+    }
+    entidades_historial = {
+        evento.entidad
+        for operacion in historial.context["page_obj"].object_list
+        for evento in operacion.eventos
+    }
+
+    assert "Cuota 08/2026 de Campos, Julia" in contenido_detalle
+    assert {"cuotas.Cuota", "cuotas.Pago"} <= entidades_detalle
+    assert "Pago de Rivas, Mora" not in contenido_detalle
+    assert f"?asociado_id={asociado.id}" in contenido_detalle
+    assert "Movimientos relacionados con Campos, Julia" in contenido_historial
+    assert "Cuota 08/2026 de Campos, Julia" in contenido_historial
+    assert {"cuotas.Cuota", "cuotas.Pago"} <= entidades_historial
+    assert "Pago de Rivas, Mora" not in contenido_historial
 
 
 @pytest.mark.django_db

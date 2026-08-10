@@ -112,6 +112,7 @@
       tipo: String(credential.tipo),
       ultimoEstado: String(credential.ultimoEstado),
       token: String(credential.token),
+      credentialUrl: String(credential.credentialUrl),
       updatedAt: String(credential.updatedAt),
       expiresAt: String(credential.expiresAt),
     };

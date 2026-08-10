@@ -79,6 +79,8 @@ def _get_cuotas_para_cobro(asociado: Asociado, cuotas_ids):
         return cuotas_deudoras
     cuotas_ids = [int(cuota_id) for cuota_id in cuotas_ids]
     if not cuotas_ids:
+        if not cuotas_deudoras:
+            return []
         raise ValueError("Debe seleccionar al menos una cuota para cobrar.")
 
     cuotas_por_id = {cuota.id: cuota for cuota in cuotas_deudoras}
@@ -189,7 +191,8 @@ def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por
     importe = Decimal(str(importe))
     cuotas = _get_cuotas_para_cobro(asociado, cuotas_ids)
     deuda_total = sum((cuota.get_saldo_pendiente(fecha) for cuota in cuotas), start=Decimal("0"))
-    if deuda_total <= 0:
+    es_donacion_sin_deuda = not cuotas and cuotas_ids == []
+    if deuda_total <= 0 and not es_donacion_sin_deuda:
         raise ValueError("El asociado no tiene deuda.")
     if importe < deuda_total:
         raise ValueError("El pago no puede ser menor a la deuda total.")
@@ -272,3 +275,28 @@ def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por
         )
 
     return pago
+
+
+@transaction.atomic
+def registrar_donacion(
+    *,
+    asociado: Asociado,
+    fecha,
+    importe,
+    metodo,
+    registrado_por=None,
+    observaciones="",
+):
+    """Registra una donación cuando el asociado no tiene cuotas pendientes."""
+
+    if get_cuotas_deudoras(asociado).exists():
+        raise ValueError("El asociado tiene cuotas pendientes; primero debe registrar su cobro.")
+    return registrar_pago(
+        asociado=asociado,
+        fecha=fecha,
+        importe=importe,
+        metodo=metodo,
+        registrado_por=registrado_por,
+        observaciones=observaciones,
+        cuotas_ids=[],
+    )

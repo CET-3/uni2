@@ -5,28 +5,22 @@
 
 {% block content %}
 <div class="container py-5">
+<nav class="uni2-context-navigation mb-3" aria-label="Ruta de atención">
+    <a href="{{ return_url }}">Atención al asociado</a>
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">{{ asociado.apellido }}, {{ asociado.nombre }}</span>
+</nav>
 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
     <div>
         <h1 class="h2 mb-1">{{ asociado.apellido }}, {{ asociado.nombre }}</h1>
         <p class="text-secondary mb-0">Número {{ asociado.numero_asociado }} · DNI {{ asociado.dni }}</p>
     </div>
     <div class="uni2-page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Volver al listado</a>
-        <a class="btn btn-outline-primary" href="{{ cuotas_url }}">Ver todas las cuotas</a>
-        {% if perms.gestion.ver_auditoria %}
-            <a class="btn btn-outline-primary" href="{% url 'gestion:auditoria' %}?entidad=asociados.Asociado&amp;objeto_id={{ asociado.id }}">Ver auditoría</a>
-        {% endif %}
         {% if perms.gestion.editar_asociados %}
-            <a class="btn btn-outline-primary" href="{% url 'gestion:asociado_editar' asociado.id %}">Editar datos</a>
-            {% if not asociado.usuario %}
-                <form method="post" action="{% url 'gestion:crear_usuario_asociado' asociado.id %}" class="d-inline">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-success">Crear usuario</button>
-                </form>
-            {% endif %}
+            <a class="btn btn-outline-primary" href="{{ edit_url }}">Editar asociado</a>
         {% endif %}
         {% if perms.gestion.cobrar_cuotas %}
-            <a class="btn btn-primary" href="{{ cobro_url }}">Cobrar</a>
+            <a class="btn btn-primary" href="{{ cobro_url }}">{% if total_deuda > 0 %}Cobrar{% else %}Registrar donación{% endif %}</a>
         {% endif %}
     </div>
 </div>
@@ -66,14 +60,14 @@
             <h2 class="h5 mb-3">Cuotas del año actual</h2>
             <div class="table-responsive">
                 <table class="table table-soft align-middle mb-0">
-                    <thead><tr><th>Periodo</th><th>Importe</th><th>Pagado</th><th>Saldo</th><th>Estado</th></tr></thead>
+                    <thead><tr><th>Periodo</th><th class="text-end">Importe</th><th class="text-end">Pagado</th><th class="text-end">Saldo</th><th>Estado</th></tr></thead>
                     <tbody>
                         {% for item in cuotas_anio_actual %}
                             <tr>
                                 <td>{{ item.cuota.periodo }}</td>
-                                <td>{{ item.importe_original|moneda }}</td>
-                                <td>{{ item.importe_pagado|moneda }}</td>
-                                <td>{{ item.saldo|moneda }}</td>
+                                <td class="text-end">{{ item.importe_original|moneda }}</td>
+                                <td class="text-end">{{ item.importe_pagado|moneda }}</td>
+                                <td class="text-end">{{ item.saldo|moneda }}</td>
                                 <td>{{ item.estado_display }}</td>
                             </tr>
                         {% empty %}
@@ -107,5 +101,22 @@
         </div></div>
     </div>
 </div>
+
+{% if puede_ver_movimientos_asociado %}
+    <section class="mt-5" aria-labelledby="historial-auditoria">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-end gap-2 mb-3">
+            <div>
+                <h2 class="h4 mb-1" id="historial-auditoria">Historial de auditoría</h2>
+                <p class="text-secondary mb-0">Últimas operaciones registradas para este asociado.</p>
+            </div>
+            {% if auditoria_url %}<a href="{{ auditoria_url }}">Ver historial completo</a>{% endif %}
+        </div>
+        {% if operaciones_auditoria %}
+            {% include "gestion/_lista_operaciones_auditoria.html" with operaciones=operaciones_auditoria contextual=True only %}
+        {% else %}
+            {% include "components/alert.html" with variant="info" message="Todavía no hay operaciones registradas para este asociado." only %}
+        {% endif %}
+    </section>
+{% endif %}
 </div>
 {% endblock %}

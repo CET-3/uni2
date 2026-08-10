@@ -36,6 +36,7 @@ def test_base_integra_manifest_worker_y_componentes_pwa(client):
     assert "/static/pwa/icons/apple-touch-icon-180.png" in content
     assert "/static/pwa/uni2-private-storage.js" in content
     assert "/static/pwa/uni2-pwa.js" in content
+    assert "/static/js/uni2-section-navigation.js" in content
     assert 'id="uni2-connectivity-status"' in content
     assert 'id="uni2-install-promotion"' in content
     assert "Instalá UNI2" in content
@@ -46,6 +47,18 @@ def test_base_integra_manifest_worker_y_componentes_pwa(client):
     assert "cdn.jsdelivr.net" not in content
     assert "fonts.googleapis.com" not in content
     assert "fonts.gstatic.com" not in content
+
+
+def test_navegacion_mobile_cierra_el_menu_antes_de_ir_a_la_seccion():
+    script_path = finders.find("js/uni2-section-navigation.js")
+    assert script_path is not None
+    source = Path(script_path).read_text(encoding="utf-8")
+
+    assert 'menu.classList.contains("show")' in source
+    assert '"hidden.bs.collapse"' in source
+    assert "Collapse.getOrCreateInstance(menu).hide()" in source
+    assert "target.scrollIntoView" in source
+    assert 'behavior: "smooth"' not in source
 
 
 def test_instalacion_ofrece_accion_visible_y_fallback_manual():
@@ -124,8 +137,18 @@ def test_credencial_solo_expone_al_cliente_campos_offline_permitidos(client):
         "data-credential-tipo",
         "data-credential-estado",
         "data-credential-token",
+        "data-credential-url",
     }
-    assert asociado.dni not in content
+    assert (
+        credential_attrs["data-credential-url"]
+        == f"http://testserver/credenciales/{asociado.token_credencial}/"
+    )
+    assert (
+        f'data-uni2-qr-value="http://testserver/credenciales/{asociado.token_credencial}/"'
+        in content
+    )
+    assert asociado.dni in content
+    assert "data-credential-dni" not in content
     assert asociado.email not in content
     assert asociado.telefono not in content
     assert asociado.direccion not in content
@@ -133,6 +156,15 @@ def test_credencial_solo_expone_al_cliente_campos_offline_permitidos(client):
     assert 'id="uni2-credential-save"' in content
     assert 'id="uni2-credential-delete"' in content
     assert "durante 7 días" in content
+
+
+def test_copia_offline_conserva_la_url_del_qr_y_admite_registros_anteriores():
+    credential_script = Path(finders.find("pwa/uni2-credential.js")).read_text(encoding="utf-8")
+    storage_script = Path(finders.find("pwa/uni2-private-storage.js")).read_text(encoding="utf-8")
+
+    assert "credentialUrl: root.dataset.credentialUrl" in credential_script
+    assert "credential.credentialUrl ||" in credential_script
+    assert "credentialUrl: String(credential.credentialUrl)" in storage_script
 
 
 @pytest.mark.django_db
@@ -146,6 +178,6 @@ def test_logout_esta_marcado_para_limpiar_credencial_privada(client):
     )
     client.force_login(asociado.usuario)
 
-    content = client.get(reverse("asociados:dashboard")).content.decode()
+    content = client.get(reverse("web:home")).content.decode()
 
     assert content.count("data-pwa-logout") >= 2

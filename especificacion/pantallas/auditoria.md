@@ -117,10 +117,17 @@ es accesible, el evento conserva la descripción sin ofrecer un enlace roto.
 
 ## Historial contextual
 
-Las pantallas de detalle prioritarias podrán mostrar una sección `Historial`
-con los mismos datos, filtrados por entidad e identificador. La primera
-integración será el detalle de asociado; pagos y comercios se incorporarán en
-etapas posteriores.
+El detalle de asociado muestra una sección `Historial de auditoría` al pie para
+usuarios con `gestion.ver_movimientos_asociado`. Incluye las diez operaciones más recientes
+que tengan un evento directo del asociado o una referencia estructurada hacia
+él. De este modo reúne cambios de la ficha, cuotas, pagos y donaciones sin
+depender de buscar el nombre en textos visibles. Recupera completos los eventos
+de cada operación para no recortar un cobro en sus imputaciones y cambios de
+cuota. Cuando una operación masiva contiene movimientos de varios asociados,
+solo presenta los eventos correspondientes a la ficha consultada.
+
+Un enlace de texto abre el mismo historial contextual completo, pero solo
+aparece para usuarios que también poseen `gestion.ver_auditoria`.
 
 ## Estados vacíos y casos especiales
 
@@ -135,6 +142,8 @@ etapas posteriores.
 - En desktop puede utilizar una tabla.
 - En mobile los eventos deben conservar fecha, actor, acción y objeto sin
   depender de scroll horizontal para comprender lo esencial.
+- El encabezado, identificador y detalle de cada operación se apilan sin
+  reservar alturas propias de la disposición de escritorio.
 - Los controles de filtros tienen etiquetas visibles.
 - La agrupación usa estructura semántica de sección y encabezado; no requiere
   interacción para acceder a sus eventos.

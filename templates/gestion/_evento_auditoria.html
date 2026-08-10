@@ -2,7 +2,7 @@
 <article class="uni2-audit-event uni2-audit-event-{{ evento.accion }}{% if evento_agrupado %} uni2-audit-event-nested{% endif %}">
     <div class="uni2-audit-event-main">
         <div class="uni2-audit-subject">
-            <h2>
+            {% if contextual %}<h3>{% else %}<h2>{% endif %}
                 <span class="uni2-audit-icon{% if evento.accion == 'crear' %} uni2-audit-icon-create{% endif %}" aria-hidden="true">
                     <i class="bi {% if evento.accion == 'crear' %}bi-plus-lg{% else %}bi-pencil{% endif %}"></i>
                 </span>
@@ -12,7 +12,7 @@
                     <strong class="uni2-audit-object">{{ evento|objeto_evento_auditoria }}</strong>
                     el día {{ evento.fecha|date:"d/m/Y" }} a las {{ evento.fecha|date:"H:i" }}.
                 </span>
-            </h2>
+            {% if contextual %}</h3>{% else %}</h2>{% endif %}
             <p class="uni2-audit-meta">
                 <span>Entidad: {{ evento.entidad|etiqueta_entidad_auditoria }}</span>
                 <span>ID: {{ evento.objeto_id }}</span>
