@@ -81,7 +81,7 @@ La emulación de WebKit en CI no reemplaza la prueba en un iPhone o iPad real.
    iniciar sesión y comprobar que vuelve a la URL escaneada.
 3. Confirmar que el resultado sólo muestra validez, nombre y apellido, tipo y
    estado; nunca DNI, deuda ni cuotas.
-4. Repetir con el formulario manual del UUID.
+4. Repetir con el formulario manual, primero con el UUID y luego con el DNI.
 5. Abrir la URL como el asociado propietario; luego intentar una URL ajena y
    confirmar que no revela datos.
 6. Probar un UUID inexistente, una URL malformada, un rol no admitido y un

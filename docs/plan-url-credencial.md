@@ -73,8 +73,9 @@ la URL.
 6. Muestra válida o inválida y, cuando corresponde, nombre y apellido, tipo y
    estado. No muestra deuda ni otros datos sensibles.
 
-El formulario manual de validación debe conservarse como alternativa cuando
-la cámara no pueda leer el QR o el token llegue por otro medio.
+El formulario manual de validación se conserva como alternativa cuando la
+cámara no pueda leer el QR y acepta el UUID o el DNI. El DNI se envía por POST:
+no forma parte de la URL ni del QR.
 
 ## Autorización y privacidad
 

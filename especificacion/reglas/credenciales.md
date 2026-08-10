@@ -62,7 +62,8 @@ token ajeno se rechaza con una respuesta genérica.
 
 Un comercio sólo puede resolver y validar una credencial cuando está
 autenticado, vinculado a ese usuario y su convenio está firmado. Se conserva
-el ingreso manual del UUID como alternativa.
+el ingreso manual del UUID o del DNI como alternativa. El DNI se envía dentro
+del formulario y no se incorpora a la URL ni al QR.
 
 ## CREDENCIAL-011
 

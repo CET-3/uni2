@@ -1,14 +1,16 @@
 from asociados.models import Asociado
-from asociados.selectors import get_asociado_by_credential_token
+from asociados.selectors import get_asociado_by_credential_identifier
 
 from .models import Comercio
 
 
-def validar_credencial(*, comercio: Comercio, token):
+def validar_credencial(*, comercio: Comercio, token=None, identificador=None):
     if comercio.estado != Comercio.ESTADO_FIRMADO:
         raise ValueError("El comercio no tiene un convenio firmado.")
 
-    asociado = get_asociado_by_credential_token(token)
+    asociado = get_asociado_by_credential_identifier(
+        identificador if identificador is not None else token
+    )
     if asociado is None:
         return {"valida": False, "mensaje": "Credencial inválida"}
 

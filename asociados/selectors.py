@@ -1,3 +1,5 @@
+import uuid
+
 from django.db.models import Q
 from django.utils import timezone
 
@@ -17,6 +19,19 @@ def get_asociado_by_credential_token(token):
     """Busca una credencial sin decidir quién tiene permiso para verla."""
 
     return Asociado.objects.filter(token_credencial=token).first()
+
+
+def get_asociado_by_credential_identifier(identifier):
+    """Busca por UUID de credencial o por DNI para la validación manual."""
+
+    value = str(identifier or "").strip()
+    if not value:
+        return None
+    try:
+        token = uuid.UUID(value)
+    except (ValueError, AttributeError):
+        return Asociado.objects.filter(dni=value).first()
+    return get_asociado_by_credential_token(token)
 
 
 def search_asociados(query: str):

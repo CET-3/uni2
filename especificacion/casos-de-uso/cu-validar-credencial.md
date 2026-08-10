@@ -12,7 +12,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Flujo principal:**
 
-1. Escanea el QR con la cámara común o ingresa el UUID manualmente.
+1. Escanea el QR con la cámara común o ingresa el UUID o DNI manualmente.
 2. El QR abre `/credenciales/<token UUID>/`.
 3. Si no tiene sesión, inicia sesión y regresa a la URL escaneada.
 4. El sistema comprueba el comercio vinculado y su convenio firmado.
