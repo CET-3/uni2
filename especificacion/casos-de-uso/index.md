@@ -41,6 +41,12 @@
 * [CU-crear-asociado](cu-crear-asociado.md) - Actor: Gestión con permiso para editar asociados.
 * [CU-editar-asociado](cu-editar-asociado.md) - Actor: Gestión con permiso para editar asociados.
 
+### Convenios y contenidos
+
+* [CU-administrar-convenios](cu-administrar-convenios.md) - Actor: Gestión de convenios.
+* [CU-administrar-productos-servicios](cu-administrar-productos-servicios.md) - Actor: Gestión de productos y servicios.
+* [CU-administrar-publicidades](cu-administrar-publicidades.md) - Actor: Gestión de publicidades.
+
 ### Cuotas y pagos
 
 * [CU-registrar-pago-cuota](cu-registrar-pago-cuota.md) - Actor: Gestión con permiso para cobrar cuotas.
@@ -67,6 +73,12 @@
 ### Usuarios
 
 * [CU-crear-usuario-asociado](cu-crear-usuario-asociado.md) - Actor: Administrador
+* [CU-administrar-usuarios-accesos](cu-administrar-usuarios-accesos.md) - Actor: Administrador de permisos.
+
+### Proyecto y operación técnica
+
+* [CU-consultar-documentacion-proyecto](cu-consultar-documentacion-proyecto.md) - Actor: Equipo del proyecto.
+* [CU-sincronizar-grupos](cu-sincronizar-grupos.md) - Actor: Administrador de la app.
 
 ### Cuotas
 

@@ -11,9 +11,10 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 Usuario de autenticación de Django. Se recomienda usar el sistema estandar inicialmente.
 
-**Grupos operativos iniciales:** Atención al asociado, Administrador de permisos,
-Gestión de convenios, Gestión de publicidades, Administrador de la mutual y
-Administrador de la app. Los grupos son acumulables.
+**Grupos iniciales:** Atención al asociado, Administrador de permisos, Gestión
+de convenios, Gestión de productos y servicios, Gestión de publicidades,
+Administrador de la mutual, Equipo del proyecto y Administrador de la app. Los
+grupos son acumulables.
 
 **Grupos de experiencia:** Asociados y Comercios. Estos grupos acompañan al
 vínculo con la entidad correspondiente y no reemplazan los grupos operativos.

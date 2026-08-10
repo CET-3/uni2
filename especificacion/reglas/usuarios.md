@@ -62,8 +62,9 @@ la variante multiperfil de la home.
 Los grupos son acumulables. Una persona puede pertenecer a más de un área sin
 crear un grupo combinado. La migración de roles crea los grupos operativos
 `Atención al asociado`, `Administrador de permisos`, `Gestión de convenios`,
-`Gestión de publicidades`, `Administrador de la mutual` y `Administrador de la
-app`, además de los grupos de experiencia `Asociados` y `Comercios`.
+`Gestión de productos y servicios`, `Gestión de publicidades`, `Administrador
+de la mutual`, `Equipo del proyecto` y `Administrador de la app`, además de los
+grupos de experiencia `Asociados` y `Comercios`.
 
 ## USUARIO-012
 
@@ -85,9 +86,8 @@ El `GestionPermissionRequiredMixin` usa `UserPassesTestMixin` con `raise_excepti
 
 La especificación del proyecto se sirve en `/especificacion/` y requiere el
 permiso `gestion.ver_especificacion`. Usa un mixin propio
-`VerEspecificacionRequiredMixin`. El permiso se asigna al `Administrador de la
-mutual`; el superusuario técnico también lo obtiene por su condición de
-superusuario.
+`VerEspecificacionRequiredMixin`. El permiso se asigna a `Equipo del proyecto`;
+el superusuario técnico también lo obtiene por su condición de superusuario.
 
 ## USUARIO-017
 
@@ -122,8 +122,10 @@ El logo y el resultado exitoso del login enlazan a `/`. La selección no se guar
 | Atención al asociado | Consulta y edición ordinaria de asociados; cobros; últimos movimientos de la ficha | No requerido | Baja, importaciones, exportación, deudores, períodos y auditoría general |
 | Administrador de permisos | Home administrativa y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No modifica la definición de grupos, no edita superusuarios ni puede asignar `Administrador de la app` |
 | Gestión de convenios | Home administrativa | Actividades comerciales y comercios | Usuarios, asociados, publicidades y auditoría general |
-| Gestión de publicidades | Home administrativa | Categorías, productos/servicios y publicidades; consulta comercios para vincular | Modificación de comercios, usuarios, asociados y auditoría general |
+| Gestión de productos y servicios | Home administrativa | Categorías y productos/servicios | Publicidades, comercios, usuarios, asociados y auditoría general |
+| Gestión de publicidades | Home administrativa | Publicidades; consulta productos y comercios para vincular | Modificación de productos o comercios, usuarios, asociados y auditoría general |
 | Administrador de la mutual | Toda la operación regular, reportes y auditoría | Dominios de asociados, cuotas, convenios y contenidos; finanzas en solo lectura; usuarios en consulta | Importaciones masivas, permisos técnicos, superusuarios y borrados |
+| Equipo del proyecto | Especificación y design system | No requerido | Admin técnico, datos operativos y auditoría |
 | Administrador de la app | Todos los accesos por `is_superuser` | Administración técnica completa con las restricciones de integridad del sistema | No es un rol operativo delegable |
 
 ## USUARIO-020 — `is_staff`, grupos y superusuario
@@ -136,8 +138,8 @@ asignación de esa capacidad, retira `is_staff`, salvo que la cuenta sea
 superusuario.
 
 La lógica no contiene nombres de grupos. Los grupos iniciales Administrador de
-permisos, Gestión de convenios, Gestión de publicidades y Administrador de la
-mutual reciben la capacidad en la migración inicial. Un grupo futuro puede
+permisos, Gestión de convenios, Gestión de productos y servicios, Gestión de
+publicidades y Administrador de la mutual reciben la capacidad en la migración inicial. Un grupo futuro puede
 habilitar el admin recibiendo el mismo permiso, sin cambiar código Python.
 
 La sincronización vive en `usuarios.services.sincronizar_acceso_admin()` y se
@@ -162,3 +164,16 @@ Los permisos `gestion.importar_asociados` y
 faltantes asociada al padrón, no se asignan a ningún grupo operativo. Se
 reservan al `Administrador de la app`, que los obtiene por `is_superuser`. La
 exportación regular de asociados sí pertenece al Administrador de la mutual.
+
+## USUARIO-022 — Configuración repetible de grupos
+
+La matriz vigente de grupos y permisos se define una sola vez en
+`usuarios/roles.py`. El comando `sincronizar_grupos` permite informar, aplicar o
+verificar esa matriz en cualquier ambiente. Al aplicar reemplaza los permisos
+de los grupos administrados por el conjunto exacto definido y alinea `is_staff`
+por capacidad, pero no decide ni modifica sus integrantes.
+
+Al separar `Gestión de productos y servicios` de `Gestión de publicidades`, la
+migración agrega inicialmente al grupo nuevo a quienes ya integraban el grupo
+histórico. Esto conserva accesos durante el despliegue; luego el Administrador
+de permisos revisa cada responsabilidad y retira el grupo sobrante.

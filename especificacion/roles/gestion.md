@@ -14,7 +14,7 @@ Usuario con uno o más permisos operativos de gestión. Puede acceder solo a las
 - Crear usuarios para asociados mediante las herramientas administrativas habilitadas.
 - Gestionar cuotas y registrar pagos.
 - Consultar reportes.
-- Ver la especificación del proyecto.
+- Consultar las herramientas o datos autorizados para sus grupos.
 
 El acceso a `gestion` no depende de `is_staff`. `is_staff` queda reservado para el admin técnico de Django.
 
