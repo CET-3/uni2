@@ -6,7 +6,14 @@ from pytest_django.asserts import assertContains, assertNotContains
 
 from asociados.services import create_asociado
 from comercios.models import ActividadComercial, Comercio
-from gestion.permissions import GESTION_COBRAR_CUOTAS, GESTION_VER_DESIGN_SYSTEM, GESTION_VER_ESPECIFICACION
+from gestion.permissions import (
+    GESTION_COBRAR_CUOTAS,
+    GESTION_VER_DESIGN_SYSTEM,
+    GESTION_VER_DEUDORES,
+    GESTION_VER_ESPECIFICACION,
+)
+from usuarios.home_navigation import build_home_navigation
+from usuarios.roles import ACCESO_ADMIN_TECNICO
 from usuarios.services import COMERCIO_GROUP
 
 
@@ -397,20 +404,24 @@ def test_navbar_muestra_design_system_si_tiene_permiso(client):
 
 
 @pytest.mark.django_db
-def test_navbar_agrupa_herramientas_internas_para_staff(client):
+def test_navbar_agrupa_herramientas_internas_para_capacidad_admin(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(
         username="admin_nav",
         password="secreto123",
         is_staff=True,
     )
-    permisos = Permission.objects.filter(
-        content_type__app_label="gestion",
-        codename__in=[
-            GESTION_VER_ESPECIFICACION.split(".", 1)[1],
-            GESTION_VER_DESIGN_SYSTEM.split(".", 1)[1],
-        ],
-    )
+    permisos = [
+        Permission.objects.get(
+            content_type__app_label=app_label,
+            codename=codename,
+        )
+        for app_label, codename in (
+            GESTION_VER_ESPECIFICACION.split(".", 1),
+            GESTION_VER_DESIGN_SYSTEM.split(".", 1),
+            ACCESO_ADMIN_TECNICO.split(".", 1),
+        )
+    ]
     user.user_permissions.add(*permisos)
 
     client.force_login(user)
@@ -425,6 +436,53 @@ def test_navbar_agrupa_herramientas_internas_para_staff(client):
     assert "Design system" in content
     assert "uni2-user-menu-section" in content
     assert "uni2-user-menu-link" in content
+
+
+@pytest.mark.django_db
+def test_is_staff_sin_capacidad_no_muestra_admin_tecnico(client):
+    user = get_user_model().objects.create_user(
+        username="staff_sin_capacidad",
+        is_staff=True,
+    )
+    client.force_login(user)
+
+    response = client.get(reverse("web:home"))
+
+    assert response.status_code == 200
+    assertNotContains(response, "Admin técnico")
+    assertNotContains(response, reverse("admin:index"))
+
+
+@pytest.mark.django_db
+def test_superusuario_muestra_admin_tecnico(client):
+    user = get_user_model().objects.create_superuser(
+        username="superusuario_nav",
+        password="secreto123",
+    )
+    client.force_login(user)
+
+    response = client.get(reverse("web:home"))
+
+    assertContains(response, "Admin técnico")
+    assertContains(response, reverse("admin:index"))
+
+
+@pytest.mark.django_db
+def test_home_no_ofrece_ver_deudores_aunque_el_usuario_tenga_permiso():
+    user = get_user_model().objects.create_user(username="reporte_deudores")
+    app_label, codename = GESTION_VER_DEUDORES.split(".", 1)
+    user.user_permissions.add(
+        Permission.objects.get(
+            content_type__app_label=app_label,
+            codename=codename,
+        )
+    )
+
+    navigation = build_home_navigation(user, requested_profile="gestion")
+    actions = navigation["primary_actions"] + navigation["extra_actions"]
+
+    assert "Ver deudores" not in [action.label for action in actions]
+    assert reverse("gestion:deudores") not in [action.url for action in actions]
 
 
 @pytest.mark.django_db

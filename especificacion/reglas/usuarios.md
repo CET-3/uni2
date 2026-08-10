@@ -42,7 +42,11 @@ Si un usuario tiene más de una experiencia disponible, luego del login ve en la
 
 ## USUARIO-009
 
-`is_staff` habilita el admin técnico de Django, pero no define por sí solo qué tareas operativas puede usar una persona en `gestion`. Las pantallas y accesos del backoffice se controlan con permisos Django propios de la app `gestion`.
+`is_staff` es un requisito interno del admin de Django, pero no alcanza para
+mostrar su acceso en la interfaz ni define qué tareas operativas puede usar una
+persona en `gestion`. El enlace `Admin técnico` requiere la capacidad explícita
+`usuarios.acceder_admin_tecnico`. Las pantallas y accesos del backoffice se
+controlan con permisos Django propios de cada app.
 
 ## USUARIO-010
 
@@ -140,6 +144,10 @@ La sincronización vive en `usuarios.services.sincronizar_acceso_admin()` y se
 ejecuta desde el admin después de guardar la relación de grupos. No usa signals.
 La migración inicial corrige también usuarios que ya pertenecían a los roles
 iniciales alcanzados.
+
+La home y el menú muestran `Admin técnico` por la misma capacidad explícita,
+no por `is_staff`. Esto evita anunciar el admin a cuentas antiguas o ajustadas
+manualmente que conservan la bandera técnica sin permisos de administración.
 
 `Administrador de la app` es una etiqueta organizativa para cuentas con
 `is_superuser=True`; pertenecer al grupo no concede permisos. Sólo otro

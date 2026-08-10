@@ -1,3 +1,4 @@
+from .roles import ACCESO_ADMIN_TECNICO
 from .services import get_available_experiences, user_has_gestion_access, user_is_asociado, user_is_comercio
 
 
@@ -13,7 +14,9 @@ def navigation_roles(request):
         "es_asociado": es_asociado,
         "es_comercio": es_comercio,
         "tiene_gestion": user_has_gestion_access(user),
-        "es_staff": bool(user.is_authenticated and user.is_staff),
+        "tiene_admin_tecnico": bool(
+            user.is_authenticated and user.has_perm(ACCESO_ADMIN_TECNICO)
+        ),
         "tiene_perfil_asociado": tiene_perfil_asociado,
         "tiene_perfil_comercio": tiene_perfil_comercio,
         "experiencias_disponibles": experiencias_disponibles,
