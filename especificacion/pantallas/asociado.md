@@ -10,6 +10,9 @@ timestamp: 2026-07-13T00:00:00-03:00
 
 - La variante de asociado en la home saluda con el nombre y ofrece como CTA `Mi credencial` y `Mis cuotas`. Debajo conserva servicios, beneficios, publicidades y la información para asociarse.
 - Mi credencial: card centrada dentro del container responsive de Bootstrap.
+  El QR contiene la URL absoluta y neutral del entorno. Conserva el UUID
+  visible como respaldo, muestra el DNI al titular y explica que el comercio
+  necesita conexión. El DNI no se incorpora al QR ni a la copia offline.
 - Mis cuotas: resumen y tabla responsive dentro del mismo container; en mobile el total se apila debajo del título.
 - Productos y servicios.
 - Comercios adheridos.

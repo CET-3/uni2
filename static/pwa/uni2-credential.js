@@ -11,14 +11,14 @@
       ? configuredRetentionDays
       : 7;
 
-  function renderQRCode(container, token, accessibleName) {
+  function renderQRCode(container, value, accessibleName) {
     if (!container) return;
     container.textContent = '';
 
     try {
       if (typeof window.qrcode !== 'function') throw new Error('Generador QR no disponible.');
       const code = window.qrcode(0, 'M');
-      code.addData(String(token), 'Byte');
+      code.addData(String(value), 'Byte');
       code.make();
       container.innerHTML = code.createSvgTag(6, 4);
       const svg = container.querySelector('svg');
@@ -72,7 +72,7 @@
 
     renderQRCode(
       root.querySelector('[data-uni2-qr-value]'),
-      root.dataset.credentialToken,
+      root.dataset.credentialUrl,
       'Código QR de la credencial de ' +
         root.dataset.credentialNombre +
         ' ' +
@@ -104,6 +104,7 @@
         tipo: root.dataset.credentialTipo,
         ultimoEstado: root.dataset.credentialEstado,
         token: root.dataset.credentialToken,
+        credentialUrl: root.dataset.credentialUrl,
         updatedAt: new Date().toISOString(),
         expiresAt: newExpiryDate(),
       };
@@ -238,7 +239,7 @@
 
     renderQRCode(
       content.querySelector('[data-offline-credential-qr]'),
-      credential.token,
+      credential.credentialUrl || (window.location.origin + '/credenciales/' + credential.token + '/'),
       'Código QR de la credencial guardada de ' +
         credential.nombre +
         ' ' +

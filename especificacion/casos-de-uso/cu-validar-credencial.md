@@ -12,13 +12,16 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Flujo principal:**
 
-1.  Escanea el QR o ingresa el token.
-2.  El sistema busca al asociado por `token_credencial`.
-3.  Verifica el estado.
-4.  Muestra el resultado.
+1. Escanea el QR con la cámara común o ingresa el UUID manualmente.
+2. El QR abre `/credenciales/<token UUID>/`.
+3. Si no tiene sesión, inicia sesión y regresa a la URL escaneada.
+4. El sistema comprueba el comercio vinculado y su convenio firmado.
+5. Busca al asociado por `token_credencial` y verifica el estado actual.
+6. Muestra válida o inválida y sólo los datos permitidos.
 
 **Reglas relacionadas:** [Comercios — operación](../reglas/comercios-operacion.md), [Credenciales](../reglas/credenciales.md).
 
-**Situaciones especiales:** QR invalido, asociado inactivo, comercio inactivo.
+**Situaciones especiales:** URL o UUID inválido, asociado inactivo, comercio
+sin convenio firmado, rol no admitido y ausencia de conexión.
 
 **Modelos afectados:** Asociado, Comercio.

@@ -1,11 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.views.generic import TemplateView
 
 from django.utils import timezone
 
 from cuotas.selectors import calcular_estado_cuota, get_total_deuda
+from usuarios.mixins import CredentialPrivacyHeadersMixin
 from usuarios.services import user_is_asociado
 
 
@@ -25,12 +27,18 @@ class AsociadoRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
         return super().handle_no_permission()
 
 
-class AsociadoCredencialView(AsociadoRequiredMixin, TemplateView):
+class AsociadoCredencialView(CredentialPrivacyHeadersMixin, AsociadoRequiredMixin, TemplateView):
     template_name = "asociados/credencial.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["asociado"] = self.request.user.asociado
+        context["credencial_url"] = self.request.build_absolute_uri(
+            reverse(
+                "usuarios:resolver_credencial",
+                kwargs={"token": self.request.user.asociado.token_credencial},
+            )
+        )
         return context
 
 

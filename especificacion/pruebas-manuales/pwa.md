@@ -75,11 +75,25 @@ La emulación de WebKit en CI no reemplaza la prueba en un iPhone o iPad real.
 
 ## Validación
 
-1. Con el teléfono del asociado offline, mostrar la copia guardada.
-2. Con `qa-comercio` online, validar el token contra Uni2.
-3. Dar de baja o cambiar el estado en el servidor y repetir: el servidor debe
+1. Comprobar que el QR contiene una URL HTTPS de staging con la forma
+   `/credenciales/<UUID>/`, sin datos personales.
+2. Escanearla con la cámara común de Android y de iOS. Sin sesión de comercio,
+   iniciar sesión y comprobar que vuelve a la URL escaneada.
+3. Confirmar que el resultado sólo muestra validez, nombre y apellido, tipo y
+   estado; nunca DNI, deuda ni cuotas.
+4. Repetir con el formulario manual del UUID.
+5. Abrir la URL como el asociado propietario; luego intentar una URL ajena y
+   confirmar que no revela datos.
+6. Probar un UUID inexistente, una URL malformada, un rol no admitido y un
+   comercio sin convenio firmado.
+7. Inspeccionar que `Cache-Control` incluya `private` y `no-store`, que
+   `Referrer-Policy` sea `same-origin` y que Cache Storage no contenga la URL.
+8. Con el teléfono del asociado offline, mostrar la copia guardada y comprobar
+   que su QR conserva la misma URL sin afirmar vigencia.
+9. Con `qa-comercio` online, validar el QR contra Uni2.
+10. Dar de baja o cambiar el estado en el servidor y repetir: el servidor debe
    decidir el estado vigente.
-4. Poner también al comercio offline: la validación debe rechazarse sin quedar
+11. Poner también al comercio offline: la validación debe rechazarse sin quedar
    pendiente.
 
 ## Formularios sin conexión

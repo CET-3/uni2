@@ -129,6 +129,7 @@ El registro contiene:
 - propietario como SHA-256 del origen y el ID de usuario, nunca el ID crudo;
 - nombre, apellido, número, tipo y estado al guardar;
 - token de credencial;
+- URL absoluta de resolución de la credencial;
 - fechas de actualización y vencimiento.
 
 Un registro con más de siete días no se muestra y se elimina. Al cerrar sesión
@@ -141,7 +142,9 @@ conectarse. Mientras permanezca completamente offline puede conservar la copia
 anterior hasta que venza el límite local de siete días; no se promete una
 revocación remota durante el offline absoluto.
 
-El QR se genera localmente desde el token. El almacenamiento local no
+El QR se genera localmente desde la URL entregada por el servidor. Una copia
+anterior sin ese campo reconstruye la ruta desde su origen y token hasta que
+una visita online la actualiza. El almacenamiento local no
 convierte la credencial en vigente: la decisión de validez sigue perteneciendo
 al servidor cuando el comercio consulta el token.
 

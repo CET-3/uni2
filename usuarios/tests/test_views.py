@@ -33,6 +33,16 @@ def test_login_redirige_a_home_con_variante_asociado(client):
     assert response.url == reverse("web:home")
 
 
+def test_login_presenta_controles_claros_y_autocompletables(client):
+    response = client.get(reverse("usuarios:login"))
+    content = response.content.decode()
+
+    assert 'class="form-control"' in content
+    assert 'autocomplete="username"' in content
+    assert 'autocomplete="current-password"' in content
+    assert "Ingresar a Uni2" in content
+
+
 @pytest.mark.django_db
 def test_login_redirige_a_home_con_variante_comercio(client):
     user_model = get_user_model()

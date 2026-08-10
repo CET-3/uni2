@@ -8,6 +8,10 @@ timestamp: 2026-07-29T00:00:00-03:00
 
 # Sitio público
 
+El login usa una card compacta y responsive, con campos identificados, ayudas
+de autocompletado y errores accesibles. Cuando fue abierto desde una URL
+protegida conserva el destino seguro para continuar allí después de ingresar.
+
 - Inicio único (`/`).
   - Hero público: cuando no hay sesión, presenta la mutual con título, descripción y botones de acción (`Sumate`, `Iniciar sesión`).
   - Hero de asociado: saluda con el nombre y ofrece `Mi credencial` y `Mis cuotas`.

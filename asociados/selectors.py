@@ -13,6 +13,12 @@ def get_asociado_by_dni(dni: str):
     return Asociado.objects.filter(dni=dni).select_related("curso_actual", "usuario").first()
 
 
+def get_asociado_by_credential_token(token):
+    """Busca una credencial sin decidir quién tiene permiso para verla."""
+
+    return Asociado.objects.filter(token_credencial=token).first()
+
+
 def search_asociados(query: str):
     query = query.strip()
     if not query:
