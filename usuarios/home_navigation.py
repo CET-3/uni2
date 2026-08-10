@@ -9,10 +9,10 @@ from gestion.permissions import (
     GESTION_CONSULTAR_ASOCIADOS,
     GESTION_VER_AUDITORIA,
     GESTION_VER_DESIGN_SYSTEM,
-    GESTION_VER_DEUDORES,
     GESTION_VER_ESPECIFICACION,
 )
 
+from .roles import ACCESO_ADMIN_TECNICO
 from .services import get_available_experiences
 
 
@@ -65,12 +65,6 @@ def _acciones_gestion(user):
             "Buscar asociados, revisar sus datos y operar sobre su cuenta.",
         ),
         (
-            GESTION_VER_DEUDORES,
-            "Ver deudores",
-            "gestion:deudores",
-            "Consultar asociados con deuda.",
-        ),
-        (
             GESTION_ADMINISTRAR_PERIODOS_CUOTA,
             "Períodos de cuota",
             "gestion:periodos_cuota",
@@ -112,7 +106,7 @@ def _acciones_gestion(user):
         for permission, label, url_name, description in definiciones
         if user.has_perm(permission)
     ]
-    if user.is_staff:
+    if user.has_perm(ACCESO_ADMIN_TECNICO):
         acciones.append(
             HomeAction(
                 label="Admin técnico",

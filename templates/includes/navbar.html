@@ -33,7 +33,7 @@
                     {% elif tiene_perfil_comercio %}
                         <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:home' %}?perfil=comercio">Mi comercio</a></li>
                     {% endif %}
-                    {% if es_staff %}
+                    {% if tiene_admin_tecnico %}
                         <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'admin:index' %}">Admin técnico</a></li>
                     {% endif %}
                     {% if perms.gestion.ver_especificacion %}
@@ -89,11 +89,11 @@
                                     <a class="dropdown-item uni2-user-menu-link" href="{% url 'web:home' %}?perfil=comercio"><i class="bi bi-shop" aria-hidden="true"></i><span>Mi comercio</span></a>
                                 {% endif %}
                             </li>
-                            {% if es_staff or perms.gestion.ver_especificacion or perms.gestion.ver_design_system %}
+                            {% if tiene_admin_tecnico or perms.gestion.ver_especificacion or perms.gestion.ver_design_system %}
                                 <li><hr class="dropdown-divider"></li>
                                 <li class="uni2-user-menu-section">
                                     <span class="uni2-user-menu-label">Herramientas</span>
-                                    {% if es_staff %}
+                                    {% if tiene_admin_tecnico %}
                                         <a class="dropdown-item uni2-user-menu-link" href="{% url 'admin:index' %}"><i class="bi bi-tools" aria-hidden="true"></i><span>Admin técnico</span></a>
                                     {% endif %}
                                     {% if perms.gestion.ver_especificacion %}

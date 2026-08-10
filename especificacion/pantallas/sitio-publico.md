@@ -12,6 +12,10 @@ El login usa una card compacta y responsive, con campos identificados, ayudas
 de autocompletado y errores accesibles. Cuando fue abierto desde una URL
 protegida conserva el destino seguro para continuar allí después de ingresar.
 
+En la variante administrativa de la home no se ofrece un acceso directo a
+`Ver deudores`. La pantalla y su permiso se conservan para acceso explícito,
+pero no forman parte de las acciones principales ni de `Más accesos`.
+
 - Inicio único (`/`).
   - Hero público: cuando no hay sesión, presenta la mutual con título, descripción y botones de acción (`Sumate`, `Iniciar sesión`).
   - Hero de asociado: saluda con el nombre y ofrece `Mi credencial` y `Mis cuotas`.
