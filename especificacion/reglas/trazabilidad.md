@@ -33,7 +33,7 @@ timestamp: 2026-08-09T00:00:00-03:00
 5. El historial es de solo lectura para usuarios de la aplicación.
 6. La auditoría conserva los datos mínimos necesarios y excluye contraseñas,
    tokens, secretos, binarios y contenido completo de archivos importados.
-7. Ver la consulta general de auditoría requiere `gestion.ver_auditoria`; ver los movimientos recientes dentro de la ficha de un asociado requiere `gestion.ver_movimientos_asociado`.
+7. Ver la consulta general de auditoría requiere `gestion.ver_auditoria`; ver los movimientos recientes dentro de la ficha de un asociado requiere `gestion.ver_movimientos_asociado`. Ese historial contextual incluye eventos directos y relaciones estructuradas con el asociado; nunca infiere relaciones por coincidencias de texto ni expone eventos de otras personas dentro de operaciones masivas.
 
 ## Bajas, anulaciones y eliminación
 

@@ -7,7 +7,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView
 
-from auditoria.selectors import buscar_operaciones, obtener_operaciones
+from auditoria.selectors import (
+    buscar_operaciones,
+    buscar_operaciones_asociado,
+    obtener_operaciones,
+    obtener_operaciones_asociado,
+)
 from asociados.exporters import build_asociados_formato_uni2_xlsx
 from asociados.importers import (
     PADRON_IMPORT_SESSION_KEY,
@@ -102,11 +107,26 @@ class GestionAuditoriaView(GestionPermissionRequiredMixin, TemplateView):
                 "fecha_desde": form.cleaned_data["fecha_desde"],
                 "fecha_hasta": form.cleaned_data["fecha_hasta"],
             }
-        operaciones = buscar_operaciones(**filtros)
+        asociado_id = self.request.GET.get("asociado_id", "")
+        asociado_auditado = None
+        if asociado_id.isdigit():
+            asociado_auditado = Asociado.objects.filter(pk=asociado_id).first()
+
+        if asociado_auditado:
+            operaciones = buscar_operaciones_asociado(asociado_auditado.id)
+        else:
+            operaciones = buscar_operaciones(**filtros)
         context["form"] = form
         page_obj = Paginator(operaciones, 25).get_page(self.request.GET.get("page"))
-        page_obj.object_list = obtener_operaciones(page_obj.object_list)
+        if asociado_auditado:
+            page_obj.object_list = obtener_operaciones_asociado(
+                page_obj.object_list,
+                asociado_auditado.id,
+            )
+        else:
+            page_obj.object_list = obtener_operaciones(page_obj.object_list)
         context["page_obj"] = page_obj
+        context["asociado_auditado"] = asociado_auditado
         query_params = self.request.GET.copy()
         query_params.pop("page", None)
         context["querystring"] = query_params.urlencode()
@@ -488,15 +508,14 @@ class GestionAsociadoDetalleView(GestionPermissionRequiredMixin, TemplateView):
         )
         if self.request.user.has_perm(GESTION_VER_MOVIMIENTOS_ASOCIADO):
             context["puede_ver_movimientos_asociado"] = True
-            resumenes_auditoria = buscar_operaciones(
-                entidad="asociados.Asociado",
-                objeto_id=str(asociado.id),
-            )[:10]
-            context["operaciones_auditoria"] = obtener_operaciones(resumenes_auditoria)
+            resumenes_auditoria = buscar_operaciones_asociado(asociado.id)[:10]
+            context["operaciones_auditoria"] = obtener_operaciones_asociado(
+                resumenes_auditoria,
+                asociado.id,
+            )
             if self.request.user.has_perm(GESTION_VER_AUDITORIA):
                 context["auditoria_url"] = (
-                    f"{reverse('gestion:auditoria')}?"
-                    f"entidad=asociados.Asociado&objeto_id={asociado.id}"
+                    f"{reverse('gestion:auditoria')}?asociado_id={asociado.id}"
                 )
         return context
 

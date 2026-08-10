@@ -8,13 +8,18 @@
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
         <div>
             <h1 class="h2 mb-1">Auditoría de gestión</h1>
-            <p class="text-secondary mb-0">Historial de operaciones registradas por Uni2.</p>
+            {% if asociado_auditado %}
+                <p class="text-secondary mb-0">Movimientos relacionados con {{ asociado_auditado }}.</p>
+            {% else %}
+                <p class="text-secondary mb-0">Historial de operaciones registradas por Uni2.</p>
+            {% endif %}
         </div>
         <a class="btn btn-outline-primary" href="{% url 'web:home' %}?perfil=gestion">Volver al inicio</a>
     </div>
 
     <form method="get" class="card uni2-surface-card mb-4">
         <div class="card-body">
+            {% if asociado_auditado %}<input type="hidden" name="asociado_id" value="{{ asociado_auditado.id }}">{% endif %}
             <div class="row g-3 align-items-end">
                 <div class="col-md-6 col-lg-3">
                     <label class="form-label" for="{{ form.actor.id_for_label }}">{{ form.actor.label }}</label>

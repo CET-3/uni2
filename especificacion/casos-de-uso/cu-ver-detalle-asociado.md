@@ -20,7 +20,7 @@ timestamp: 2026-06-22T00:00:00-03:00
 4.  Si tiene permiso de edición, puede elegir `Editar asociado`.
 5.  Si tiene permiso de cobro, puede elegir `Cobrar`.
 6.  Una navegación secundaria permite volver a `Atención al asociado` y conserva los filtros de la búsqueda de origen mediante un parámetro local validado.
-7.  Si tiene permiso `gestion.ver_movimientos_asociado`, al pie ve las diez operaciones de auditoría más recientes relacionadas con el asociado.
+7.  Si tiene permiso `gestion.ver_movimientos_asociado`, al pie ve las diez operaciones de auditoría más recientes relacionadas con el asociado, incluidas sus cuotas, pagos y donaciones.
 8.  Si además tiene `gestion.ver_auditoria`, puede abrir el historial completo filtrado.
 
 **Acciones principales:** el encabezado contiene únicamente `Editar asociado` y `Cobrar`, sujetas a permisos. La auditoría es información secundaria al pie y no agrega una acción al encabezado. El historial completo de cuotas y la creación individual de usuario no tienen acceso desde esta pantalla mientras se diseñan sus recorridos definitivos.

@@ -345,6 +345,82 @@ def test_auditoria_contextual_filtra_por_asociado(client):
 
 
 @pytest.mark.django_db
+def test_historial_contextual_incluye_cuotas_y_pagos_del_asociado(client):
+    usuario = crear_usuario_con_permisos(
+        "auditoria_relacionada",
+        [
+            GESTION_CONSULTAR_ASOCIADOS,
+            GESTION_VER_AUDITORIA,
+            GESTION_VER_MOVIMIENTOS_ASOCIADO,
+        ],
+    )
+    asociado = Asociado.objects.create(
+        nombre="Julia",
+        apellido="Campos",
+        dni="40000997",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-08-09",
+        fecha_inicio_cobro="2026-08-01",
+    )
+    otro_asociado = Asociado.objects.create(
+        nombre="Mora",
+        apellido="Rivas",
+        dni="40000996",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-08-09",
+        fecha_inicio_cobro="2026-08-01",
+    )
+    for entidad, objeto_id, descripcion, asociado_evento in (
+        ("cuotas.Cuota", "90", "Cuota 08/2026 de Campos, Julia", asociado),
+        ("cuotas.Pago", "91", "Pago de Campos, Julia", asociado),
+        ("cuotas.Pago", "92", "Pago de Rivas, Mora", otro_asociado),
+    ):
+        EventoAuditoria.objects.create(
+            actor=usuario,
+            actor_etiqueta=usuario.username,
+            accion=EventoAuditoria.ACCION_CREAR,
+            entidad=entidad,
+            objeto_id=objeto_id,
+            objeto_descripcion=descripcion,
+            cambios={
+                "asociado": {
+                    "anterior": None,
+                    "nuevo": {"id": asociado_evento.id, "texto": str(asociado_evento)},
+                }
+            },
+            origen=EventoAuditoria.ORIGEN_GESTION,
+        )
+    client.force_login(usuario)
+
+    detalle = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
+    historial = client.get(
+        reverse("gestion:auditoria"),
+        {"asociado_id": asociado.id},
+    )
+    contenido_detalle = detalle.content.decode()
+    contenido_historial = historial.content.decode()
+    entidades_detalle = {
+        evento.entidad
+        for operacion in detalle.context["operaciones_auditoria"]
+        for evento in operacion.eventos
+    }
+    entidades_historial = {
+        evento.entidad
+        for operacion in historial.context["page_obj"].object_list
+        for evento in operacion.eventos
+    }
+
+    assert "Cuota 08/2026 de Campos, Julia" in contenido_detalle
+    assert {"cuotas.Cuota", "cuotas.Pago"} <= entidades_detalle
+    assert "Pago de Rivas, Mora" not in contenido_detalle
+    assert f"?asociado_id={asociado.id}" in contenido_detalle
+    assert "Movimientos relacionados con Campos, Julia" in contenido_historial
+    assert "Cuota 08/2026 de Campos, Julia" in contenido_historial
+    assert {"cuotas.Cuota", "cuotas.Pago"} <= entidades_historial
+    assert "Pago de Rivas, Mora" not in contenido_historial
+
+
+@pytest.mark.django_db
 def test_auditoria_agrupa_la_operacion_sin_ocultar_eventos(client):
     usuario = crear_usuario_con_permisos("auditora_operaciones", [GESTION_VER_AUDITORIA])
     operacion_id = uuid.uuid4()

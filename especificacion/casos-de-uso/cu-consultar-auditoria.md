@@ -30,7 +30,7 @@ timestamp: 2026-08-09T00:00:00-03:00
 **Permisos:** requiere `gestion.ver_auditoria`. El permiso es independiente de
 consultar o editar asociados y de las acciones de baja o anulación.
 
-**Acceso contextual:** la auditoría general continúa disponible desde la home administrativa y requiere `gestion.ver_auditoria`. El detalle de asociado usa el permiso independiente `gestion.ver_movimientos_asociado` para mostrar las diez operaciones más recientes de la ficha. El enlace hacia esta consulta completa solo aparece cuando el usuario posee ambos permisos.
+**Acceso contextual:** la auditoría general continúa disponible desde la home administrativa y requiere `gestion.ver_auditoria`. El detalle de asociado usa el permiso independiente `gestion.ver_movimientos_asociado` para mostrar las diez operaciones más recientes relacionadas con la ficha, incluidas cuotas, pagos y donaciones que referencien estructuradamente al asociado. Una operación compuesta se muestra completa mientras corresponda a una sola persona; en operaciones masivas se excluyen los eventos de otros asociados. El enlace hacia esta misma consulta contextual completa solo aparece cuando el usuario posee ambos permisos.
 
 **Situaciones especiales:** evento de proceso automático, usuario desactivado,
 objeto eliminado excepcionalmente, valor protegido, dato anterior a la

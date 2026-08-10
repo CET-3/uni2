@@ -111,6 +111,31 @@ def buscar_operaciones(**filtros):
     )
 
 
+def buscar_operaciones_asociado(asociado_id):
+    """Busca operaciones vinculadas de forma estructurada con un asociado.
+
+    Además de los cambios sobre ``Asociado``, incluye eventos de entidades que
+    guardan la relación en ``cambios.asociado`` (por ejemplo cuotas, pagos y
+    donaciones). No se usa la descripción visible como criterio de búsqueda.
+    """
+
+    asociado_id = int(asociado_id)
+    eventos = EventoAuditoria.objects.filter(
+        Q(entidad="asociados.Asociado", objeto_id=str(asociado_id))
+        | Q(cambios__asociado__anterior__id=asociado_id)
+        | Q(cambios__asociado__nuevo__id=asociado_id)
+    )
+    return (
+        eventos.order_by()
+        .values("operacion_id")
+        .annotate(
+            ultima_fecha=Max("fecha"),
+            ultimo_evento_id=Max("id"),
+        )
+        .order_by("-ultima_fecha", "-ultimo_evento_id")
+    )
+
+
 def obtener_operaciones(resumenes):
     """Carga completos los eventos de las operaciones de una página.
 
@@ -138,3 +163,62 @@ def obtener_operaciones(resumenes):
         )
         for operacion_id in ids_ordenados
     ]
+
+
+def obtener_operaciones_asociado(resumenes, asociado_id):
+    """Carga operaciones del asociado sin filtrar de más ni exponer terceros.
+
+    Una operación ordinaria pertenece a un solo asociado y se muestra completa
+    para conservar juntos, por ejemplo, el pago, sus imputaciones y la cuota
+    actualizada. Si una operación masiva contiene eventos de varios asociados,
+    se conservan únicamente los eventos que refieren al asociado consultado.
+    """
+
+    asociado_id = int(asociado_id)
+    operaciones = obtener_operaciones(resumenes)
+    resultado = []
+    for operacion in operaciones:
+        ids_relacionados = {
+            relacionado_id
+            for evento in operacion.eventos
+            for relacionado_id in _ids_asociados_del_evento(evento)
+        }
+        if len(ids_relacionados) <= 1:
+            resultado.append(operacion)
+            continue
+
+        eventos_del_asociado = tuple(
+            evento
+            for evento in operacion.eventos
+            if asociado_id in _ids_asociados_del_evento(evento)
+        )
+        if eventos_del_asociado:
+            resultado.append(
+                OperacionAuditoria(
+                    operacion_id=operacion.operacion_id,
+                    eventos=eventos_del_asociado,
+                )
+            )
+    return resultado
+
+
+def _ids_asociados_del_evento(evento):
+    ids = set()
+    if evento.entidad == "asociados.Asociado":
+        try:
+            ids.add(int(evento.objeto_id))
+        except (TypeError, ValueError):
+            pass
+
+    cambio_asociado = evento.cambios.get("asociado", {})
+    if not isinstance(cambio_asociado, dict):
+        return ids
+    for momento in ("anterior", "nuevo"):
+        referencia = cambio_asociado.get(momento)
+        if not isinstance(referencia, dict) or "id" not in referencia:
+            continue
+        try:
+            ids.add(int(referencia["id"]))
+        except (TypeError, ValueError):
+            continue
+    return ids
