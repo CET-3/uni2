@@ -17,8 +17,12 @@ La raíz (`/`) siempre muestra la home y adapta su hero según [USUARIO-018](../
 La barra de navegación se muestra en todas las pantallas internas (asociado, gestión, comercio) y contiene:
 
 - **Logo** → home (`/`).
+- **Productos y servicios** → `/#productos-servicios`.
+- **Comercios** → `/#beneficios`.
 - **Título contextual** opcional según la pantalla.
 - **Menú de usuario** (desplegable con el nombre de la persona).
+
+Los dos enlaces públicos llevan a secciones de la home única y no a los listados independientes, cuyas rutas se conservan por compatibilidad. En mobile, al elegir una sección se cierra primero el menú colapsado y luego se realiza la navegación o el desplazamiento. Las secciones contemplan mediante `scroll-margin-top` la navbar sticky, el banner de staging y los safe areas de una PWA instalada.
 
 ## Menú de usuario
 

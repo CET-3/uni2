@@ -1,19 +1,16 @@
-{% url "web:home" as default_home_url %}
 <nav class="uni2-breadcrumbs" aria-label="{{ aria_label|default:'Ruta de navegación' }}">
     <ol class="breadcrumb">
-        {% if not hide_home %}
+        {% if root_url and root_label %}
             <li class="breadcrumb-item">
-                <a href="{{ home_url|default:default_home_url }}">{{ home_label|default:"Inicio" }}</a>
+                <a href="{{ root_url }}">{{ root_label }}</a>
             </li>
         {% endif %}
-        {% if parent_url and parent_label %}
+        {% if ancestor_url and ancestor_label %}
             <li class="breadcrumb-item">
-                <a href="{{ parent_url }}{% if parent_fragment %}#{{ parent_fragment }}{% endif %}">{{ parent_label }}</a>
+                <a href="{{ ancestor_url }}">{{ ancestor_label }}</a>
             </li>
         {% endif %}
-        {% if current_url and current_label %}
-            <li class="breadcrumb-item"><a href="{{ current_url }}">{{ current_label }}</a></li>
-        {% elif current_label %}
+        {% if current_label %}
             <li class="breadcrumb-item active" aria-current="page">{{ current_label }}</li>
         {% endif %}
     </ol>

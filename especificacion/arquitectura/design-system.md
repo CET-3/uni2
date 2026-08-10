@@ -101,7 +101,7 @@ El catálogo presenta `uni2-breadcrumbs` en la capa de componentes y usa el mism
 
 El breadcrumb es un componente de navegación contextual, no una primitiva: combina una lista ordenada, enlaces, separadores y el estado de página actual dentro de un `nav` con nombre accesible. Usa la estructura base de Bootstrap, un separador textual decorativo `›`, enlaces con el color de acción y la página actual con color de texto secundario.
 
-Se usa en páginas de detalle con rutas de dos o tres niveles. No se usa en la home. Por defecto, la página actual no enlaza y declara `aria-current="page"`; los nombres largos pueden envolver en mobile. En el detalle de un comercio, el breadcrumb muestra solamente los dos ancestros navegables (`Comercios > actividad comercial`) porque el nombre del comercio ya es el título de la pantalla. No se agrega un icono de inicio porque el texto ya comunica el destino y el separador no necesita exponerse a tecnologías asistivas.
+Se usa en páginas de detalle con rutas de dos o tres niveles. No se usa en la home. Nunca agrega `Inicio`: el logo ya cumple esa función global. La página actual no enlaza y declara `aria-current="page"`; los nombres largos pueden envolver en mobile. No se agrega un icono de inicio porque el texto ya comunica el destino y el separador no necesita exponerse a tecnologías asistivas.
 
 ## Formato monetario
 
@@ -114,9 +114,9 @@ Los valores técnicos de formularios, atributos `data-*`, planillas y payloads n
 se convierten al formato visual: conservan el decimal que necesita su parser.
 Esto evita que una mejora de presentación cambie cálculos o validaciones.
 
-El partial resuelve `Inicio` y su URL como valores por defecto. Las páginas pasan explícitamente `parent_url`, `parent_label` y `current_label`; también pueden reemplazar `home_url`, `home_label` y `aria_label`. `hide_home` omite el primer nivel, `parent_fragment` agrega un ancla al enlace padre y `current_url` convierte el último nivel en otro ancestro navegable. Esta interfaz cubre la jerarquía corta del MVP sin introducir listas armadas en las views.
+El partial recibe niveles explícitos: `root_url` y `root_label` para la raíz de sección; `ancestor_url` y `ancestor_label` para un nivel intermedio opcional; y `current_label` para la página actual. `aria_label` permite precisar el nombre accesible. No existen parámetros implícitos para `Inicio`, fragmentos o una página actual enlazada.
 
-Las páginas de categoría, producto/servicio, actividad comercial, comercio disponible y comercio no disponible usan este componente. Las pantallas de actividad comercial y comercio comparten la jerarquía `Comercios > actividad`, sin el nivel `Inicio`. En el detalle del comercio ambos niveles son ancestros navegables; en la página de la actividad, su propio nombre es el nivel actual y no enlaza.
+Las páginas de categoría, producto/servicio, actividad comercial, comercio disponible y comercio no disponible usan este componente. Sus jerarquías son `Productos y servicios > categoría`, `Productos y servicios > categoría > producto`, `Comercios > actividad` y `Comercios > actividad > comercio`.
 
 En viewport de escritorio, las páginas públicas de detalle distribuyen introducción y panel en dos columnas mediante `uni2-detail-layout`. Por debajo de `lg` se apilan en una columna para mantener una lectura cómoda y evitar comprimir tablas o datos de contacto.
 

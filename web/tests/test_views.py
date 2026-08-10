@@ -33,6 +33,18 @@ def test_url_beneficios_no_se_mantiene(client):
 
 
 @pytest.mark.django_db
+def test_navbar_publica_apunta_a_las_secciones_de_la_home(client):
+    content = client.get(reverse("web:home")).content.decode()
+
+    assert f'href="{reverse("web:home")}#productos-servicios"' in content
+    assert f'href="{reverse("web:home")}#beneficios"' in content
+    assert f'href="{reverse("web:productos_servicios")}">Productos y servicios' not in content
+    assert f'href="{reverse("web:comercios")}">Comercios' not in content
+    assert 'id="productos-servicios"' in content
+    assert 'id="beneficios"' in content
+
+
+@pytest.mark.django_db
 def test_design_system_requiere_login(client):
     response = client.get(reverse("web:design-system"))
 
@@ -545,6 +557,32 @@ def test_paginas_de_detalle_comparten_el_componente_breadcrumbs():
         assert '<nav aria-label="breadcrumb">' not in template
 
 
+def test_breadcrumbs_no_agrega_inicio_ni_conserva_parametros_implicitos():
+    project_root = Path(__file__).resolve().parents[2]
+    component = (project_root / "templates/components/breadcrumbs.html").read_text(encoding="utf-8")
+
+    assert "Inicio" not in component
+    assert "hide_home" not in component
+    assert "current_url" not in component
+    assert "parent_fragment" not in component
+    assert "root_url" in component
+    assert "ancestor_url" in component
+    assert 'aria-current="page"' in component
+
+
+def test_anclas_publicas_reservan_espacio_y_permiten_titulos_largos_en_mobile():
+    css_path = finders.find("css/uni2-design-system.css")
+    assert css_path is not None
+    css = Path(css_path).read_text(encoding="utf-8")
+
+    assert ".uni2-anchor-section" in css
+    assert 'data-deployment-environment="staging"' in css
+    assert "scroll-margin-top" in css
+    assert "#productos-servicios .uni2-titulo-seccion" in css
+    assert "#beneficios .uni2-titulo-seccion" in css
+    assert "overflow-wrap: anywhere" in css
+
+
 def test_templates_usan_una_sola_familia_productiva_de_alertas():
     project_root = Path(__file__).resolve().parents[2]
     templates_root = project_root / "templates"
@@ -673,7 +711,11 @@ def test_detalle_producto_servicio_publico_muestra_producto_activo(client):
     assert "$ 600,00" in contenido
     assert 'class="uni2-breadcrumbs"' in contenido
     assert 'aria-current="page">Anillado' in contenido
-    assert reverse("web:productos_servicios") in contenido
+    breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
+    assert f'href="{reverse("web:home")}#productos-servicios">Productos y servicios</a>' in breadcrumb
+    assert f'href="{reverse("web:categoria_detalle", args=[categoria.pk])}">Impresiones</a>' in breadcrumb
+    assert "Inicio" not in breadcrumb
+    assert f'href="{reverse("web:home")}#productos-servicios" class="uni2-cta uni2-cta-secondary">← Todos los productos</a>' in contenido
 
 
 @pytest.mark.django_db
@@ -718,8 +760,7 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
         "Librería</a>"
     ) in breadcrumb
     assert "Inicio" not in breadcrumb
-    assert "Librería Sur" not in breadcrumb
-    assert 'aria-current="page"' not in breadcrumb
+    assert 'aria-current="page">Librería Sur' in breadcrumb
     assert response_pendiente.status_code == 200
     contenido_pendiente = response_pendiente.content.decode()
     assert "próximamente" in contenido_pendiente
@@ -734,7 +775,8 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
         "Librería</a>"
     ) in breadcrumb_pendiente
     assert "Inicio" not in breadcrumb_pendiente
-    assert "Librería Pendiente" not in breadcrumb_pendiente
+    assert 'aria-current="page">Librería Pendiente' in breadcrumb_pendiente
+    assert f'href="{reverse("web:home")}#beneficios" class="uni2-cta uni2-cta-secondary">← Todos los comercios</a>' in contenido_pendiente
 
 
 @pytest.mark.django_db

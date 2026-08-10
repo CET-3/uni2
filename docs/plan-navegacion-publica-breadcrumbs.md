@@ -2,9 +2,9 @@
 
 ## Estado
 
-Pendiente de implementación.
+Implementado sobre `feature/home-atencion-asociado` como parte del PR de navegación.
 
-Este documento registra una propuesta acordada para implementar más adelante. Mientras el cambio no esté implementado, la especificación OKF vigente continúa describiendo el comportamiento actual. Al realizar el trabajo, también se deberán actualizar los archivos específicos de `especificacion/`.
+Este documento conserva las decisiones que guiaron la implementación. La especificación OKF fue actualizada en el mismo trabajo y vuelve a ser la fuente de verdad del comportamiento vigente.
 
 ## Dependencias y orden
 

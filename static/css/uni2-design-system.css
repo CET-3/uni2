@@ -282,6 +282,14 @@ html {
   scroll-padding-top: 92px;
 }
 
+.uni2-anchor-section {
+  scroll-margin-top: calc(100px + env(safe-area-inset-top));
+}
+
+[data-deployment-environment="staging"] .uni2-anchor-section {
+  scroll-margin-top: calc(132px + env(safe-area-inset-top));
+}
+
 /* === BREADCRUMBS (PROPUESTA EN CATÁLOGO) === */
 .uni2-breadcrumbs {
   --bs-breadcrumb-divider: "›";
@@ -290,6 +298,7 @@ html {
 
 .uni2-breadcrumbs .breadcrumb {
   align-items: center;
+  flex-wrap: wrap;
   margin: 0;
   row-gap: 0.35rem;
 }
@@ -297,6 +306,13 @@ html {
 .uni2-breadcrumbs .breadcrumb-item {
   color: var(--color-text-muted);
   min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#productos-servicios .uni2-titulo-seccion,
+#beneficios .uni2-titulo-seccion {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .uni2-breadcrumbs .breadcrumb-item + .breadcrumb-item::before {
@@ -2118,6 +2134,7 @@ button.uni2-service-card:hover {
   }
 
   .uni2-audit-operation-id {
+    flex: none;
     text-align: left;
   }
 

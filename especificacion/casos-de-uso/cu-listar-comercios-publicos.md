@@ -14,10 +14,12 @@ status: "listo"
 **Flujo principal:**
 
 1.  Ingresa a la home.
-2.  Selecciona el acceso a comercios adheridos.
-3.  El sistema muestra los comercios publicados, ordenados por `orden`, con su actividad comercial y beneficio vigente.
+2.  Selecciona `Comercios` en la navegación y el sistema lo ubica en `/#beneficios`.
+3.  El sistema muestra los rubros que tienen comercios publicados y sus beneficios vigentes.
 4.  El visitante puede consultar los datos públicos de contacto o presencia web disponibles.
 5.  Desde una publicidad o un enlace público, el visitante puede abrir el detalle de un comercio. Si el comercio está `Firmado`, ve sus datos completos. Si no lo está, ve una pantalla informativa "Este comercio estará disponible próximamente".
+
+La ruta `/comercios/` se conserva por compatibilidad, pero no forma parte de la navegación principal.
 
 **Reglas relacionadas:** [Comercios públicos](../reglas/comercios-publicos.md).
 

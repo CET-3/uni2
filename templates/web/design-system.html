@@ -491,14 +491,14 @@
             <p class="small text-muted mb-3"><code>.uni2-breadcrumbs</code> — navegación contextual compartida por las páginas de detalle. El catálogo usa el mismo partial productivo <code>components/breadcrumbs.html</code>.</p>
             <div class="card">
                 <div class="card-body">
-                    {% include "components/breadcrumbs.html" with home_url="#componentes" parent_url="#componentes" parent_label="Productos y servicios" current_label="Fotocopias e impresiones" aria_label="Ruta de navegación de ejemplo" only %}
+                    {% include "components/breadcrumbs.html" with root_url="#componentes" root_label="Productos y servicios" current_label="Fotocopias e impresiones" aria_label="Ruta de navegación de ejemplo" only %}
                     <hr>
                     <ul class="small text-muted mb-0">
                         <li>Se usa en páginas de detalle, no en la home.</li>
                         <li>La página actual se muestra como texto y usa <code>aria-current="page"</code>.</li>
                         <li>El separador <code>›</code> es decorativo; no se agrega un icono.</li>
                         <li>La ruta recomendada tiene entre dos y tres niveles y puede envolver en mobile.</li>
-                        <li>El partial recibe <code>parent_url</code>, <code>parent_label</code> y <code>current_label</code>; Inicio se resuelve por defecto.</li>
+                        <li>El partial recibe una raíz de sección, un ancestro opcional y la página actual; no agrega Inicio.</li>
                     </ul>
                 </div>
             </div>

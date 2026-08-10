@@ -36,6 +36,7 @@ def test_base_integra_manifest_worker_y_componentes_pwa(client):
     assert "/static/pwa/icons/apple-touch-icon-180.png" in content
     assert "/static/pwa/uni2-private-storage.js" in content
     assert "/static/pwa/uni2-pwa.js" in content
+    assert "/static/js/uni2-section-navigation.js" in content
     assert 'id="uni2-connectivity-status"' in content
     assert 'id="uni2-install-promotion"' in content
     assert "Instalá UNI2" in content
@@ -46,6 +47,18 @@ def test_base_integra_manifest_worker_y_componentes_pwa(client):
     assert "cdn.jsdelivr.net" not in content
     assert "fonts.googleapis.com" not in content
     assert "fonts.gstatic.com" not in content
+
+
+def test_navegacion_mobile_cierra_el_menu_antes_de_ir_a_la_seccion():
+    script_path = finders.find("js/uni2-section-navigation.js")
+    assert script_path is not None
+    source = Path(script_path).read_text(encoding="utf-8")
+
+    assert 'menu.classList.contains("show")' in source
+    assert '"hidden.bs.collapse"' in source
+    assert "Collapse.getOrCreateInstance(menu).hide()" in source
+    assert "target.scrollIntoView" in source
+    assert 'behavior: "smooth"' not in source
 
 
 def test_instalacion_ofrece_accion_visible_y_fallback_manual():

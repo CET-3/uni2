@@ -20,6 +20,8 @@ status: "listo"
 5. Ve una sección **Cómo asociarse** con los pasos para ser parte de UNI2, la cuota social y los horarios de atención.
 6. Puede navegar al login para acceder como asociado o comercio.
 
+La navegación superior lleva directamente a las secciones `#productos-servicios` y `#beneficios` de esta misma home. En mobile cierra el menú antes de desplazar para mantener visibles los títulos debajo de la barra sticky.
+
 **Casos de uso relacionados:** [CU-listar-productos-servicios-publicos](cu-listar-productos-servicios-publicos.md), [CU-listar-comercios-publicos](cu-listar-comercios-publicos.md).
 
 **Modelos afectados:** Publicidad, ProductoServicio, ActividadComercial, Comercio.

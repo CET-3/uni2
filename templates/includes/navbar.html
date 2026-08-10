@@ -13,8 +13,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarUni2">
             <ul class="navbar-nav uni2-navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{% url 'web:productos_servicios' %}">Productos y servicios</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'web:comercios' %}">Comercios</a></li>
+                <li class="nav-item"><a class="nav-link js-uni2-section-link" href="{% url 'web:home' %}#productos-servicios">Productos y servicios</a></li>
+                <li class="nav-item"><a class="nav-link js-uni2-section-link" href="{% url 'web:home' %}#beneficios">Comercios</a></li>
                 {% if user.is_authenticated %}
                     {% if cantidad_experiencias > 1 %}
                         {% if tiene_perfil_asociado %}

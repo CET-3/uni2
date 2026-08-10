@@ -1,12 +1,12 @@
-{% if categorias_productos_servicios %}
-<section aria-labelledby="servicios-title">
+<section id="productos-servicios" class="uni2-anchor-section" aria-labelledby="servicios-title">
     <div class="uni2-section-heading">
         <div>
             <h2 id="servicios-title" class="uni2-titulo-seccion">Servicios que suman</h2>
         </div>
     </div>
 
-    <div class="row g-3" aria-label="Servicios de la mutual">
+    {% if categorias_productos_servicios %}
+      <div class="row g-3" aria-label="Servicios de la mutual">
         {% for categoria in categorias_productos_servicios %}
             {% cycle 'uni2-service-card-blue' 'uni2-service-card-yellow' 'uni2-service-card-green' 'uni2-service-card-red' 'uni2-service-card-purple' as color silent %}
             {% url 'web:categoria_detalle' categoria.pk as detalle_url %}
@@ -14,6 +14,6 @@
                 {% include "components/service_card.html" with color=color icono=categoria.etiqueta_icono titulo=categoria.nombre descripcion=categoria.descripcion url=detalle_url only %}
             </div>
         {% endfor %}
-    </div>
+      </div>
+    {% endif %}
 </section>
-{% endif %}

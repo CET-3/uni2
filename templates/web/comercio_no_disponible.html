@@ -8,7 +8,7 @@
 <div class="container py-3">
   {% url "web:home" as breadcrumb_comercios_url %}
   {% url "web:actividad_comercial_detalle" comercio.actividad_comercial_id as breadcrumb_actividad_url %}
-  {% include "components/breadcrumbs.html" with hide_home=True parent_url=breadcrumb_comercios_url parent_fragment="beneficios" parent_label="Comercios" current_url=breadcrumb_actividad_url current_label=comercio.actividad_comercial.nombre only %}
+  {% include "components/breadcrumbs.html" with root_url=breadcrumb_comercios_url|add:"#beneficios" root_label="Comercios" ancestor_url=breadcrumb_actividad_url ancestor_label=comercio.actividad_comercial.nombre current_label=comercio.nombre only %}
 </div>
 
 <section class="uni2-service-detail" aria-labelledby="comercio-title">
@@ -18,7 +18,7 @@
         <span class="uni2-eyebrow">{{ comercio.actividad_comercial.nombre }}</span>
         <h1 id="comercio-title">{{ comercio.nombre }}</h1>
         <p>Este comercio estará disponible próximamente.</p>
-        <a href="{% url 'web:comercios' %}" class="uni2-cta uni2-cta-secondary">← Todos los comercios</a>
+        <a href="{% url 'web:home' %}#beneficios" class="uni2-cta uni2-cta-secondary">← Todos los comercios</a>
       </div>
     </div>
   </div>
