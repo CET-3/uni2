@@ -176,7 +176,7 @@ def test_home_muestra_variante_gestion_con_esa_experiencia(client):
     user_model = get_user_model()
     user = user_model.objects.create_user(username="gest_smart", password="secreto123")
     permiso = Permission.objects.get(
-        content_type__app_label="gestion", codename="ver_dashboard_gestion"
+        content_type__app_label="gestion", codename="cobrar_cuotas"
     )
     user.user_permissions.add(permiso)
 
@@ -298,7 +298,7 @@ def test_home_multiperfil_limita_el_hero_a_dos_cta_y_muestra_el_tercero_debajo(c
         usuario=user,
     )
     permiso = Permission.objects.get(
-        content_type__app_label="gestion", codename="ver_dashboard_gestion"
+        content_type__app_label="gestion", codename="cobrar_cuotas"
     )
     user.user_permissions.add(permiso)
 
@@ -334,7 +334,7 @@ def test_home_multiperfil_rechaza_un_perfil_no_disponible(client):
     asociado.usuario = user
     asociado.save(update_fields=["usuario"])
     permiso = Permission.objects.get(
-        content_type__app_label="gestion", codename="ver_dashboard_gestion"
+        content_type__app_label="gestion", codename="cobrar_cuotas"
     )
     user.user_permissions.add(permiso)
 

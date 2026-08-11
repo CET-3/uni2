@@ -97,7 +97,6 @@ def test_equipo_proyecto_solo_recibe_herramientas_de_documentacion():
 
     assert _tiene_permiso(grupo, "gestion.ver_especificacion")
     assert _tiene_permiso(grupo, "gestion.ver_design_system")
-    assert _tiene_permiso(grupo, "gestion.ver_dashboard_gestion")
     assert not _tiene_permiso(grupo, ACCESO_ADMIN_TECNICO)
     assert not _tiene_permiso(grupo, GESTION_VER_AUDITORIA)
     assert not _tiene_permiso(grupo, "asociados.view_asociado")

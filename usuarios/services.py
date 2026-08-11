@@ -136,7 +136,13 @@ def user_is_comercio(user) -> bool:
 
 
 def user_has_gestion_access(user) -> bool:
-    return user_has_any_gestion_permission(user)
+    return bool(
+        user.is_authenticated
+        and (
+            user_has_any_gestion_permission(user)
+            or user.has_perm(ACCESO_ADMIN_TECNICO)
+        )
+    )
 
 
 def get_available_experiences(user) -> list[str]:

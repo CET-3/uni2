@@ -19,7 +19,11 @@ grupos son acumulables.
 **Grupos de experiencia:** Asociados y Comercios. Estos grupos acompañan al
 vínculo con la entidad correspondiente y no reemplazan los grupos operativos.
 
-**Permisos operativos de gestión:** ver dashboard de gestión, consultar asociados, editar asociados, importar asociados, exportar asociados, cobrar cuotas, ver deudores, administrar períodos de cuota e importar cuotas históricas.
+**Permisos operativos de gestión:** consultar asociados, editar asociados,
+importar asociados, exportar asociados, cobrar cuotas, ver deudores,
+administrar períodos de cuota, importar cuotas históricas, consultar auditoría y
+acceder a la documentación interna. La experiencia administrativa se deduce de
+estas capacidades o del acceso al admin técnico.
 
 **Campos relevantes:** username, email, password, first_name, last_name, is_active, is_staff, last_login, date_joined.
 

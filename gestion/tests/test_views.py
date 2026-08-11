@@ -23,7 +23,6 @@ from gestion.permissions import (
     GESTION_IMPORTAR_ASOCIADOS,
     GESTION_IMPORTAR_CUOTAS_HISTORICAS,
     GESTION_PERMISSIONS,
-    GESTION_DASHBOARD,
 )
 from usuarios.services import ASOCIADO_GROUP
 from usuarios.roles import ADMINISTRADOR_APP_GROUP
@@ -137,7 +136,6 @@ def test_home_atencion_muestra_solo_operacion_diaria(client):
     atencion = crear_usuario_gestion(
         "atencion_dashboard",
         permisos=[
-            GESTION_DASHBOARD,
             GESTION_CONSULTAR_ASOCIADOS,
             GESTION_EDITAR_ASOCIADOS,
             GESTION_COBRAR_CUOTAS,
@@ -159,7 +157,6 @@ def test_home_gestion_muestra_importaciones_autorizadas(client):
     admin_operativo = crear_usuario_gestion(
         "admin_importaciones",
         permisos=[
-            GESTION_DASHBOARD,
             GESTION_IMPORTAR_ASOCIADOS,
             GESTION_IMPORTAR_CUOTAS_HISTORICAS,
         ],
@@ -1250,7 +1247,6 @@ def test_asociados_gestion_oculta_acciones_sin_permiso(client):
     atencion = crear_usuario_gestion(
         "atencion_mutual",
         permisos=[
-            GESTION_DASHBOARD,
             GESTION_CONSULTAR_ASOCIADOS,
             GESTION_EDITAR_ASOCIADOS,
             GESTION_COBRAR_CUOTAS,

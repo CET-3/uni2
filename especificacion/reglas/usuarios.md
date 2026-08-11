@@ -120,10 +120,10 @@ El logo y el resultado exitoso del login enlazan a `/`. La selección no se guar
 | Grupo | Gestión propia | Admin técnico | Exclusiones principales |
 |---|---|---|---|
 | Atención al asociado | Consulta y edición ordinaria de asociados; cobros; últimos movimientos de la ficha | No requerido | Baja, importaciones, exportación, deudores, períodos y auditoría general |
-| Administrador de permisos | Home administrativa y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No modifica la definición de grupos, no edita superusuarios ni puede asignar `Administrador de la app` |
-| Gestión de convenios | Home administrativa | Actividades comerciales y comercios | Usuarios, asociados, publicidades y auditoría general |
-| Gestión de productos y servicios | Home administrativa | Categorías y productos/servicios | Publicidades, comercios, usuarios, asociados y auditoría general |
-| Gestión de publicidades | Home administrativa | Publicidades; consulta productos y comercios para vincular | Modificación de productos o comercios, usuarios, asociados y auditoría general |
+| Administrador de permisos | Experiencia administrativa y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No modifica la definición de grupos, no edita superusuarios ni puede asignar `Administrador de la app` |
+| Gestión de convenios | Experiencia administrativa | Actividades comerciales y comercios | Usuarios, asociados, publicidades y auditoría general |
+| Gestión de productos y servicios | Experiencia administrativa | Categorías y productos/servicios | Publicidades, comercios, usuarios, asociados y auditoría general |
+| Gestión de publicidades | Experiencia administrativa | Publicidades; consulta productos y comercios para vincular | Modificación de productos o comercios, usuarios, asociados y auditoría general |
 | Administrador de la mutual | Toda la operación regular, reportes y auditoría | Dominios de asociados, cuotas, convenios y contenidos; finanzas en solo lectura; usuarios en consulta | Importaciones masivas, permisos técnicos, superusuarios y borrados |
 | Equipo del proyecto | Especificación y design system | No requerido | Admin técnico, datos operativos y auditoría |
 | Administrador de la app | Todos los accesos por `is_superuser` | Administración técnica completa con las restricciones de integridad del sistema | No es un rol operativo delegable |
@@ -177,3 +177,10 @@ Al separar `Gestión de productos y servicios` de `Gestión de publicidades`, la
 migración agrega inicialmente al grupo nuevo a quienes ya integraban el grupo
 histórico. Esto conserva accesos durante el despliegue; luego el Administrador
 de permisos revisa cada responsabilidad y retira el grupo sobrante.
+
+## USUARIO-023 — Acceso deducido a la administración
+
+La experiencia `Administración` no tiene un permiso propio de dashboard. Se
+ofrece cuando la persona posee al menos un permiso operativo real de `gestion`
+o la capacidad `usuarios.acceder_admin_tecnico`. Cada pantalla mantiene su
+control específico y entrar a la experiencia no autoriza otras operaciones.

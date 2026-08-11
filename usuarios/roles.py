@@ -32,7 +32,6 @@ DEFAULT_GROUPS = GRUPOS_OPERATIVOS + (ASOCIADO_GROUP, COMERCIO_GROUP)
 
 PERMISOS_POR_GRUPO = {
     ATENCION_ASOCIADO_GROUP: (
-        "gestion.ver_dashboard_gestion",
         "gestion.consultar_asociados",
         "gestion.editar_asociados",
         "gestion.cobrar_cuotas",
@@ -40,7 +39,6 @@ PERMISOS_POR_GRUPO = {
     ),
     ADMINISTRADOR_PERMISOS_GROUP: (
         ACCESO_ADMIN_TECNICO,
-        "gestion.ver_dashboard_gestion",
         "gestion.ver_auditoria",
         "auth.view_user",
         "auth.add_user",
@@ -50,7 +48,6 @@ PERMISOS_POR_GRUPO = {
     ),
     GESTION_CONVENIOS_GROUP: (
         ACCESO_ADMIN_TECNICO,
-        "gestion.ver_dashboard_gestion",
         "comercios.view_actividadcomercial",
         "comercios.add_actividadcomercial",
         "comercios.change_actividadcomercial",
@@ -60,7 +57,6 @@ PERMISOS_POR_GRUPO = {
     ),
     GESTION_PRODUCTOS_SERVICIOS_GROUP: (
         ACCESO_ADMIN_TECNICO,
-        "gestion.ver_dashboard_gestion",
         "contenidos.view_categoriaproductoservicio",
         "contenidos.add_categoriaproductoservicio",
         "contenidos.change_categoriaproductoservicio",
@@ -70,7 +66,6 @@ PERMISOS_POR_GRUPO = {
     ),
     GESTION_PUBLICIDADES_GROUP: (
         ACCESO_ADMIN_TECNICO,
-        "gestion.ver_dashboard_gestion",
         "contenidos.view_productoservicio",
         "contenidos.view_publicidad",
         "contenidos.add_publicidad",
@@ -78,13 +73,11 @@ PERMISOS_POR_GRUPO = {
         "comercios.view_comercio",
     ),
     EQUIPO_PROYECTO_GROUP: (
-        "gestion.ver_dashboard_gestion",
         "gestion.ver_especificacion",
         "gestion.ver_design_system",
     ),
     ADMINISTRADOR_MUTUAL_GROUP: (
         ACCESO_ADMIN_TECNICO,
-        "gestion.ver_dashboard_gestion",
         "gestion.consultar_asociados",
         "gestion.editar_asociados",
         "gestion.exportar_asociados",
