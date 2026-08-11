@@ -11,6 +11,7 @@ okf_version: "0.1"
 * [Relaciones](relaciones/index.md) - Relaciones entre entidades del MVP.
 * [Reglas](reglas/index.md) - Reglas de negocio vigentes.
 * [Casos de uso](casos-de-uso/index.md) - Flujos funcionales del MVP.
+* [Procesos](procesos/index.md) - Orden de trabajo, responsables, entradas y resultados.
 * [Casos borde](casos-borde/index.md) - Situaciones especiales y respuesta esperada.
 * [Reportes](reportes/index.md) - Reportes y listados operativos del MVP.
 * [Pruebas manuales](pruebas-manuales/index.md) - Guías simples para verificar funcionalidades desde la interfaz.

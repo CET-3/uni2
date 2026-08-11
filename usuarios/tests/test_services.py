@@ -13,6 +13,7 @@ from usuarios.services import (
     create_user_for_asociado,
     create_user_for_comercio,
     ensure_default_groups,
+    get_available_experiences,
     sincronizar_acceso_admin,
 )
 from usuarios.roles import (
@@ -30,6 +31,7 @@ def test_grupo_convenios_activa_y_desactiva_acceso_admin():
     usuario.groups.add(grupo)
     sincronizar_acceso_admin(usuario)
     assert usuario.is_staff
+    assert "gestion" in get_available_experiences(usuario)
 
     usuario.groups.remove(grupo)
     sincronizar_acceso_admin(usuario)

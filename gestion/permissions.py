@@ -1,4 +1,3 @@
-GESTION_DASHBOARD = "gestion.ver_dashboard_gestion"
 GESTION_CONSULTAR_ASOCIADOS = "gestion.consultar_asociados"
 GESTION_EDITAR_ASOCIADOS = "gestion.editar_asociados"
 GESTION_IMPORTAR_ASOCIADOS = "gestion.importar_asociados"
@@ -14,7 +13,6 @@ GESTION_VER_MOVIMIENTOS_ASOCIADO = "gestion.ver_movimientos_asociado"
 
 
 GESTION_PERMISSION_LABELS = [
-    (GESTION_DASHBOARD, "Puede ver el dashboard de gestión"),
     (GESTION_CONSULTAR_ASOCIADOS, "Puede consultar asociados"),
     (GESTION_EDITAR_ASOCIADOS, "Puede editar asociados"),
     (GESTION_IMPORTAR_ASOCIADOS, "Puede importar asociados"),

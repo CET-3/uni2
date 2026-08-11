@@ -12,3 +12,4 @@
 * [Trazabilidad y auditoría](trazabilidad.md) - Diseño aprobado para atribuir cambios, conservar historial y controlar operaciones destructivas.
 * [Glosario de deploy y releases](glosario-deploy.md) - Conceptos básicos para entender ambientes, credenciales, controles y promoción de versiones.
 * [Configuración de deploy](deploy.md) - Inventario de variables, secretos y valores automáticos de Production, staging y GitHub Actions.
+* [Configuración de grupos](configuracion-grupos.md) - Fuente única, sincronización y despliegue de la matriz de permisos.
