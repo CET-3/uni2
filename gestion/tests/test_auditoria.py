@@ -11,7 +11,6 @@ from cuotas.models import PeriodoCuota
 from gestion.permissions import (
     GESTION_ADMINISTRAR_PERIODOS_CUOTA,
     GESTION_CONSULTAR_ASOCIADOS,
-    GESTION_DASHBOARD,
     GESTION_EDITAR_ASOCIADOS,
     GESTION_VER_AUDITORIA,
     GESTION_VER_MOVIMIENTOS_ASOCIADO,
@@ -30,7 +29,7 @@ def crear_usuario_con_permisos(username, permisos):
 
 @pytest.mark.django_db
 def test_auditoria_rechaza_usuario_sin_permiso_y_oculta_acceso(client):
-    usuario = crear_usuario_con_permisos("sin_auditoria", [GESTION_DASHBOARD])
+    usuario = crear_usuario_con_permisos("sin_auditoria", [GESTION_CONSULTAR_ASOCIADOS])
     client.force_login(usuario)
 
     dashboard = client.get(reverse("web:home"))
@@ -77,7 +76,7 @@ def test_atencion_ve_movimientos_de_ficha_pero_no_puede_abrir_auditoria_general(
 
 @pytest.mark.django_db
 def test_auditoria_muestra_acceso_y_eventos_con_permiso(client):
-    usuario = crear_usuario_con_permisos("con_auditoria", [GESTION_DASHBOARD, GESTION_VER_AUDITORIA])
+    usuario = crear_usuario_con_permisos("con_auditoria", [GESTION_VER_AUDITORIA])
     EventoAuditoria.objects.create(
         actor=usuario,
         actor_etiqueta=usuario.username,

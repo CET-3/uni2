@@ -11,14 +11,19 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 Usuario de autenticación de Django. Se recomienda usar el sistema estandar inicialmente.
 
-**Grupos operativos iniciales:** Atención al asociado, Administrador de permisos,
-Gestión de convenios, Gestión de publicidades, Administrador de la mutual y
-Administrador de la app. Los grupos son acumulables.
+**Grupos iniciales:** Atención al asociado, Administrador de permisos, Gestión
+de convenios, Gestión de productos y servicios, Gestión de publicidades,
+Administrador de la mutual, Equipo del proyecto y Administrador de la app. Los
+grupos son acumulables.
 
 **Grupos de experiencia:** Asociados y Comercios. Estos grupos acompañan al
 vínculo con la entidad correspondiente y no reemplazan los grupos operativos.
 
-**Permisos operativos de gestión:** ver dashboard de gestión, consultar asociados, editar asociados, importar asociados, exportar asociados, cobrar cuotas, ver deudores, administrar períodos de cuota e importar cuotas históricas.
+**Permisos operativos de gestión:** consultar asociados, editar asociados,
+importar asociados, exportar asociados, cobrar cuotas, ver deudores,
+administrar períodos de cuota, importar cuotas históricas, consultar auditoría y
+acceder a la documentación interna. La experiencia administrativa se deduce de
+estas capacidades o del acceso al admin técnico.
 
 **Campos relevantes:** username, email, password, first_name, last_name, is_active, is_staff, last_login, date_joined.
 

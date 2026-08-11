@@ -4,7 +4,7 @@ from io import StringIO
 import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.contrib.sessions.models import Session
 from django.core.management import call_command
 from django.core.management.base import CommandError
@@ -19,17 +19,41 @@ from gestion.permissions import (
     GESTION_COBRAR_CUOTAS,
     GESTION_IMPORTAR_ASOCIADOS,
     GESTION_VER_AUDITORIA,
-    GESTION_VER_MOVIMIENTOS_ASOCIADO,
     GESTION_VER_DESIGN_SYSTEM,
+    GESTION_VER_MOVIMIENTOS_ASOCIADO,
 )
 from usuarios.models import EstadoDatosStaging
+from usuarios.roles import (
+    ACCESO_ADMIN_TECNICO,
+    ADMINISTRADOR_APP_GROUP,
+    ATENCION_ASOCIADO_GROUP,
+    EQUIPO_PROYECTO_GROUP,
+    GESTION_PUBLICIDADES_GROUP,
+)
 from usuarios.services import ASOCIADO_GROUP, COMERCIO_GROUP
-from usuarios.roles import ADMINISTRADOR_APP_GROUP, ATENCION_ASOCIADO_GROUP
 
-
-SERVICIOS_VERCEL = {"Fotocopias", "Uniformes", "Bicicleta solidaria", "Cuadernillos y anillado"}
-RUBROS_VERCEL = {"Gastronomía", "Actividad física", "Belleza", "Vestimenta", "Educación", "Tecnología y accesorios"}
-COMERCIOS_VERCEL = {"Alto Drugstore", "Librería Muñoz", "Atenas Gimnasio", "Andromeda Studio", "Carolina's Closet", "Techno Store"}
+SERVICIOS_VERCEL = {
+    "Fotocopias",
+    "Uniformes",
+    "Bicicleta solidaria",
+    "Cuadernillos y anillado",
+}
+RUBROS_VERCEL = {
+    "Gastronomía",
+    "Actividad física",
+    "Belleza",
+    "Vestimenta",
+    "Educación",
+    "Tecnología y accesorios",
+}
+COMERCIOS_VERCEL = {
+    "Alto Drugstore",
+    "Librería Muñoz",
+    "Atenas Gimnasio",
+    "Andromeda Studio",
+    "Carolina's Closet",
+    "Techno Store",
+}
 
 
 def set_staging_qa_credentials(monkeypatch):
@@ -52,7 +76,9 @@ def test_huella_base_no_expone_la_contrasena_configurada():
 
     call_command("huella_base", stdout=output)
 
-    assert output.getvalue().strip() == database_fingerprint(settings.DATABASES["default"])
+    assert output.getvalue().strip() == database_fingerprint(
+        settings.DATABASES["default"]
+    )
 
 
 def test_huella_base_puede_calcular_la_identidad_separada_del_rol():
@@ -121,10 +147,65 @@ def test_carga_inicial_crea_usuarios_de_prueba():
 
 
 @pytest.mark.django_db
+def test_sincronizar_grupos_informa_aplica_y_es_idempotente():
+    equipo = Group.objects.get(name=EQUIPO_PROYECTO_GROUP)
+    permiso_extra = Permission.objects.get(
+        content_type__app_label="auth", codename="delete_user"
+    )
+    equipo.permissions.add(permiso_extra)
+    publicidades = Group.objects.get(name=GESTION_PUBLICIDADES_GROUP)
+    publicidades_user = get_user_model().objects.create_user(
+        username="publicidades-con-matriz-desviada", is_staff=True
+    )
+    publicidades_user.groups.add(publicidades)
+    publicidades.permissions.clear()
+    output = StringIO()
+
+    call_command("sincronizar_grupos", stdout=output)
+
+    assert "Ejecutá nuevamente con --apply" in output.getvalue()
+    with pytest.raises(CommandError, match="no está sincronizada"):
+        call_command("sincronizar_grupos", check=True)
+
+    call_command("sincronizar_grupos", apply=True)
+    output = StringIO()
+    call_command("sincronizar_grupos", check=True, stdout=output)
+
+    assert "está sincronizada" in output.getvalue()
+    assert not equipo.permissions.filter(pk=permiso_extra.pk).exists()
+    publicidades_user.refresh_from_db()
+    assert publicidades_user.is_staff
+
+
+@pytest.mark.django_db
+def test_sincronizar_grupos_alinea_is_staff_por_capacidad_sin_hardcodear_grupos():
+    custom_group = Group.objects.create(name="Responsabilidad futura")
+    admin_app, admin_codename = ACCESO_ADMIN_TECNICO.split(".", 1)
+    custom_group.permissions.add(
+        Permission.objects.get(
+            content_type__app_label=admin_app, codename=admin_codename
+        )
+    )
+    user_model = get_user_model()
+    enabled = user_model.objects.create_user(username="futuro", is_staff=False)
+    enabled.groups.add(custom_group)
+    stale = user_model.objects.create_user(username="sin-capacidad", is_staff=True)
+
+    call_command("sincronizar_grupos", apply=True)
+
+    enabled.refresh_from_db()
+    stale.refresh_from_db()
+    assert enabled.is_staff
+    assert not stale.is_staff
+
+
+@pytest.mark.django_db
 def test_carga_inicial_crea_servicios_vercel():
     call_command("carga_inicial")
     nombres = set(CategoriaProductoServicio.objects.values_list("nombre", flat=True))
-    assert SERVICIOS_VERCEL.issubset(nombres), f"Faltan servicios: {SERVICIOS_VERCEL - nombres}"
+    assert SERVICIOS_VERCEL.issubset(nombres), (
+        f"Faltan servicios: {SERVICIOS_VERCEL - nombres}"
+    )
     assert ProductoServicio.objects.filter(categoria__nombre="Fotocopias").exists()
 
 
@@ -139,7 +220,9 @@ def test_carga_inicial_crea_rubros_vercel():
 def test_carga_inicial_crea_comercios_vercel():
     call_command("carga_inicial")
     nombres = set(Comercio.objects.values_list("nombre", flat=True))
-    assert COMERCIOS_VERCEL.issubset(nombres), f"Faltan comercios: {COMERCIOS_VERCEL - nombres}"
+    assert COMERCIOS_VERCEL.issubset(nombres), (
+        f"Faltan comercios: {COMERCIOS_VERCEL - nombres}"
+    )
 
 
 @pytest.mark.django_db
@@ -214,7 +297,9 @@ def test_preparar_copia_staging_invalida_accesos_y_crea_usuarios_qa(monkeypatch)
     UNI2_STAGING_DATABASE_LABEL="uni2-staging",
     PWA_PRIVATE_DATA_EPOCH="2026-08-02-01",
 )
-def test_preparar_copia_staging_aborta_antes_de_tocar_un_destino_no_confirmado(monkeypatch):
+def test_preparar_copia_staging_aborta_antes_de_tocar_un_destino_no_confirmado(
+    monkeypatch,
+):
     user = get_user_model().objects.create_user(
         username="usuario-productivo",
         password="sigue-intacto",
@@ -240,7 +325,9 @@ def test_preparar_copia_staging_aborta_antes_de_tocar_un_destino_no_confirmado(m
     UNI2_STAGING_DATABASE_LABEL="uni2-staging",
     PWA_PRIVATE_DATA_EPOCH="2026-08-02-01",
 )
-def test_preparar_copia_staging_revierte_todo_si_falla_despues_de_invalidar(monkeypatch):
+def test_preparar_copia_staging_revierte_todo_si_falla_despues_de_invalidar(
+    monkeypatch,
+):
     asociado = Asociado.objects.create(
         nombre="Rita",
         apellido="Rollback",
