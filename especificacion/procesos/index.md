@@ -8,20 +8,34 @@ timestamp: 2026-08-10T00:00:00-03:00
 
 # Procesos
 
-Los procesos se ordenan por la clase de trabajo que resuelven. Un grupo es una
-responsabilidad y una persona puede integrar varios grupos.
+Este índice enumera los procesos principales. Los casos de uso documentan cómo
+se realiza cada tarea y permiten reconocer a qué proceso corresponde.
 
-## Operación de la mutual
+## Atención a asociados
 
-1. [Atención, cobranza y administración de cuotas](operacion-mutual.md).
-2. [Convenios, productos y publicidades](contenidos-y-convenios.md).
+1. Alta, consulta y actualización de asociados.
+2. Cobro de cuotas y registro de donaciones.
+3. Consulta de deuda y movimientos de asociados.
 
-## Experiencias externas
+## Administración de la mutual
 
-3. [Cuenta y beneficios del asociado](experiencias.md#cuenta-y-beneficios-del-asociado).
-4. [Operación del comercio adherido](experiencias.md#operacion-del-comercio-adherido).
+4. Creación de períodos y generación de cuotas.
+5. Administración de convenios y comercios adheridos.
+6. Administración de productos y servicios.
+7. Administración de publicidades.
+8. Creación de usuarios y asignación de grupos.
+9. Consulta de auditoría y seguimiento de operaciones.
 
-## Gobierno y soporte
+## Experiencias de asociados y comercios
 
-5. [Usuarios, accesos, auditoría y supervisión](gobierno-y-soporte.md).
-6. [Documentación, capacitación y operación técnica](proyecto-y-operacion-tecnica.md).
+10. Consulta de credencial, cuotas y beneficios del asociado.
+11. Validación de credenciales en comercios adheridos.
+
+## Alumnos participantes del desarrollo de la app
+
+12. Consulta de la especificación y el design system.
+
+## Operación técnica
+
+13. Preparación de datos e importaciones iniciales.
+14. Migraciones, despliegues y mantenimiento de ambientes.
