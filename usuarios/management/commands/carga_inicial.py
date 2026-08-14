@@ -144,8 +144,8 @@ class Command(BaseCommand):
             defaults={
                 "descripcion": "Uso de bicicleta por el ciclo lectivo.",
                 "es_servicio": True,
-                "precio_asociados": 0,
-                "precio_no_asociados": 0,
+                "precio_asociados": None,
+                "precio_no_asociados": None,
                 "orden": 1,
             },
         )

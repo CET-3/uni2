@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% load formatos %}
-
+{% load static %}
 {% block title %}{{ categoria.nombre }} | Uni2{% endblock %}
 
 {% block body_class %} uni2-detail-page{% endblock %}
@@ -13,47 +12,93 @@
 
 <section class="uni2-service-detail" aria-labelledby="categoria-title">
     <div class="container pb-5">
-    <div class="uni2-detail-layout">
-      <div class="uni2-detail-copy">
+    <div class="uni2-category-detail-layout">
+      <header class="uni2-detail-copy">
         <h1 id="categoria-title" class="uni2-titulo-principal">{{ categoria.nombre }}</h1>
         {% if categoria.descripcion %}
           <p>{{ categoria.descripcion }}</p>
         {% endif %}
-      </div>
+      </header>
 
-      <div class="uni2-detail-panel">
-        {% if categoria.productos_servicios.all %}
-          <h2>Precios</h2>
+      <div class="uni2-category-products-panel">
+        {% if bloques_productos.generales or bloques_productos.ciclos %}
+          {% if bloques_productos.generales %}
+            <section class="uni2-general-products-card"{% if bloques_productos.ciclos %} aria-labelledby="productos-generales-title"{% endif %}>
+              <div class="uni2-detail-panel uni2-product-group">
+                {% if bloques_productos.ciclos %}
+                  <h2 id="productos-generales-title" class="uni2-product-group-title">Productos generales</h2>
+                {% endif %}
+                {% include "components/product_price_tables.html" with grupos_precio=bloques_productos.generales.grupos_precio tabla_label="Productos generales" only %}
+              </div>
+            </section>
+          {% endif %}
 
-          <div class="uni2-price-table-wrap">
-            <table class="uni2-price-table uni2-price-table-compact" aria-label="Precios de la categoría">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Precio asociado</th>
-                  <th>Precio no asociado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in categoria.productos_servicios.all %}
-                  <tr>
-                    <th>{{ item.nombre }}</th>
-                    <td>{{ item.precio_asociados|moneda }}</td>
-                    <td>{{ item.precio_no_asociados|moneda }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+          {% if bloques_productos.ciclos %}
+            <div class="uni2-cycles-grid{% if bloques_productos.mostrar_selector_ciclos %} uni2-cycles-grid--multiple{% endif %}" data-cycle-selector>
+              {% if bloques_productos.mostrar_selector_ciclos %}
+                <div class="uni2-cycle-tabs" data-cycle-tabs role="tablist" aria-label="Seleccionar ciclo" hidden>
+                  {% for ciclo in bloques_productos.ciclos %}
+                    <button
+                      type="button"
+                      class="uni2-cycle-tab"
+                      id="uni2-cycle-tab-{{ ciclo.slug }}"
+                      role="tab"
+                      data-cycle-tab="{{ ciclo.slug }}"
+                      aria-controls="uni2-cycle-panel-{{ ciclo.slug }}"
+                      aria-selected="false"
+                      tabindex="-1"
+                    >{{ ciclo.titulo }}</button>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% for ciclo in bloques_productos.ciclos %}
+                <section
+                  class="uni2-cycle-section uni2-cycle-card uni2-cycle-card--{{ ciclo.slug }}"
+                  id="uni2-cycle-panel-{{ ciclo.slug }}"
+                  data-cycle-panel="{{ ciclo.slug }}"
+                  {% if bloques_productos.mostrar_selector_ciclos %}role="tabpanel" aria-labelledby="uni2-cycle-tab-{{ ciclo.slug }}"{% else %}aria-labelledby="ciclo-{{ ciclo.slug }}-title"{% endif %}
+                >
+                  <header class="uni2-cycle-heading">
+                    <span aria-hidden="true">{{ ciclo.etiqueta_corta }}</span>
+                    <h2 id="ciclo-{{ ciclo.slug }}-title">{{ ciclo.titulo }}</h2>
+                  </header>
+                  {% for grupo_curso in ciclo.grupos %}
+                    <section class="uni2-course-group" aria-labelledby="curso-{{ ciclo.slug }}-{{ forloop.counter }}-title">
+                      <h3 id="curso-{{ ciclo.slug }}-{{ forloop.counter }}-title">{{ grupo_curso.titulo }}</h3>
+                      {% include "components/product_price_tables.html" with grupos_precio=grupo_curso.grupos_precio tabla_label=grupo_curso.titulo only %}
+                    </section>
+                  {% endfor %}
+                </section>
+              {% endfor %}
+            </div>
+          {% endif %}
         {% else %}
-          <p class="text-secondary mb-0">No hay productos o servicios publicados en esta categoría.</p>
+          <div class="uni2-detail-panel">
+            <p class="text-secondary mb-0">No hay productos o servicios publicados en esta categoría.</p>
+          </div>
         {% endif %}
 
-        {% if categoria.texto_cta %}
-          {% include "components/contact_block.html" with texto=categoria.texto_cta only %}
+        {% if categoria.imagen_informativa or categoria.texto_cta %}
+          <div class="uni2-detail-panel uni2-category-extras">
+          {% if categoria.imagen_informativa %}
+            <section class="uni2-informative-image" aria-labelledby="imagen-informativa-categoria">
+              <h3 id="imagen-informativa-categoria">{{ categoria.titulo_imagen_informativa }}</h3>
+              <img src="{{ categoria.imagen_informativa.url }}" alt="{{ categoria.titulo_imagen_informativa }}">
+            </section>
+          {% endif %}
+
+          {% if categoria.texto_cta %}
+            {% include "components/contact_block.html" with texto=categoria.texto_cta only %}
+          {% endif %}
+          </div>
         {% endif %}
       </div>
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{% static 'js/uni2-cycle-selector.js' %}"></script>
 {% endblock %}

@@ -10,6 +10,19 @@ timestamp: 2026-06-23T00:00:00-03:00
 
 Las fotos cargadas desde el admin técnico usan campos `ImageField`.
 
+## Productos y categorías
+
+La foto de `ProductoServicio` representa un ítem concreto. Se recomienda una
+imagen horizontal o cuadrada de al menos `1200 px` en su lado mayor, en WebP o
+JPG y menor a `500 KB`. La miniatura usa recorte de cobertura; la ficha
+individual conserva la imagen completa dentro de su contenedor.
+
+La imagen informativa de `CategoriaProductoServicio` puede contener texto o
+medidas, por ejemplo una tabla de talles. Debe ser legible a ancho de celular;
+se recomienda WebP o PNG, hasta `1600 px` de ancho y menor a `700 KB`. Siempre
+se publica acompañada por un título textual que brinda contexto y se usa como
+alternativa accesible.
+
 ## Local
 
 En desarrollo local, Django guarda los archivos en `MEDIA_ROOT` y los sirve desde `MEDIA_URL` cuando `DEBUG=True`.

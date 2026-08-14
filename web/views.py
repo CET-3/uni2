@@ -6,7 +6,11 @@ from django.views.generic import DetailView, TemplateView
 from comercios.selectors import get_comercios_firmados, get_rubros_con_comercios
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
-from contenidos.selectors import get_categorias_productos_servicios_publicas, get_publicidades_home
+from contenidos.selectors import (
+    get_bloques_productos_publicos,
+    get_categorias_productos_servicios_publicas,
+    get_publicidades_home,
+)
 from cuotas.selectors import get_periodo_cuota_para_publicar
 from gestion.permissions import GESTION_VER_DESIGN_SYSTEM, user_has_gestion_permission
 from usuarios.home_navigation import build_home_navigation
@@ -77,12 +81,12 @@ class CategoriaProductoServicioDetalleView(DetailView):
     context_object_name = "categoria"
 
     def get_queryset(self):
-        return CategoriaProductoServicio.objects.filter(activa=True).prefetch_related(
-            Prefetch(
-                "productos_servicios",
-                queryset=ProductoServicio.objects.filter(activo=True).order_by("orden", "nombre"),
-            )
-        )
+        return CategoriaProductoServicio.objects.filter(activa=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["bloques_productos"] = get_bloques_productos_publicos(self.object)
+        return context
 
 
 class ActividadComercialDetalleView(DetailView):

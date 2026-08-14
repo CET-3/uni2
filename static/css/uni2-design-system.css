@@ -2603,6 +2603,245 @@ button.uni2-service-card:hover {
   font-weight: 800;
 }
 
+.uni2-price-table .uni2-price-column {
+  text-align: right;
+}
+
+.uni2-product-group + .uni2-product-group {
+  margin-top: 24px;
+}
+
+.uni2-category-detail-layout {
+  display: grid;
+  gap: clamp(28px, 4vw, 48px);
+}
+
+.uni2-category-products-panel {
+  display: grid;
+  gap: 24px;
+  width: 100%;
+}
+
+.uni2-cycles-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.uni2-cycle-card {
+  --uni2-cycle-accent: var(--brand-blue);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 18px;
+  border-top: 8px solid var(--uni2-cycle-accent);
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.uni2-cycle-card--cs {
+  --uni2-cycle-accent: var(--brand-green);
+}
+
+.uni2-cycle-tabs[hidden] {
+  display: none;
+}
+
+.uni2-cycle-tabs {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 14px;
+  gap: 6px;
+  margin-bottom: 24px;
+  padding: 5px;
+}
+
+.uni2-cycle-tab {
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  color: var(--color-action-on-surface);
+  flex: 1 1 0;
+  font-weight: 900;
+  min-height: 46px;
+  padding: 9px 12px;
+}
+
+.uni2-cycle-tab[aria-selected="true"] {
+  background: var(--brand-blue);
+  color: var(--color-on-strong);
+}
+
+.uni2-cycle-tab:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.uni2-cycle-heading {
+  align-items: center;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--uni2-cycle-accent) 12%, transparent), var(--color-surface-muted));
+  display: flex;
+  gap: 14px;
+  padding: 18px;
+}
+
+.uni2-cycle-heading > span {
+  align-items: center;
+  background: var(--uni2-cycle-accent);
+  border-radius: 50%;
+  color: var(--color-on-strong);
+  display: inline-flex;
+  flex: 0 0 54px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  height: 54px;
+  justify-content: center;
+}
+
+.uni2-cycle-heading h2 {
+  color: var(--color-text);
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+  font-weight: 900;
+  margin: 0;
+}
+
+.uni2-course-group + .uni2-course-group {
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.uni2-course-group {
+  padding: 18px;
+}
+
+.uni2-course-group > h3 {
+  color: var(--color-action-on-surface);
+  font-size: 1rem;
+  font-weight: 900;
+  margin: 0 0 10px;
+}
+
+.uni2-category-extras .uni2-informative-image:first-child {
+  margin-top: 0;
+}
+
+@media (min-width: 992px) {
+  .uni2-cycles-grid--multiple {
+    align-items: start;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .uni2-cycles-grid--multiple .uni2-cycle-tabs {
+    grid-column: 1 / -1;
+  }
+}
+
+.uni2-detail-panel .uni2-product-group-title {
+  color: var(--color-action-on-surface);
+  font-size: 1rem;
+  font-weight: 900;
+  margin: 20px 0 10px;
+}
+
+.uni2-product-group .uni2-price-table-wrap + .uni2-price-table-wrap {
+  margin-top: 12px;
+}
+
+.uni2-product-row {
+  position: relative;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.uni2-product-row:hover,
+.uni2-product-row:focus-within {
+  background: var(--color-surface-muted);
+  box-shadow: inset 4px 0 0 var(--brand-blue);
+}
+
+.uni2-product-row:focus-within {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: -3px;
+}
+
+.uni2-product-row-link {
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.uni2-product-row-link::after {
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.uni2-product-row-link:focus {
+  outline: none;
+}
+
+.uni2-product-thumb {
+  aspect-ratio: 1;
+  border: 1px solid rgba(63, 81, 181, 0.14);
+  border-radius: 9px;
+  flex: 0 0 46px;
+  height: 46px;
+  object-fit: cover;
+  width: 46px;
+}
+
+.uni2-price-badge {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 999px;
+  color: var(--color-action-on-surface);
+  display: inline-flex;
+  font-size: 0.76rem;
+  font-weight: 900;
+  margin-left: 6px;
+  padding: 5px 9px;
+  white-space: nowrap;
+}
+
+.uni2-product-photo {
+  aspect-ratio: 4 / 3;
+  background: var(--color-surface);
+  border: 1px solid rgba(63, 81, 181, 0.14);
+  border-radius: 18px;
+  display: block;
+  margin-top: 20px;
+  object-fit: contain;
+  width: 100%;
+}
+
+.uni2-product-recipient {
+  color: var(--color-action-on-surface);
+  font-size: 0.9rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.uni2-informative-image {
+  margin-top: 24px;
+}
+
+.uni2-informative-image h3 {
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.uni2-informative-image img {
+  background: var(--color-surface);
+  border: 1px solid rgba(63, 81, 181, 0.14);
+  border-radius: 14px;
+  display: block;
+  height: auto;
+  max-height: 560px;
+  object-fit: contain;
+  width: 100%;
+}
+
 .uni2-print-contact {
   align-items: center;
   background-image: var(--texture-grain), linear-gradient(135deg, var(--brand-blue-dark) 0 24%, var(--brand-blue) 48% 100%);
@@ -2622,6 +2861,14 @@ button.uni2-service-card:hover {
   height: 54px;
   place-items: center;
   width: 54px;
+}
+
+.uni2-print-contact-body {
+  min-width: 0;
+}
+
+.uni2-print-contact-body p:last-child {
+  margin-bottom: 0;
 }
 
 .uni2-print-contact h3,
@@ -2691,6 +2938,10 @@ button.uni2-service-card:hover {
 }
 
 @media (max-width: 575.98px) {
+  .uni2-cycle-tabs:not([hidden]) {
+    display: flex;
+  }
+
   .uni2-hero h1 {
     font-size: clamp(2.55rem, 13vw, 4rem);
   }
@@ -2784,11 +3035,6 @@ button.uni2-service-card:hover {
 
   .uni2-benefit-logo-dot {
     border-width: 3px;
-  }
-
-  .uni2-print-contact {
-    align-items: flex-start;
-    flex-direction: column;
   }
 
   .uni2-price-table {
