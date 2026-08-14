@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}{{ actividad_comercial.nombre }} | Uni2{% endblock %}
 
 {% block content %}
@@ -18,11 +20,26 @@
     <div class="uni2-benefit-list" aria-label="Comercios adheridos">
       {% for comercio in actividad_comercial.comercios.all %}
         {% url 'web:comercio_detalle' comercio.pk as detalle_url %}
-        {% include "components/benefit_list_item.html" with url=detalle_url titulo=comercio.nombre descripcion=comercio.descripcion foto=comercio.foto beneficio=comercio.beneficio_texto direccion=comercio.direccion telefono=comercio.telefono url_presencia_web=comercio.url_presencia_web only %}
+        {% url 'web:comercio_detalle_modal' comercio.pk as detalle_modal_url %}
+        {% include "components/benefit_list_item.html" with url=detalle_url modal_url=detalle_modal_url titulo=comercio.nombre descripcion=comercio.descripcion foto=comercio.foto beneficio=comercio.beneficio_texto direccion=comercio.direccion telefono=comercio.telefono url_presencia_web=comercio.url_presencia_web only %}
       {% empty %}
         <p>No hay comercios adheridos en esta categoría.</p>
       {% endfor %}
     </div>
   </div>
 </section>
+
+<div class="modal fade uni2-commerce-modal"
+     tabindex="-1"
+     aria-labelledby="comercio-modal-title"
+     aria-hidden="true"
+     data-commerce-modal>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content" data-commerce-modal-content></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{% static 'js/uni2-commerce-modal.js' %}"></script>
 {% endblock %}

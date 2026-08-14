@@ -7,7 +7,9 @@
         {% endif %}
     </span>
     <div class="uni2-benefit-list-body">
-        <h2><a class="uni2-benefit-detail-link" href="{{ url }}">{{ titulo }}</a></h2>
+        <h2><a class="uni2-benefit-detail-link{% if modal_url %} js-commerce-modal-link{% endif %}"
+               href="{{ url }}"
+               {% if modal_url %}data-commerce-modal-url="{{ modal_url }}"{% endif %}>{{ titulo }}</a></h2>
         {% if descripcion %}
             <p>{{ descripcion }}</p>
         {% endif %}

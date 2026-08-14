@@ -1,5 +1,6 @@
 import pytest
 from django.urls import reverse
+from django.contrib.staticfiles import finders
 
 from comercios.models import ActividadComercial, Comercio
 
@@ -66,3 +67,26 @@ def test_modal_comercio_inexistente_responde_404(client):
     response = client.get(reverse("web:comercio_detalle_modal", args=[999999]))
 
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_listado_conserva_href_completo_y_declara_endpoint_modal(
+    client, actividad, comercio_firmado
+):
+    response = client.get(
+        reverse("web:actividad_comercial_detalle", args=[actividad.pk])
+    )
+
+    content = response.content.decode()
+    full_url = reverse("web:comercio_detalle", args=[comercio_firmado.pk])
+    modal_url = reverse("web:comercio_detalle_modal", args=[comercio_firmado.pk])
+    assert f'href="{full_url}"' in content
+    assert f'data-commerce-modal-url="{modal_url}"' in content
+    assert 'class="uni2-benefit-detail-link js-commerce-modal-link"' in content
+    assert content.count(" data-commerce-modal>") == 1
+    assert content.count(" data-commerce-modal-content>") == 1
+    assert "js/uni2-commerce-modal.js" in content
+
+
+def test_script_modal_de_comercios_existe_en_staticfiles():
+    assert finders.find("js/uni2-commerce-modal.js") is not None

@@ -1228,7 +1228,10 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     assert "Lo de Carlitos" in contenido
     assert "Milanesas y comidas caseras." in contenido
     detalle_parrilla_url = reverse("web:comercio_detalle", args=[parrilla.pk])
-    assert f'<a class="uni2-benefit-detail-link" href="{detalle_parrilla_url}">' in contenido
+    assert (
+        f'<a class="uni2-benefit-detail-link js-commerce-modal-link"\n'
+        f'               href="{detalle_parrilla_url}"' in contenido
+    )
     assert contenido.count(f'href="{detalle_parrilla_url}"') == 1
     assert "No Visible" not in contenido
 

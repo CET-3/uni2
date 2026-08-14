@@ -2265,6 +2265,40 @@ button.uni2-service-card:hover {
   margin: 0;
 }
 
+.uni2-commerce-modal .modal-content {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 18px;
+  color: var(--color-text);
+}
+
+.uni2-commerce-modal .modal-header {
+  align-items: center;
+  border-bottom-color: var(--color-border-subtle);
+}
+
+.uni2-commerce-modal .modal-body {
+  padding: clamp(18px, 4vw, 32px);
+}
+
+.uni2-commerce-modal .uni2-detail-layout--modal {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.uni2-commerce-modal .uni2-commerce-full-link {
+  margin-top: 20px;
+}
+
+.uni2-commerce-modal-state {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  min-height: 180px;
+  justify-content: center;
+  text-align: center;
+}
+
 .uni2-commerce-detail {
   align-items: start;
   min-height: auto;
