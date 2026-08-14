@@ -65,8 +65,11 @@
       }
     });
 
-    modalElement.addEventListener("hidden.bs.modal", function () {
+    modalElement.addEventListener("hide.bs.modal", function () {
       if (activeRequest) activeRequest.abort();
+    });
+
+    modalElement.addEventListener("hidden.bs.modal", function () {
       activeRequest = null;
       content.replaceChildren();
       if (opener && document.contains(opener)) opener.focus();

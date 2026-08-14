@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 from django.urls import reverse
 from django.contrib.staticfiles import finders
@@ -90,3 +92,12 @@ def test_listado_conserva_href_completo_y_declara_endpoint_modal(
 
 def test_script_modal_de_comercios_existe_en_staticfiles():
     assert finders.find("js/uni2-commerce-modal.js") is not None
+
+
+def test_script_modal_aborta_la_solicitud_al_comenzar_el_cierre():
+    script_path = finders.find("js/uni2-commerce-modal.js")
+
+    script = Path(script_path).read_text()
+
+    assert 'modalElement.addEventListener("hide.bs.modal", function () {' in script
+    assert "if (activeRequest) activeRequest.abort();" in script
