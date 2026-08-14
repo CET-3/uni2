@@ -1,0 +1,46 @@
+{% load formatos %}
+
+{% for grupo in grupos_precio %}
+  <div class="uni2-price-table-wrap">
+    <table class="uni2-price-table uni2-price-table-compact" data-price-type="{{ grupo.tipo_precio }}" aria-label="{{ tabla_label }} · {% if grupo.tipo_precio == 'diferenciado' %}Precio diferenciado{% elif grupo.tipo_precio == 'unico' %}Precio único{% elif grupo.tipo_precio == 'solo_asociados' %}Solo asociados{% else %}Sin precio{% endif %}">
+      <thead>
+        <tr>
+          <th scope="col">{{ grupo.etiqueta_items }}</th>
+          {% if grupo.tipo_precio == "diferenciado" %}
+            <th scope="col" class="uni2-price-column">Precio asociado</th>
+            <th scope="col" class="uni2-price-column">Precio no asociado</th>
+          {% elif grupo.tipo_precio == "unico" %}
+            <th scope="col" class="uni2-price-column">Precio</th>
+          {% elif grupo.tipo_precio == "solo_asociados" %}
+            <th scope="col" class="uni2-price-column">Precio asociado</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in grupo.items %}
+          <tr class="uni2-product-row">
+            <th scope="row">
+              <a class="uni2-product-row-link" href="{% url 'web:producto_servicio_detalle' item.pk %}">
+                {% if item.foto %}
+                  <img class="uni2-product-thumb" src="{{ item.foto.url }}" alt="">
+                {% endif %}
+                <span>{{ item.nombre }}</span>
+              </a>
+            </th>
+            {% if grupo.tipo_precio == "diferenciado" %}
+              <td class="uni2-price-column">{{ item.precio_asociados|moneda }}</td>
+              <td class="uni2-price-column">{{ item.precio_no_asociados|moneda }}</td>
+            {% elif grupo.tipo_precio == "unico" %}
+              <td class="uni2-price-column">{{ item.precio_asociados|moneda }}</td>
+            {% elif grupo.tipo_precio == "solo_asociados" %}
+              <td class="uni2-price-column">
+                {{ item.precio_asociados|moneda }}
+                <span class="uni2-price-badge">Solo asociados</span>
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endfor %}

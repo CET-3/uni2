@@ -120,6 +120,19 @@ Las páginas de categoría, producto/servicio, actividad comercial, comercio dis
 
 En viewport de escritorio, las páginas públicas de detalle distribuyen introducción y panel en dos columnas mediante `uni2-detail-layout`. Por debajo de `lg` se apilan en una columna para mantener una lectura cómoda y evitar comprimir tablas o datos de contacto.
 
+Las tablas de categorías usan `uni2-product-row` para convertir cada fila en
+un único destino navegable mediante `uni2-product-row-link`. El enlace extiende
+su área interactiva sin duplicarse en la navegación por teclado y la fila
+responde a hover y `focus-within`. `uni2-product-thumb` integra la foto dentro
+de la celda del nombre, por lo que un producto sin foto no deja una columna
+vacía. Los escenarios comerciales se distinguen con encabezados de tabla y
+`uni2-price-badge`, no solamente por color.
+
+La ficha individual usa `uni2-product-photo` para la imagen completa y
+`uni2-product-recipient` para ciclo y curso. La imagen compartida de categoría
+usa `uni2-informative-image` tanto en categoría como en producto. Todas estas
+regiones son opcionales y desaparecen por completo cuando no tienen datos.
+
 ## Alertas UNI2 compartidas
 
 El catálogo y las pantallas productivas ubican las alertas en componentes, no en primitivos. Una alerta combina icono, variante semántica, título, mensaje y acción opcional; por eso no se trata como un valor visual aislado.

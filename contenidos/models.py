@@ -1,7 +1,8 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
-from django.core.exceptions import ValidationError
 
+from asociados.models import Curso
 from comercios.models import Comercio
 
 
@@ -28,6 +29,18 @@ class CategoriaProductoServicio(models.Model):
         blank=True,
         help_text="Texto de contacto o acción asociado a esta categoría. Los emails y URLs se convierten en enlaces en la web.",
     )
+    imagen_informativa = models.ImageField(
+        "imagen informativa",
+        upload_to="categorias_productos_servicios/",
+        blank=True,
+        help_text="Imagen compartida por la categoría, por ejemplo una tabla de talles.",
+    )
+    titulo_imagen_informativa = models.CharField(
+        "título de la imagen informativa",
+        max_length=150,
+        blank=True,
+        help_text="Título público que explica la imagen, por ejemplo Tabla de talles.",
+    )
     activa = models.BooleanField(
         "activa",
         default=True,
@@ -48,8 +61,23 @@ class CategoriaProductoServicio(models.Model):
     def __str__(self):
         return self.nombre
 
+    def clean(self):
+        super().clean()
+        errores = {}
+        if self.imagen_informativa and not self.titulo_imagen_informativa:
+            errores["titulo_imagen_informativa"] = "Debe indicar un título para la imagen informativa."
+        if self.titulo_imagen_informativa and not self.imagen_informativa:
+            errores["imagen_informativa"] = "Debe cargar la imagen informativa correspondiente al título."
+        if errores:
+            raise ValidationError(errores)
+
 
 class ProductoServicio(models.Model):
+    PRECIO_DIFERENCIADO = "diferenciado"
+    PRECIO_UNICO = "unico"
+    PRECIO_SOLO_ASOCIADOS = "solo_asociados"
+    SIN_PRECIO = "sin_precio"
+
     categoria = models.ForeignKey(
         CategoriaProductoServicio,
         on_delete=models.PROTECT,
@@ -66,21 +94,44 @@ class ProductoServicio(models.Model):
         "descripción",
         help_text="Texto público que explica qué incluye.",
     )
+    foto = models.ImageField(
+        "foto",
+        upload_to="productos_servicios/",
+        blank=True,
+        help_text="Fotografía del producto o servicio para su ficha pública.",
+    )
     es_servicio = models.BooleanField(
         "es servicio",
         default=False,
         help_text="Marcar si el ítem es un servicio. Si no se marca, se interpreta como producto.",
     )
+    ciclo_destinatario = models.CharField(
+        "ciclo destinatario",
+        max_length=2,
+        choices=Curso.DIVISIONES,
+        blank=True,
+        help_text="Ciclo escolar al que se dirige el producto o servicio, si corresponde.",
+    )
+    curso_destinatario = models.CharField(
+        "curso destinatario",
+        max_length=10,
+        blank=True,
+        help_text="Año tomado de los cursos cargados, sin distinguir comisión ni turno.",
+    )
     precio_asociados = models.DecimalField(
         "precio para asociados",
         max_digits=10,
         decimal_places=2,
+        blank=True,
+        null=True,
         help_text="Precio vigente para asociados.",
     )
     precio_no_asociados = models.DecimalField(
         "precio para no asociados",
         max_digits=10,
         decimal_places=2,
+        blank=True,
+        null=True,
         help_text="Precio vigente para personas no asociadas.",
     )
     activo = models.BooleanField(
@@ -105,6 +156,34 @@ class ProductoServicio(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def clean(self):
+        super().clean()
+        errores = {}
+
+        if self.curso_destinatario and not self.ciclo_destinatario:
+            errores["curso_destinatario"] = "No puede indicar un curso sin seleccionar el ciclo."
+
+        if self.precio_asociados is not None and self.precio_asociados <= 0:
+            errores["precio_asociados"] = "El precio debe ser mayor que cero."
+        if self.precio_no_asociados is not None and self.precio_no_asociados <= 0:
+            errores["precio_no_asociados"] = "El precio debe ser mayor que cero."
+
+        if self.precio_asociados is None and (not self.es_servicio or self.precio_no_asociados is not None):
+            errores["precio_asociados"] = "Debe indicar un precio para asociados."
+
+        if errores:
+            raise ValidationError(errores)
+
+    @property
+    def tipo_precio(self):
+        if self.precio_asociados is None:
+            return self.SIN_PRECIO
+        if self.precio_no_asociados is None:
+            return self.PRECIO_SOLO_ASOCIADOS
+        if self.precio_asociados == self.precio_no_asociados:
+            return self.PRECIO_UNICO
+        return self.PRECIO_DIFERENCIADO
 
 
 class Publicidad(models.Model):

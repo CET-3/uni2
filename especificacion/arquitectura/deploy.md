@@ -41,6 +41,16 @@ Estas variables pertenecen al proyecto Vercel productivo.
 | `AWS_S3_REGION_NAME` | No secreto | Opcional | Región del storage. |
 | `AWS_S3_CUSTOM_DOMAIN` | No secreto | Opcional | Dominio público opcional del storage. |
 
+Los valores vigentes para los hosts públicos y técnicos admitidos son:
+
+```text
+ALLOWED_HOSTS=uni2.app,www.uni2.app,uni2-ashy.vercel.app
+CSRF_TRUSTED_ORIGINS=https://uni2.app,https://www.uni2.app,https://uni2-ashy.vercel.app
+```
+
+Estos valores pertenecen únicamente al entorno Production. Cambiarlos exige
+crear un nuevo deployment para que el runtime reciba las variables actualizadas.
+
 Vercel agrega automáticamente variables como `VERCEL_URL`,
 `VERCEL_BRANCH_URL` y `VERCEL_PROJECT_PRODUCTION_URL`. No se copian ni se
 versionan manualmente.
