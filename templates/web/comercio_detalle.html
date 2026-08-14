@@ -13,58 +13,7 @@
 
 <section class="uni2-service-detail uni2-commerce-detail" aria-labelledby="comercio-title">
   <div class="container pb-5">
-    <div class="uni2-detail-layout">
-      <div class="uni2-detail-copy">
-        <div class="uni2-commerce-identity">
-          <span class="uni2-commerce-identity-logo{% if not comercio.foto %} uni2-commerce-identity-logo--fallback{% endif %}">
-            {% if comercio.foto %}
-              <img src="{{ comercio.foto.url }}" alt="{{ comercio.nombre }}" loading="lazy">
-            {% else %}
-              {{ comercio.nombre|slice:":2"|upper }}
-            {% endif %}
-          </span>
-          <div class="uni2-commerce-identity-copy">
-            <span class="uni2-eyebrow">{{ comercio.actividad_comercial.nombre }}</span>
-            <h1 id="comercio-title" class="uni2-titulo-principal">{{ comercio.nombre }}</h1>
-            {% if comercio.descripcion %}
-              <p>{{ comercio.descripcion }}</p>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
-      <div class="uni2-detail-panel">
-        {% if comercio.beneficio_texto %}
-          <div class="uni2-commerce-benefit-block">
-            <h2>Beneficio</h2>
-            <strong class="uni2-commerce-benefit-text">{{ comercio.beneficio_texto }}</strong>
-          </div>
-        {% endif %}
-        {% if comercio.direccion %}
-          <div>
-            <h2>Dirección</h2>
-            <p>{{ comercio.direccion }}</p>
-          </div>
-        {% endif %}
-        {% if comercio.telefono %}
-          <div>
-            <h2>Teléfono</h2>
-            <p>{{ comercio.telefono }}</p>
-          </div>
-        {% endif %}
-        {% if comercio.email %}
-          <div>
-            <h2>Email</h2>
-            <p><a href="mailto:{{ comercio.email }}">{{ comercio.email }}</a></p>
-          </div>
-        {% endif %}
-        {% if comercio.url_presencia_web %}
-          <div>
-            <a class="uni2-cta uni2-cta-secondary" href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">Visitar online</a>
-          </div>
-        {% endif %}
-      </div>
-    </div>
+    {% include "components/comercio_publico.html" with comercio=comercio en_modal=False only %}
   </div>
 </section>
 {% endblock %}

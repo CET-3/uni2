@@ -3,7 +3,11 @@ from django.db.models import Prefetch
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, TemplateView
 
-from comercios.selectors import get_comercios_firmados, get_rubros_con_comercios
+from comercios.selectors import (
+    get_comercio_firmado_queryset,
+    get_comercios_firmados,
+    get_rubros_con_comercios,
+)
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
 from contenidos.selectors import (
@@ -73,6 +77,15 @@ class ComercioDetalleView(DetailView):
         if obj.estado != Comercio.ESTADO_FIRMADO:
             self.template_name = "web/comercio_no_disponible.html"
         return obj
+
+
+class ComercioDetalleModalView(DetailView):
+    model = Comercio
+    template_name = "web/_comercio_modal_content.html"
+    context_object_name = "comercio"
+
+    def get_queryset(self):
+        return get_comercio_firmado_queryset()
 
 
 class CategoriaProductoServicioDetalleView(DetailView):
