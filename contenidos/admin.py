@@ -3,25 +3,49 @@ from django.contrib import admin
 from auditoria.admin_mixins import AuditoriaAdminMixin
 from config.formatting import formatear_moneda
 
+from .forms import ProductoServicioAdminForm
 from .models import CategoriaProductoServicio, ProductoServicio, Publicidad
 
 
 class ProductoServicioInline(admin.TabularInline):
     model = ProductoServicio
+    form = ProductoServicioAdminForm
     extra = 0
-    fields = ("nombre", "es_servicio", "precio_asociados", "precio_no_asociados", "activo", "orden")
+    fields = (
+        "nombre",
+        "foto",
+        "es_servicio",
+        "ciclo_destinatario",
+        "curso_destinatario",
+        "precio_asociados",
+        "precio_no_asociados",
+        "activo",
+        "orden",
+    )
     can_delete = False
 
 
 @admin.register(CategoriaProductoServicio)
 class CategoriaProductoServicioAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
-    audit_fields = ("nombre", "descripcion", "etiqueta_icono", "texto_cta", "activa", "orden")
+    audit_fields = (
+        "nombre",
+        "descripcion",
+        "etiqueta_icono",
+        "texto_cta",
+        "imagen_informativa",
+        "titulo_imagen_informativa",
+        "activa",
+        "orden",
+    )
     audit_inline_fields = {
         ProductoServicio: (
             "categoria",
             "nombre",
             "descripcion",
+            "foto",
             "es_servicio",
+            "ciclo_destinatario",
+            "curso_destinatario",
             "precio_asociados",
             "precio_no_asociados",
             "activo",
@@ -36,11 +60,15 @@ class CategoriaProductoServicioAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
 
 @admin.register(ProductoServicio)
 class ProductoServicioAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    form = ProductoServicioAdminForm
     audit_fields = (
         "categoria",
         "nombre",
         "descripcion",
+        "foto",
         "es_servicio",
+        "ciclo_destinatario",
+        "curso_destinatario",
         "precio_asociados",
         "precio_no_asociados",
         "activo",
@@ -50,21 +78,27 @@ class ProductoServicioAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
         "nombre",
         "categoria",
         "es_servicio",
+        "ciclo_destinatario",
+        "curso_destinatario",
         "precio_asociados_formateado",
         "precio_no_asociados_formateado",
         "activo",
         "orden",
     )
-    list_filter = ("activo", "es_servicio", "categoria")
-    search_fields = ("nombre", "descripcion", "categoria__nombre")
+    list_filter = ("activo", "es_servicio", "ciclo_destinatario", "categoria")
+    search_fields = ("nombre", "descripcion", "curso_destinatario", "categoria__nombre")
     list_select_related = ("categoria",)
 
     @admin.display(description="Precio para asociados", ordering="precio_asociados")
     def precio_asociados_formateado(self, obj):
+        if obj.precio_asociados is None:
+            return "—"
         return formatear_moneda(obj.precio_asociados)
 
     @admin.display(description="Precio para no asociados", ordering="precio_no_asociados")
     def precio_no_asociados_formateado(self, obj):
+        if obj.precio_no_asociados is None:
+            return "—"
         return formatear_moneda(obj.precio_no_asociados)
 
 

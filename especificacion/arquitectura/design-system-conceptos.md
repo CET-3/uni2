@@ -376,11 +376,26 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-detail-layout` | Grid de dos columnas |
 | `uni2-detail-copy` | Columna de texto con heading display |
 | `uni2-detail-panel` | Panel glassmorphism con borde azul superior |
+| `uni2-category-detail-layout` | Flujo vertical de encabezado y catálogo de una categoría |
+| `uni2-category-products-panel` | Contenedor de ancho completo para productos y servicios |
+| `uni2-general-products-card` | Card neutral y de ancho completo para productos generales |
+| `uni2-cycles-grid` | Grilla de cards de ciclos |
+| `uni2-cycles-grid--multiple` | Variante de dos columnas en desktop ancho |
+| `uni2-cycle-tabs` | Selector mobile de Ciclo Básico y Ciclo Superior |
+| `uni2-cycle-tab` | Botón accesible de un ciclo |
+| `uni2-cycle-section` | Sección principal de un ciclo |
+| `uni2-cycle-card` | Card independiente de un ciclo |
+| `uni2-cycle-card--cb` | Variante de Ciclo Básico con acento azul |
+| `uni2-cycle-card--cs` | Variante de Ciclo Superior con acento verde |
+| `uni2-cycle-heading` | Encabezado con abreviatura y nombre del ciclo |
+| `uni2-course-group` | Grupo de productos para todo el ciclo o para un curso |
 | `uni2-price-table-wrap` | Contenedor con scroll horizontal |
 | `uni2-price-table` | Tabla de precios con estilo propio |
 | `uni2-price-table-compact` | Variante sin min-width |
+| `uni2-price-column` | Encabezado o celda monetaria alineada a la derecha |
 | `uni2-print-contact` | Bloque de contacto con gradiente |
 | `uni2-print-icon` | Ícono circular blanco dentro del bloque |
+| `uni2-print-contact-body` | Texto del bloque, sin margen final y alineado con el ícono también en mobile |
 
 ### Comercios
 

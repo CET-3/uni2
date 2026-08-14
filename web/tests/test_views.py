@@ -752,7 +752,7 @@ def test_detalle_producto_servicio_publico_muestra_producto_activo(client):
     assert f'href="{reverse("web:home")}#productos-servicios">Productos y servicios</a>' in breadcrumb
     assert f'href="{reverse("web:categoria_detalle", args=[categoria.pk])}">Impresiones</a>' in breadcrumb
     assert "Inicio" not in breadcrumb
-    assert f'href="{reverse("web:home")}#productos-servicios" class="uni2-cta uni2-cta-secondary">← Todos los productos</a>' in contenido
+    assert "← Todos los productos" not in contenido
 
 
 @pytest.mark.django_db
@@ -916,14 +916,239 @@ def test_categoria_detalle_muestra_sus_productos_activos(client):
 
     assert response.status_code == 200
     assert response.template_name == ["web/categoria_detalle.html"]
+    assert (
+        response.context["bloques_productos"]["generales"]["grupos_precio"][0]["items"][0].nombre
+        == "Fotocopia simple"
+    )
     contenido = response.content.decode()
     assert "Fotocopias" in contenido
     assert "Fotocopia simple" in contenido
     assert "Inactivo" not in contenido
     assert "$ 50,00" in contenido
     assert "Consultá en la mutual" in contenido
+    assert 'class="uni2-print-contact-body"' in contenido
+    assert 'class="uni2-category-detail-layout"' in contenido
+    assert 'class="uni2-detail-layout"' not in contenido
+    assert 'aria-labelledby="productos-generales-title"' not in contenido
+    assert contenido.index('id="categoria-title"') < contenido.index('class="uni2-category-products-panel"')
     assert 'class="uni2-breadcrumbs"' in contenido
     assert 'aria-current="page">Fotocopias' in contenido
+
+
+@pytest.mark.django_db
+def test_categoria_detalle_presenta_fotos_imagen_informativa_y_cuatro_casos_de_precio(client):
+    categoria = CategoriaProductoServicio.objects.create(
+        nombre="Uniformes",
+        descripcion="Prendas institucionales.",
+        titulo_imagen_informativa="Tabla de talles",
+        imagen_informativa="categorias_productos_servicios/talles.webp",
+    )
+    diferenciado = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Remera",
+        descripcion="Remera institucional.",
+        foto="productos_servicios/remera.webp",
+        ciclo_destinatario="CB",
+        curso_destinatario="1ro",
+        precio_asociados=9000,
+        precio_no_asociados=12000,
+        orden=1,
+    )
+    unico = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Escudo",
+        descripcion="Escudo bordado.",
+        precio_asociados=5000,
+        precio_no_asociados=5000,
+        orden=2,
+    )
+    solo_asociados = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Buzo",
+        descripcion="Buzo institucional.",
+        precio_asociados=18000,
+        precio_no_asociados=None,
+        orden=3,
+    )
+    servicio = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Prueba de talle",
+        descripcion="Asesoramiento presencial.",
+        es_servicio=True,
+        precio_asociados=None,
+        precio_no_asociados=None,
+        orden=4,
+    )
+    servicio_con_precio = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Ajuste de uniforme",
+        descripcion="Servicio de costura.",
+        es_servicio=True,
+        precio_asociados=2000,
+        precio_no_asociados=2500,
+        orden=5,
+    )
+    superior = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Campera superior",
+        descripcion="Campera para ciclo superior.",
+        ciclo_destinatario="CS",
+        curso_destinatario="1ro",
+        precio_asociados=22000,
+        precio_no_asociados=26000,
+        orden=6,
+    )
+
+    contenido = client.get(reverse("web:categoria_detalle", args=[categoria.pk])).content.decode()
+
+    assert 'data-price-type="diferenciado"' in contenido
+    assert 'data-price-type="unico"' in contenido
+    assert 'data-price-type="solo_asociados"' in contenido
+    assert 'data-price-type="sin_precio"' in contenido
+    assert "Precio asociado" in contenido
+    assert "Precio no asociado" in contenido
+    assert "Solo asociados" in contenido
+    assert "Sin precio" in contenido
+    assert "$ 0,00" not in contenido
+    assert f'href="{reverse("web:producto_servicio_detalle", args=[diferenciado.pk])}"' in contenido
+    assert f'href="{reverse("web:producto_servicio_detalle", args=[unico.pk])}"' in contenido
+    assert f'href="{reverse("web:producto_servicio_detalle", args=[solo_asociados.pk])}"' in contenido
+    assert f'href="{reverse("web:producto_servicio_detalle", args=[servicio.pk])}"' in contenido
+    assert f'href="{reverse("web:producto_servicio_detalle", args=[servicio_con_precio.pk])}"' in contenido
+    assert f'href="{reverse("web:producto_servicio_detalle", args=[superior.pk])}"' in contenido
+    filas = re.findall(r'<tr class="uni2-product-row">.*?</tr>', contenido, re.DOTALL)
+    assert len(filas) == 6
+    assert all(fila.count("href=") == 1 for fila in filas)
+    assert ">Producto</th>" in contenido
+    assert ">Servicio</th>" in contenido
+    assert "Disponibilidad" not in contenido
+    tabla_sin_precio = re.search(
+        r'<table[^>]+data-price-type="sin_precio".*?</table>',
+        contenido,
+        re.DOTALL,
+    ).group()
+    assert tabla_sin_precio.count('scope="col"') == 1
+    assert "<td" not in tabla_sin_precio
+    assert 'class="uni2-price-column"' in contenido
+    assert 'scope="col"' in contenido
+    assert 'scope="row"' in contenido
+    assert 'aria-label="1.º C.B. · Precio diferenciado"' in contenido
+    assert 'aria-label="Productos generales · Precio único"' in contenido
+    assert '/media/productos_servicios/remera.webp' in contenido
+    assert 'class="uni2-category-detail-layout"' in contenido
+    assert 'class="uni2-detail-layout"' not in contenido
+    assert contenido.index('id="categoria-title"') < contenido.index('class="uni2-category-products-panel"')
+    assert "Ciclo Básico" in contenido
+    assert "Ciclo Superior" in contenido
+    assert "1.º C.B." in contenido
+    assert "1.º C.S." in contenido
+    assert 'data-cycle-selector' in contenido
+    assert 'class="uni2-general-products-card"' in contenido
+    assert 'class="uni2-cycles-grid uni2-cycles-grid--multiple"' in contenido
+    assert 'class="uni2-cycle-section uni2-cycle-card uni2-cycle-card--cb"' in contenido
+    assert 'class="uni2-cycle-section uni2-cycle-card uni2-cycle-card--cs"' in contenido
+    assert 'role="tablist"' in contenido
+    assert 'data-cycle-tab="cb"' in contenido
+    assert 'aria-controls="uni2-cycle-panel-cb"' in contenido
+    assert 'data-cycle-tab="cs"' in contenido
+    assert 'aria-controls="uni2-cycle-panel-cs"' in contenido
+    assert 'id="uni2-cycle-panel-cb"' in contenido
+    assert 'id="uni2-cycle-panel-cs"' in contenido
+    assert 'src="/static/js/uni2-cycle-selector.js"' in contenido
+    assert "Tabla de talles" in contenido
+    assert '/media/categorias_productos_servicios/talles.webp' in contenido
+
+
+@pytest.mark.django_db
+def test_categoria_con_un_solo_ciclo_no_muestra_selector_mobile(client):
+    categoria = CategoriaProductoServicio.objects.create(nombre="Cuadernillos")
+    ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Matemática",
+        descripcion="Cuadernillo de Matemática.",
+        ciclo_destinatario="CB",
+        curso_destinatario="1ro",
+        precio_asociados=4000,
+        precio_no_asociados=5000,
+    )
+
+    contenido = client.get(reverse("web:categoria_detalle", args=[categoria.pk])).content.decode()
+
+    assert 'role="tablist"' not in contenido
+    assert 'class="uni2-cycles-grid"' in contenido
+    assert "uni2-cycles-grid--multiple" not in contenido
+    assert 'class="uni2-cycle-section uni2-cycle-card uni2-cycle-card--cb"' in contenido
+    assert 'id="uni2-cycle-panel-cb"' in contenido
+    assert "1.º C.B." in contenido
+
+
+@pytest.mark.django_db
+def test_detalle_producto_muestra_foto_destinatario_e_imagen_informativa(client):
+    categoria = CategoriaProductoServicio.objects.create(
+        nombre="Uniformes",
+        titulo_imagen_informativa="Tabla de talles",
+        imagen_informativa="categorias_productos_servicios/talles.webp",
+    )
+    producto = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Remera",
+        descripcion="Remera institucional.",
+        foto="productos_servicios/remera.webp",
+        ciclo_destinatario="CB",
+        curso_destinatario="1ro",
+        precio_asociados=9000,
+        precio_no_asociados=12000,
+    )
+
+    contenido = client.get(reverse("web:producto_servicio_detalle", args=[producto.pk])).content.decode()
+
+    assert 'class="uni2-product-photo"' in contenido
+    assert 'class="uni2-detail-layout"' in contenido
+    assert '/media/productos_servicios/remera.webp' in contenido
+    assert "Ciclo Básico · 1ro" in contenido
+    assert "Tabla de talles" in contenido
+    assert '/media/categorias_productos_servicios/talles.webp' in contenido
+    assert contenido.index("Remera institucional.") < contenido.index('class="uni2-product-photo"')
+    assert "← Todos los productos" not in contenido
+
+
+@pytest.mark.django_db
+def test_detalles_adaptan_presentacion_a_precio_unico_solo_asociados_y_servicio_sin_precio(client):
+    categoria = CategoriaProductoServicio.objects.create(nombre="Servicios")
+    unico = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Credencial",
+        descripcion="Reposición.",
+        precio_asociados=5000,
+        precio_no_asociados=5000,
+    )
+    exclusivo = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Beneficio exclusivo",
+        descripcion="Solo para asociados.",
+        precio_asociados=3000,
+        precio_no_asociados=None,
+    )
+    sin_precio = ProductoServicio.objects.create(
+        categoria=categoria,
+        nombre="Orientación",
+        descripcion="Atención personalizada.",
+        es_servicio=True,
+        precio_asociados=None,
+        precio_no_asociados=None,
+    )
+
+    contenido_unico = client.get(reverse("web:producto_servicio_detalle", args=[unico.pk])).content.decode()
+    contenido_exclusivo = client.get(reverse("web:producto_servicio_detalle", args=[exclusivo.pk])).content.decode()
+    contenido_sin_precio = client.get(reverse("web:producto_servicio_detalle", args=[sin_precio.pk])).content.decode()
+
+    assert "Precio general" in contenido_unico
+    assert contenido_unico.count("$ 5.000,00") == 1
+    assert "Solo asociados" in contenido_exclusivo
+    assert "Precio asociado" in contenido_exclusivo
+    assert "¿Cómo acceder?" in contenido_sin_precio
+    assert "Sin precio" in contenido_sin_precio
+    assert "$ 0,00" not in contenido_sin_precio
 
 
 @pytest.mark.django_db

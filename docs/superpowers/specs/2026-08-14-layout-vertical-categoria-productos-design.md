@@ -45,7 +45,7 @@ y equivalentes, sin distinguir comisión ni turno.
 
 ## Comportamiento responsive
 
-En desktop se muestran Ciclo Básico y Ciclo Superior, uno debajo del otro. En
+En desktop ancho se muestran Ciclo Básico y Ciclo Superior lado a lado. En
 mobile, cuando existen ambos ciclos, aparecen dos botones para alternar cuál se
 muestra. Ciclo Básico queda seleccionado inicialmente. Si solo existe un ciclo,
 el selector no se muestra. Los productos generales permanecen visibles y fuera
@@ -56,6 +56,12 @@ estado mediante `aria-selected`. El contenido se renderiza completo desde
 Django: sin JavaScript se muestran ambos ciclos. Un script específico activa
 la alternancia solamente en el breakpoint mobile y vuelve a mostrar ambos
 paneles al pasar a desktop.
+
+Cada ciclo se presenta como una card independiente. En desktop ancho se ubican
+lado a lado; en anchos intermedios se apilan y en mobile queda visible solamente
+la card elegida. Ciclo Básico usa el azul de marca como acento superior y en su
+identificador; Ciclo Superior usa el verde de marca. Los productos generales,
+cuando existen, se muestran antes en una card neutral de ancho completo.
 
 Las tablas conservan su comportamiento responsive actual. El bloque de contacto
 mantiene ícono y texto en una misma fila; el texto puede envolver dentro de su

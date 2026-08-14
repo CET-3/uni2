@@ -166,8 +166,10 @@ La migración agrega todos los campos como opcionales. Los productos y
 categorías existentes quedan sin destinatario ni imágenes y conservan su
 presentación y funcionamiento actuales.
 
-No se transforma automáticamente ningún dato ni se crean relaciones con
-`Curso`.
+Como normalización compatible, los servicios existentes que tengan ambos
+precios en cero pasan a tener ambos campos vacíos, que es la representación
+explícita de servicio sin precio. No se transforma ningún otro dato ni se crean
+relaciones con `Curso`.
 
 ## Pruebas
 

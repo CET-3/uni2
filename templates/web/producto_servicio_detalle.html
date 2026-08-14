@@ -18,32 +18,67 @@
       <div class="uni2-detail-copy">
         <span class="uni2-eyebrow">{{ producto_servicio.categoria.nombre }}</span>
         <h1 id="ps-title" class="uni2-titulo-principal">{{ producto_servicio.nombre }}</h1>
+        {% if producto_servicio.ciclo_destinatario %}
+          <p class="uni2-product-recipient">
+            {{ producto_servicio.get_ciclo_destinatario_display }}{% if producto_servicio.curso_destinatario %} · {{ producto_servicio.curso_destinatario }}{% endif %}
+          </p>
+        {% endif %}
         <p>{{ producto_servicio.descripcion }}</p>
-        <a href="{% url 'web:home' %}#productos-servicios" class="uni2-cta uni2-cta-secondary">← Todos los productos</a>
+        {% if producto_servicio.foto %}
+          <img class="uni2-product-photo" src="{{ producto_servicio.foto.url }}" alt="Foto de {{ producto_servicio.nombre }}">
+        {% endif %}
       </div>
 
       <div class="uni2-detail-panel">
-        <h2>Precios</h2>
-        <div class="uni2-price-table-wrap">
-          <table class="uni2-price-table uni2-price-table-compact" aria-label="Precios">
-            <thead>
-              <tr>
-                <th>Tipo</th>
-                <th>Precio</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>Asociados</th>
-                <td>{{ producto_servicio.precio_asociados|moneda }}</td>
-              </tr>
-              <tr>
-                <th>No asociados</th>
-                <td>{{ producto_servicio.precio_no_asociados|moneda }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        {% if producto_servicio.tipo_precio == "sin_precio" %}
+          <h2>¿Cómo acceder?</h2>
+          <p><span class="uni2-price-badge">Sin precio</span></p>
+          <p>Este servicio no tiene un precio publicado. Consultá las condiciones y la disponibilidad con la mutual.</p>
+        {% else %}
+          <h2>{% if producto_servicio.tipo_precio == "diferenciado" %}Precios{% else %}Precio{% endif %}</h2>
+          {% if producto_servicio.tipo_precio == "solo_asociados" %}
+            <p><span class="uni2-price-badge">Solo asociados</span></p>
+          {% endif %}
+          <div class="uni2-price-table-wrap">
+            <table class="uni2-price-table uni2-price-table-compact" aria-label="Precios">
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th class="uni2-price-column">Precio</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if producto_servicio.tipo_precio == "unico" %}
+                  <tr>
+                    <th>Precio general</th>
+                    <td class="uni2-price-column">{{ producto_servicio.precio_asociados|moneda }}</td>
+                  </tr>
+                {% elif producto_servicio.tipo_precio == "solo_asociados" %}
+                  <tr>
+                    <th>Precio asociado</th>
+                    <td class="uni2-price-column">{{ producto_servicio.precio_asociados|moneda }}</td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <th>Asociados</th>
+                    <td class="uni2-price-column">{{ producto_servicio.precio_asociados|moneda }}</td>
+                  </tr>
+                  <tr>
+                    <th>No asociados</th>
+                    <td class="uni2-price-column">{{ producto_servicio.precio_no_asociados|moneda }}</td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+
+        {% if producto_servicio.categoria.imagen_informativa %}
+          <section class="uni2-informative-image" aria-labelledby="imagen-informativa-producto">
+            <h3 id="imagen-informativa-producto">{{ producto_servicio.categoria.titulo_imagen_informativa }}</h3>
+            <img src="{{ producto_servicio.categoria.imagen_informativa.url }}" alt="{{ producto_servicio.categoria.titulo_imagen_informativa }}">
+          </section>
+        {% endif %}
 
         {% if producto_servicio.categoria.texto_cta %}
           {% include "components/contact_block.html" with texto=producto_servicio.categoria.texto_cta only %}

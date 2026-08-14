@@ -179,8 +179,11 @@ def test_bloques_separan_generales_ciclo_completo_y_curso(categoria):
 
     bloques = get_bloques_productos_publicos(categoria)
 
-    assert [bloque["titulo"] for bloque in bloques] == [None, "Ciclo Básico · Para todo el ciclo", "Ciclo Básico · 1ro"]
+    assert [bloque["titulo"] for bloque in bloques] == ["Productos generales", "Ciclo Básico · Para todo el ciclo", "Ciclo Básico · 1ro"]
 ```
+
+Cuando el único bloque de la categoría es el general, comprobar por separado
+que su título sea `None` para conservar la tabla plana actual.
 
 Incluir `test_bloques_excluyen_productos_inactivos`,
 `test_bloques_respetan_orden_y_nombre` y
