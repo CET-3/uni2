@@ -1,9 +1,3 @@
-<div class="modal-header">
-  <span class="uni2-eyebrow">Ficha del comercio</span>
-  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-</div>
-<div class="modal-body">
-  {% include "components/comercio_publico.html" with comercio=comercio en_modal=True only %}
-  <a class="uni2-cta uni2-cta-secondary uni2-commerce-full-link"
-     href="{% url 'web:comercio_detalle' comercio.pk %}">Ver ficha completa</a>
-</div>
+{% include "components/comercio_publico.html" with comercio=comercio en_modal=True only %}
+<a class="uni2-cta uni2-cta-secondary uni2-commerce-full-link"
+   href="{% url 'web:comercio_detalle' comercio.pk %}">Ver ficha completa</a>

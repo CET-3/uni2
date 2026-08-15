@@ -12,7 +12,7 @@
 
     function renderLoading() {
       content.innerHTML = [
-        '<div class="modal-body uni2-commerce-modal-state" role="status">',
+        '<div class="uni2-commerce-modal-state" role="status">',
         '<h2 id="comercio-modal-title" class="visually-hidden">Ficha del comercio</h2>',
         '<span class="spinner-border" aria-hidden="true"></span>',
         '<span>Cargando ficha del comercio…</span>',
@@ -23,7 +23,7 @@
     function renderError(fullUrl) {
       content.replaceChildren();
       const body = document.createElement("div");
-      body.className = "modal-body uni2-commerce-modal-state";
+      body.className = "uni2-commerce-modal-state";
       body.setAttribute("role", "alert");
       const title = document.createElement("h2");
       title.id = "comercio-modal-title";
