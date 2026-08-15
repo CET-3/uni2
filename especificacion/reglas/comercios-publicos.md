@@ -18,3 +18,8 @@ en el sitio público.
 5. En la sección Beneficios de la home se muestran hasta 3 comercios con foto por cada rubro (`ActividadComercial`) que tenga al menos un comercio en estado `Firmado`. Las fotos se toman del campo `foto` del modelo `Comercio`. Los comercios sin foto no se muestran en la nube de logos de la card del rubro.
 6. En el MVP, la gestión de comercios se realiza desde el admin técnico de Django.
 7. La dirección es opcional: los emprendimientos sin local físico pueden publicarse y su detalle no muestra un bloque de dirección vacío.
+8. La ficha modal se ofrece solamente desde el listado de una actividad
+   comercial y su contenido parcial solo está disponible para comercios con
+   estado `Firmado`. La página `/comercios/<pk>/` se conserva como destino
+   indexable y compartible. Abrir o cerrar el modal no modifica la URL ni el
+   historial del navegador.
