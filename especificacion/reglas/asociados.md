@@ -20,3 +20,10 @@ timestamp: 2026-06-22T00:00:00-03:00
 10. La edición ordinaria no muestra ni acepta `estado`, `fecha_baja` o
     `motivo_baja`. Mientras no exista el caso de uso específico de baja, esos
     campos quedan visibles únicamente para el superusuario técnico en el admin.
+11. Durante la depuración excepcional de la carga inicial, un superusuario
+    puede eliminar físicamente asociados y cursos desde el admin técnico. La
+    confirmación de Django informa los objetos relacionados: al eliminar un
+    asociado también se eliminan sus cuotas, pagos, aplicaciones de pagos y
+    donaciones; al eliminar un curso, los asociados que lo usaban quedan sin
+    curso actual. La baja lógica continúa siendo el flujo ordinario fuera de
+    esta limpieza inicial.

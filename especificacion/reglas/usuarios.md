@@ -184,3 +184,14 @@ La experiencia `Administración` no tiene un permiso propio de dashboard. Se
 ofrece cuando la persona posee al menos un permiso operativo real de `gestion`
 o la capacidad `usuarios.acceder_admin_tecnico`. Cada pantalla mantiene su
 control específico y entrar a la experiencia no autoriza otras operaciones.
+
+## USUARIO-024 — Borrado excepcional de la carga inicial
+
+El Administrador de la app, identificado por `is_superuser=True`, puede borrar
+`Curso`, `Asociado` y `User` desde el admin técnico durante la depuración de la
+carga inicial. La excepción incluye el borrado individual y la acción masiva de
+Django. Los roles delegados no reciben esta capacidad aunque tengan permisos
+de consulta o modificación sobre esas entidades.
+
+Al borrar un usuario, el asociado vinculado queda sin usuario. Los demás
+modelos administrados mantienen bloqueado el borrado directo.

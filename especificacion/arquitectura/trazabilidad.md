@@ -296,6 +296,13 @@ La política funcional se detalla en
   y debe limitarse mediante controles de infraestructura, respaldos y acceso
   restringido.
 
+Como excepción acotada para depurar la carga inicial en desarrollo, staging y
+producción, el admin permite al superusuario eliminar `Curso`, `Asociado` y
+`User`, tanto individualmente como mediante `delete_selected`. La confirmación
+incluye las cascadas aunque los modelos financieros relacionados mantengan
+bloqueado su borrado directo. Esta limpieza no genera un `EventoAuditoria` de
+Uni2; conserva solamente el registro técnico estándar del admin de Django.
+
 ## Inmutabilidad
 
 `EventoAuditoria` será de solo agregado a nivel de aplicación:
