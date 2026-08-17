@@ -4,6 +4,7 @@ import pytest
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.test import RequestFactory
 
 from auditoria.models import EventoAuditoria
 from asociados.models import Asociado, CicloLectivo, Curso
@@ -115,3 +116,38 @@ def test_crud_simples_usados_por_el_admin_tienen_mixin_de_auditoria():
 
     for model in modelos_auditados:
         assert hasattr(admin.site._registry[model], "audit_fields"), model._meta.label
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("model", [Curso, Asociado, get_user_model()])
+def test_admin_permite_borrar_datos_de_carga_inicial_solo_a_superusuario(model):
+    superusuario = get_user_model().objects.create_superuser(
+        username=f"root_{model._meta.model_name}",
+        password="secreto123",
+    )
+    operador = get_user_model().objects.create_user(
+        username=f"operador_{model._meta.model_name}",
+        password="secreto123",
+        is_staff=True,
+    )
+    model_admin = admin.site._registry[model]
+    request_superusuario = RequestFactory().get("/admin/")
+    request_superusuario.user = superusuario
+    request_operador = RequestFactory().get("/admin/")
+    request_operador.user = operador
+
+    assert model_admin.has_delete_permission(request_superusuario) is True
+    assert "delete_selected" in model_admin.get_actions(request_superusuario)
+    assert model_admin.has_delete_permission(request_operador) is False
+    assert "delete_selected" not in model_admin.get_actions(request_operador)
+
+
+@pytest.mark.django_db
+def test_admin_auditado_sin_habilitacion_mantiene_borrado_bloqueado():
+    superusuario = get_user_model().objects.create_superuser(
+        username="root_actividad",
+        password="secreto123",
+    )
+    model_admin = admin.site._registry[ActividadComercial]
+
+    assert model_admin.has_delete_permission(SimpleNamespace(user=superusuario)) is False
