@@ -40,6 +40,7 @@ Estas variables pertenecen al proyecto Vercel productivo.
 | `AWS_S3_ENDPOINT_URL` | No secreto | Opcional | Endpoint S3-compatible. |
 | `AWS_S3_REGION_NAME` | No secreto | Opcional | Región del storage. |
 | `AWS_S3_CUSTOM_DOMAIN` | No secreto | Opcional | Dominio público opcional del storage. |
+| `GOOGLE_ANALYTICS_MEASUREMENT_ID` | No secreto | Opcional | Activa en Producción la medición de visitas y navegación con GA4. |
 
 Los valores vigentes para los hosts públicos y técnicos admitidos son:
 
