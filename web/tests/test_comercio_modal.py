@@ -180,6 +180,21 @@ def test_script_modal_aborta_la_solicitud_al_comenzar_el_cierre():
     assert "activeRequest.abort()" in listener.group("body")
 
 
+def test_boton_de_cierre_oculta_el_modal_de_forma_explicita():
+    script_path = finders.find("js/uni2-commerce-modal.js")
+
+    script = Path(script_path).read_text()
+
+    listener = re.search(
+        r'closeButton\.addEventListener\("click", function \(\) \{(?P<body>.*?)\n    \}\);',
+        script,
+        re.DOTALL,
+    )
+
+    assert listener is not None
+    assert "modal.hide()" in listener.group("body")
+
+
 def test_estados_de_carga_y_error_conservan_el_titulo_del_modal():
     script_path = finders.find("js/uni2-commerce-modal.js")
 
