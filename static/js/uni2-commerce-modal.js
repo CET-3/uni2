@@ -6,7 +6,6 @@
     if (!modalElement || !window.bootstrap) return;
 
     const content = modalElement.querySelector("[data-commerce-modal-content]");
-    const closeButton = modalElement.querySelector(".btn-close[data-bs-dismiss='modal']");
     const modal = window.bootstrap.Modal.getOrCreateInstance(modalElement);
     let opener = null;
     let activeRequest = null;
@@ -68,10 +67,6 @@
 
     modalElement.addEventListener("hide.bs.modal", function () {
       if (activeRequest) activeRequest.abort();
-    });
-
-    closeButton.addEventListener("click", function () {
-      modal.hide();
     });
 
     modalElement.addEventListener("hidden.bs.modal", function () {

@@ -145,9 +145,22 @@ def test_listado_conserva_href_completo_y_declara_endpoint_modal(
         links[0]["class"].split()
     )
     assert links[0]["data-commerce-modal-url"] == modal_url
-    assert len(page.elements_with(**{"data-commerce-modal": None})) == 1
+    modal_elements = page.elements_with(**{"data-commerce-modal": None})
+    assert len(modal_elements) == 1
+    modal_classes = set(modal_elements[0][1]["class"].split())
+    assert {"modal", "uni2-commerce-modal"} <= modal_classes
+    assert "fade" not in modal_classes
     assert len(page.elements_with(**{"data-commerce-modal-content": None})) == 1
     assert len(page.elements_with(id="comercio-modal-title")) == 1
+
+    dialogs = [
+        (tag, attrs)
+        for (tag, attrs), ancestors in zip(page.elements, page.ancestors)
+        if "modal-dialog" in attrs.get("class", "").split()
+        and any("data-commerce-modal" in ancestor_attrs for _, ancestor_attrs in ancestors)
+    ]
+    assert len(dialogs) == 1
+    assert "modal-dialog-scrollable" in dialogs[0][1]["class"].split()
 
     close_buttons = [
         attrs
@@ -178,21 +191,6 @@ def test_script_modal_aborta_la_solicitud_al_comenzar_el_cierre():
 
     assert listener is not None
     assert "activeRequest.abort()" in listener.group("body")
-
-
-def test_boton_de_cierre_oculta_el_modal_de_forma_explicita():
-    script_path = finders.find("js/uni2-commerce-modal.js")
-
-    script = Path(script_path).read_text()
-
-    listener = re.search(
-        r'closeButton\.addEventListener\("click", function \(\) \{(?P<body>.*?)\n    \}\);',
-        script,
-        re.DOTALL,
-    )
-
-    assert listener is not None
-    assert "modal.hide()" in listener.group("body")
 
 
 def test_estados_de_carga_y_error_conservan_el_titulo_del_modal():
