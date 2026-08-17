@@ -297,11 +297,13 @@ La política funcional se detalla en
   restringido.
 
 Como excepción acotada para depurar la carga inicial en desarrollo, staging y
-producción, el admin permite al superusuario eliminar `Curso`, `Asociado` y
-`User`, tanto individualmente como mediante `delete_selected`. La confirmación
-incluye las cascadas aunque los modelos financieros relacionados mantengan
-bloqueado su borrado directo. Esta limpieza no genera un `EventoAuditoria` de
-Uni2; conserva solamente el registro técnico estándar del admin de Django.
+producción, el admin permite al superusuario eliminar `Curso`, `Asociado`,
+`PeriodoCuota` y `User`, tanto individualmente como mediante
+`delete_selected`. La confirmación incluye las cascadas aunque los modelos
+financieros relacionados mantengan bloqueado su borrado directo. Los períodos
+referenciados por cuotas conservan `PROTECT` y no pueden eliminarse. Esta
+limpieza no genera un `EventoAuditoria` de Uni2; conserva solamente el registro
+técnico estándar del admin de Django.
 
 ## Inmutabilidad
 

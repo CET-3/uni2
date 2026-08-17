@@ -119,7 +119,7 @@ def test_crud_simples_usados_por_el_admin_tienen_mixin_de_auditoria():
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("model", [Curso, Asociado, get_user_model()])
+@pytest.mark.parametrize("model", [Curso, Asociado, PeriodoCuota, get_user_model()])
 def test_admin_permite_borrar_datos_de_carga_inicial_solo_a_superusuario(model):
     superusuario = get_user_model().objects.create_superuser(
         username=f"root_{model._meta.model_name}",
