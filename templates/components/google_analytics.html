@@ -24,6 +24,9 @@
 
         gtag("js", new Date());
         gtag("config", "{{ google_analytics_measurement_id|escapejs }}", {
+            page_title: uni2AnalyticsPageName,
+            page_location: uni2AnalyticsPageLocation,
+            page_referrer: uni2AnalyticsPageReferrer,
             send_page_view: false,
         });
         gtag("event", "page_view", {

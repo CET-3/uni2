@@ -86,6 +86,9 @@ def test_base_carga_google_tag_y_envia_una_vista_normalizada(client):
     assert 'const uni2AnalyticsPageName = "web:home";' in content
     assert "send_page_view: false" in content
     assert 'gtag("event", "page_view"' in content
+    assert content.count("page_title: uni2AnalyticsPageName") == 2
+    assert content.count("page_location: uni2AnalyticsPageLocation") == 2
+    assert content.count("page_referrer: uni2AnalyticsPageReferrer") == 2
     assert "window.location.href" not in content
     assert 'new URL("/", document.referrer).href' in content
 
