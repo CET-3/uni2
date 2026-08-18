@@ -328,6 +328,13 @@
                         <span class="uni2-badge">Servicio</span>
                         <code class="d-block small text-muted mt-2">.uni2-badge — etiqueta de categoría en cards de catálogo</code>
                     </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="uni2-badge uni2-badge-info">Con usuario</span>
+                        <span class="uni2-badge uni2-badge-success">Al día</span>
+                        <span class="uni2-badge uni2-badge-warning">Pendiente</span>
+                        <span class="uni2-badge uni2-badge-danger">Con deuda</span>
+                    </div>
+                    <code class="small text-muted">.uni2-badge-{info|success|warning|danger} — estado semántico acompañado por texto</code>
                     <div>
                         <strong class="uni2-discount">10% OFF</strong>
                         <code class="d-block small text-muted mt-2">.uni2-discount — descuento destacado en cards de publicidad</code>
@@ -604,15 +611,38 @@
             </div>
         </div>
 
-        <!-- RESUMEN DE IMPORTACIÓN -->
+        <!-- MÉTRICAS OPERATIVAS -->
         <div class="col-12">
-            <p class="h6 text-muted mb-2">Resumen de importación</p>
-            <p class="small text-muted mb-3"><code>.uni2-metric-card</code> — valor resumido usado durante la previsualización de importaciones del MVP. No representa un dashboard de métricas agregadas.</p>
+            <p class="h6 text-muted mb-2">Métricas operativas</p>
+            <p class="small text-muted mb-3"><code>.uni2-metric-card</code> — resume un dato operativo real. Sus variantes semánticas no reemplazan el detalle en listas o tablas.</p>
             <div class="row g-3">
-                <div class="col-6 col-lg-3"><div class="uni2-metric-card card h-100"><div class="card-body"><div class="uni2-metric-label">Importar</div><div class="uni2-metric-value">142</div></div></div></div>
-                <div class="col-6 col-lg-3"><div class="uni2-metric-card card h-100"><div class="card-body"><div class="uni2-metric-label">Revisar</div><div class="uni2-metric-value">8</div></div></div></div>
-                <div class="col-6 col-lg-3"><div class="uni2-metric-card card h-100"><div class="card-body"><div class="uni2-metric-label">No importar</div><div class="uni2-metric-value">3</div></div></div></div>
-                <div class="col-6 col-lg-3"><div class="uni2-metric-card card h-100"><div class="card-body"><div class="uni2-metric-label">Cursos nuevos</div><div class="uni2-metric-value">5</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="uni2-metric-card uni2-metric-card-info card h-100"><div class="card-body"><div class="uni2-metric-label">Total</div><div class="uni2-metric-value">142</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="uni2-metric-card uni2-metric-card-success card h-100"><div class="card-body"><div class="uni2-metric-label">Al día</div><div class="uni2-metric-value">131</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="uni2-metric-card uni2-metric-card-warning card h-100"><div class="card-body"><div class="uni2-metric-label">Revisar</div><div class="uni2-metric-value">8</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="uni2-metric-card uni2-metric-card-danger card h-100"><div class="card-body"><div class="uni2-metric-label">Con deuda</div><div class="uni2-metric-value">3</div></div></div></div>
+            </div>
+        </div>
+
+        <!-- SUPERFICIES, AVATAR Y LISTA DE DATOS -->
+        <div class="col-12">
+            <p class="h6 text-muted mb-2">Identidad y datos operativos</p>
+            <p class="small text-muted mb-3">Surface cards con acento semántico, avatar de iniciales y pares etiqueta/valor.</p>
+            <div class="row g-3">
+                <div class="col-12 col-lg-3"><div class="card uni2-surface-card uni2-surface-card-info h-100"><div class="card-body"><code>.uni2-surface-card-info</code></div></div></div>
+                <div class="col-12 col-lg-3"><div class="card uni2-surface-card uni2-surface-card-success h-100"><div class="card-body"><code>.uni2-surface-card-success</code></div></div></div>
+                <div class="col-12 col-lg-3"><div class="card uni2-surface-card uni2-surface-card-warning h-100"><div class="card-body"><code>.uni2-surface-card-warning</code></div></div></div>
+                <div class="col-12 col-lg-3"><div class="card uni2-surface-card uni2-surface-card-danger h-100"><div class="card-body"><code>.uni2-surface-card-danger</code></div></div></div>
+                <div class="col-12 col-lg-4 d-flex align-items-center gap-3">
+                    <span class="uni2-avatar uni2-avatar-blue" aria-hidden="true">ML</span>
+                    <code>.uni2-avatar-{blue|green|yellow|red}</code>
+                </div>
+                <div class="col-12 col-lg-8">
+                    <dl class="uni2-data-list">
+                        <div><dt>Número</dt><dd>1024</dd></div>
+                        <div><dt>Estado</dt><dd>Activo</dd></div>
+                    </dl>
+                    <code>.uni2-data-list</code>
+                </div>
             </div>
         </div>
 

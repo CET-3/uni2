@@ -698,6 +698,35 @@ html {
   color: #2d2606;
 }
 
+.uni2-badge-info,
+.uni2-badge-success,
+.uni2-badge-warning,
+.uni2-badge-danger {
+  background-image: none;
+  letter-spacing: 0.03em;
+  text-transform: none;
+}
+
+.uni2-badge-info {
+  background-color: color-mix(in srgb, var(--brand-blue) 14%, transparent);
+  color: var(--color-action-on-surface);
+}
+
+.uni2-badge-success {
+  background-color: color-mix(in srgb, var(--brand-green) 14%, transparent);
+  color: var(--color-success-text);
+}
+
+.uni2-badge-warning {
+  background-color: color-mix(in srgb, var(--brand-yellow) 18%, transparent);
+  color: var(--color-warning-text);
+}
+
+.uni2-badge-danger {
+  background-color: color-mix(in srgb, var(--brand-red) 12%, transparent);
+  color: var(--color-danger-text);
+}
+
 .uni2-discount {
   background-image: var(--texture-grain), linear-gradient(135deg, var(--brand-green-dark) 0 24%, var(--brand-green) 48% 100%);
   color: #05230a;
@@ -2037,9 +2066,22 @@ button.uni2-service-card:hover {
 
 .uni2-metric-card {
   border: 0;
+  border-top: 0.35rem solid var(--uni2-component-accent, var(--brand-blue));
   border-radius: 1rem;
   box-shadow: var(--shadow-card);
 }
+
+.uni2-metric-card-info,
+.uni2-surface-card-info { --uni2-component-accent: var(--brand-blue); }
+
+.uni2-metric-card-success,
+.uni2-surface-card-success { --uni2-component-accent: var(--brand-green); }
+
+.uni2-metric-card-warning,
+.uni2-surface-card-warning { --uni2-component-accent: var(--brand-yellow); }
+
+.uni2-metric-card-danger,
+.uni2-surface-card-danger { --uni2-component-accent: var(--brand-red); }
 
 .uni2-metric-card .uni2-metric-label {
   color: var(--color-text-secondary);
@@ -2093,9 +2135,39 @@ button.uni2-service-card:hover {
 
 .uni2-surface-card {
   border: 0;
+  border-top: 0.35rem solid var(--uni2-component-accent, var(--brand-blue));
   border-radius: 1.1rem;
   box-shadow: var(--shadow-card);
 }
+
+.uni2-avatar {
+  display: inline-grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 2.5rem;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.uni2-avatar-blue { background: var(--brand-blue); color: var(--color-on-strong); }
+.uni2-avatar-green { background: var(--brand-green); color: var(--color-on-bright); }
+.uni2-avatar-yellow { background: var(--brand-yellow); color: var(--color-on-bright); }
+.uni2-avatar-red { background: var(--brand-red-dark); color: var(--color-on-strong); }
+
+.uni2-data-list { margin: 0; }
+
+.uni2-data-list > div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.8fr) minmax(0, 1.2fr);
+  gap: 1rem;
+  padding-block: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.uni2-data-list > div:last-child { border-bottom: 0; }
+.uni2-data-list dt { color: var(--color-text-muted); font-weight: 600; }
+.uni2-data-list dd { margin: 0; overflow-wrap: anywhere; }
 
 /* === AUDITORÍA === */
 .uni2-audit-list {

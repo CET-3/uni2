@@ -140,6 +140,24 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "benefit-list-body" in content
     assert "uni2-discount" in content
     assert "uni2-metric-card" in content
+    for clase in (
+        "uni2-metric-card-info",
+        "uni2-metric-card-success",
+        "uni2-metric-card-warning",
+        "uni2-metric-card-danger",
+        "uni2-badge-info",
+        "uni2-badge-success",
+        "uni2-badge-warning",
+        "uni2-badge-danger",
+        "uni2-surface-card-info",
+        "uni2-surface-card-success",
+        "uni2-surface-card-warning",
+        "uni2-surface-card-danger",
+        "uni2-avatar",
+        "uni2-data-list",
+    ):
+        assert clase in content
+    assert "No representa un dashboard" not in content
     assert "uni2-breadcrumbs" in content
     assert "Fotocopias e impresiones" in content
     assert 'aria-current="page"' in content

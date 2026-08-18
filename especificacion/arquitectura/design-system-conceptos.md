@@ -416,10 +416,16 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-dashboard-page` | Contexto de página de dashboard |
 | `uni2-dashboard-pill` | Pill de contexto en el hero |
 | `uni2-section-title-row` | Fila de título + acción de sección |
-| `uni2-metric-card` | Resumen numérico de una previsualización de importación |
+| `uni2-metric-card` | Resumen de un dato operativo real |
+| `uni2-metric-card-{info,success,warning,danger}` | Variantes semánticas de una métrica |
 | `uni2-metric-label` | Etiqueta de la métrica |
 | `uni2-metric-value` | Valor de la métrica |
-| `uni2-surface-card` | Card genérica sin borde |
+| `uni2-surface-card` | Card genérica para una unidad temática |
+| `uni2-surface-card-{info,success,warning,danger}` | Variantes de acento semántico de una superficie |
+| `uni2-badge-{info,success,warning,danger}` | Variantes semánticas de una etiqueta de estado |
+| `uni2-avatar` | Imagen o iniciales que identifican a una persona |
+| `uni2-avatar-{blue,green,yellow,red}` | Variantes cromáticas del avatar |
+| `uni2-data-list` | Lista de pares etiqueta/valor para una ficha |
 | `uni2-page-header-actions` | Grupo de acciones del header de página |
 | `uni2-pill-row` | Fila de pills |
 | `uni2-schedule-card` | Card de horario/turno |

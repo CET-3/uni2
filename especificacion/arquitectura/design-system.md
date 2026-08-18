@@ -40,6 +40,10 @@ La página interna `/design-system/` usa los componentes estándar de Bootstrap 
 
 Las secciones completas y los agrupadores se presentan como bandas o bloques sin card. Una card se usa solamente cuando representa una unidad individual con límite propio: un elemento repetido, un formulario, una métrica o un ejemplo aislado. No se anidan cards; si un bloque agrupa varias unidades que ya tienen borde o superficie propios, el agrupador queda sin borde.
 
+Las métricas `uni2-metric-card` resumen un dato operativo real y conservan el detalle que permite interpretarlo en listas o tablas. Los modificadores `info`, `success`, `warning` y `danger` expresan su función semántica, no una decoración arbitraria. Los mismos acentos pueden aplicarse a `uni2-surface-card` para delimitar una unidad temática sin anidar cards.
+
+Los badges semánticos siempre incluyen un texto de estado y nunca comunican su significado solo mediante color. `uni2-avatar` representa una persona mediante imagen o iniciales, pero no es por sí mismo un control interactivo. `uni2-data-list` organiza pares etiqueta/valor de una ficha; cuando hay que comparar varias entidades o registros se usa una tabla.
+
 Una `uni2-service-card` navegable usa un enlace como elemento raíz, de modo que toda la card tenga una única semántica y una única zona interactiva. La etiqueta visual `.link` dentro de esa raíz es un `span`. Una card informativa o con botones propios agrega `uni2-service-card-static`; no recibe hover de navegación y sus acciones conservan su semántica independiente.
 
 Cuando el catálogo muestra un componente que también existe en producción, debe usar la misma clase productiva `uni2-*` que usa la pantalla real. El catálogo no define clases `ds-*`: su mobiliario documental se resuelve con componentes y utilidades de Bootstrap.
