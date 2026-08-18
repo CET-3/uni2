@@ -2,6 +2,7 @@ from datetime import date
 from decimal import Decimal
 
 import pytest
+from django.db.models.deletion import ProtectedError
 
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
@@ -61,6 +62,19 @@ def test_no_generar_cuotas_duplicadas(asociado_activo, periodos):
     generar_cuotas_para_periodo(periodos[0])
     creadas = generar_cuotas_para_periodo(periodos[0])
     assert creadas == 0
+
+
+@pytest.mark.django_db
+def test_periodo_con_cuotas_no_se_puede_borrar(asociado_activo, periodos):
+    periodo = periodos[0]
+    generar_cuotas_para_periodo(periodo)
+    cuota = Cuota.objects.get(asociado=asociado_activo, periodo=periodo)
+
+    with pytest.raises(ProtectedError):
+        periodo.delete()
+
+    assert PeriodoCuota.objects.filter(pk=periodo.pk).exists()
+    assert Cuota.objects.filter(pk=cuota.pk).exists()
 
 
 @pytest.mark.django_db
