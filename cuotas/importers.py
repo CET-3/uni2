@@ -265,6 +265,8 @@ def analyze_cuotas_historicas_xlsx(file_obj, fecha_operacion: date) -> CuotasHis
             metodo, metodo_note = _normalize_metodo(raw_forma)
             if not pagada and metodo:
                 pagada = True
+            if pagada and not metodo and not metodo_note:
+                metodo = Pago.METODO_EFECTIVO
             observaciones = [item for item in [pago_note, metodo_note] if item]
             importe, recargo = _valores_cuota_historica(mes_data["mes"])
 
@@ -288,8 +290,6 @@ def analyze_cuotas_historicas_xlsx(file_obj, fecha_operacion: date) -> CuotasHis
 
             if not asociado:
                 observaciones.append("No se encontró asociado por nombre")
-            if pagada and not metodo:
-                metodo = Pago.METODO_EFECTIVO
             if asociado and PeriodoCuota.objects.filter(
                 mes=mes_data["mes"], ciclo_lectivo__anio=CUOTA_HISTORICA_ANIO, cuotas__asociado=asociado
             ).exists():
