@@ -128,6 +128,8 @@ def test_home_gestion_muestra_accesos_basicos(client):
     assert "Panel de gestión" in content
     assert "Atención al asociado" in content
     assert "Períodos de cuota" in content
+    assert "uni2-service-card" in content
+    assert "uni2-access-" not in content
     assert "asociados activos" not in content.lower()
 
 
