@@ -2,97 +2,147 @@
 
 {% block title %}Atención al asociado | Uni2{% endblock %}
 
+{% block body_class %} uni2-ops-page{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-    <div>
-        <h1 class="h2 mb-1">Atención al asociado</h1>
-        <p class="text-secondary mb-0">Buscá por texto libre y acotá con filtros de estado, tipo, curso, usuario o deuda.</p>
-    </div>
-    <div class="uni2-page-header-actions">
-        {% if perms.gestion.exportar_asociados %}
-            <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">Exportar asociados</a>
-        {% endif %}
-        {% if perms.gestion.editar_asociados %}
-            <a class="btn btn-primary" href="{% url 'gestion:asociado_nuevo' %}">Nuevo asociado</a>
-        {% endif %}
-    </div>
-</div>
+<div class="container py-5 uni2-ops-shell">
+    {% include "components/breadcrumbs.html" with current_label="Atención al asociado" only %}
 
-<div class="card uni2-surface-card mb-4">
-    <div class="card-body">
-        <form method="get" class="row g-3 align-items-end">
-            <div class="col-lg-4">
-                <label class="form-label" for="{{ form.q.id_for_label }}">{{ form.q.label }}</label>
-                {{ form.q }}
+    <header class="uni2-ops-hero uni2-ops-hero-blue">
+        <div class="uni2-ops-hero-copy">
+            <span class="uni2-section-kicker">Gestión diaria</span>
+            <h1>Atención al asociado</h1>
+            <p>Buscá una persona, revisá su estado y entrá a su ficha para cobrar, editar o consultar movimientos.</p>
+        </div>
+        <div class="uni2-ops-hero-tools">
+            <div class="uni2-ops-hero-metrics" aria-label="Resumen de búsqueda">
+                <span class="uni2-ops-metric uni2-ops-metric-yellow">
+                    <strong>{% if asociados %}{{ asociados|length }}{% else %}0{% endif %}</strong>
+                    <small>resultados</small>
+                </span>
             </div>
-            <div class="col-lg-2">
-                <label class="form-label" for="{{ form.estado.id_for_label }}">{{ form.estado.label }}</label>
-                {{ form.estado }}
-            </div>
-            <div class="col-lg-2">
-                <label class="form-label" for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}</label>
-                {{ form.tipo }}
-            </div>
-            <div class="col-lg-2">
-                <label class="form-label" for="{{ form.curso_actual.id_for_label }}">{{ form.curso_actual.label }}</label>
-                {{ form.curso_actual }}
-            </div>
-            <div class="col-lg-2">
-                <label class="form-label" for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
-                {{ form.usuario }}
-            </div>
-            <div class="col-lg-2">
-                <label class="form-label" for="{{ form.deuda.id_for_label }}">{{ form.deuda.label }}</label>
-                {{ form.deuda }}
-            </div>
-            <div class="col-lg-2">
-                <button class="btn btn-primary w-100" type="submit">Buscar</button>
-            </div>
-        </form>
-        {% if form.errors %}
-            {% include "components/alert.html" with variant="warning" message="Revisá los filtros ingresados." extra_classes="mt-3 mb-0" only %}
-        {% endif %}
-    </div>
-</div>
-
-{% if asociados %}
-    <div class="card uni2-surface-card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-soft align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Asociado</th>
-                            <th>Numero</th>
-                            <th>DNI</th>
-                            <th>Curso</th>
-                            <th>Estado</th>
-                            <th>Usuario</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for asociado in asociados %}
-                            <tr class="uni2-clickable-row">
-                                <td>
-                                    <a class="uni2-row-link" href="{% url 'gestion:asociado_detalle' asociado.id %}?volver={{ request.get_full_path|urlencode }}">
-                                        {{ asociado.apellido }}, {{ asociado.nombre }}
-                                    </a>
-                                </td>
-                                <td>{{ asociado.numero_asociado }}</td>
-                                <td>{{ asociado.dni }}</td>
-                                <td>{{ asociado.curso_actual|default:"-" }}</td>
-                                <td>{{ asociado.get_estado_display }}</td>
-                                <td>{% if asociado.usuario %}{{ asociado.usuario.username }}{% else %}-{% endif %}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="uni2-ops-actions uni2-ops-primary-actions">
+                {% if perms.gestion.exportar_asociados %}
+                    <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">
+                        <i class="bi bi-download" aria-hidden="true"></i> Exportar
+                    </a>
+                {% endif %}
+                {% if perms.gestion.editar_asociados %}
+                    <a class="btn btn-primary" href="{% url 'gestion:asociado_nuevo' %}">
+                        <i class="bi bi-person-plus" aria-hidden="true"></i> Nuevo asociado
+                    </a>
+                {% endif %}
             </div>
         </div>
-    </div>
-{% elif form.is_bound %}
-    {% include "components/alert.html" with variant="warning" title="Sin resultados" message="No se encontraron asociados para la búsqueda ingresada." only %}
-{% endif %}
+    </header>
+
+    <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-green mb-4" aria-labelledby="filtros-title">
+        <div class="card-body">
+            <div class="uni2-ops-panel-heading">
+                <div>
+                    <span class="uni2-section-kicker">Búsqueda</span>
+                    <h2 id="filtros-title">Encontrar asociado</h2>
+                    <p>Combiná texto libre con filtros para achicar el listado.</p>
+                </div>
+                {% if form.is_bound %}
+                    <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:asociados' %}">
+                        <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar
+                    </a>
+                {% endif %}
+            </div>
+
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-lg-4">
+                    <label class="form-label" for="{{ form.q.id_for_label }}">{{ form.q.label }}</label>
+                    {{ form.q }}
+                </div>
+                <div class="col-lg-2">
+                    <label class="form-label" for="{{ form.estado.id_for_label }}">{{ form.estado.label }}</label>
+                    {{ form.estado }}
+                </div>
+                <div class="col-lg-2">
+                    <label class="form-label" for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}</label>
+                    {{ form.tipo }}
+                </div>
+                <div class="col-lg-2">
+                    <label class="form-label" for="{{ form.curso_actual.id_for_label }}">{{ form.curso_actual.label }}</label>
+                    {{ form.curso_actual }}
+                </div>
+                <div class="col-lg-2">
+                    <label class="form-label" for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
+                    {{ form.usuario }}
+                </div>
+                <div class="col-lg-2">
+                    <label class="form-label" for="{{ form.deuda.id_for_label }}">{{ form.deuda.label }}</label>
+                    {{ form.deuda }}
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-primary w-100" type="submit">
+                        <i class="bi bi-search" aria-hidden="true"></i> Buscar
+                    </button>
+                </div>
+            </form>
+            {% if form.errors %}
+                {% include "components/alert.html" with variant="warning" message="Revisá los filtros ingresados." extra_classes="mt-3 mb-0" only %}
+            {% endif %}
+        </div>
+    </section>
+
+    {% if asociados %}
+        <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue" aria-labelledby="resultados-title">
+            <div class="card-body">
+                <div class="uni2-ops-panel-heading">
+                    <div>
+                        <span class="uni2-section-kicker">Resultados</span>
+                        <h2 id="resultados-title">Asociados encontrados</h2>
+                        <p>Seleccioná una fila para abrir la ficha completa.</p>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-soft uni2-ops-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Asociado</th>
+                                <th>Número</th>
+                                <th>DNI</th>
+                                <th>Curso</th>
+                                <th>Estado</th>
+                                <th>Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for asociado in asociados %}
+                                <tr class="uni2-clickable-row">
+                                    <td>
+                                        <a class="uni2-row-link uni2-ops-person" href="{% url 'gestion:asociado_detalle' asociado.id %}?volver={{ request.get_full_path|urlencode }}">
+                                            {% cycle 'uni2-ops-avatar-blue' 'uni2-ops-avatar-green' 'uni2-ops-avatar-yellow' 'uni2-ops-avatar-red' as avatar_color silent %}
+                                            <span class="uni2-ops-avatar {{ avatar_color }}" aria-hidden="true">{{ asociado.nombre|first }}{{ asociado.apellido|first }}</span>
+                                            <span>
+                                                <strong>{{ asociado.apellido }}, {{ asociado.nombre }}</strong>
+                                                <small>Ver ficha completa</small>
+                                            </span>
+                                        </a>
+                                    </td>
+                                    <td><span class="uni2-ops-strong">{{ asociado.numero_asociado }}</span></td>
+                                    <td>{{ asociado.dni }}</td>
+                                    <td>{{ asociado.curso_actual|default:"-" }}</td>
+                                    <td><span class="uni2-ops-badge uni2-ops-badge-blue">{{ asociado.get_estado_display }}</span></td>
+                                    <td>
+                                        {% if asociado.usuario %}
+                                            <span class="uni2-ops-badge uni2-ops-badge-green">{{ asociado.usuario.username }}</span>
+                                        {% else %}
+                                            <span class="uni2-ops-badge uni2-ops-badge-yellow">Sin usuario</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    {% elif form.is_bound %}
+        {% include "components/alert.html" with variant="warning" title="Sin resultados" message="No se encontraron asociados para la búsqueda ingresada." only %}
+    {% endif %}
 </div>
 {% endblock %}

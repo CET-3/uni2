@@ -4,6 +4,7 @@
 
 {% block content %}
 <div class="container py-5">
+{% include "components/breadcrumbs.html" with ancestor_url="/gestion/asociados/" ancestor_label="Atención al asociado" current_label="Importar padrón inicial" only %}
 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
     <div>
         <h1 class="h2 mb-1">Importar padrón inicial</h1>
@@ -20,7 +21,6 @@
                 {% endif %}
             </button>
         </form>
-        <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">Volver a asociados</a>
     </div>
 </div>
 

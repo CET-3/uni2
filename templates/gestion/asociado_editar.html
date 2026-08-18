@@ -1,89 +1,125 @@
 {% extends "base.html" %}
 
 {% block title %}Editar asociado | Uni2{% endblock %}
+{% block body_class %} uni2-ops-page{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-    <div>
-        <h1 class="h2 mb-1">Editar asociado</h1>
-        <p class="text-secondary mb-0">{{ asociado.apellido }}, {{ asociado.nombre }} · DNI {{ asociado.dni }}</p>
-    </div>
-</div>
+<div class="container py-5 uni2-ops-shell">
+    {% include "components/breadcrumbs.html" with ancestor_url=detail_url ancestor_label=asociado current_label="Editar" only %}
 
-<form method="post" class="card uni2-surface-card" novalidate>
-    {% csrf_token %}
-    <input type="hidden" name="volver" value="{{ return_url }}">
-    <div class="card-body">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label" for="{{ form.nombre.id_for_label }}">Nombre</label>
-                {{ form.nombre }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="{{ form.apellido.id_for_label }}">Apellido</label>
-                {{ form.apellido }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="{{ form.dni.id_for_label }}">DNI</label>
-                {{ form.dni }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="{{ form.tipo.id_for_label }}">Tipo</label>
-                {{ form.tipo }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
-                {{ form.email }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="{{ form.telefono.id_for_label }}">Teléfono</label>
-                {{ form.telefono }}
-            </div>
-            <div class="col-12">
-                <label class="form-label" for="{{ form.direccion.id_for_label }}">Dirección</label>
-                {{ form.direccion }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="{{ form.curso_actual.id_for_label }}">Curso actual</label>
-                {{ form.curso_actual }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="{{ form.estado.id_for_label }}">Estado</label>
-                {{ form.estado }}
-            </div>
-            <div class="col-md-4">
-                <label class="form-label" for="{{ form.fecha_alta.id_for_label }}">Fecha alta</label>
-                {{ form.fecha_alta }}
-            </div>
-            <div class="col-md-4">
-                <label class="form-label" for="{{ form.fecha_inicio_cobro.id_for_label }}">Inicio cobro</label>
-                {{ form.fecha_inicio_cobro }}
-            </div>
-            <div class="col-md-4">
-                <label class="form-label" for="{{ form.fecha_baja.id_for_label }}">Fecha baja</label>
-                {{ form.fecha_baja }}
-            </div>
-            <div class="col-12">
-                <label class="form-label" for="{{ form.motivo_baja.id_for_label }}">Motivo baja</label>
-                {{ form.motivo_baja }}
+    <header class="uni2-ops-hero uni2-ops-hero-blue">
+        <div class="uni2-associate-record-heading">
+            <span class="uni2-ops-avatar uni2-ops-avatar-blue uni2-associate-record-avatar" aria-hidden="true">
+                {{ asociado.nombre|first }}{{ asociado.apellido|first }}
+            </span>
+            <div class="uni2-ops-hero-copy">
+                <span class="uni2-section-kicker">Edición de ficha</span>
+                <h1>Editar asociado</h1>
+                <div class="uni2-record-meta-row" aria-label="Datos del asociado">
+                    <span class="uni2-ops-badge uni2-ops-badge-blue">{{ asociado.apellido }}, {{ asociado.nombre }}</span>
+                    <span class="uni2-ops-badge uni2-ops-badge-yellow">DNI {{ asociado.dni }}</span>
+                    <span class="uni2-ops-badge uni2-ops-badge-green">{{ asociado.get_estado_display }}</span>
+                </div>
             </div>
         </div>
+    </header>
 
-        {% for field in form %}
-            {% for error in field.errors %}
-                <div class="text-danger small mt-2">{{ field.label }}: {{ error }}</div>
-            {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-            <div class="text-danger small mt-2">{{ error }}</div>
-        {% endfor %}
+    <form method="post" class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="volver" value="{{ return_url }}">
+        <div class="card-body">
+            <div class="uni2-ops-panel-heading">
+                <div>
+                    <span class="uni2-section-kicker">Datos editables</span>
+                    <h2>Ficha del asociado</h2>
+                    <p>Actualizá solo los campos que cambiaron para conservar el historial limpio.</p>
+                </div>
+            </div>
 
-        <div class="mt-4 d-flex flex-column flex-sm-row gap-2">
-            <button class="btn btn-primary" type="submit">Guardar cambios</button>
-            <a class="btn btn-outline-primary" href="{{ detail_url }}">Cancelar</a>
+            {% if form.errors or form.non_field_errors %}
+                <div class="uni2-form-error-summary" role="alert" aria-labelledby="edit-form-errors-title">
+                    <span class="uni2-form-error-icon" aria-hidden="true">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </span>
+                    <div>
+                        <strong id="edit-form-errors-title">Revisá los datos del asociado</strong>
+                        <p>Hay campos incompletos o con datos que Uni2 no puede guardar todavía.</p>
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><span>{{ field.label }}:</span> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.nombre.id_for_label }}">Nombre</label>
+                    {{ form.nombre }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.apellido.id_for_label }}">Apellido</label>
+                    {{ form.apellido }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.dni.id_for_label }}">DNI</label>
+                    {{ form.dni }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.tipo.id_for_label }}">Tipo</label>
+                    {{ form.tipo }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.telefono.id_for_label }}">Teléfono</label>
+                    {{ form.telefono }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="{{ form.direccion.id_for_label }}">Dirección</label>
+                    {{ form.direccion }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.curso_actual.id_for_label }}">Curso actual</label>
+                    {{ form.curso_actual }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.estado.id_for_label }}">Estado</label>
+                    {{ form.estado }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.fecha_alta.id_for_label }}">Fecha alta</label>
+                    {{ form.fecha_alta }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.fecha_inicio_cobro.id_for_label }}">Inicio cobro</label>
+                    {{ form.fecha_inicio_cobro }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.fecha_baja.id_for_label }}">Fecha baja</label>
+                    {{ form.fecha_baja }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="{{ form.motivo_baja.id_for_label }}">Motivo baja</label>
+                    {{ form.motivo_baja }}
+                </div>
+            </div>
+
+            <div class="uni2-ops-form-actions">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-check2-circle" aria-hidden="true"></i> Guardar cambios
+                </button>
+                <a class="btn btn-outline-primary" href="{{ detail_url }}">Cancelar</a>
+            </div>
         </div>
-    </div>
-</form>
+    </form>
 </div>
 {% endblock %}

@@ -54,6 +54,9 @@ class AsociadoCuotasView(AsociadoRequiredMixin, TemplateView):
             "-periodo__ciclo_lectivo__anio", "-periodo__mes"
         )
         context["fecha_referencia"] = fecha_referencia
-        context["cuotas"] = [calcular_estado_cuota(cuota, fecha_referencia) for cuota in cuotas]
+        cuotas_calculadas = [calcular_estado_cuota(cuota, fecha_referencia) for cuota in cuotas]
+        context["cuotas"] = cuotas_calculadas
         context["total_deuda"] = get_total_deuda(asociado, fecha_referencia)
+        context["cuotas_total"] = len(cuotas_calculadas)
+        context["cuotas_con_saldo"] = sum(1 for cuota in cuotas_calculadas if cuota.saldo > 0)
         return context

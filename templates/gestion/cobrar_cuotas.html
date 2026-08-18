@@ -2,134 +2,181 @@
 {% load l10n formatos %}
 
 {% block title %}{% if es_donacion_sin_deuda %}Registrar donación{% else %}Cobrar cuotas{% endif %} | Uni2{% endblock %}
+{% block body_class %} uni2-ops-page{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-    <div>
-        <h1 class="h2 mb-1">{% if es_donacion_sin_deuda %}Registrar donación{% else %}Cobro de cuotas{% endif %}</h1>
-        <p class="text-secondary mb-0">{% if es_donacion_sin_deuda %}Registrá el aporte voluntario del asociado seleccionado.{% else %}Revisá la deuda y registrá el pago del asociado seleccionado.{% endif %}</p>
-    </div>
-</div>
-
+<div class="container py-5 uni2-ops-shell">
 {% if selected_asociado %}
-    <div class="card uni2-surface-card mb-4">
+    {% include "components/breadcrumbs.html" with ancestor_url=detail_url ancestor_label=selected_asociado current_label="Cobro" only %}
+
+    <header class="uni2-ops-hero {% if es_donacion_sin_deuda %}uni2-ops-hero-green{% else %}uni2-ops-hero-red{% endif %}">
+        <div class="uni2-associate-record-heading">
+            <span class="uni2-ops-avatar {% if es_donacion_sin_deuda %}uni2-ops-avatar-green{% else %}uni2-ops-avatar-red{% endif %} uni2-associate-record-avatar" aria-hidden="true">
+                {{ selected_asociado.nombre|first }}{{ selected_asociado.apellido|first }}
+            </span>
+            <div class="uni2-ops-hero-copy">
+                <span class="uni2-section-kicker">{% if es_donacion_sin_deuda %}Aporte voluntario{% else %}Cuenta corriente{% endif %}</span>
+                <h1>{% if es_donacion_sin_deuda %}Registrar donación{% else %}Cobro de cuotas{% endif %}</h1>
+                <p>{% if es_donacion_sin_deuda %}Registrá el aporte voluntario del asociado seleccionado.{% else %}Seleccioná las cuotas pendientes y registrá el importe recibido.{% endif %}</p>
+            </div>
+        </div>
+        <div class="uni2-ops-hero-tools">
+            <div class="uni2-ops-hero-metrics">
+                <span class="uni2-ops-metric {% if total_deuda > 0 %}uni2-ops-metric-red{% else %}uni2-ops-metric-green{% endif %}">
+                    <i class="bi {% if total_deuda > 0 %}bi-exclamation-circle-fill{% else %}bi-heart-fill{% endif %}" aria-hidden="true"></i>
+                    <strong>{{ total_deuda|moneda }}</strong>
+                    <small>{% if total_deuda > 0 %}deuda{% else %}sin deuda{% endif %}</small>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue mb-4" aria-label="Resumen del asociado">
         <div class="card-body py-3">
-            <div class="row g-3 align-items-center">
-                <div class="col-sm-auto">
-                    <span class="text-secondary small">Asociado</span>
-                    <div class="fw-semibold">{{ selected_asociado.apellido }}, {{ selected_asociado.nombre }}</div>
+            <div class="uni2-cobro-summary">
+                <div>
+                    <span>Asociado</span>
+                    <strong>{{ selected_asociado.apellido }}, {{ selected_asociado.nombre }}</strong>
                 </div>
-                <div class="col-sm-auto">
-                    <span class="text-secondary small">Número</span>
-                    <div>{{ selected_asociado.numero_asociado }}</div>
+                <div>
+                    <span>Número</span>
+                    <strong>{{ selected_asociado.numero_asociado }}</strong>
                 </div>
-                <div class="col-sm-auto">
-                    <span class="text-secondary small">DNI</span>
-                    <div>{{ selected_asociado.dni }}</div>
+                <div>
+                    <span>DNI</span>
+                    <strong>{{ selected_asociado.dni }}</strong>
                 </div>
-                <div class="col-sm-auto">
-                    <span class="text-secondary small">Curso</span>
-                    <div>{{ selected_asociado.curso_actual|default:"-" }}</div>
+                <div>
+                    <span>Curso</span>
+                    <strong>{{ selected_asociado.curso_actual|default:"-" }}</strong>
                 </div>
-                <div class="col-sm-auto ms-sm-auto">
-                    <span class="text-secondary small">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</span>
-                    <div class="fw-semibold">{{ total_deuda|moneda }}</div>
+                <div>
+                    <span>Al {{ fecha_referencia|date:"d/m/Y" }}</span>
+                    <strong>{{ total_deuda|moneda }}</strong>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="card uni2-surface-card">
+    <form method="post" class="card uni2-surface-card uni2-ops-panel {% if es_donacion_sin_deuda %}uni2-ops-panel-green{% else %}uni2-ops-panel-red{% endif %}" novalidate>
+        {% csrf_token %}
+        {{ cobro_form.asociado_id }}
+        <input type="hidden" name="volver" value="{{ return_url }}">
         <div class="card-body">
-            <h2 class="h5 mb-3">{% if es_donacion_sin_deuda %}Datos de la donación{% else %}Registrar pago{% endif %}</h2>
-            <form method="post" novalidate>
-                {% csrf_token %}
-                {{ cobro_form.asociado_id }}
-                <input type="hidden" name="volver" value="{{ return_url }}">
-                {% if es_donacion_sin_deuda %}
-                    {% include "components/alert.html" with variant="info" message="El asociado no tiene cuotas pendientes. El importe ingresado se registrará íntegramente como donación." only %}
-                {% else %}
-                <h3 class="h6 mb-3">Cuotas a cobrar</h3>
-                <div class="table-responsive mb-3">
-                    <table class="table table-soft align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th>Elegir</th>
-                                <th>Periodo</th>
-                                <th>Vencimiento</th>
-                                <th>Original</th>
-                                <th>Recargo actual</th>
-                                <th>Total actual</th>
-                                <th>Pagado</th>
-                                <th>Saldo</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for cuota in cuotas_deudoras %}
-                                <tr>
-                                    <td>
-                                        <label class="visually-hidden" for="cuota-{{ cuota.cuota.id }}">
-                                            Cobrar cuota {{ cuota.cuota.periodo }}
-                                        </label>
-                                        <input
-                                            id="cuota-{{ cuota.cuota.id }}"
-                                            class="form-check-input cuota-cobro-check"
-                                            type="checkbox"
-                                            name="cuotas_ids"
-                                            value="{{ cuota.cuota.id }}"
-                                            data-saldo="{{ cuota.saldo|unlocalize }}"
-                                            {% if cuota.cuota.id|stringformat:"s" in selected_cuotas_ids %}checked{% endif %}
-                                        >
-                                    </td>
-                                    <td>{{ cuota.cuota.periodo }}</td>
-                                    <td>{{ cuota.cuota.periodo.fecha_vencimiento|date:"d/m/Y" }}</td>
-                                    <td>{{ cuota.importe_original|moneda }}</td>
-                                    <td>{{ cuota.recargo|moneda }}</td>
-                                    <td>{{ cuota.total_exigible|moneda }}</td>
-                                    <td>{{ cuota.importe_pagado|moneda }}</td>
-                                    <td>{{ cuota.saldo|moneda }}</td>
-                                    <td>{{ cuota.estado_display }}</td>
-                                </tr>
-                            {% empty %}
-                                <tr><td colspan="9">El asociado no tiene cuotas pendientes.</td></tr>
+            <div class="uni2-ops-panel-heading">
+                <div>
+                    <span class="uni2-section-kicker">{% if es_donacion_sin_deuda %}Donación{% else %}Pago{% endif %}</span>
+                    <h2>{% if es_donacion_sin_deuda %}Datos de la donación{% else %}Registrar pago{% endif %}</h2>
+                    <p>{% if es_donacion_sin_deuda %}El importe se registrará como aporte voluntario.{% else %}La selección de cuotas define el mínimo a cobrar.{% endif %}</p>
+                </div>
+            </div>
+
+            {% if cobro_form.errors or cobro_form.non_field_errors %}
+                <div class="uni2-form-error-summary" role="alert" aria-labelledby="cobro-form-errors-title">
+                    <span class="uni2-form-error-icon" aria-hidden="true">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </span>
+                    <div>
+                        <strong id="cobro-form-errors-title">Revisá los datos del cobro</strong>
+                        <p>Hay campos incompletos o cuotas que necesitan revisión antes de guardar.</p>
+                        <ul>
+                            {% for field in cobro_form %}
+                                {% for error in field.errors %}
+                                    <li><span>{{ field.label }}:</span> {{ error }}</li>
+                                {% endfor %}
                             {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% for error in cobro_form.cuotas_ids.errors %}<div class="text-danger small mb-2">{{ error }}</div>{% endfor %}
-                {% endif %}
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label" for="{{ cobro_form.fecha.id_for_label }}">Fecha</label>
-                        {{ cobro_form.fecha }}
-                        {% for error in cobro_form.fecha.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label" for="{{ cobro_form.importe.id_for_label }}">{% if es_donacion_sin_deuda %}Importe de la donación{% else %}Importe recibido{% endif %}</label>
-                        {{ cobro_form.importe }}
-                        {% for error in cobro_form.importe.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label" for="{{ cobro_form.metodo.id_for_label }}">Método</label>
-                        {{ cobro_form.metodo }}
-                        {% for error in cobro_form.metodo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label" for="{{ cobro_form.observaciones.id_for_label }}">Observaciones</label>
-                        {{ cobro_form.observaciones }}
-                        {% for error in cobro_form.observaciones.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                            {% for error in cobro_form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
-                {% for error in cobro_form.non_field_errors %}<div class="text-danger small mt-2">{{ error }}</div>{% endfor %}
-                <div class="mt-3 d-flex flex-column flex-sm-row gap-2">
-                    <button class="btn btn-primary" type="submit">{% if es_donacion_sin_deuda %}Registrar donación{% else %}Confirmar cobro{% endif %}</button>
-                    <a class="btn btn-outline-primary" href="{{ detail_url }}">Cancelar</a>
+            {% endif %}
+
+            {% if es_donacion_sin_deuda %}
+                {% include "components/alert.html" with variant="info" message="El asociado no tiene cuotas pendientes. El importe ingresado se registrará íntegramente como donación." only %}
+            {% else %}
+                <section class="uni2-cobro-section" aria-labelledby="cuotas-cobro-title">
+                    <h3 id="cuotas-cobro-title">Cuotas a cobrar</h3>
+                    <div class="table-responsive">
+                        <table class="table table-soft uni2-ops-table uni2-cobro-table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Elegir</th>
+                                    <th>Cuota</th>
+                                    <th>Importes</th>
+                                    <th>Saldo</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cuota in cuotas_deudoras %}
+                                    <tr>
+                                        <td>
+                                            <label class="uni2-cobro-check" for="cuota-{{ cuota.cuota.id }}">
+                                                <input
+                                                    id="cuota-{{ cuota.cuota.id }}"
+                                                    class="form-check-input cuota-cobro-check"
+                                                    type="checkbox"
+                                                    name="cuotas_ids"
+                                                    value="{{ cuota.cuota.id }}"
+                                                    data-saldo="{{ cuota.saldo|unlocalize }}"
+                                                    {% if cuota.cuota.id|stringformat:"s" in selected_cuotas_ids %}checked{% endif %}
+                                                >
+                                                <span class="visually-hidden">Cobrar cuota {{ cuota.cuota.periodo }}</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <div class="uni2-period-amounts">
+                                                <strong>{{ cuota.cuota.periodo }}</strong>
+                                                <span>Vence {{ cuota.cuota.periodo.fecha_vencimiento|date:"d/m/Y" }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="uni2-period-amounts">
+                                                <strong>{{ cuota.total_exigible|moneda }}</strong>
+                                                <span>Original {{ cuota.importe_original|moneda }} · recargo {{ cuota.recargo|moneda }}</span>
+                                            </div>
+                                        </td>
+                                        <td><span class="uni2-ops-badge uni2-ops-badge-red">{{ cuota.saldo|moneda }}</span></td>
+                                        <td><span class="uni2-ops-badge uni2-ops-badge-yellow">{{ cuota.estado_display }}</span></td>
+                                    </tr>
+                                {% empty %}
+                                    <tr><td colspan="5">El asociado no tiene cuotas pendientes.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {% endif %}
+
+            <div class="uni2-cobro-fields">
+                <div>
+                    <label class="form-label" for="{{ cobro_form.fecha.id_for_label }}">Fecha</label>
+                    {{ cobro_form.fecha }}
                 </div>
-            </form>
+                <div>
+                    <label class="form-label" for="{{ cobro_form.importe.id_for_label }}">{% if es_donacion_sin_deuda %}Importe de la donación{% else %}Importe recibido{% endif %}</label>
+                    {{ cobro_form.importe }}
+                </div>
+                <div>
+                    <label class="form-label" for="{{ cobro_form.metodo.id_for_label }}">Método</label>
+                    {{ cobro_form.metodo }}
+                </div>
+                <div class="uni2-cobro-field-full">
+                    <label class="form-label" for="{{ cobro_form.observaciones.id_for_label }}">Observaciones</label>
+                    {{ cobro_form.observaciones }}
+                </div>
+            </div>
+
+            <div class="uni2-ops-form-actions">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-check2-circle" aria-hidden="true"></i> {% if es_donacion_sin_deuda %}Registrar donación{% else %}Confirmar cobro{% endif %}
+                </button>
+                <a class="btn btn-outline-primary" href="{{ detail_url }}">Cancelar</a>
+            </div>
         </div>
-    </div>
+    </form>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

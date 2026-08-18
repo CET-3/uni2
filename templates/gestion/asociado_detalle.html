@@ -2,121 +2,192 @@
 {% load formatos %}
 
 {% block title %}Detalle de asociado | Uni2{% endblock %}
+{% block body_class %} uni2-ops-page{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-<nav class="uni2-context-navigation mb-3" aria-label="Ruta de atención">
-    <a href="{{ return_url }}">Atención al asociado</a>
-    <span aria-hidden="true">/</span>
-    <span aria-current="page">{{ asociado.apellido }}, {{ asociado.nombre }}</span>
-</nav>
-<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-    <div>
-        <h1 class="h2 mb-1">{{ asociado.apellido }}, {{ asociado.nombre }}</h1>
-        <p class="text-secondary mb-0">Número {{ asociado.numero_asociado }} · DNI {{ asociado.dni }}</p>
-    </div>
-    <div class="uni2-page-header-actions">
-        {% if perms.gestion.editar_asociados %}
-            <a class="btn btn-outline-primary" href="{{ edit_url }}">Editar asociado</a>
-        {% endif %}
-        {% if perms.gestion.cobrar_cuotas %}
-            <a class="btn btn-primary" href="{{ cobro_url }}">{% if total_deuda > 0 %}Cobrar{% else %}Registrar donación{% endif %}</a>
-        {% endif %}
-    </div>
-</div>
+<div class="container py-5 uni2-ops-shell">
+    {% include "components/breadcrumbs.html" with ancestor_url=return_url ancestor_label="Atención al asociado" current_label=asociado only %}
 
-<div class="row g-4 mb-4">
-    <div class="col-lg-4">
-        <div class="card uni2-surface-card h-100"><div class="card-body">
-            <h2 class="h5 mb-3">Estado general</h2>
-            <p class="mb-2"><strong>Tipo:</strong> {{ asociado.get_tipo_display }}</p>
-            <p class="mb-2"><strong>Estado:</strong> {{ asociado.get_estado_display }}</p>
-            <p class="mb-2"><strong>Curso actual:</strong> {{ asociado.curso_actual|default:"-" }}</p>
-            <p class="mb-2"><strong>Alta:</strong> {{ asociado.fecha_alta|date:"d/m/Y" }}</p>
-            <p class="mb-0"><strong>Inicio cobro:</strong> {{ asociado.fecha_inicio_cobro|date:"d/m/Y" }}</p>
-        </div></div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card uni2-surface-card h-100"><div class="card-body">
-            <h2 class="h5 mb-3">Contacto y acceso</h2>
-            <p class="mb-2"><strong>Email:</strong> {{ asociado.email|default:"-" }}</p>
-            <p class="mb-2"><strong>Teléfono:</strong> {{ asociado.telefono|default:"-" }}</p>
-            <p class="mb-2"><strong>Usuario:</strong> {% if asociado.usuario %}{{ asociado.usuario.username }}{% else %}Sin usuario{% endif %}</p>
-            <p class="mb-0"><strong>Último acceso:</strong> {% if asociado.usuario and asociado.usuario.last_login %}{{ asociado.usuario.last_login|date:"d/m/Y H:i" }}{% else %}-{% endif %}</p>
-        </div></div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card uni2-surface-card h-100"><div class="card-body">
-            <h2 class="h5 mb-3">Deuda</h2>
-            <p class="display-6 mb-2">{{ total_deuda|moneda }}</p>
-            <p class="text-secondary mb-0">Calculada al {{ fecha_referencia|date:"d/m/Y" }}</p>
-        </div></div>
-    </div>
-</div>
-
-<div class="row g-4">
-    <div class="col-lg-7">
-        <div class="card uni2-surface-card h-100"><div class="card-body">
-            <h2 class="h5 mb-3">Cuotas del año actual</h2>
-            <div class="table-responsive">
-                <table class="table table-soft align-middle mb-0">
-                    <thead><tr><th>Periodo</th><th class="text-end">Importe</th><th class="text-end">Pagado</th><th class="text-end">Saldo</th><th>Estado</th></tr></thead>
-                    <tbody>
-                        {% for item in cuotas_anio_actual %}
-                            <tr>
-                                <td>{{ item.cuota.periodo }}</td>
-                                <td class="text-end">{{ item.importe_original|moneda }}</td>
-                                <td class="text-end">{{ item.importe_pagado|moneda }}</td>
-                                <td class="text-end">{{ item.saldo|moneda }}</td>
-                                <td>{{ item.estado_display }}</td>
-                            </tr>
-                        {% empty %}
-                            <tr><td colspan="5">No tiene cuotas en el año actual.</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <header class="uni2-ops-hero uni2-ops-hero-blue uni2-associate-record-hero">
+        <div class="uni2-associate-record-heading">
+            <span class="uni2-ops-avatar uni2-ops-avatar-blue uni2-associate-record-avatar" aria-hidden="true">
+                {{ asociado.nombre|first }}{{ asociado.apellido|first }}
+            </span>
+            <div class="uni2-ops-hero-copy">
+                <span class="uni2-section-kicker">Ficha del asociado</span>
+                <h1>{{ asociado.apellido }}, {{ asociado.nombre }}</h1>
+                <div class="uni2-record-meta-row" aria-label="Datos principales">
+                    <span class="uni2-ops-badge uni2-ops-badge-blue">Nº {{ asociado.numero_asociado }}</span>
+                    <span class="uni2-ops-badge uni2-ops-badge-yellow">DNI {{ asociado.dni }}</span>
+                    <span class="uni2-ops-badge uni2-ops-badge-green">{{ asociado.get_estado_display }}</span>
+                </div>
             </div>
-        </div></div>
-    </div>
-    <div class="col-lg-5">
-        <div class="card uni2-surface-card"><div class="card-body">
-            <h2 class="h5 mb-3">Pagos recientes</h2>
-            <ul class="list-group list-group-flush">
-                {% for pago in pagos_recientes %}
-                    <li class="list-group-item px-0">
-                        <div class="d-flex justify-content-between gap-3">
-                            <span>{{ pago.pago.fecha|date:"d/m/Y" }} · {{ pago.pago.get_metodo_display }}</span>
-                            <strong>{{ pago.pago.importe|moneda }}</strong>
-                        </div>
-                        <div class="small text-secondary mt-1">
-                            {% for linea in pago.lineas %}
-                                <div>{{ linea }}</div>
-                            {% endfor %}
-                        </div>
-                    </li>
-                {% empty %}
-                    <li class="list-group-item px-0">No hay pagos registrados.</li>
-                {% endfor %}
-            </ul>
-        </div></div>
-    </div>
-</div>
-
-{% if puede_ver_movimientos_asociado %}
-    <section class="mt-5" aria-labelledby="historial-auditoria">
-        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-end gap-2 mb-3">
-            <div>
-                <h2 class="h4 mb-1" id="historial-auditoria">Historial de auditoría</h2>
-                <p class="text-secondary mb-0">Últimas operaciones registradas para este asociado.</p>
-            </div>
-            {% if auditoria_url %}<a href="{{ auditoria_url }}">Ver historial completo</a>{% endif %}
         </div>
-        {% if operaciones_auditoria %}
-            {% include "gestion/_lista_operaciones_auditoria.html" with operaciones=operaciones_auditoria contextual=True only %}
-        {% else %}
-            {% include "components/alert.html" with variant="info" message="Todavía no hay operaciones registradas para este asociado." only %}
-        {% endif %}
-    </section>
-{% endif %}
+        <div class="uni2-ops-hero-tools">
+            <div class="uni2-ops-hero-metrics">
+                <span class="uni2-ops-metric {% if total_deuda > 0 %}uni2-ops-metric-red{% else %}uni2-ops-metric-green{% endif %}">
+                    <i class="bi {% if total_deuda > 0 %}bi-exclamation-circle-fill{% else %}bi-check2-circle{% endif %}" aria-hidden="true"></i>
+                    <strong>{{ total_deuda|moneda }}</strong>
+                    <small>{% if total_deuda > 0 %}deuda{% else %}al día{% endif %}</small>
+                </span>
+            </div>
+            <div class="uni2-ops-actions uni2-ops-primary-actions">
+                {% if perms.gestion.editar_asociados %}
+                    <a class="btn btn-outline-primary" href="{{ edit_url }}">
+                        <i class="bi bi-pencil-square" aria-hidden="true"></i> Editar asociado
+                    </a>
+                {% endif %}
+                {% if perms.gestion.cobrar_cuotas %}
+                    <a class="btn btn-primary" href="{{ cobro_url }}">
+                        <i class="bi bi-cash-coin" aria-hidden="true"></i> {% if total_deuda > 0 %}Cobrar{% else %}Registrar donación{% endif %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="uni2-record-grid mb-4">
+        <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue">
+            <div class="card-body">
+                <div class="uni2-ops-panel-heading">
+                    <div>
+                        <span class="uni2-section-kicker">Datos administrativos</span>
+                        <h2>Estado general</h2>
+                    </div>
+                </div>
+                <dl class="uni2-record-list">
+                    <div><dt>Tipo</dt><dd>{{ asociado.get_tipo_display }}</dd></div>
+                    <div><dt>Estado</dt><dd>{{ asociado.get_estado_display }}</dd></div>
+                    <div><dt>Curso actual</dt><dd>{{ asociado.curso_actual|default:"-" }}</dd></div>
+                    <div><dt>Alta</dt><dd>{{ asociado.fecha_alta|date:"d/m/Y" }}</dd></div>
+                    <div><dt>Inicio cobro</dt><dd>{{ asociado.fecha_inicio_cobro|date:"d/m/Y" }}</dd></div>
+                </dl>
+            </div>
+        </section>
+
+        <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-green">
+            <div class="card-body">
+                <div class="uni2-ops-panel-heading">
+                    <div>
+                        <span class="uni2-section-kicker">Contacto</span>
+                        <h2>Acceso y comunicación</h2>
+                    </div>
+                </div>
+                <dl class="uni2-record-list">
+                    <div><dt>Email</dt><dd>{{ asociado.email|default:"-" }}</dd></div>
+                    <div><dt>Teléfono</dt><dd>{{ asociado.telefono|default:"-" }}</dd></div>
+                    <div><dt>Usuario</dt><dd>{% if asociado.usuario %}{{ asociado.usuario.username }}{% else %}Sin usuario{% endif %}</dd></div>
+                    <div><dt>Último acceso</dt><dd>{% if asociado.usuario and asociado.usuario.last_login %}{{ asociado.usuario.last_login|date:"d/m/Y H:i" }}{% else %}-{% endif %}</dd></div>
+                </dl>
+            </div>
+        </section>
+
+        <section class="card uni2-surface-card uni2-ops-panel {% if total_deuda > 0 %}uni2-ops-panel-red{% else %}uni2-ops-panel-yellow{% endif %}">
+            <div class="card-body">
+                <div class="uni2-ops-panel-heading">
+                    <div>
+                        <span class="uni2-section-kicker">Cuenta corriente</span>
+                        <h2>Deuda</h2>
+                        <p>Calculada al {{ fecha_referencia|date:"d/m/Y" }}.</p>
+                    </div>
+                </div>
+                <div class="uni2-record-total {% if total_deuda > 0 %}uni2-record-total-red{% else %}uni2-record-total-green{% endif %}">
+                    <span>{{ total_deuda|moneda }}</span>
+                    <small>{% if total_deuda > 0 %}saldo pendiente{% else %}sin saldo pendiente{% endif %}</small>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue h-100">
+                <div class="card-body">
+                    <div class="uni2-ops-panel-heading">
+                        <div>
+                            <span class="uni2-section-kicker">Año actual</span>
+                            <h2>Cuotas</h2>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-soft uni2-ops-table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Período</th>
+                                    <th class="text-end">Importe</th>
+                                    <th class="text-end">Pagado</th>
+                                    <th class="text-end">Saldo</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cuotas_anio_actual %}
+                                    <tr>
+                                        <td class="uni2-ops-strong">{{ item.cuota.periodo }}</td>
+                                        <td class="text-end">{{ item.importe_original|moneda }}</td>
+                                        <td class="text-end">{{ item.importe_pagado|moneda }}</td>
+                                        <td class="text-end">{{ item.saldo|moneda }}</td>
+                                        <td><span class="uni2-ops-badge uni2-ops-badge-blue">{{ item.estado_display }}</span></td>
+                                    </tr>
+                                {% empty %}
+                                    <tr><td colspan="5">No tiene cuotas en el año actual.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-5">
+            <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-green h-100">
+                <div class="card-body">
+                    <div class="uni2-ops-panel-heading">
+                        <div>
+                            <span class="uni2-section-kicker">Últimos movimientos</span>
+                            <h2>Pagos recientes</h2>
+                        </div>
+                    </div>
+                    <div class="uni2-payment-list">
+                        {% for pago in pagos_recientes %}
+                            <article class="uni2-payment-entry">
+                                <div>
+                                    <strong>{{ pago.pago.fecha|date:"d/m/Y" }}</strong>
+                                    <span>{{ pago.pago.get_metodo_display }}</span>
+                                </div>
+                                <strong>{{ pago.pago.importe|moneda }}</strong>
+                                <div class="uni2-payment-lines">
+                                    {% for linea in pago.lineas %}
+                                        <span>{{ linea }}</span>
+                                    {% endfor %}
+                                </div>
+                            </article>
+                        {% empty %}
+                            <p class="text-secondary mb-0">No hay pagos registrados.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    {% if puede_ver_movimientos_asociado %}
+        <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-yellow mt-4" aria-labelledby="historial-auditoria">
+            <div class="card-body">
+                <div class="uni2-ops-panel-heading">
+                    <div>
+                        <span class="uni2-section-kicker">Trazabilidad</span>
+                        <h2 id="historial-auditoria">Historial de auditoría</h2>
+                        <p>Últimas operaciones registradas para este asociado.</p>
+                    </div>
+                    {% if auditoria_url %}<a class="btn btn-outline-primary" href="{{ auditoria_url }}">Ver historial completo</a>{% endif %}
+                </div>
+                {% if operaciones_auditoria %}
+                    {% include "gestion/_lista_operaciones_auditoria.html" with operaciones=operaciones_auditoria contextual=True only %}
+                {% else %}
+                    {% include "components/alert.html" with variant="info" message="Todavía no hay operaciones registradas para este asociado." only %}
+                {% endif %}
+            </div>
+        </section>
+    {% endif %}
 </div>
 {% endblock %}

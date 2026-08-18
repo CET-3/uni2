@@ -936,6 +936,23 @@ def test_periodos_cuota_gestion_crea_periodo(client):
 
 
 @pytest.mark.django_db
+def test_periodos_cuota_gestion_muestra_alerta_de_errores(client):
+    staff = crear_usuario_gestion("staff_periodo_errores")
+    client.force_login(staff)
+
+    response = client.post(
+        reverse("gestion:periodos_cuota"),
+        {"action": "crear_periodo"},
+    )
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Revisá los datos del período" in content
+    assert "Hay campos incompletos" in content
+    assert "Mes:" in content
+
+
+@pytest.mark.django_db
 def test_periodos_cuota_gestion_genera_cuotas_sin_duplicar(client):
     staff = crear_usuario_gestion("staff_generacion")
     create_asociado(nombre="Lara", apellido="Suarez", dni="48888111", tipo="asociado", fecha_alta="2026-05-10")
@@ -948,6 +965,14 @@ def test_periodos_cuota_gestion_genera_cuotas_sin_duplicar(client):
         importe_recargo_mes_siguiente="500.00",
         fecha_vencimiento="2026-06-10",
     )
+
+    client.force_login(staff)
+    response = client.get(reverse("gestion:periodos_cuota"))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Generar cuotas" in content
+    assert "0 cuotas" in content
 
 
 @pytest.mark.django_db
@@ -1016,7 +1041,7 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert f"?asociado={asociado.id}" in content
     assert "Editar asociado" in content
     assert "Guardar cambios" not in content
-    assert "Cuotas del año actual" in content
+    assert "Cuotas" in content
     assert '<th class="text-end">Importe</th>' in content
     assert '<th class="text-end">Pagado</th>' in content
     assert '<th class="text-end">Saldo</th>' in content
@@ -1066,7 +1091,7 @@ def test_asociado_cuotas_muestra_historico_completo(client):
     assert "Cuotas de Campos, Julia" in content
     assert "06/2025" in content
     assert "06/2026" in content
-    assert "Volver al detalle" in content
+    assert "Volver al detalle" not in content
 
 
 @pytest.mark.django_db

@@ -3,114 +3,159 @@
 
 {% block title %}Períodos de cuota | Uni2{% endblock %}
 
-{% block content %}
-<div class="container py-5">
-<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-    <div>
-        <h1 class="h2 mb-1">Períodos de cuota</h1>
-        <p class="text-secondary mb-0">Crea el período mensual y genera las cuotas para los asociados alcanzados.</p>
-    </div>
-    <div class="uni2-page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'web:home' %}?perfil=gestion">Volver al inicio</a>
-        <a class="btn btn-primary" href="{% url 'gestion:cobros' %}">Cobrar cuotas</a>
-    </div>
-</div>
+{% block body_class %} uni2-ops-page{% endblock %}
 
-<div class="row g-4">
-    <div class="col-lg-4">
-        <div class="card uni2-surface-card">
-            <div class="card-body">
-                <h2 class="h5 mb-3">Nuevo período</h2>
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="crear_periodo">
-                    <div class="mb-3">
-                        <label class="form-label" for="{{ periodo_form.mes.id_for_label }}">Mes</label>
-                        {{ periodo_form.mes }}
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="{{ periodo_form.ciclo_lectivo.id_for_label }}">Ciclo lectivo</label>
-                        {{ periodo_form.ciclo_lectivo }}
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="{{ periodo_form.importe.id_for_label }}">Importe</label>
-                        {{ periodo_form.importe }}
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="{{ periodo_form.importe_recargo_mes.id_for_label }}">Recargo mismo mes</label>
-                        {{ periodo_form.importe_recargo_mes }}
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="{{ periodo_form.importe_recargo_mes_siguiente.id_for_label }}">Recargo mes siguiente</label>
-                        {{ periodo_form.importe_recargo_mes_siguiente }}
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="{{ periodo_form.fecha_vencimiento.id_for_label }}">Vencimiento</label>
-                        {{ periodo_form.fecha_vencimiento }}
-                    </div>
-                    <div class="form-check mb-3">
-                        {{ periodo_form.activo }}
-                        <label class="form-check-label" for="{{ periodo_form.activo.id_for_label }}">Activo</label>
-                    </div>
-                    {% for field in periodo_form %}
-                        {% for error in field.errors %}
-                            <div class="text-danger small mb-2">{{ error }}</div>
-                        {% endfor %}
-                    {% endfor %}
-                    {% for error in periodo_form.non_field_errors %}
-                        <div class="text-danger small mb-2">{{ error }}</div>
-                    {% endfor %}
-                    <button class="btn btn-primary" type="submit">Crear período</button>
-                </form>
+{% block content %}
+<div class="container py-5 uni2-ops-shell">
+    {% include "components/breadcrumbs.html" with current_label="Períodos de cuota" only %}
+
+    <header class="uni2-ops-hero uni2-ops-hero-yellow">
+        <div class="uni2-ops-hero-copy">
+            <span class="uni2-section-kicker">Cuotas</span>
+            <h1>Períodos de cuota</h1>
+            <p>Creá el período mensual, definí importes y generá las cuotas para los asociados alcanzados.</p>
+        </div>
+        <div class="uni2-ops-hero-tools">
+            <div class="uni2-ops-hero-metrics" aria-label="Resumen de períodos">
+                <span class="uni2-ops-metric uni2-ops-metric-blue">
+                    <strong>{{ periodos|length }}</strong>
+                    <small>períodos</small>
+                </span>
             </div>
         </div>
-    </div>
-    <div class="col-lg-8">
-        <div class="card uni2-surface-card">
-            <div class="card-body">
-                <h2 class="h5 mb-3">Períodos existentes</h2>
-                <div class="table-responsive">
-                    <table class="table table-soft align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th>Periodo</th>
-                                <th>Importe</th>
-                                <th>Rec. mismo mes</th>
-                                <th>Rec. mes sig.</th>
-                                <th>Vencimiento</th>
-                                <th>Cuotas</th>
-                                <th>Estado</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for periodo in periodos %}
-                                <tr>
-                                    <td>{{ periodo }}</td>
-                                    <td>{{ periodo.importe|moneda }}</td>
-                                    <td>{{ periodo.importe_recargo_mes|moneda }}</td>
-                                    <td>{{ periodo.importe_recargo_mes_siguiente|moneda }}</td>
-                                    <td>{{ periodo.fecha_vencimiento|date:"d/m/Y" }}</td>
-                                    <td>{{ periodo.cuotas.count }}</td>
-                                    <td>{% if periodo.activo %}Activo{% else %}Inactivo{% endif %}</td>
-                                    <td class="text-lg-end">
-                                        <form method="post" class="d-inline">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="action" value="generar_cuotas">
-                                            <input type="hidden" name="periodo_id" value="{{ periodo.id }}">
-                                            <button class="btn btn-outline-primary btn-sm" type="submit">Generar cuotas</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% empty %}
-                                <tr><td colspan="7">No hay periodos cargados.</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+    </header>
+
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-3">
+            <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-green" aria-labelledby="nuevo-periodo-title">
+                <div class="card-body">
+                    <div class="uni2-ops-panel-heading">
+                        <div>
+                            <span class="uni2-section-kicker">Nuevo</span>
+                            <h2 id="nuevo-periodo-title">Crear período</h2>
+                            <p>Definí el mes, el ciclo y los importes que se usarán al generar cuotas.</p>
+                        </div>
+                    </div>
+                    {% if periodo_form.errors or periodo_form.non_field_errors %}
+                        <div class="uni2-form-error-summary" role="alert" aria-labelledby="periodo-form-errors-title">
+                            <span class="uni2-form-error-icon" aria-hidden="true">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                            </span>
+                            <div>
+                                <strong id="periodo-form-errors-title">Revisá los datos del período</strong>
+                                <p>Hay campos incompletos o con datos que Uni2 no puede guardar todavía.</p>
+                                <ul>
+                                    {% for field in periodo_form %}
+                                        {% for error in field.errors %}
+                                            <li><span>{{ field.label }}:</span> {{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {% for error in periodo_form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="crear_periodo">
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ periodo_form.mes.id_for_label }}">Mes</label>
+                            {{ periodo_form.mes }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ periodo_form.ciclo_lectivo.id_for_label }}">Ciclo lectivo</label>
+                            {{ periodo_form.ciclo_lectivo }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ periodo_form.importe.id_for_label }}">Importe</label>
+                            {{ periodo_form.importe }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ periodo_form.importe_recargo_mes.id_for_label }}">Recargo mismo mes</label>
+                            {{ periodo_form.importe_recargo_mes }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ periodo_form.importe_recargo_mes_siguiente.id_for_label }}">Recargo mes siguiente</label>
+                            {{ periodo_form.importe_recargo_mes_siguiente }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ periodo_form.fecha_vencimiento.id_for_label }}">Vencimiento</label>
+                            {{ periodo_form.fecha_vencimiento }}
+                        </div>
+                        <div class="form-check mb-3">
+                            {{ periodo_form.activo }}
+                            <label class="form-check-label" for="{{ periodo_form.activo.id_for_label }}">Activo</label>
+                        </div>
+                        <button class="btn btn-primary w-100" type="submit">
+                            <i class="bi bi-calendar-plus" aria-hidden="true"></i> Crear período
+                        </button>
+                    </form>
                 </div>
-            </div>
+            </section>
+        </div>
+
+        <div class="col-lg-9">
+            <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue" aria-labelledby="periodos-title">
+                <div class="card-body">
+                    <div class="uni2-ops-panel-heading">
+                        <div>
+                            <span class="uni2-section-kicker">Historial</span>
+                            <h2 id="periodos-title">Períodos existentes</h2>
+                            <p>Generá cuotas cuando el período ya tenga todos los importes revisados.</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-soft uni2-ops-table uni2-periods-table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Período</th>
+                                    <th>Importes</th>
+                                    <th>Vencimiento</th>
+                                    <th>Estado</th>
+                                    <th class="text-lg-end">Generación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for periodo in periodos %}
+                                    <tr>
+                                        <td><span class="uni2-ops-strong">{{ periodo }}</span></td>
+                                        <td>
+                                            <div class="uni2-period-amounts">
+                                                <strong>{{ periodo.importe|moneda }}</strong>
+                                                <span>Recargos: {{ periodo.importe_recargo_mes|moneda }} / {{ periodo.importe_recargo_mes_siguiente|moneda }}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{ periodo.fecha_vencimiento|date:"d/m/Y" }}</td>
+                                        <td>
+                                            {% if periodo.activo %}
+                                                <span class="uni2-ops-badge uni2-ops-badge-green">Activo</span>
+                                            {% else %}
+                                                <span class="uni2-ops-badge uni2-ops-badge-yellow">Inactivo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-lg-end">
+                                            <form method="post" class="uni2-period-generate-action">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="generar_cuotas">
+                                                <input type="hidden" name="periodo_id" value="{{ periodo.id }}">
+                                                <span class="uni2-ops-badge uni2-ops-badge-blue">{{ periodo.cuotas.count }} cuotas</span>
+                                                <button class="btn btn-primary" type="submit" aria-label="Generar cuotas para {{ periodo }}">
+                                                    <i class="bi bi-lightning-charge" aria-hidden="true"></i> Generar cuotas
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr><td colspan="5">No hay períodos cargados.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
-</div>
 </div>
 {% endblock %}

@@ -25,22 +25,25 @@
 <div class="container py-5">
 
     {% if home_navigation.extra_actions %}
-        <section class="mb-5" aria-labelledby="otros-accesos-title">
-            <div class="uni2-section-heading">
+        <section class="uni2-access-launcher mb-5" aria-labelledby="otros-accesos-title">
+            <div class="uni2-access-launcher-heading">
                 <div>
                     <h2 id="otros-accesos-title" class="uni2-titulo-componente">Más accesos</h2>
+                    <p>Acciones disponibles para tu perfil.</p>
                 </div>
             </div>
-            <div class="row g-3">
+            <div class="uni2-access-launcher-grid">
                 {% for action in home_navigation.extra_actions %}
-                    <div class="col-md-6">
-                        <a class="uni2-service-card uni2-service-card-blue" href="{{ action.url }}">
-                            <div>
-                                <h3>{{ action.label }}</h3>
-                                {% if action.description %}<p>{{ action.description }}</p>{% endif %}
-                            </div>
-                        </a>
-                    </div>
+                    <a class="uni2-access-link {% cycle 'uni2-access-link-blue' 'uni2-access-link-green' 'uni2-access-link-yellow' 'uni2-access-link-red' %}" href="{{ action.url }}">
+                        <span class="uni2-access-link-icon" aria-hidden="true">
+                            <i class="bi bi-arrow-up-right-circle"></i>
+                        </span>
+                        <span class="uni2-access-link-copy">
+                            <strong>{{ action.label }}</strong>
+                            {% if action.description %}<small>{{ action.description }}</small>{% endif %}
+                        </span>
+                        <i class="bi bi-arrow-right-short uni2-access-link-arrow" aria-hidden="true"></i>
+                    </a>
                 {% endfor %}
             </div>
         </section>
