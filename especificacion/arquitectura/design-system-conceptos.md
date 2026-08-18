@@ -430,6 +430,23 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-pill-row` | Fila de pills |
 | `uni2-schedule-card` | Card de horario/turno |
 
+### Estructuras de flujos operativos
+
+| Clase | Uso |
+|---|---|
+| `uni2-periods-table` | Ajuste de densidad de la tabla de períodos |
+| `uni2-period-amounts` | Agrupa importe y recargos de un período |
+| `uni2-period-generate-action` | Alinea cantidad y acción de generación de cuotas |
+| `uni2-cobro-summary` | Distribuye los datos del asociado antes del cobro |
+| `uni2-cobro-section` | Delimita la selección de cuotas dentro del formulario |
+| `uni2-cobro-table` | Ancho mínimo de la tabla seleccionable de cuotas |
+| `uni2-cobro-check` | Área visible y accesible del checkbox de una cuota |
+| `uni2-cobro-fields` | Distribuye fecha, importe, método y observaciones |
+| `uni2-cobro-field-full` | Hace que observaciones ocupe todo el ancho disponible |
+
+Estas clases describen estructura exclusiva del flujo y no definen colores,
+títulos, badges, cards ni acciones alternativas al sistema compartido.
+
 ### Footer
 
 | Clase | Uso |

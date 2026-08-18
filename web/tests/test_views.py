@@ -194,6 +194,24 @@ def test_css_design_system_acota_navegacion_y_no_conserva_aliases_huerfanos():
     assert "ds-page" not in css
 
 
+def test_redisenio_no_conserva_familias_visuales_paralelas():
+    project_root = Path(__file__).resolve().parents[2]
+    archivos = [project_root / "static/css/uni2-design-system.css"]
+    archivos.extend((project_root / "templates").rglob("*.html"))
+    contenido = "\n".join(path.read_text(encoding="utf-8") for path in archivos)
+
+    for familia in (
+        "uni2-ops-",
+        "uni2-member-",
+        "uni2-access-",
+        "uni2-form-error-summary",
+        "uni2-record-list",
+        "uni2-record-",
+        "uni2-payment-",
+    ):
+        assert familia not in contenido
+
+
 def test_catalogo_muestra_todos_los_tokens_publicos():
     project_root = Path(__file__).resolve().parents[2]
     css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
