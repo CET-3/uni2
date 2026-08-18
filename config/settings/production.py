@@ -15,6 +15,9 @@ def _unique(values):
 
 DEBUG = False
 UNI2_DEPLOYMENT_ENVIRONMENT = "production"
+GOOGLE_ANALYTICS_MEASUREMENT_ID = os.getenv(
+    "GOOGLE_ANALYTICS_MEASUREMENT_ID", ""
+).strip()
 PWA_PRIVATE_DATA_EPOCH = os.getenv("UNI2_PRIVATE_DATA_EPOCH", "production")
 
 SECRET_KEY = os.environ["SECRET_KEY"]

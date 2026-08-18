@@ -10,6 +10,7 @@ def load_production_settings(**variables):
         "ALLOWED_HOSTS",
         "CSRF_TRUSTED_ORIGINS",
         "DEBUG",
+        "GOOGLE_ANALYTICS_MEASUREMENT_ID",
         "VERCEL_BRANCH_URL",
         "VERCEL_PROJECT_PRODUCTION_URL",
         "VERCEL_URL",
@@ -33,6 +34,7 @@ from config.settings import production
 
 print(json.dumps({
     "allowed_hosts": production.ALLOWED_HOSTS,
+    "analytics_measurement_id": production.GOOGLE_ANALYTICS_MEASUREMENT_ID,
     "csrf_cookie_secure": production.CSRF_COOKIE_SECURE,
     "csrf_trusted_origins": production.CSRF_TRUSTED_ORIGINS,
     "debug": production.DEBUG,
@@ -53,6 +55,14 @@ print(json.dumps({
         text=True,
     )
     return json.loads(result.stdout)
+
+
+def test_produccion_lee_el_identificador_de_google_analytics():
+    production = load_production_settings(
+        GOOGLE_ANALYTICS_MEASUREMENT_ID=" G-TEST123 "
+    )
+
+    assert production["analytics_measurement_id"] == "G-TEST123"
 
 
 def test_produccion_no_permite_activar_debug_desde_el_entorno():
