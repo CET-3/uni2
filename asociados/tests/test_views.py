@@ -83,3 +83,39 @@ def test_home_asociado_incluye_secciones_publicas(client):
     assert "Servicios que suman" in content
     assert "Librerías" in content
     assert "20% OFF" in content
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("url_name", ["asociados:credencial", "asociados:cuotas"])
+def test_pantallas_asociado_usan_contenedor_sin_familias_paralelas(client, url_name):
+    asociado = create_asociado(
+        nombre="Nora",
+        apellido="Diseño",
+        dni="40999111",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 8, 1),
+    )
+    client.force_login(asociado.usuario)
+
+    content = client.get(reverse(url_name)).content.decode()
+
+    assert 'class="container py-5' in content
+    assert "uni2-member-" not in content
+    assert "uni2-ops-" not in content
+
+
+@pytest.mark.django_db
+def test_cuotas_asociado_usan_metricas_y_superficie_compartidas(client):
+    asociado = create_asociado(
+        nombre="Leo",
+        apellido="Cuotas",
+        dni="40999222",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 8, 1),
+    )
+    client.force_login(asociado.usuario)
+
+    content = client.get(reverse("asociados:cuotas")).content.decode()
+
+    assert "uni2-metric-card" in content
+    assert "uni2-surface-card" in content

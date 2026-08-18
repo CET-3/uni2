@@ -2,44 +2,52 @@
 {% load formatos %}
 
 {% block title %}Mis cuotas | Uni2{% endblock %}
-{% block body_class %} uni2-member-page{% endblock %}
-
 {% block content %}
 <div class="container py-5">
-    <header class="uni2-member-hero uni2-member-hero-cuotas">
-        <div>
-            <span class="uni2-section-kicker">Estado de cuenta</span>
-            <h1>Mis cuotas</h1>
-            <p>Consultá el estado actualizado de tus cuotas sociales y saldos pendientes.</p>
-        </div>
-        <div class="uni2-member-metrics" aria-label="Resumen de cuotas">
-            <span class="uni2-ops-metric {% if total_deuda > 0 %}uni2-ops-metric-red{% else %}uni2-ops-metric-green{% endif %}">
-                <i class="bi {% if total_deuda > 0 %}bi-exclamation-circle-fill{% else %}bi-check2-circle{% endif %}" aria-hidden="true"></i>
-                <strong>{{ total_deuda|moneda }}</strong>
-                <small>deuda al {{ fecha_referencia|date:"d/m/Y" }}</small>
-            </span>
-            <span class="uni2-ops-metric uni2-ops-metric-blue">
-                <strong>{{ cuotas_total }}</strong>
-                <small>cuotas</small>
-            </span>
-            <span class="uni2-ops-metric uni2-ops-metric-yellow">
-                <strong>{{ cuotas_con_saldo }}</strong>
-                <small>con saldo</small>
-            </span>
-        </div>
+    <header class="mb-4">
+        <span class="uni2-section-kicker">Estado de cuenta</span>
+        <h1 class="uni2-titulo-seccion">Mis cuotas</h1>
+        <p class="text-secondary mb-0">Consultá el estado actualizado de tus cuotas sociales y saldos pendientes.</p>
     </header>
 
-    <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue" aria-labelledby="cuotas-list-title">
+    <div class="row g-3 mb-4" aria-label="Resumen de cuotas">
+        <div class="col-12 col-sm-4">
+            <div class="card uni2-metric-card {% if total_deuda > 0 %}uni2-metric-card-danger{% else %}uni2-metric-card-success{% endif %} h-100">
+                <div class="card-body">
+                    <div class="uni2-metric-label">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</div>
+                    <div class="uni2-metric-value">{{ total_deuda|moneda }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-4">
+            <div class="card uni2-metric-card uni2-metric-card-info h-100">
+                <div class="card-body">
+                    <div class="uni2-metric-label">Cuotas</div>
+                    <div class="uni2-metric-value">{{ cuotas_total }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-4">
+            <div class="card uni2-metric-card uni2-metric-card-warning h-100">
+                <div class="card-body">
+                    <div class="uni2-metric-label">Con saldo</div>
+                    <div class="uni2-metric-value">{{ cuotas_con_saldo }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="card uni2-surface-card uni2-surface-card-info" aria-labelledby="cuotas-list-title">
         <div class="card-body">
-            <div class="uni2-ops-panel-heading">
+            <div class="mb-3">
                 <div>
                     <span class="uni2-section-kicker">Historial</span>
-                    <h2 id="cuotas-list-title">Detalle de cuotas</h2>
-                    <p>Los saldos se calculan a la fecha de consulta.</p>
+                    <h2 id="cuotas-list-title" class="uni2-titulo-componente">Detalle de cuotas</h2>
+                    <p class="text-secondary mb-0">Los saldos se calculan a la fecha de consulta.</p>
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-soft uni2-ops-table uni2-member-dues-table align-middle mb-0">
+                <table class="table table-soft align-middle mb-0">
                     <thead>
                         <tr>
                             <th>Período</th>
@@ -52,7 +60,7 @@
                     <tbody>
                         {% for item in cuotas %}
                             <tr>
-                                <td><span class="uni2-ops-strong">{{ item.cuota.periodo }}</span></td>
+                                <td><strong>{{ item.cuota.periodo }}</strong></td>
                                 <td>
                                     <div class="uni2-period-amounts">
                                         <strong>{{ item.importe_original|moneda }}</strong>
@@ -61,11 +69,11 @@
                                 </td>
                                 <td>{{ item.importe_pagado|moneda }}</td>
                                 <td>
-                                    <span class="uni2-ops-badge {% if item.saldo > 0 %}uni2-ops-badge-red{% else %}uni2-ops-badge-green{% endif %}">
+                                    <span class="uni2-badge {% if item.saldo > 0 %}uni2-badge-danger{% else %}uni2-badge-success{% endif %}">
                                         {{ item.saldo|moneda }}
                                     </span>
                                 </td>
-                                <td><span class="uni2-ops-badge uni2-ops-badge-blue">{{ item.estado_display }}</span></td>
+                                <td><span class="uni2-badge uni2-badge-info">{{ item.estado_display }}</span></td>
                             </tr>
                         {% empty %}
                             <tr>

@@ -2,13 +2,11 @@
 {% load static %}
 
 {% block title %}Mi credencial | Uni2{% endblock %}
-{% block body_class %} uni2-member-page{% endblock %}
-
 {% block content %}
 <div class="container py-5">
     <section
         id="uni2-credential"
-        class="uni2-credential uni2-member-credential"
+        class="uni2-credential"
         aria-labelledby="uni2-credential-title"
         data-credential-nombre="{{ asociado.nombre }}"
         data-credential-apellido="{{ asociado.apellido }}"
@@ -18,11 +16,11 @@
         data-credential-token="{{ asociado.token_credencial }}"
         data-credential-url="{{ credencial_url }}"
     >
-        <header class="uni2-member-hero">
+        <header class="d-flex flex-column flex-md-row align-items-md-start justify-content-between gap-3 mb-4">
             <div>
                 <span class="uni2-section-kicker">Credencial digital</span>
-                <h1 id="uni2-credential-title">{{ asociado.nombre }} {{ asociado.apellido }}</h1>
-                <p>Mostrá esta credencial para validar tu estado de asociado en comercios y beneficios.</p>
+                <h1 id="uni2-credential-title" class="uni2-titulo-seccion">{{ asociado.nombre }} {{ asociado.apellido }}</h1>
+                <p class="text-secondary mb-0">Mostrá esta credencial para validar tu estado de asociado en comercios y beneficios.</p>
             </div>
             <span class="uni2-credential-state {% if asociado.estado == 'activo' %}uni2-credential-state-active{% else %}uni2-credential-state-inactive{% endif %}">
                 {{ asociado.get_estado_display }}
@@ -36,7 +34,6 @@
                     <h2 class="h3 mb-1">{{ asociado.apellido }}, {{ asociado.nombre }}</h2>
                     <p class="mb-0 text-secondary">Asociado Nº {{ asociado.numero_asociado }}</p>
                 </div>
-                <span class="uni2-member-card-mark" aria-hidden="true">UNI2</span>
             </div>
 
             <div class="uni2-credential-body">
@@ -73,7 +70,7 @@
         </div>
 
         <aside class="uni2-credential-offline-panel mt-4" aria-labelledby="uni2-offline-save-title">
-            <div class="uni2-member-offline-copy">
+            <div class="d-flex flex-column flex-md-row gap-3 align-items-md-start">
                 <span class="uni2-service-icon uni2-service-card-blue" aria-hidden="true"><i class="bi bi-phone"></i></span>
                 <div>
                     <h2 class="h5 mb-2" id="uni2-offline-save-title">Tener la credencial sin conexión</h2>
