@@ -28,15 +28,15 @@ timestamp: 2026-07-13T00:00:00-03:00
 
 ## Pantallas operativas de gestión
 
-Las pantallas `Atención al asociado`, `Nuevo asociado`, `Deudores` y `Períodos de cuota` comparten una capa visual operativa basada en el design system Uni2:
+Las pantallas `Atención al asociado`, `Nuevo asociado`, `Deudores` y `Períodos de cuota` reutilizan el mismo design system que el resto de Uni2:
 
-- encabezado con franja multicolor, color semántico por tarea, descripción breve y acciones principales;
-- paneles con borde superior de color para diferenciar búsqueda, carga, seguimiento y tablas;
-- tablas con lectura densa pero destacando nombre, estado, usuario, deuda o cantidad mediante badges;
-- uso de Bootstrap Icons en acciones principales y de avatares con iniciales en listados de personas;
-- responsive mobile con acciones apiladas, métricas flexibles y tablas con desplazamiento horizontal.
+- encabezado simple con `uni2-titulo-*`, descripción breve y `uni2-page-header-actions`, sin un hero operativo propio;
+- `uni2-metric-card` para resúmenes reales y `uni2-surface-card` para búsqueda, carga, seguimiento y tablas;
+- tablas con lectura densa que destacan nombre, estado, usuario, deuda o cantidad mediante `uni2-avatar` y `uni2-badge` semánticos;
+- Bootstrap Icons en acciones principales y utilidades Bootstrap para grillas, alineación y adaptación responsive;
+- en mobile las acciones se apilan y las tablas conservan desplazamiento horizontal.
 - los breadcrumbs de estas pantallas omiten `Inicio` porque el logo global ya cumple esa navegación;
 - las acciones del encabezado se agrupan separadas de las métricas para evitar confundir comandos con indicadores;
 - el alta manual muestra los errores de validación en una alerta destacada arriba de los campos del formulario.
 - ninguna pantalla operativa usa botones `Volver`; la navegación contextual queda resuelta por breadcrumbs y por el logo global para volver al inicio.
-- la ficha de asociado usa el mismo patrón visual operativo: hero con identidad, métricas de deuda, acciones permitidas, paneles de estado/contacto/cuenta corriente, cuotas y pagos recientes.
+- la ficha de asociado usa los mismos componentes compartidos: encabezado con identidad, métricas de deuda, acciones permitidas, paneles de estado/contacto/cuenta corriente, cuotas y pagos recientes.

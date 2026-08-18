@@ -2,26 +2,24 @@
 
 {% block title %}Atención al asociado | Uni2{% endblock %}
 
-{% block body_class %} uni2-ops-page{% endblock %}
-
 {% block content %}
-<div class="container py-5 uni2-ops-shell">
+<div class="container py-5">
     {% include "components/breadcrumbs.html" with current_label="Atención al asociado" only %}
 
-    <header class="uni2-ops-hero uni2-ops-hero-blue">
-        <div class="uni2-ops-hero-copy">
+    <header class="d-flex flex-column flex-lg-row justify-content-between gap-4 mb-4">
+        <div>
             <span class="uni2-section-kicker">Gestión diaria</span>
-            <h1>Atención al asociado</h1>
-            <p>Buscá una persona, revisá su estado y entrá a su ficha para cobrar, editar o consultar movimientos.</p>
+            <h1 class="uni2-titulo-seccion">Atención al asociado</h1>
+            <p class="text-secondary mb-0">Buscá una persona, revisá su estado y entrá a su ficha para cobrar, editar o consultar movimientos.</p>
         </div>
-        <div class="uni2-ops-hero-tools">
-            <div class="uni2-ops-hero-metrics" aria-label="Resumen de búsqueda">
-                <span class="uni2-ops-metric uni2-ops-metric-yellow">
-                    <strong>{% if asociados %}{{ asociados|length }}{% else %}0{% endif %}</strong>
-                    <small>resultados</small>
-                </span>
+        <div class="d-flex flex-column gap-3 align-items-lg-end">
+            <div class="card uni2-metric-card uni2-metric-card-warning" aria-label="Resumen de búsqueda">
+                <div class="card-body py-2">
+                    <div class="uni2-metric-label">Resultados</div>
+                    <div class="uni2-metric-value">{% if asociados %}{{ asociados|length }}{% else %}0{% endif %}</div>
+                </div>
             </div>
-            <div class="uni2-ops-actions uni2-ops-primary-actions">
+            <div class="uni2-page-header-actions">
                 {% if perms.gestion.exportar_asociados %}
                     <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">
                         <i class="bi bi-download" aria-hidden="true"></i> Exportar
@@ -36,13 +34,13 @@
         </div>
     </header>
 
-    <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-green mb-4" aria-labelledby="filtros-title">
+    <section class="card uni2-surface-card uni2-surface-card-success mb-4" aria-labelledby="filtros-title">
         <div class="card-body">
-            <div class="uni2-ops-panel-heading">
+            <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-3">
                 <div>
                     <span class="uni2-section-kicker">Búsqueda</span>
-                    <h2 id="filtros-title">Encontrar asociado</h2>
-                    <p>Combiná texto libre con filtros para achicar el listado.</p>
+                    <h2 id="filtros-title" class="uni2-titulo-componente">Encontrar asociado</h2>
+                    <p class="text-secondary mb-0">Combiná texto libre con filtros para achicar el listado.</p>
                 </div>
                 {% if form.is_bound %}
                     <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:asociados' %}">
@@ -89,17 +87,17 @@
     </section>
 
     {% if asociados %}
-        <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue" aria-labelledby="resultados-title">
+        <section class="card uni2-surface-card uni2-surface-card-info" aria-labelledby="resultados-title">
             <div class="card-body">
-                <div class="uni2-ops-panel-heading">
+                <div class="mb-3">
                     <div>
                         <span class="uni2-section-kicker">Resultados</span>
-                        <h2 id="resultados-title">Asociados encontrados</h2>
-                        <p>Seleccioná una fila para abrir la ficha completa.</p>
+                        <h2 id="resultados-title" class="uni2-titulo-componente">Asociados encontrados</h2>
+                        <p class="text-secondary mb-0">Seleccioná una fila para abrir la ficha completa.</p>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-soft uni2-ops-table align-middle mb-0">
+                    <table class="table table-soft align-middle mb-0">
                         <thead>
                             <tr>
                                 <th>Asociado</th>
@@ -114,24 +112,24 @@
                             {% for asociado in asociados %}
                                 <tr class="uni2-clickable-row">
                                     <td>
-                                        <a class="uni2-row-link uni2-ops-person" href="{% url 'gestion:asociado_detalle' asociado.id %}?volver={{ request.get_full_path|urlencode }}">
-                                            {% cycle 'uni2-ops-avatar-blue' 'uni2-ops-avatar-green' 'uni2-ops-avatar-yellow' 'uni2-ops-avatar-red' as avatar_color silent %}
-                                            <span class="uni2-ops-avatar {{ avatar_color }}" aria-hidden="true">{{ asociado.nombre|first }}{{ asociado.apellido|first }}</span>
-                                            <span>
+                                        <a class="uni2-row-link d-inline-flex align-items-center gap-2" href="{% url 'gestion:asociado_detalle' asociado.id %}?volver={{ request.get_full_path|urlencode }}">
+                                            {% cycle 'uni2-avatar-blue' 'uni2-avatar-green' 'uni2-avatar-yellow' 'uni2-avatar-red' as avatar_color silent %}
+                                            <span class="uni2-avatar {{ avatar_color }}" aria-hidden="true">{{ asociado.nombre|first }}{{ asociado.apellido|first }}</span>
+                                            <span class="d-flex flex-column">
                                                 <strong>{{ asociado.apellido }}, {{ asociado.nombre }}</strong>
-                                                <small>Ver ficha completa</small>
+                                                <small class="text-secondary">Ver ficha completa</small>
                                             </span>
                                         </a>
                                     </td>
-                                    <td><span class="uni2-ops-strong">{{ asociado.numero_asociado }}</span></td>
+                                    <td><strong>{{ asociado.numero_asociado }}</strong></td>
                                     <td>{{ asociado.dni }}</td>
                                     <td>{{ asociado.curso_actual|default:"-" }}</td>
-                                    <td><span class="uni2-ops-badge uni2-ops-badge-blue">{{ asociado.get_estado_display }}</span></td>
+                                    <td><span class="uni2-badge uni2-badge-info">{{ asociado.get_estado_display }}</span></td>
                                     <td>
                                         {% if asociado.usuario %}
-                                            <span class="uni2-ops-badge uni2-ops-badge-green">{{ asociado.usuario.username }}</span>
+                                            <span class="uni2-badge uni2-badge-success">{{ asociado.usuario.username }}</span>
                                         {% else %}
-                                            <span class="uni2-ops-badge uni2-ops-badge-yellow">Sin usuario</span>
+                                            <span class="uni2-badge uni2-badge-warning">Sin usuario</span>
                                         {% endif %}
                                     </td>
                                 </tr>

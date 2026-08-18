@@ -36,6 +36,11 @@ def crear_usuario_gestion(username="usuario_gestion", permisos=None):
     return user
 
 
+def assert_usa_design_system_compartido(content):
+    assert "uni2-surface-card" in content
+    assert "uni2-ops-" not in content
+
+
 def crear_planilla_padron(rows):
     workbook = Workbook()
     worksheet = workbook.active
@@ -909,6 +914,7 @@ def test_deudores_gestion_lista_asociados_y_linkea_a_cobro(client):
     content = response.content.decode()
     assert "Ramos" in content
     assert f"?asociado={asociado.id}" in content
+    assert_usa_design_system_compartido(content)
 
 
 @pytest.mark.django_db
@@ -952,6 +958,8 @@ def test_periodos_cuota_gestion_muestra_alerta_de_errores(client):
     assert "Revisá los datos del período" in content
     assert "Hay campos incompletos" in content
     assert "Mes:" in content
+    assert "uni2-alert-danger" in content
+    assert_usa_design_system_compartido(content)
 
 
 @pytest.mark.django_db
@@ -1033,6 +1041,8 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert "Campos" in content
     assert reverse("gestion:exportar_asociados") in content
     assert "?q=Campos" in content
+    assert "uni2-avatar" in content
+    assert_usa_design_system_compartido(content)
 
     detalle = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
 
