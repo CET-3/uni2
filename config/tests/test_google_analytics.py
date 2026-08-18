@@ -68,3 +68,36 @@ def test_analytics_rechaza_identificadores_vacios_o_invalidos(measurement_id):
         "google_analytics_measurement_id": "",
         "google_analytics_page_name": "",
     }
+
+
+@pytest.mark.django_db
+@override_settings(
+    UNI2_DEPLOYMENT_ENVIRONMENT="production",
+    GOOGLE_ANALYTICS_MEASUREMENT_ID=MEASUREMENT_ID,
+)
+def test_base_carga_google_tag_y_envia_una_vista_normalizada(client):
+    content = client.get("/").content.decode()
+
+    assert (
+        'src="https://www.googletagmanager.com/gtag/js?id=G-TEST123"'
+        in content
+    )
+    assert 'id="uni2-google-analytics-config"' in content
+    assert 'const uni2AnalyticsPageName = "web:home";' in content
+    assert "send_page_view: false" in content
+    assert 'gtag("event", "page_view"' in content
+    assert "window.location.href" not in content
+    assert 'new URL("/", document.referrer).href' in content
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("environment", ["development", "staging"])
+def test_base_no_carga_google_tag_fuera_de_produccion(client, environment):
+    with override_settings(
+        UNI2_DEPLOYMENT_ENVIRONMENT=environment,
+        GOOGLE_ANALYTICS_MEASUREMENT_ID=MEASUREMENT_ID,
+    ):
+        content = client.get("/").content.decode()
+
+    assert "googletagmanager.com/gtag/js" not in content
+    assert "uni2-google-analytics-config" not in content

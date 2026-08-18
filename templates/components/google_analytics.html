@@ -1,0 +1,35 @@
+{% if google_analytics_measurement_id and google_analytics_page_name %}
+    <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_measurement_id|urlencode }}"
+    ></script>
+    <script id="uni2-google-analytics-config">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            window.dataLayer.push(arguments);
+        }
+
+        const uni2AnalyticsPageName = "{{ google_analytics_page_name|escapejs }}";
+        const uni2AnalyticsPagePath = uni2AnalyticsPageName
+            .split(":")
+            .map((segment) => encodeURIComponent(segment))
+            .join("/");
+        const uni2AnalyticsPageLocation = new URL(
+            `/__analytics__/${uni2AnalyticsPagePath}/`,
+            window.location.origin,
+        ).href;
+        const uni2AnalyticsPageReferrer = document.referrer
+            ? new URL("/", document.referrer).href
+            : "";
+
+        gtag("js", new Date());
+        gtag("config", "{{ google_analytics_measurement_id|escapejs }}", {
+            send_page_view: false,
+        });
+        gtag("event", "page_view", {
+            page_title: uni2AnalyticsPageName,
+            page_location: uni2AnalyticsPageLocation,
+            page_referrer: uni2AnalyticsPageReferrer,
+        });
+    </script>
+{% endif %}
