@@ -26,6 +26,17 @@ Cada mes, el administrador del sistema crea el próximo período de cuota desde 
 2. Los dos valores de recargo (por vencimiento y por mora) deben copiarse desde `PeriodoCuota` a `Cuota` al momento de generarla.
 3. Al crear un nuevo asociado, se generan automáticamente las cuotas que le corresponden según las [reglas de alta de asociado](altas-de-asociado.md).
 
+## Borrado excepcional de períodos
+
+Durante la depuración excepcional de la carga inicial, un superusuario puede
+eliminar períodos de cuota desde el admin técnico, tanto individualmente como
+con la acción masiva de Django. Un período que todavía tenga cuotas relacionadas
+no se puede eliminar: `Cuota.periodo` conserva la protección `PROTECT` y la
+limpieza debe eliminar primero los asociados y sus cuotas.
+
+Esta excepción no habilita el borrado directo de `Cuota`, `Pago`, `PagoCuota` o
+`Donacion`.
+
 ## Importe publicado
 
 La cuota social informada en el sitio público toma el importe del

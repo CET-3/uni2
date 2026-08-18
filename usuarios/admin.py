@@ -15,6 +15,7 @@ admin.site.unregister(Group)
 
 @admin.register(User)
 class Uni2UserAdmin(AuditoriaAdminMixin, UserAdmin):
+    allow_superuser_delete = True
     audit_fields = (
         "username",
         "email",

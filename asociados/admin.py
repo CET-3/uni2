@@ -16,6 +16,7 @@ class CicloLectivoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
 
 @admin.register(Curso)
 class CursoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    allow_superuser_delete = True
     audit_fields = ("anio", "curso", "division", "turno", "activo")
     list_display = ("anio", "curso", "division", "turno", "activo")
     list_filter = ("division", "turno", "activo")
@@ -46,6 +47,7 @@ class AsociadoAdminForm(forms.ModelForm):
 
 @admin.register(Asociado)
 class AsociadoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    allow_superuser_delete = True
     audit_fields = (
         "nombre",
         "apellido",

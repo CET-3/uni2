@@ -5,6 +5,7 @@ from .services import construir_cambios, registrar_evento
 class AuditoriaAdminMixin:
     audit_fields = ()
     audit_inline_fields = {}
+    allow_superuser_delete = False
 
     def preparar_objeto_para_auditoria(self, request, obj):
         """Hook para ajustes derivados que deben formar parte del mismo evento."""
@@ -83,4 +84,15 @@ class AuditoriaAdminMixin:
         formset.save_m2m()
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        if not self.allow_superuser_delete or not request.user.is_superuser:
+            return False
+        return super().has_delete_permission(request, obj)
+
+    def get_deleted_objects(self, objs, request):
+        deleted_objects, model_count, perms_needed, protected = super().get_deleted_objects(
+            objs,
+            request,
+        )
+        if self.allow_superuser_delete and request.user.is_superuser:
+            perms_needed.clear()
+        return deleted_objects, model_count, perms_needed, protected

@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 
 import pytest
 from django.contrib import admin
@@ -6,7 +7,8 @@ from django.contrib.auth import get_user_model
 from django.test import RequestFactory
 
 from asociados.admin import AsociadoAdmin, AsociadoAdminForm
-from asociados.models import Asociado, Curso
+from asociados.models import Asociado, CicloLectivo, Curso
+from cuotas.models import Cuota, Donacion, Pago, PagoCuota, PeriodoCuota
 
 
 @pytest.fixture
@@ -61,3 +63,94 @@ def test_admin_operativo_no_expone_campos_de_baja():
     assert "estado" not in fields
     assert "fecha_baja" not in fields
     assert "motivo_baja" not in fields
+
+
+@pytest.mark.django_db
+def test_borrar_curso_deja_al_asociado_sin_curso(curso):
+    asociado = Asociado.objects.create(
+        nombre="Ana",
+        apellido="Perez",
+        dni="40111222",
+        tipo=Asociado.TIPO_ASOCIADO,
+        curso_actual=curso,
+        fecha_alta=date(2026, 3, 1),
+        fecha_inicio_cobro=date(2026, 3, 1),
+    )
+
+    curso.delete()
+
+    asociado.refresh_from_db()
+    assert asociado.curso_actual is None
+
+
+@pytest.mark.django_db
+def test_borrar_usuario_deja_al_asociado_sin_usuario():
+    usuario = get_user_model().objects.create_user(username="asociado", password="secreto123")
+    asociado = Asociado.objects.create(
+        usuario=usuario,
+        nombre="Ana",
+        apellido="Perez",
+        dni="40111222",
+        tipo=Asociado.TIPO_ADHERENTE,
+        fecha_alta=date(2026, 3, 1),
+        fecha_inicio_cobro=date(2026, 3, 1),
+    )
+
+    usuario.delete()
+
+    asociado.refresh_from_db()
+    assert asociado.usuario is None
+
+
+@pytest.mark.django_db
+def test_borrar_asociado_elimina_sus_registros_financieros():
+    asociado = Asociado.objects.create(
+        nombre="Ana",
+        apellido="Perez",
+        dni="40111222",
+        tipo=Asociado.TIPO_ADHERENTE,
+        fecha_alta=date(2026, 3, 1),
+        fecha_inicio_cobro=date(2026, 3, 1),
+    )
+    ciclo_lectivo = CicloLectivo.objects.create(anio=2026)
+    periodo = PeriodoCuota.objects.create(
+        mes=3,
+        ciclo_lectivo=ciclo_lectivo,
+        importe=Decimal("1000.00"),
+        fecha_vencimiento=date(2026, 3, 10),
+    )
+    cuota = Cuota.objects.create(asociado=asociado, periodo=periodo, importe=Decimal("1000.00"))
+    pago = Pago.objects.create(
+        asociado=asociado,
+        fecha=date(2026, 3, 5),
+        importe=Decimal("1100.00"),
+        metodo=Pago.METODO_EFECTIVO,
+    )
+    PagoCuota.objects.create(pago=pago, cuota=cuota, importe=Decimal("1000.00"))
+    Donacion.objects.create(
+        asociado=asociado,
+        pago=pago,
+        importe=Decimal("100.00"),
+        fecha=date(2026, 3, 5),
+    )
+    superusuario = get_user_model().objects.create_superuser(
+        username="root_limpieza",
+        password="secreto123",
+    )
+    request = RequestFactory().get("/admin/asociados/asociado/")
+    request.user = superusuario
+    model_admin = admin.site._registry[Asociado]
+
+    _, _, permisos_necesarios, objetos_protegidos = model_admin.get_deleted_objects(
+        [asociado],
+        request,
+    )
+
+    assert permisos_necesarios == set()
+    assert objetos_protegidos == []
+    asociado.delete()
+
+    assert not Cuota.objects.exists()
+    assert not Pago.objects.exists()
+    assert not PagoCuota.objects.exists()
+    assert not Donacion.objects.exists()

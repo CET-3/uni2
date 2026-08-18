@@ -19,6 +19,7 @@ class RegistroFinancieroSoloLecturaAdmin:
 
 @admin.register(PeriodoCuota)
 class PeriodoCuotaAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    allow_superuser_delete = True
     audit_fields = (
         "mes",
         "ciclo_lectivo",
