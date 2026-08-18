@@ -2,95 +2,84 @@
 
 {% block title %}Nuevo asociado | Uni2{% endblock %}
 
-{% block body_class %} uni2-ops-page{% endblock %}
-
 {% block content %}
-<div class="container py-5 uni2-ops-shell">
+<div class="container py-5">
     {% include "components/breadcrumbs.html" with ancestor_url="/gestion/asociados/" ancestor_label="Atención al asociado" current_label="Nuevo asociado" only %}
 
-    <header class="uni2-ops-hero uni2-ops-hero-green">
-        <div class="uni2-ops-hero-copy">
+    <header class="mb-4">
+        <div>
             <span class="uni2-section-kicker">Alta manual</span>
-            <h1>Nuevo asociado</h1>
-            <p>Cargá los datos principales para crear la ficha y generar las cuotas iniciales que correspondan.</p>
+            <h1 class="uni2-titulo-seccion">Nuevo asociado</h1>
+            <p class="text-secondary mb-0">Cargá los datos principales para crear la ficha y generar las cuotas iniciales que correspondan.</p>
         </div>
     </header>
 
     <div class="row g-4 align-items-start">
         <div class="col-12">
-            <form method="post" class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue" novalidate>
+            <form method="post" class="card uni2-surface-card uni2-surface-card-info" novalidate>
                 {% csrf_token %}
                 <div class="card-body">
-                    <div class="uni2-ops-panel-heading">
+                    <div class="mb-3">
                         <div>
                             <span class="uni2-section-kicker">Datos personales</span>
-                            <h2>Ficha del asociado</h2>
-                            <p>Los campos de identificación son la base para futuras búsquedas y cobros.</p>
+                            <h2 class="uni2-titulo-componente">Ficha del asociado</h2>
+                            <p class="text-secondary mb-0">Los campos de identificación son la base para futuras búsquedas y cobros.</p>
                         </div>
                     </div>
 
                     {% if form.errors or form.non_field_errors %}
-                        <div class="uni2-form-error-summary" role="alert" aria-labelledby="form-errors-title">
-                            <span class="uni2-form-error-icon" aria-hidden="true">
-                                <i class="bi bi-exclamation-triangle-fill"></i>
-                            </span>
-                            <div>
-                                <strong id="form-errors-title">Revisá los datos del formulario</strong>
-                                <p>Hay campos incompletos o con datos que Uni2 no puede guardar todavía.</p>
-                                <ul>
-                                    {% for field in form %}
-                                        {% for error in field.errors %}
-                                            <li><span>{{ field.label }}:</span> {{ error }}</li>
-                                        {% endfor %}
-                                    {% endfor %}
-                                    {% for error in form.non_field_errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
+                        {% include "components/alert.html" with variant="danger" title="Revisá los datos del formulario" message="Hay campos incompletos o con datos que Uni2 no puede guardar todavía." only %}
                     {% endif %}
 
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label" for="{{ form.nombre.id_for_label }}">Nombre</label>
                             {{ form.nombre }}
+                            {{ form.nombre.errors }}
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="{{ form.apellido.id_for_label }}">Apellido</label>
                             {{ form.apellido }}
+                            {{ form.apellido.errors }}
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="{{ form.dni.id_for_label }}">DNI</label>
                             {{ form.dni }}
+                            {{ form.dni.errors }}
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="{{ form.tipo.id_for_label }}">Tipo</label>
                             {{ form.tipo }}
+                            {{ form.tipo.errors }}
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="{{ form.curso_actual.id_for_label }}">Curso actual</label>
                             {{ form.curso_actual }}
+                            {{ form.curso_actual.errors }}
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
                             {{ form.email }}
+                            {{ form.email.errors }}
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="{{ form.telefono.id_for_label }}">Teléfono</label>
                             {{ form.telefono }}
+                            {{ form.telefono.errors }}
                         </div>
                         <div class="col-12">
                             <label class="form-label" for="{{ form.direccion.id_for_label }}">Dirección</label>
                             {{ form.direccion }}
+                            {{ form.direccion.errors }}
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="{{ form.fecha_alta.id_for_label }}">Fecha de alta</label>
                             {{ form.fecha_alta }}
+                            {{ form.fecha_alta.errors }}
                         </div>
                     </div>
 
-                    <div class="uni2-ops-form-actions">
+                    <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
                         <button class="btn btn-primary" type="submit">
                             <i class="bi bi-check2-circle" aria-hidden="true"></i> Guardar asociado
                         </button>

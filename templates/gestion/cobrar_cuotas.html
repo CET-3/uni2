@@ -2,36 +2,31 @@
 {% load l10n formatos %}
 
 {% block title %}{% if es_donacion_sin_deuda %}Registrar donación{% else %}Cobrar cuotas{% endif %} | Uni2{% endblock %}
-{% block body_class %} uni2-ops-page{% endblock %}
-
 {% block content %}
-<div class="container py-5 uni2-ops-shell">
+<div class="container py-5">
 {% if selected_asociado %}
     {% include "components/breadcrumbs.html" with ancestor_url=detail_url ancestor_label=selected_asociado current_label="Cobro" only %}
 
-    <header class="uni2-ops-hero {% if es_donacion_sin_deuda %}uni2-ops-hero-green{% else %}uni2-ops-hero-red{% endif %}">
-        <div class="uni2-associate-record-heading">
-            <span class="uni2-ops-avatar {% if es_donacion_sin_deuda %}uni2-ops-avatar-green{% else %}uni2-ops-avatar-red{% endif %} uni2-associate-record-avatar" aria-hidden="true">
+    <header class="d-flex flex-column flex-lg-row justify-content-between gap-4 mb-4">
+        <div class="d-flex align-items-start gap-3">
+            <span class="uni2-avatar {% if es_donacion_sin_deuda %}uni2-avatar-green{% else %}uni2-avatar-red{% endif %}" aria-hidden="true">
                 {{ selected_asociado.nombre|first }}{{ selected_asociado.apellido|first }}
             </span>
-            <div class="uni2-ops-hero-copy">
+            <div>
                 <span class="uni2-section-kicker">{% if es_donacion_sin_deuda %}Aporte voluntario{% else %}Cuenta corriente{% endif %}</span>
-                <h1>{% if es_donacion_sin_deuda %}Registrar donación{% else %}Cobro de cuotas{% endif %}</h1>
-                <p>{% if es_donacion_sin_deuda %}Registrá el aporte voluntario del asociado seleccionado.{% else %}Seleccioná las cuotas pendientes y registrá el importe recibido.{% endif %}</p>
+                <h1 class="uni2-titulo-seccion">{% if es_donacion_sin_deuda %}Registrar donación{% else %}Cobro de cuotas{% endif %}</h1>
+                <p class="text-secondary mb-0">{% if es_donacion_sin_deuda %}Registrá el aporte voluntario del asociado seleccionado.{% else %}Seleccioná las cuotas pendientes y registrá el importe recibido.{% endif %}</p>
             </div>
         </div>
-        <div class="uni2-ops-hero-tools">
-            <div class="uni2-ops-hero-metrics">
-                <span class="uni2-ops-metric {% if total_deuda > 0 %}uni2-ops-metric-red{% else %}uni2-ops-metric-green{% endif %}">
-                    <i class="bi {% if total_deuda > 0 %}bi-exclamation-circle-fill{% else %}bi-heart-fill{% endif %}" aria-hidden="true"></i>
-                    <strong>{{ total_deuda|moneda }}</strong>
-                    <small>{% if total_deuda > 0 %}deuda{% else %}sin deuda{% endif %}</small>
-                </span>
+        <div class="card uni2-metric-card {% if total_deuda > 0 %}uni2-metric-card-danger{% else %}uni2-metric-card-success{% endif %} align-self-lg-start">
+            <div class="card-body py-2">
+                <div class="uni2-metric-label">{% if total_deuda > 0 %}Deuda{% else %}Estado{% endif %}</div>
+                <div class="uni2-metric-value">{{ total_deuda|moneda }}</div>
             </div>
         </div>
     </header>
 
-    <section class="card uni2-surface-card uni2-ops-panel uni2-ops-panel-blue mb-4" aria-label="Resumen del asociado">
+    <section class="card uni2-surface-card uni2-surface-card-info mb-4" aria-label="Resumen del asociado">
         <div class="card-body py-3">
             <div class="uni2-cobro-summary">
                 <div>
@@ -58,39 +53,21 @@
         </div>
     </section>
 
-    <form method="post" class="card uni2-surface-card uni2-ops-panel {% if es_donacion_sin_deuda %}uni2-ops-panel-green{% else %}uni2-ops-panel-red{% endif %}" novalidate>
+    <form method="post" class="card uni2-surface-card {% if es_donacion_sin_deuda %}uni2-surface-card-success{% else %}uni2-surface-card-danger{% endif %}" novalidate>
         {% csrf_token %}
         {{ cobro_form.asociado_id }}
         <input type="hidden" name="volver" value="{{ return_url }}">
         <div class="card-body">
-            <div class="uni2-ops-panel-heading">
+            <div class="mb-3">
                 <div>
                     <span class="uni2-section-kicker">{% if es_donacion_sin_deuda %}Donación{% else %}Pago{% endif %}</span>
-                    <h2>{% if es_donacion_sin_deuda %}Datos de la donación{% else %}Registrar pago{% endif %}</h2>
-                    <p>{% if es_donacion_sin_deuda %}El importe se registrará como aporte voluntario.{% else %}La selección de cuotas define el mínimo a cobrar.{% endif %}</p>
+                    <h2 class="uni2-titulo-componente">{% if es_donacion_sin_deuda %}Datos de la donación{% else %}Registrar pago{% endif %}</h2>
+                    <p class="text-secondary mb-0">{% if es_donacion_sin_deuda %}El importe se registrará como aporte voluntario.{% else %}La selección de cuotas define el mínimo a cobrar.{% endif %}</p>
                 </div>
             </div>
 
             {% if cobro_form.errors or cobro_form.non_field_errors %}
-                <div class="uni2-form-error-summary" role="alert" aria-labelledby="cobro-form-errors-title">
-                    <span class="uni2-form-error-icon" aria-hidden="true">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                    </span>
-                    <div>
-                        <strong id="cobro-form-errors-title">Revisá los datos del cobro</strong>
-                        <p>Hay campos incompletos o cuotas que necesitan revisión antes de guardar.</p>
-                        <ul>
-                            {% for field in cobro_form %}
-                                {% for error in field.errors %}
-                                    <li><span>{{ field.label }}:</span> {{ error }}</li>
-                                {% endfor %}
-                            {% endfor %}
-                            {% for error in cobro_form.non_field_errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
+                {% include "components/alert.html" with variant="danger" title="Revisá los datos del cobro" message="Hay campos incompletos o cuotas que necesitan revisión antes de guardar." only %}
             {% endif %}
 
             {% if es_donacion_sin_deuda %}
@@ -99,7 +76,7 @@
                 <section class="uni2-cobro-section" aria-labelledby="cuotas-cobro-title">
                     <h3 id="cuotas-cobro-title">Cuotas a cobrar</h3>
                     <div class="table-responsive">
-                        <table class="table table-soft uni2-ops-table uni2-cobro-table align-middle mb-0">
+                        <table class="table table-soft uni2-cobro-table align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th>Elegir</th>
@@ -138,8 +115,8 @@
                                                 <span>Original {{ cuota.importe_original|moneda }} · recargo {{ cuota.recargo|moneda }}</span>
                                             </div>
                                         </td>
-                                        <td><span class="uni2-ops-badge uni2-ops-badge-red">{{ cuota.saldo|moneda }}</span></td>
-                                        <td><span class="uni2-ops-badge uni2-ops-badge-yellow">{{ cuota.estado_display }}</span></td>
+                                        <td><span class="uni2-badge uni2-badge-danger">{{ cuota.saldo|moneda }}</span></td>
+                                        <td><span class="uni2-badge uni2-badge-warning">{{ cuota.estado_display }}</span></td>
                                     </tr>
                                 {% empty %}
                                     <tr><td colspan="5">El asociado no tiene cuotas pendientes.</td></tr>
@@ -154,22 +131,26 @@
                 <div>
                     <label class="form-label" for="{{ cobro_form.fecha.id_for_label }}">Fecha</label>
                     {{ cobro_form.fecha }}
+                    {{ cobro_form.fecha.errors }}
                 </div>
                 <div>
                     <label class="form-label" for="{{ cobro_form.importe.id_for_label }}">{% if es_donacion_sin_deuda %}Importe de la donación{% else %}Importe recibido{% endif %}</label>
                     {{ cobro_form.importe }}
+                    {{ cobro_form.importe.errors }}
                 </div>
                 <div>
                     <label class="form-label" for="{{ cobro_form.metodo.id_for_label }}">Método</label>
                     {{ cobro_form.metodo }}
+                    {{ cobro_form.metodo.errors }}
                 </div>
                 <div class="uni2-cobro-field-full">
                     <label class="form-label" for="{{ cobro_form.observaciones.id_for_label }}">Observaciones</label>
                     {{ cobro_form.observaciones }}
+                    {{ cobro_form.observaciones.errors }}
                 </div>
             </div>
 
-            <div class="uni2-ops-form-actions">
+            <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
                 <button class="btn btn-primary" type="submit">
                     <i class="bi bi-check2-circle" aria-hidden="true"></i> {% if es_donacion_sin_deuda %}Registrar donación{% else %}Confirmar cobro{% endif %}
                 </button>

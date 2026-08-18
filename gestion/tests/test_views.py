@@ -717,6 +717,8 @@ def test_cobros_renderiza_saldo_y_etiqueta_accesible_para_cada_cuota(client):
     assert f'id="cuota-{cuota.id}"' in content
     assert f'for="cuota-{cuota.id}"' in content
     assert f"Cobrar cuota {cuota.periodo}" in content
+    assert "uni2-cobro-check" in content
+    assert "uni2-ops-" not in content
 
 
 @pytest.mark.django_db
@@ -1247,6 +1249,8 @@ def test_asociado_detalle_muestra_a_que_corresponde_pago_reciente(client):
     assert "Pagos recientes" in content
     assert "Cuotas: 03/2026" in content
     assert "Donación: $ 500,00" in content
+    assert "uni2-data-list" in content
+    assert "uni2-ops-" not in content
 
 
 @pytest.mark.django_db
@@ -1277,6 +1281,25 @@ def test_asociado_editar_muestra_formulario_separado(client):
     assert "Editar asociado" in content
     assert "Guardar cambios" in content
     assert reverse("gestion:asociado_detalle", args=[asociado.id]) in content
+    assert "uni2-surface-card" in content
+    assert "uni2-ops-" not in content
+
+
+@pytest.mark.django_db
+def test_asociado_nuevo_usa_formulario_y_alerta_compartidos(client):
+    staff = crear_usuario_gestion(
+        "staff_alta_diseno",
+        permisos=[GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS],
+    )
+    client.force_login(staff)
+
+    formulario = client.get(reverse("gestion:asociado_nuevo")).content.decode()
+    invalido = client.post(reverse("gestion:asociado_nuevo"), {}).content.decode()
+
+    assert "uni2-surface-card" in formulario
+    assert "uni2-ops-" not in formulario
+    assert "uni2-alert-danger" in invalido
+    assert "uni2-form-error-summary" not in invalido
 
 
 @pytest.mark.django_db

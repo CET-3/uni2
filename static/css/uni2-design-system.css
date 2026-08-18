@@ -2562,83 +2562,6 @@ button.uni2-service-card:hover {
   padding-top: 20px;
 }
 
-.uni2-form-error-summary {
-  align-items: start;
-  background:
-    linear-gradient(135deg, rgba(255, 43, 43, 0.12), rgba(255, 203, 48, 0.12)),
-    var(--color-surface);
-  border: 1px solid rgba(255, 43, 43, 0.28);
-  border-left: 7px solid var(--brand-red);
-  border-radius: 18px;
-  box-shadow: 0 16px 36px rgba(163, 0, 0, 0.12);
-  color: var(--color-text);
-  display: grid;
-  gap: 14px;
-  grid-template-columns: 48px minmax(0, 1fr);
-  margin-top: 22px;
-  padding: 18px;
-}
-
-.uni2-form-error-icon {
-  align-items: center;
-  background-image: var(--texture-grain), linear-gradient(135deg, var(--brand-red-dark), var(--brand-red));
-  background-blend-mode: soft-light, normal;
-  border-radius: 50%;
-  color: var(--color-on-strong);
-  display: inline-flex;
-  font-size: 1.25rem;
-  height: 48px;
-  justify-content: center;
-  width: 48px;
-}
-
-.uni2-form-error-summary strong {
-  color: var(--color-danger-text);
-  display: block;
-  font-size: 1.02rem;
-  font-weight: 900;
-  line-height: 1.2;
-}
-
-.uni2-form-error-summary p {
-  color: var(--color-text-secondary);
-  font-weight: 650;
-  margin: 4px 0 10px;
-}
-
-.uni2-form-error-summary ul {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-  padding-left: 1.1rem;
-}
-
-.uni2-form-error-summary li {
-  color: var(--color-text);
-  font-weight: 650;
-}
-
-.uni2-form-error-summary li span {
-  font-weight: 900;
-}
-
-.uni2-associate-record-hero {
-  grid-template-columns: minmax(0, 1fr) minmax(250px, 300px);
-}
-
-.uni2-associate-record-heading {
-  align-items: center;
-  display: flex;
-  gap: 18px;
-  min-width: 0;
-}
-
-.uni2-associate-record-avatar {
-  font-size: 1.18rem;
-  height: 76px;
-  width: 76px;
-}
-
 .uni2-record-meta-row {
   display: flex;
   flex-wrap: wrap;
@@ -2650,40 +2573,6 @@ button.uni2-service-card:hover {
   display: grid;
   gap: 18px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.uni2-record-list {
-  display: grid;
-  gap: 12px;
-  margin: 0;
-}
-
-.uni2-record-list div {
-  align-items: baseline;
-  border-bottom: 1px solid var(--color-border-subtle);
-  display: flex;
-  gap: 16px;
-  justify-content: space-between;
-  padding-bottom: 10px;
-}
-
-.uni2-record-list div:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.uni2-record-list dt {
-  color: var(--color-text-muted);
-  font-size: 0.82rem;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.uni2-record-list dd {
-  color: var(--color-text);
-  font-weight: 850;
-  margin: 0;
-  text-align: right;
 }
 
 .uni2-record-total {
@@ -2893,51 +2782,6 @@ button.uni2-service-card:hover {
   grid-column: 1 / -1;
 }
 
-.uni2-ops-side-card {
-  background-blend-mode: soft-light, normal;
-  background-image: var(--texture-grain), linear-gradient(135deg, var(--side-dark), var(--side-color));
-  border-radius: 18px;
-  box-shadow: var(--shadow-card);
-  color: var(--side-text, var(--color-on-strong));
-  display: grid;
-  gap: 12px;
-  padding: 22px;
-}
-
-.uni2-ops-side-card .uni2-service-icon {
-  --card-color: rgba(255, 255, 255, 0.92);
-  --card-dark: rgba(255, 255, 255, 0.78);
-  --card-text: var(--side-icon-text);
-  height: 52px;
-  width: 52px;
-}
-
-.uni2-ops-side-card h2 {
-  font-size: 1.1rem;
-  font-weight: 900;
-  margin: 0;
-}
-
-.uni2-ops-side-card p {
-  font-weight: 700;
-  margin: 0;
-}
-
-.uni2-ops-side-card-yellow {
-  --side-color: var(--brand-yellow);
-  --side-dark: var(--brand-yellow-dark);
-  --side-text: #2d2606;
-  --side-icon-text: #8a6200;
-}
-
-.uni2-ops-side-card-green {
-  --side-color: var(--brand-green);
-  --side-dark: var(--brand-green-dark);
-  --side-text: #07230d;
-  --side-icon-text: #177323;
-}
-
-
 @media (max-width: 991.98px) {
   .uni2-audit-operation-header {
     align-items: flex-start;
@@ -3035,7 +2879,6 @@ button.uni2-service-card:hover {
     flex-direction: column;
   }
 
-  .uni2-associate-record-hero,
   .uni2-record-grid {
     grid-template-columns: 1fr;
   }
@@ -3065,32 +2908,8 @@ button.uni2-service-card:hover {
     width: 100%;
   }
 
-  .uni2-form-error-summary {
-    grid-template-columns: 1fr;
-  }
-
   .uni2-ops-metric {
     flex: 1 1 150px;
-  }
-
-  .uni2-associate-record-heading {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .uni2-associate-record-avatar {
-    height: 62px;
-    width: 62px;
-  }
-
-  .uni2-record-list div {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .uni2-record-list dd {
-    text-align: left;
   }
 
   .uni2-payment-entry {

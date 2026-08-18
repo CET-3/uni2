@@ -40,3 +40,5 @@ Las pantallas `Atención al asociado`, `Nuevo asociado`, `Deudores` y `Períodos
 - el alta manual muestra los errores de validación en una alerta destacada arriba de los campos del formulario.
 - ninguna pantalla operativa usa botones `Volver`; la navegación contextual queda resuelta por breadcrumbs y por el logo global para volver al inicio.
 - la ficha de asociado usa los mismos componentes compartidos: encabezado con identidad, métricas de deuda, acciones permitidas, paneles de estado/contacto/cuenta corriente, cuotas y pagos recientes.
+- los pares etiqueta/valor de la ficha usan `uni2-data-list`; cobros conserva clases `uni2-cobro-*` únicamente para la selección de cuotas, el resumen y la distribución de sus campos.
+- los formularios de alta, edición, períodos y cobro usan `components/alert.html` como resumen general y muestran cada error junto al campo correspondiente.
