@@ -13,3 +13,4 @@
 * [Glosario de deploy y releases](glosario-deploy.md) - Conceptos básicos para entender ambientes, credenciales, controles y promoción de versiones.
 * [Configuración de deploy](deploy.md) - Inventario de variables, secretos y valores automáticos de Production, staging y GitHub Actions.
 * [Configuración de grupos](configuracion-grupos.md) - Fuente única, sincronización y despliegue de la matriz de permisos.
+* [Medición de navegación con Google Analytics](google-analytics.md) - Integración de GA4 exclusiva de Producción y sin URLs ni identificadores privados.
