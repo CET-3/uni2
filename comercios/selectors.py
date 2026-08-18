@@ -3,12 +3,14 @@ from django.db.models import Count, Prefetch
 from .models import ActividadComercial, Comercio
 
 
+def get_comercio_firmado_queryset():
+    return Comercio.objects.filter(
+        estado=Comercio.ESTADO_FIRMADO,
+    ).select_related("actividad_comercial")
+
+
 def get_comercios_firmados():
-    return (
-        Comercio.objects.filter(estado=Comercio.ESTADO_FIRMADO)
-        .select_related("actividad_comercial")
-        .order_by("orden", "nombre")
-    )
+    return get_comercio_firmado_queryset().order_by("orden", "nombre")
 
 
 def get_rubros_con_comercios():

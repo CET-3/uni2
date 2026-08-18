@@ -146,3 +146,58 @@ su listado de comercios.
 
 **Resultado esperado:** el listado sigue siendo legible y no se superponen
 textos ni botones.
+
+### PM-COMERCIO-PUBLICO-013 - Abrir ficha modal sin cambiar la URL
+
+**Pasos:**
+
+1. Abrir el detalle de un rubro con al menos un comercio firmado.
+2. Copiar la URL visible.
+3. Seleccionar el nombre de un comercio.
+
+**Resultado esperado:** el modal muestra la ficha pública del comercio y la URL
+permanece exactamente igual a la copiada.
+
+### PM-COMERCIO-PUBLICO-014 - Cerrar modal y restaurar foco
+
+**Pasos:**
+
+1. Abrir el modal y cerrarlo con la X.
+2. Repetir y cerrarlo con `Escape`.
+3. Repetir y cerrarlo seleccionando el fondo.
+
+**Resultado esperado:** las tres acciones cierran el modal y el foco vuelve al
+nombre del comercio que lo abrió.
+
+### PM-COMERCIO-PUBLICO-015 - Conservar ficha completa y enlaces especiales
+
+**Pasos:**
+
+1. Abrir el modal y seleccionar `Ver ficha completa`.
+2. Volver al rubro y usar Ctrl/Cmd+clic sobre otro comercio.
+3. Probar `Abrir enlace en una pestaña nueva` y `Copiar dirección del enlace`.
+
+**Resultado esperado:** todas las variantes usan la URL `/comercios/<pk>/`; la
+activación normal desde el rubro sigue abriendo el modal.
+
+### PM-COMERCIO-PUBLICO-016 - Navegar sin JavaScript
+
+**Pasos:**
+
+1. Deshabilitar JavaScript en el navegador.
+2. Abrir el detalle de un rubro.
+3. Seleccionar un comercio.
+
+**Resultado esperado:** se abre la ficha completa `/comercios/<pk>/`; el enlace
+no queda inerte.
+
+### PM-COMERCIO-PUBLICO-017 - Resolver un error de carga
+
+**Pasos:**
+
+1. Abrir el detalle de un rubro con conexión.
+2. Simular conexión offline desde las herramientas del navegador.
+3. Seleccionar un comercio.
+
+**Resultado esperado:** el modal informa que no pudo cargar la ficha y ofrece
+`Abrir ficha completa` con la URL `/comercios/<pk>/`.
