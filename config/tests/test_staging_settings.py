@@ -21,7 +21,7 @@ STAGING_DATABASE = {
 def load_staging_settings(**overrides):
     environment = os.environ.copy()
     for name in tuple(environment):
-        if name.startswith(("AWS_", "UNI2_")):
+        if name.startswith(("AWS_", "UNI2_")) or name == "GOOGLE_ANALYTICS_MEASUREMENT_ID":
             environment.pop(name)
 
     environment.update(
@@ -51,6 +51,7 @@ from config.settings import staging
 
 print(json.dumps({
     "allow_demo_data": staging.ALLOW_DEMO_DATA,
+    "analytics_measurement_id": staging.GOOGLE_ANALYTICS_MEASUREMENT_ID,
     "app_name": staging.PWA_APP_NAME,
     "batch_email_mode": staging.UNI2_BATCH_EMAIL_MODE,
     "build_id": staging.PWA_BUILD_ID,
@@ -86,6 +87,7 @@ def test_staging_es_seguro_y_visualmente_distinto():
     staging = json.loads(result.stdout)
     assert staging == {
         "allow_demo_data": False,
+        "analytics_measurement_id": "",
         "app_name": "UNI2 - Entorno de prueba",
         "batch_email_mode": "disabled",
         "build_id": "staging-commit",
@@ -116,6 +118,13 @@ def test_staging_es_seguro_y_visualmente_distinto():
         "storages_app_enabled": False,
         "transactional_email_mode": "disabled",
     }
+
+
+def test_staging_no_hereda_google_analytics_de_produccion():
+    result = load_staging_settings(GOOGLE_ANALYTICS_MEASUREMENT_ID="G-TEST123")
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["analytics_measurement_id"] == ""
 
 
 def test_staging_rechaza_una_base_con_huella_productiva():

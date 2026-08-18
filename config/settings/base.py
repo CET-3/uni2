@@ -67,6 +67,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "config.context_processors.google_analytics",
                 "usuarios.context_processors.navigation_roles",
                 "pwa.context_processors.pwa_settings",
             ],
@@ -141,6 +142,10 @@ PWA_ICON_DIRECTORY = "pwa/icons"
 UNI2_DEPLOYMENT_ENVIRONMENT = "development"
 UNI2_ENVIRONMENT_LABEL = ""
 UNI2_ENVIRONMENT_SHORT_LABEL = ""
+
+# Analytics queda apagado por defecto. Solamente Producción puede leer el ID
+# real; staging lo vuelve a deshabilitar luego de heredar el perfil productivo.
+GOOGLE_ANALYTICS_MEASUREMENT_ID = ""
 
 # Las integraciones todavía no están implementadas. Declarar la política desde
 # ahora evita que staging herede por accidente proveedores reales en el futuro.
