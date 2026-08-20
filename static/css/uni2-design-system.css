@@ -1909,6 +1909,20 @@ button.uni2-service-card:hover {
   box-shadow: var(--shadow-card);
 }
 
+.uni2-surface-card-brand {
+  background:
+    linear-gradient(
+      90deg,
+      var(--brand-blue) 0 25%,
+      var(--brand-green) 25% 50%,
+      var(--brand-yellow) 50% 75%,
+      var(--brand-red) 75% 100%
+    ) top / 100% 0.35rem no-repeat,
+    var(--color-surface);
+  border-top: 0;
+  padding-top: 0.35rem;
+}
+
 .uni2-avatar {
   display: inline-grid;
   width: 2.5rem;

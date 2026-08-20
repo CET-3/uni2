@@ -42,6 +42,8 @@ Las secciones completas y los agrupadores se presentan como bandas o bloques sin
 
 Las métricas `uni2-metric-card` resumen un dato operativo real y conservan el detalle que permite interpretarlo en listas o tablas. Los modificadores `info`, `success`, `warning` y `danger` expresan su función semántica, no una decoración arbitraria. Los mismos acentos pueden aplicarse a `uni2-surface-card` para delimitar una unidad temática sin anidar cards.
 
+La variante `uni2-surface-card-brand` identifica una unidad institucional mediante una franja fina azul, verde, amarilla y roja sobre una superficie neutra. La franja es decorativa y no comunica un estado; por eso no reemplaza los modificadores semánticos `info`, `success`, `warning` o `danger`.
+
 Los badges semánticos siempre incluyen un texto de estado y nunca comunican su significado solo mediante color. `uni2-avatar` representa una persona mediante imagen o iniciales, pero no es por sí mismo un control interactivo. `uni2-data-list` organiza pares etiqueta/valor de una ficha; cuando hay que comparar varias entidades o registros se usa una tabla.
 
 Las clases `uni2-cobro-*` y `uni2-period-*` no forman una familia visual general: quedan limitadas a la estructura propia de selección/resumen del cobro y a la presentación/generación de períodos. Encabezados, colores, estados, métricas, superficies y acciones de esos flujos siguen usando los componentes compartidos.

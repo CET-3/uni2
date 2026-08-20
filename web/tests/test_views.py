@@ -153,6 +153,7 @@ def test_design_system_porta_secciones_del_showcase(client):
         "uni2-surface-card-success",
         "uni2-surface-card-warning",
         "uni2-surface-card-danger",
+        "uni2-surface-card-brand",
         "uni2-avatar",
         "uni2-data-list",
     ):
