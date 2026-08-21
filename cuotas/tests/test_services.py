@@ -4,6 +4,7 @@ from decimal import Decimal
 import pytest
 from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
+from django.utils import timezone
 
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
@@ -78,6 +79,43 @@ def test_generacion_de_cuotas(asociado_activo, periodos):
     creadas = generar_cuotas_para_periodo(periodos[0])
     assert creadas == 1
     assert Cuota.objects.filter(asociado=asociado_activo, periodo=periodos[0]).exists()
+
+
+@pytest.mark.django_db
+def test_periodo_nuevo_comienza_sin_generacion_registrada(periodos):
+    assert periodos[0].generado_el is None
+
+
+@pytest.mark.django_db
+def test_generacion_marca_el_periodo_aunque_no_cree_cuotas():
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    periodo = PeriodoCuota.objects.create(
+        mes=8,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3000"),
+        fecha_vencimiento=date(2026, 8, 10),
+    )
+    momento_anterior = timezone.now()
+
+    creadas = generar_cuotas_para_periodo(periodo)
+
+    periodo.refresh_from_db()
+    assert creadas == 0
+    assert periodo.generado_el is not None
+    assert periodo.generado_el >= momento_anterior
+
+
+@pytest.mark.django_db
+def test_reintentar_generacion_conserva_la_primera_fecha(periodos):
+    periodo = periodos[0]
+    generar_cuotas_para_periodo(periodo)
+    periodo.refresh_from_db()
+    primera_generacion = periodo.generado_el
+
+    generar_cuotas_para_periodo(periodo)
+
+    periodo.refresh_from_db()
+    assert periodo.generado_el == primera_generacion
 
 
 @pytest.mark.django_db

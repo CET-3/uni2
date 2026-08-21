@@ -130,6 +130,13 @@
                                             {% endif %}
                                         </td>
                                         <td class="text-lg-end">
+                                            <p class="small text-secondary mb-2">
+                                                {% if periodo.generado_el %}
+                                                    Generado el {{ periodo.generado_el|date:"d/m/Y H:i" }}
+                                                {% else %}
+                                                    Todavía no generado
+                                                {% endif %}
+                                            </p>
                                             <form method="post" class="uni2-period-generate-action">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="action" value="generar_cuotas">

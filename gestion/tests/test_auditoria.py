@@ -602,10 +602,21 @@ def test_creacion_y_generacion_de_periodo_desde_gestion_identifican_actor(client
         {"action": "generar_cuotas", "periodo_id": str(periodo.pk)},
     )
 
-    evento_periodo = EventoAuditoria.objects.get(entidad="cuotas.PeriodoCuota")
+    evento_creacion_periodo = EventoAuditoria.objects.get(
+        entidad="cuotas.PeriodoCuota",
+        accion=EventoAuditoria.ACCION_CREAR,
+    )
+    evento_generacion_periodo = EventoAuditoria.objects.get(
+        entidad="cuotas.PeriodoCuota",
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+    )
     evento_cuota = EventoAuditoria.objects.get(
         entidad="cuotas.Cuota",
         cambios__asociado__nuevo__id=asociado.pk,
     )
-    assert evento_periodo.actor == usuario
+    assert evento_creacion_periodo.actor == usuario
+    assert evento_generacion_periodo.actor == usuario
+    assert evento_generacion_periodo.cambios["generado_el"]["anterior"] is None
+    assert evento_generacion_periodo.cambios["generado_el"]["nuevo"]
+    assert evento_generacion_periodo.operacion_id == evento_cuota.operacion_id
     assert evento_cuota.actor == usuario

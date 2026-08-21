@@ -49,6 +49,13 @@ class PeriodoCuota(models.Model):
         default=True,
         help_text="Indica si este período está activo para generar cuotas.",
     )
+    generado_el = models.DateTimeField(
+        "generado el",
+        blank=True,
+        null=True,
+        editable=False,
+        help_text="Fecha y hora de la primera ejecución de la generación masiva de cuotas.",
+    )
 
     class Meta:
         verbose_name = "Período de cuota"

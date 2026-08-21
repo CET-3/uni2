@@ -1029,6 +1029,16 @@ def test_periodos_cuota_gestion_genera_cuotas_sin_duplicar(client):
     content = response.content.decode()
     assert "Generar cuotas" in content
     assert "0 cuotas" in content
+    assert "Todavía no generado" in content
+
+    response = client.post(
+        reverse("gestion:periodos_cuota"),
+        {"action": "generar_cuotas", "periodo_id": periodo.pk},
+        follow=True,
+    )
+
+    assert response.status_code == 200
+    assert "Generado el" in response.content.decode()
 
 
 @pytest.mark.django_db

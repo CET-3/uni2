@@ -22,6 +22,7 @@ AUDIT_FIELDS_PERIODO = (
     "importe_recargo_mes_siguiente",
     "fecha_vencimiento",
     "activo",
+    "generado_el",
 )
 AUDIT_FIELDS_CUOTA = (
     "asociado",
@@ -115,6 +116,7 @@ def crear_periodo_cuota(*, datos, actor):
 def generar_cuotas_para_periodo(periodo: PeriodoCuota, *, actor=None) -> int:
     created = 0
     operacion_id = uuid.uuid4()
+    periodo = PeriodoCuota.objects.select_for_update().get(pk=periodo.pk)
     asociados = Asociado.objects.filter(
         estado=Asociado.ESTADO_ACTIVO,
         fecha_inicio_cobro__isnull=False,
@@ -142,6 +144,25 @@ def generar_cuotas_para_periodo(periodo: PeriodoCuota, *, actor=None) -> int:
                 operacion_id=operacion_id,
                 actor_etiqueta="Sistema: generación de cuotas",
             )
+    if periodo.generado_el is None:
+        anteriores = {"generado_el": None}
+        periodo.generado_el = timezone.now()
+        periodo.save(update_fields=["generado_el"])
+        registrar_evento(
+            actor=actor,
+            actor_etiqueta="Sistema: generación de cuotas",
+            accion=EventoAuditoria.ACCION_MODIFICAR,
+            entidad=periodo._meta.label,
+            objeto_id=periodo.pk,
+            objeto_descripcion=str(periodo),
+            cambios=construir_cambios(
+                anteriores=anteriores,
+                nuevos={"generado_el": periodo.generado_el},
+                campos=("generado_el",),
+            ),
+            origen=EventoAuditoria.ORIGEN_GESTION if actor else EventoAuditoria.ORIGEN_SISTEMA,
+            operacion_id=operacion_id,
+        )
     return created
 
 
