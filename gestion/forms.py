@@ -168,21 +168,16 @@ class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
             "tipo",
             "curso_actual",
             "clasificacion_adherente",
-            "fecha_alta",
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._configurar_campos_tipo()
-        if not self.is_bound:
-            self.initial.setdefault("fecha_alta", timezone.localdate())
         for field_name, field in self.fields.items():
             if isinstance(field.widget, forms.Select):
                 field.widget.attrs.update({"class": "form-select"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
-            if field_name == "fecha_alta":
-                field.widget.attrs.update({"type": "date"})
 
     def save(self, commit=True, actor=None):
         data = self.cleaned_data
@@ -191,7 +186,7 @@ class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
             apellido=data["apellido"],
             dni=data["dni"],
             tipo=data["tipo"],
-            fecha_alta=data["fecha_alta"],
+            fecha_alta=timezone.localdate(),
             curso_actual=data["curso_actual"],
             clasificacion_adherente=data["clasificacion_adherente"],
             email=data["email"],

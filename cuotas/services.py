@@ -97,7 +97,9 @@ def _get_cuotas_para_cobro(asociado: Asociado, cuotas_ids):
 
 @transaction.atomic
 def crear_periodo_cuota(*, datos, actor):
-    periodo = PeriodoCuota.objects.create(**datos)
+    periodo = PeriodoCuota(**datos)
+    periodo.full_clean()
+    periodo.save()
     _registrar_creacion(
         obj=periodo,
         fields=AUDIT_FIELDS_PERIODO,

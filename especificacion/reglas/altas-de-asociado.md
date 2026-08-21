@@ -27,3 +27,7 @@ Al crear un asociado, el sistema genera cuotas para los 2 meses anteriores al me
 ## ALTA-ASOCIADO-005
 
 El alta de asociado no crea períodos de cuota automáticamente. Si faltan períodos para alguno de los 3 meses, no se genera la cuota correspondiente. La administración debe crear los períodos desde la pantalla de períodos de cuota.
+
+## ALTA-ASOCIADO-006
+
+En el alta manual cotidiana, la fecha de alta es la fecha local del sistema y no se puede editar. La fecha de inicio de cobro tampoco se solicita: se calcula automáticamente con las reglas `ALTA-ASOCIADO-001` y `ALTA-ASOCIADO-002`. Ambas fechas continúan editables en la edición administrativa y en el admin técnico.

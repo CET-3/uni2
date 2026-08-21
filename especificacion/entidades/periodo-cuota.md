@@ -22,7 +22,7 @@ Representa un período mensual de cuota.
 - fecha_vencimiento\*: fecha límite para pagar sin recargo.
 - activo\*: indica si este período está activo para generar cuotas.
 
-**Notas de datos:** define importe base, vencimiento y dos importes de recargo por mora. Esos importes sirven como fuente para las cuotas generadas.
+**Notas de datos:** define importe base, vencimiento y dos importes de recargo por mora. La fecha de vencimiento debe pertenecer al mismo mes y año del período. Esos importes sirven como fuente para las cuotas generadas.
 
 **Referencias funcionales:** ver [reglas de cuotas](../reglas/cuotas.md), [reglas de pagos](../reglas/pagos.md) y [generar período de cuota](../casos-de-uso/cu-generar-periodo-cuota.md).
 

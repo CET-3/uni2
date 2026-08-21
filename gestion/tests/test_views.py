@@ -1498,7 +1498,8 @@ def test_asociados_gestion_oculta_acciones_sin_permiso(client):
 
 
 @pytest.mark.django_db
-def test_asociado_nuevo_crea_asociado_desde_gestion(client):
+def test_asociado_nuevo_crea_asociado_con_fechas_automaticas(client, monkeypatch):
+    monkeypatch.setattr("gestion.forms.timezone.localdate", lambda: date(2026, 8, 21))
     staff = crear_usuario_gestion("staff_alta_asoc", permisos=[GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS])
     curso = Curso.objects.create(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
 
@@ -1515,6 +1516,7 @@ def test_asociado_nuevo_crea_asociado_desde_gestion(client):
             "tipo": "asociado",
             "curso_actual": curso.id,
             "fecha_alta": "2026-05-20",
+            "fecha_inicio_cobro": "2026-05-01",
         },
         follow=True,
     )
@@ -1523,13 +1525,18 @@ def test_asociado_nuevo_crea_asociado_desde_gestion(client):
     asociado = Asociado.objects.get(dni="44111222")
     assert asociado.nombre == "Mara"
     assert asociado.curso_actual == curso
-    assert str(asociado.fecha_inicio_cobro) == "2026-06-01"
+    assert asociado.fecha_alta == date(2026, 8, 21)
+    assert asociado.fecha_inicio_cobro == date(2026, 9, 1)
     assert response.redirect_chain[-1][0] == reverse("gestion:asociado_detalle", args=[asociado.id])
     assert "Asociado creado correctamente" in response.content.decode()
 
 
 @pytest.mark.django_db
-def test_asociado_nuevo_genera_cuotas_iniciales_y_redirige_al_detalle_aunque_pueda_cobrar(client):
+def test_asociado_nuevo_genera_cuotas_iniciales_y_redirige_al_detalle_aunque_pueda_cobrar(
+    client,
+    monkeypatch,
+):
+    monkeypatch.setattr("gestion.forms.timezone.localdate", lambda: date(2026, 6, 5))
     staff = crear_usuario_gestion(
         "staff_alta_cobra",
         permisos=[GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS, GESTION_COBRAR_CUOTAS],
@@ -1565,7 +1572,6 @@ def test_asociado_nuevo_genera_cuotas_iniciales_y_redirige_al_detalle_aunque_pue
             "direccion": "San Martin 100",
             "tipo": "asociado",
             "curso_actual": curso.id,
-            "fecha_alta": "2026-06-05",
         },
         follow=True,
     )

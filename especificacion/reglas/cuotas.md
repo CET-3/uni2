@@ -36,6 +36,7 @@ Cada mes, el administrador del sistema crea el próximo período de cuota desde 
 1. Si la cuota ya existe para el asociado y período, no debe generarse otra.
 2. Los dos valores de recargo (por vencimiento y por mora) deben copiarse desde `PeriodoCuota` a `Cuota` al momento de generarla.
 3. Al crear un nuevo asociado, se generan automáticamente las cuotas que le corresponden según las [reglas de alta de asociado](altas-de-asociado.md).
+4. La fecha de vencimiento debe estar dentro del mismo mes y año definidos por `PeriodoCuota.mes` y su ciclo lectivo. No se admiten fechas de meses anteriores ni posteriores.
 
 ## Borrado excepcional de períodos
 

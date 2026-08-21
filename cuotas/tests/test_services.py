@@ -2,17 +2,40 @@ from datetime import date
 from decimal import Decimal
 
 import pytest
+from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
 from cuotas.models import Cuota, Donacion, Pago, PeriodoCuota
 from cuotas.services import (
+    crear_periodo_cuota,
     generar_cuotas_iniciales_para_asociado,
     generar_cuotas_para_periodo,
     registrar_donacion,
     registrar_pago,
 )
+
+
+@pytest.mark.django_db
+def test_crear_periodo_rechaza_vencimiento_fuera_del_mismo_mes():
+    ciclo = CicloLectivo.objects.create(anio=2026)
+
+    with pytest.raises(ValidationError, match="dentro del período seleccionado"):
+        crear_periodo_cuota(
+            datos={
+                "mes": 8,
+                "ciclo_lectivo": ciclo,
+                "importe": Decimal("3000.00"),
+                "importe_recargo_mes": Decimal("500.00"),
+                "importe_recargo_mes_siguiente": Decimal("500.00"),
+                "fecha_vencimiento": date(2026, 9, 1),
+                "activo": True,
+            },
+            actor=None,
+        )
+
+    assert PeriodoCuota.objects.count() == 0
 
 
 @pytest.fixture

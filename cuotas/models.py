@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from asociados.models import Asociado, CicloLectivo
@@ -60,6 +61,22 @@ class PeriodoCuota(models.Model):
 
     def __str__(self):
         return f"{self.mes:02d}/{self.ciclo_lectivo}"
+
+    def clean(self):
+        super().clean()
+        if not self.ciclo_lectivo_id or self.mes is None or self.fecha_vencimiento is None:
+            return
+        if (self.fecha_vencimiento.year, self.fecha_vencimiento.month) != (
+            self.ciclo_lectivo.anio,
+            self.mes,
+        ):
+            raise ValidationError(
+                {
+                    "fecha_vencimiento": (
+                        "La fecha de vencimiento debe estar dentro del período seleccionado."
+                    )
+                }
+            )
 
 
 class Cuota(models.Model):

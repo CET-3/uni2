@@ -1,4 +1,5 @@
 import uuid
+from datetime import date
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -137,7 +138,8 @@ def test_filtros_de_auditoria_muestran_busqueda_clara_y_entidades_disponibles(cl
 
 
 @pytest.mark.django_db
-def test_alta_y_edicion_desde_gestion_generan_eventos(client):
+def test_alta_y_edicion_desde_gestion_generan_eventos(client, monkeypatch):
+    monkeypatch.setattr("gestion.forms.timezone.localdate", lambda: date(2026, 8, 9))
     usuario = crear_usuario_con_permisos(
         "operadora",
         [GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS, GESTION_VER_AUDITORIA],
@@ -156,7 +158,6 @@ def test_alta_y_edicion_desde_gestion_generan_eventos(client):
             "direccion": "Calle 1",
             "tipo": Asociado.TIPO_ASOCIADO,
             "curso_actual": curso.pk,
-            "fecha_alta": "2026-08-09",
         },
     )
     asociado = Asociado.objects.get(dni="44111229")

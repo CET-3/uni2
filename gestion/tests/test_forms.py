@@ -2,8 +2,8 @@ from datetime import date
 
 import pytest
 
-from asociados.models import Asociado, ClasificacionAdherente, Curso
-from gestion.forms import AsociadoAltaForm, AsociadoGestionForm
+from asociados.models import Asociado, CicloLectivo, ClasificacionAdherente, Curso
+from gestion.forms import AsociadoAltaForm, AsociadoGestionForm, PeriodoCuotaForm
 
 
 @pytest.fixture
@@ -34,6 +34,47 @@ def datos_base(**overrides):
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize("fecha_vencimiento", ["2026-07-31", "2026-09-01"])
+def test_periodo_rechaza_vencimiento_fuera_del_mismo_mes(fecha_vencimiento):
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    form = PeriodoCuotaForm(
+        data={
+            "mes": 8,
+            "ciclo_lectivo": ciclo.pk,
+            "importe": "3000.00",
+            "importe_recargo_mes": "500.00",
+            "importe_recargo_mes_siguiente": "500.00",
+            "fecha_vencimiento": fecha_vencimiento,
+            "activo": "on",
+        }
+    )
+
+    assert form.is_valid() is False
+    assert form.errors["fecha_vencimiento"] == [
+        "La fecha de vencimiento debe estar dentro del período seleccionado."
+    ]
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("fecha_vencimiento", ["2026-08-01", "2026-08-31"])
+def test_periodo_acepta_vencimiento_dentro_del_mismo_mes(fecha_vencimiento):
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    form = PeriodoCuotaForm(
+        data={
+            "mes": 8,
+            "ciclo_lectivo": ciclo.pk,
+            "importe": "3000.00",
+            "importe_recargo_mes": "500.00",
+            "importe_recargo_mes_siguiente": "500.00",
+            "fecha_vencimiento": fecha_vencimiento,
+            "activo": "on",
+        }
+    )
+
+    assert form.is_valid(), form.errors
+
+
+@pytest.mark.django_db
 def test_alta_no_ofrece_sin_clasificar():
     form = AsociadoAltaForm()
 
@@ -41,6 +82,14 @@ def test_alta_no_ofrece_sin_clasificar():
 
     assert "Docente" in nombres
     assert "Sin clasificar" not in nombres
+
+
+@pytest.mark.django_db
+def test_alta_operativa_no_expone_fechas_administrativas():
+    form = AsociadoAltaForm()
+
+    assert "fecha_alta" not in form.fields
+    assert "fecha_inicio_cobro" not in form.fields
 
 
 @pytest.mark.django_db

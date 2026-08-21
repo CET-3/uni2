@@ -17,8 +17,8 @@ timestamp: 2026-06-22T00:00:00-03:00
 1.  Carga datos personales.
 2.  Selecciona el tipo. Si es `Asociado`, carga el curso; si es `Adherente`,
     elige una clasificación activa.
-3.  Define fecha de alta.
-4.  El sistema calcula `fecha_inicio_cobro` según la fecha de alta.
+3.  El sistema asigna la fecha local del día como `fecha_alta`.
+4.  El sistema calcula `fecha_inicio_cobro` según esa fecha de alta.
 5.  Guarda el asociado.
 6.  El sistema genera cuotas iniciales para los períodos de cuota existentes entre `fecha_inicio_cobro` y la fecha de alta.
 7.  El sistema informa el alta y la cantidad de cuotas iniciales generadas.
@@ -30,6 +30,9 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 El formulario muestra y exige solamente el dato que corresponde al tipo. La
 clasificación transitoria `Sin clasificar` no se ofrece en el alta manual.
+`fecha_alta` y `fecha_inicio_cobro` no se muestran ni se aceptan como datos
+editables en este flujo; permanecen disponibles en la edición administrativa y
+en el admin técnico.
 
 **Situaciones especiales:** DNI duplicado, curso inexistente, clasificación inexistente o inactiva, alta después del día 15, asociado sin usuario y períodos de cuota faltantes.
 
