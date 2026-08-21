@@ -18,9 +18,12 @@ timestamp: 2026-06-22T00:00:00-03:00
 2.  Selecciona el tipo. Si es `Asociado`, carga el curso; si es `Adherente`,
     elige una clasificación activa.
 3.  El sistema asigna la fecha local del día como `fecha_alta`.
-4.  El sistema calcula `fecha_inicio_cobro` según esa fecha de alta.
+4.  El sistema calcula `fecha_inicio_cobro` según el tipo: dos meses antes para
+    `Asociado` y el mismo mes para `Adherente`, sin usar un corte por día.
 5.  Guarda el asociado.
-6.  El sistema genera cuotas iniciales para los períodos de cuota existentes entre `fecha_inicio_cobro` y la fecha de alta.
+6.  El sistema genera cuotas iniciales para los períodos activos existentes
+    entre `fecha_inicio_cobro` y el mes del alta. También agrega períodos
+    futuros activos que ya tengan `generado_el`.
 7.  El sistema informa el alta y la cantidad de cuotas iniciales generadas.
 8.  Siempre redirige al detalle operativo del asociado, donde la persona decide si quiere cobrar o editar.
 
@@ -34,6 +37,9 @@ clasificación transitoria `Sin clasificar` no se ofrece en el alta manual.
 editables en este flujo; permanecen disponibles en la edición administrativa y
 en el admin técnico.
 
-**Situaciones especiales:** DNI duplicado, curso inexistente, clasificación inexistente o inactiva, alta después del día 15, asociado sin usuario y períodos de cuota faltantes.
+**Situaciones especiales:** DNI duplicado, curso inexistente, clasificación
+inexistente o inactiva, asociado sin usuario, períodos faltantes o inactivos y
+períodos futuros creados pero todavía no generados. Reintentar la operación no
+duplica cuotas.
 
 **Modelos afectados:** Asociado, Curso, ClasificacionAdherente, PeríodoCuota, Cuota.

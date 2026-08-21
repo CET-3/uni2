@@ -27,7 +27,9 @@ recargos y de `PeriodoCuota.fecha_vencimiento`:
 2. La cuota del mes actual no la inactiva hasta el día 10 inclusive; desde el
    día 11 la inactiva si conserva cualquier saldo, incluso parcial.
 3. Las cuotas de períodos futuros no afectan la credencial.
-4. Una cuota exigible totalmente pagada no la inactiva.
+4. Las cuotas de períodos futuros no forman parte de la deuda exigible y no se
+   pueden cobrar antes de que comience su mes.
+5. Una cuota exigible totalmente pagada no la inactiva.
 
 ## Creación de cuotas
 
@@ -37,6 +39,16 @@ Cada mes, el administrador del sistema crea el próximo período de cuota desde 
 2. Los dos valores de recargo (por vencimiento y por mora) deben copiarse desde `PeriodoCuota` a `Cuota` al momento de generarla.
 3. Al crear un nuevo asociado, se generan automáticamente las cuotas que le corresponden según las [reglas de alta de asociado](altas-de-asociado.md).
 4. La fecha de vencimiento debe estar dentro del mismo mes y año definidos por `PeriodoCuota.mes` y su ciclo lectivo. No se admiten fechas de meses anteriores ni posteriores.
+5. La primera ejecución de la generación masiva completa
+   `PeriodoCuota.generado_el`, aunque no encuentre asociados elegibles y genere
+   cero cuotas. La ejecución y la transición del campo quedan agrupadas en la
+   misma operación de auditoría.
+6. Reejecutar la generación conserva el valor original de `generado_el`, no
+   duplica cuotas y no genera un segundo evento por ese campo.
+7. Durante la migración inicial del marcador, los períodos históricos que ya
+   tienen al menos una cuota reciben la fecha de la migración. No es posible
+   inferir si un período histórico sin cuotas fue generado con resultado cero,
+   por lo que esos períodos permanecen sin marca.
 
 ## Borrado excepcional de períodos
 

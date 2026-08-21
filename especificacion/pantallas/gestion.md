@@ -11,7 +11,12 @@ timestamp: 2026-07-13T00:00:00-03:00
 - La variante administrativa de la home muestra hasta dos accesos autorizados en el hero y los restantes en `Más accesos`. `Atención al asociado` tiene prioridad cuando el usuario puede consultar asociados. Los roles que solo operan mediante el admin técnico reciben ese acceso sin ver acciones de otros dominios.
 - `Atención al asociado` es la consulta operativa con búsqueda y filtros. Cada fila completa contiene un único enlace accesible al detalle, con estados visibles de foco y hover; no hay columna de acciones ni cobro directo desde el listado. Los resultados priorizan `Credencial activa` o `Credencial inactiva`, muestran `Baja` sólo cuando corresponde y reservan los badges para estados. Número, DNI, curso o clasificación y tipo se presentan como datos; curso y clasificación también pueden filtrarse. El acceso de usuario puede filtrarse, pero no ocupa una columna del resultado.
 - La consulta conserva `Nuevo asociado` y `Exportar asociados` según permisos. La importación del padrón inicial se mantiene como acceso administrativo de puesta en marcha, pero no aparece en esta pantalla cotidiana.
-- Nuevo asociado desde pantalla propia de `gestion`, sin depender del admin técnico. La fecha de alta toma el día local y el inicio de cobro se calcula automáticamente, sin exponer ninguno de los dos campos en el formulario. Al guardar, genera cuotas iniciales para períodos existentes y siempre continúa en el detalle del asociado creado.
+- Nuevo asociado desde pantalla propia de `gestion`, sin depender del admin
+  técnico. La fecha de alta toma el día local y el inicio de cobro se calcula
+  automáticamente según el tipo, sin exponer ninguno de los dos campos en el
+  formulario. Al guardar, genera cuotas para los períodos activos desde ese
+  inicio hasta el mes actual y para los futuros cuya generación ya fue
+  ejecutada; siempre continúa en el detalle del asociado creado.
 - Importar padrón inicial desde planilla heredada con previsualización, reservado al superusuario Administrador de la app. La previsualización muestra la clasificación interpretada para los adherentes y deja para revisión los cargos desconocidos o las contradicciones de tipo. La pantalla incluye la acción `Crear usuarios faltantes`; también es una acción masiva reservada a ese rol. Se ejecuta por tandas y puede continuarse hasta terminar sin obligar una sola request larga.
 - Importar cuotas históricas desde planilla heredada con previsualización, reservado al superusuario Administrador de la app.
 - Exportar asociados en formato Uni2 desde la consulta de asociados.
@@ -19,7 +24,9 @@ timestamp: 2026-07-13T00:00:00-03:00
 - En el detalle de asociado, los pagos recientes muestran fecha, método, total recibido y un resumen de aplicación: cuotas cubiertas y donación si existiera.
 - La vista histórica de cuotas y la creación individual de usuario conservan temporalmente sus rutas y permisos, pero no tienen acceso desde el detalle mientras se diseñan sus recorridos definitivos. La auditoría filtrada se integra como información al pie del detalle.
 - Cursos.
-- Períodos de cuota.
+- Períodos de cuota: cada fila distingue `Todavía no generado` de `Generado el
+  …`, usando la fecha y hora de la primera ejecución. La marca se presenta como
+  información operativa y no forma parte del formulario de creación.
 - Generar cuotas.
 - Registrar pagos y donaciones exclusivamente desde el detalle de un asociado. Con deuda, la pantalla muestra cuotas pendientes ordenadas de la más vieja a la más nueva, permite seleccionar una o más cuotas a cobrar, valida que la selección sea continua desde la cuota pendiente más vieja, calcula automáticamente el mínimo a cobrar, prellena el importe recibido y registra como donación cualquier excedente. En esa tabla el saldo se muestra como importe y cada fila usa un único badge semántico compartido: amarillo para `Pendiente` y rojo para `Vencida`. Sin deuda, la acción y la pantalla se presentan como `Registrar donación`, no muestran selección de cuotas e informan que todo el importe será donado. Cada checkbox de selección tiene como nombre accesible el período de su cuota. Cancelar o completar cualquiera de los recorridos vuelve al detalle; abrir cobros sin asociado redirige a `Atención al asociado`.
 - Deudores.
