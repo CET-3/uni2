@@ -49,6 +49,11 @@ Cada mes, el administrador del sistema crea el próximo período de cuota desde 
    tienen al menos una cuota reciben la fecha de la migración. No es posible
    inferir si un período histórico sin cuotas fue generado con resultado cero,
    por lo que esos períodos permanecen sin marca.
+8. La generación masiva y la generación inicial de un alta bloquean los
+   períodos mientras deciden y crean cuotas. Los bloqueos se toman en orden
+   cronológico para que, si ambas operaciones coinciden, el alta vea la marca
+   de generación o la generación masiva vea al nuevo asociado; ninguna de las
+   dos puede dejar la cuota omitida por una lectura intermedia.
 
 ## Borrado excepcional de períodos
 

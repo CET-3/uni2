@@ -2,6 +2,7 @@ from datetime import date
 from decimal import Decimal
 
 import pytest
+import cuotas.services as cuotas_services
 from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 from django.utils import timezone
@@ -16,6 +17,14 @@ from cuotas.services import (
     registrar_donacion,
     registrar_pago,
 )
+
+
+def test_cuotas_iniciales_bloquean_periodos_para_coordinar_generacion_masiva():
+    obtener_periodos = getattr(cuotas_services, "_get_periodos_activos_para_alta", None)
+
+    assert obtener_periodos is not None
+    queryset = obtener_periodos()
+    assert queryset.query.select_for_update is True
 
 
 @pytest.mark.django_db

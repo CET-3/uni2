@@ -65,6 +65,15 @@ def _periodo_key(periodo: PeriodoCuota) -> tuple[int, int]:
     return periodo.ciclo_lectivo.anio, periodo.mes
 
 
+def _get_periodos_activos_para_alta():
+    return (
+        PeriodoCuota.objects.select_for_update()
+        .filter(activo=True)
+        .select_related("ciclo_lectivo")
+        .order_by("ciclo_lectivo__anio", "mes")
+    )
+
+
 def _recompute_estado(cuota: Cuota, fecha_referencia=None):
     if fecha_referencia is None:
         fecha_referencia = timezone.localdate()
@@ -177,12 +186,7 @@ def generar_cuotas_iniciales_para_asociado(*, asociado: Asociado, fecha_referenc
     operacion_id = uuid.uuid4()
     inicio = (asociado.fecha_inicio_cobro.year, asociado.fecha_inicio_cobro.month)
     periodo_actual = (fecha_referencia.year, fecha_referencia.month)
-    periodos = (
-        PeriodoCuota.objects.filter(activo=True)
-        .select_related("ciclo_lectivo")
-        .order_by("ciclo_lectivo__anio", "mes")
-    )
-    for periodo in periodos:
+    for periodo in _get_periodos_activos_para_alta():
         clave = _periodo_key(periodo)
         if clave < inicio:
             continue
