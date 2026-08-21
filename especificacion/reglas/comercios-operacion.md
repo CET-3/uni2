@@ -14,3 +14,10 @@ sistema.
 ## COMERCIO-OPERACION-001
 
 Solo comercios con estado firmado pueden validar credenciales.
+
+## COMERCIO-OPERACION-002
+
+Un usuario con rol Comercio y un comercio vinculado puede consultar los datos
+de su propio comercio y convenio en todos sus estados. El vínculo se resuelve
+desde el usuario autenticado y no mediante un identificador recibido en la URL.
+La consulta es de solo lectura y no habilita acceso al admin técnico.

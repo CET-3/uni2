@@ -139,6 +139,7 @@ def _presentacion_perfil(user, perfil):
             "subtitle": "Pantalla simple para validar credenciales de asociados.",
             "actions": [
                 HomeAction("Validar credencial", reverse("comercios:validar_credencial")),
+                HomeAction("Mi convenio", reverse("comercios:mi_convenio")),
             ],
         }
     return {

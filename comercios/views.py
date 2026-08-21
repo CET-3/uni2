@@ -56,3 +56,12 @@ class ValidarCredencialView(ComercioRequiredMixin, FormView):
 
         context = self.get_context_data(form=form, resultado=resultado, comercio=comercio)
         return render(self.request, "comercios/resultado_validacion.html", context)
+
+
+class MiConvenioView(ComercioRequiredMixin, TemplateView):
+    template_name = "comercios/mi_convenio.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comercio"] = self.request.user.comercio
+        return context

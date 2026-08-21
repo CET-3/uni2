@@ -53,6 +53,7 @@ La relación entre ambos debe deducirse por el objetivo y el actor de cada caso.
 ### Comercio
 
 * [CU-validar-credencial](cu-validar-credencial.md) - Validar una credencial mediante DNI, UUID o QR.
+* [CU-ver-convenio-propio](cu-ver-convenio-propio.md) - Consultar los datos propios del comercio y su convenio.
 
 ## Usuarios, control y documentación
 
