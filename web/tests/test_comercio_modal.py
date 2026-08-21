@@ -96,6 +96,12 @@ def test_modal_comercio_firmado_muestra_solo_datos_publicos(client, comercio_fir
     assert partial.elements_with_class("modal-body") == []
     assert partial.elements_with_class("btn-close") == []
     assert partial.elements_with(id="comercio-modal-title")
+    assert len(partial.elements_with_class("uni2-commerce-modal-card")) == 1
+    assert len(partial.elements_with_class("uni2-commerce-modal-logo")) == 1
+    assert len(partial.elements_with_class("uni2-commerce-modal-benefit")) == 1
+    assert len(partial.elements_with_class("uni2-commerce-modal-meta")) == 1
+    assert len(partial.elements_with_class("uni2-commerce-modal-actions")) == 1
+    assert partial.elements_with_class("uni2-detail-layout") == []
 
 
 @pytest.mark.django_db
@@ -161,6 +167,8 @@ def test_listado_conserva_href_completo_y_declara_endpoint_modal(
     ]
     assert len(dialogs) == 1
     assert "modal-dialog-scrollable" in dialogs[0][1]["class"].split()
+    assert "uni2-commerce-modal-dialog" in dialogs[0][1]["class"].split()
+    assert "modal-lg" not in dialogs[0][1]["class"].split()
 
     close_buttons = [
         attrs
@@ -213,11 +221,13 @@ def test_estados_de_carga_y_error_conservan_el_titulo_del_modal():
     assert 'title.id = "comercio-modal-title"' in error.group("body")
 
 
-def test_css_modal_conserva_tipografia_compacta_de_la_ficha():
+def test_css_modal_define_presentacion_compacta_propia():
     css_path = finders.find("css/uni2-design-system.css")
 
     css = Path(css_path).read_text()
 
-    assert ".uni2-commerce-modal .uni2-detail-panel h2" in css
-    assert ".uni2-commerce-modal .uni2-detail-panel p" in css
-    assert ".uni2-commerce-modal .uni2-commerce-benefit-block h2" in css
+    assert ".uni2-commerce-modal-dialog" in css
+    assert ".uni2-commerce-modal-card" in css
+    assert ".uni2-commerce-modal-logo" in css
+    assert ".uni2-commerce-modal-benefit" in css
+    assert ".uni2-commerce-modal-meta" in css

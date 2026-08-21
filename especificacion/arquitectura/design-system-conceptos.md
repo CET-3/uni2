@@ -408,6 +408,13 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-commerce-identity-copy` | Rubro, nombre y descripción del comercio |
 | `uni2-commerce-benefit-block` | Bloque amarillo destacado del beneficio |
 | `uni2-commerce-benefit-text` | Descripción del beneficio |
+| `uni2-commerce-modal-dialog` | Ancho compacto del diálogo de comercio |
+| `uni2-commerce-modal-card` | Composición centrada de la ficha modal |
+| `uni2-commerce-modal-logo` | Logo circular principal del modal |
+| `uni2-commerce-modal-logo--fallback` | Variante del logo con iniciales |
+| `uni2-commerce-modal-benefit` | Beneficio amarillo debajo del logo |
+| `uni2-commerce-modal-meta` | Datos públicos compactos y centrados |
+| `uni2-commerce-modal-actions` | Acciones secundarias al pie del modal |
 
 ### Dashboard / Admin
 

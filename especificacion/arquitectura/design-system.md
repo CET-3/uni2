@@ -60,6 +60,8 @@ Las clases genéricas sin prefijo, como `hero`, `cta`, `step`, `info-box`, `ad-c
 
 La lista de beneficios con logo circular, nombre, descripción, metadata y descuento usa las mismas clases globales en el catálogo y en la pantalla productiva. Un único enlace de detalle extiende su zona interactiva sobre toda la card mediante un pseudoelemento; `Visitar online` se posiciona por encima y conserva su destino externo independiente. Esto evita anidar enlaces y evita duplicar la acción de detalle en la navegación por teclado. El nombre y `Visitar online` no se subrayan; la descripción usa el color de texto secundario y el badge de beneficio se alinea a la derecha. En mobile, el componente usa dos columnas y ubica el badge debajo del contenido para preservar un ancho de lectura cómodo. La fila conserva una respuesta de hover y foco consistente. El MVP no usa modales por hash para este flujo.
 
+La ficha modal de comercio tiene una presentación propia y no reutiliza el layout de la página completa. `uni2-commerce-modal-card` sigue la jerarquía compacta del prototipo aprobado: logo circular, beneficio amarillo, nombre, descripción y datos públicos breves centrados, con las acciones secundarias al pie. El diálogo limita su ancho a aproximadamente 520 px y reduce el logo en mobile. La carcasa continúa siendo el modal de Bootstrap para conservar cierre visible, `Escape`, fondo clickeable, scroll y restauración del foco; la página individual mantiene `uni2-commerce-detail` sin recibir estilos del modal.
+
 Los datos de ejemplo pueden mencionar asociados, beneficios, servicios o cuotas porque pertenecen a Uni2. El nombre de un reusable nuevo no debe quedar atado a esos ejemplos salvo que sea una pieza realmente exclusiva de esa entidad.
 
 ## Forma de trabajo
