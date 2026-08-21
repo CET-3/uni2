@@ -55,8 +55,8 @@ class AsociadoAdminForm(forms.ModelForm):
             cleaned_data["curso_actual"] = None
             self.instance.curso_actual = None
 
-        if fecha_alta and not fecha_inicio_cobro:
-            cleaned_data["fecha_inicio_cobro"] = calculate_fecha_inicio_cobro(fecha_alta)
+        if fecha_alta and tipo and not fecha_inicio_cobro:
+            cleaned_data["fecha_inicio_cobro"] = calculate_fecha_inicio_cobro(fecha_alta, tipo)
             self.instance.fecha_inicio_cobro = cleaned_data["fecha_inicio_cobro"]
 
         return cleaned_data

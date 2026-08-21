@@ -36,13 +36,16 @@ def _valores_auditables_asociado(asociado):
     return {campo: getattr(asociado, campo) for campo in CAMPOS_AUDITABLES_ASOCIADO}
 
 
-def calculate_fecha_inicio_cobro(fecha_alta: date) -> date:
-    if fecha_alta.day <= 15:
-        return fecha_alta.replace(day=1)
+def calculate_fecha_inicio_cobro(fecha_alta: date, tipo: str) -> date:
+    inicio_mes = fecha_alta.replace(day=1)
+    if tipo == Asociado.TIPO_ADHERENTE:
+        return inicio_mes
+    if tipo != Asociado.TIPO_ASOCIADO:
+        raise ValueError("Tipo de asociado inválido.")
 
-    if fecha_alta.month == 12:
-        return date(fecha_alta.year + 1, 1, 1)
-    return date(fecha_alta.year, fecha_alta.month + 1, 1)
+    indice_mes = inicio_mes.year * 12 + inicio_mes.month - 1 - 2
+    anio, mes_desde_cero = divmod(indice_mes, 12)
+    return date(anio, mes_desde_cero + 1, 1)
 
 
 @transaction.atomic
@@ -71,7 +74,7 @@ def create_asociado(
     if Asociado.objects.filter(dni=dni).exists():
         raise ValueError("Ya existe un asociado con ese DNI.")
 
-    fecha_inicio = fecha_inicio_cobro or calculate_fecha_inicio_cobro(fecha_alta)
+    fecha_inicio = fecha_inicio_cobro or calculate_fecha_inicio_cobro(fecha_alta, tipo)
     if tipo == Asociado.TIPO_ASOCIADO:
         clasificacion_adherente = None
     else:
