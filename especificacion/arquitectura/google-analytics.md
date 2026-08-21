@@ -1,7 +1,7 @@
 ---
 type: "Arquitectura"
 title: "Medición de navegación con Google Analytics"
-description: "Integración mínima de GA4 para medir visitas sin enviar identificadores ni URLs privadas."
+description: "Integración estándar de GA4 para medir visitas con las URLs originales del navegador."
 tags: [mvp, arquitectura, analytics, privacidad, produccion]
 timestamp: 2026-08-17T00:00:00-03:00
 ---
@@ -27,46 +27,27 @@ La configuración usa `GOOGLE_ANALYTICS_MEASUREMENT_ID`. El identificador
 empieza con `G-`, no es una credencial secreta y se administra como variable de
 entorno para poder activar o desactivar la medición sin modificar plantillas.
 
-## Identificación segura de las páginas
+## Identificación original de las páginas
 
-La etiqueta estándar no debe enviar automáticamente la ubicación real de la
-página. Algunas rutas de Uni2 incluyen identificadores internos o tokens, por
-ejemplo una credencial privada o el identificador de un asociado.
+Uni2 usa el comportamiento estándar de GA4. Cada vista de página informa la
+URL completa, el referente y el título que conoce el navegador. No se construye
+una ruta estadística alternativa ni se reemplazan esos valores por el nombre
+interno de la vista Django.
 
-Cada vista de página se informa manualmente con el nombre estable que Django ya
-asigna a la vista mediante `request.resolver_match.view_name`. Ejemplos:
-
-| Página | Nombre informado |
-| --- | --- |
-| Inicio | `web:home` |
-| Detalle de producto o servicio | `web:producto_servicio_detalle` |
-| Resolución de una credencial | `usuarios:resolver_credencial` |
-| Detalle de un asociado | `gestion:asociado_detalle` |
-| Cuotas del asociado autenticado | `asociados:cuotas` |
-
-El dato `page_location` usa una URL estadística construida con el origen
-productivo y ese nombre de vista. No contiene parámetros de ruta, cadenas de
-consulta ni fragmentos. El `page_title` también usa un nombre estable y no el
-título visible, porque algunas pantallas muestran nombres de comercios,
-productos u otras entidades.
-
-El referente enviado a Google no conserva rutas, parámetros ni fragmentos. Se
-limita al origen del referente para evitar que una navegación anterior filtre
-un token o identificador. La secuencia de eventos `page_view` sigue permitiendo
-analizar el recorrido general entre tipos de pantalla.
-
-La URL visible, los títulos mostrados en el navegador y la navegación de la
-aplicación no cambian. La normalización afecta solamente los datos enviados a
-Analytics.
+Esta decisión permite analizar las páginas y parámetros tal como se navegan,
+pero implica que Google Analytics puede recibir parámetros de ruta, cadenas de
+consulta, fragmentos, IDs internos y tokens incluidos en la URL. Por ejemplo,
+una visita a una credencial puede incluir su UUID y una visita al detalle de un
+asociado puede incluir su ID. La propiedad de Analytics y sus accesos deben
+administrarse considerando esa exposición.
 
 ## Integración en Django
 
 La responsabilidad se divide de forma explícita:
 
 - la configuración decide si Analytics está habilitado;
-- un procesador de contexto expone únicamente el identificador de medición y
-  el nombre seguro de la vista;
-- un componente de template carga `gtag.js` y envía un único `page_view`;
+- un procesador de contexto expone únicamente el identificador de medición;
+- un componente de template carga `gtag.js` y ejecuta su configuración estándar;
 - `templates/base.html` incluye ese componente para cubrir las páginas que
   comparten el layout principal.
 
@@ -76,10 +57,12 @@ relevante versionada en el proyecto.
 
 ## Configuración de GA4
 
-La medición automática de vistas de página debe estar desactivada para evitar
-que Google reciba la URL real o duplique eventos. También deben quedar
-desactivados los eventos adicionales de medición mejorada que no forman parte
-del alcance acordado.
+La medición automática de vistas de página queda activa. El llamado estándar
+`gtag("config", measurement_id)` genera el `page_view`; Uni2 no envía otro evento
+manual ni define `page_location`, `page_referrer` o `page_title`.
+
+Los eventos adicionales de medición mejorada que no forman parte del alcance
+acordado deben permanecer desactivados.
 
 No se configura `user_id`, dimensiones personalizadas con datos de personas ni
 datos obtenidos de los modelos de Uni2.
@@ -90,12 +73,12 @@ Las pruebas automatizadas deben comprobar que:
 
 - Producción carga la etiqueta cuando el identificador es válido;
 - local y staging no cargan la etiqueta;
-- la página vista usa el nombre de la vista y no incluye parámetros reales;
-- una ruta privada de credencial no expone su UUID en el HTML de Analytics;
-- una ruta de gestión no expone el identificador del asociado;
+- el componente usa la configuración estándar y no construye rutas
+  `/__analytics__/`;
+- no se envían manualmente `page_location`, `page_referrer`, `page_title` ni un
+  segundo evento `page_view`;
 - si la variable no está definida, el sitio funciona sin realizar medición.
 
 Después del despliegue se verifica una navegación controlada con Tag Assistant
-y el informe en tiempo real de GA4. No deben aparecer UUID, identificadores de
-asociados ni cadenas de consulta.
-
+y el informe en tiempo real de GA4. Las ubicaciones deben coincidir con las URLs
+originales navegadas, incluidos sus parámetros cuando existan.
