@@ -180,7 +180,7 @@ def test_alta_y_edicion_desde_gestion_generan_eventos(client, monkeypatch):
             "curso_actual": curso.pk,
             "estado": Asociado.ESTADO_ACTIVO,
             "fecha_alta": "2026-08-09",
-            "fecha_inicio_cobro": "2026-08-01",
+            "fecha_inicio_cobro": "2026-06-01",
             "fecha_baja": "",
             "motivo_baja": "",
         },
