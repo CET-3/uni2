@@ -1536,7 +1536,7 @@ def test_asociado_nuevo_crea_asociado_con_fechas_automaticas(client, monkeypatch
     assert asociado.nombre == "Mara"
     assert asociado.curso_actual == curso
     assert asociado.fecha_alta == date(2026, 8, 21)
-    assert asociado.fecha_inicio_cobro == date(2026, 9, 1)
+    assert asociado.fecha_inicio_cobro == date(2026, 6, 1)
     assert response.redirect_chain[-1][0] == reverse("gestion:asociado_detalle", args=[asociado.id])
     assert "Asociado creado correctamente" in response.content.decode()
 
@@ -1553,6 +1553,14 @@ def test_asociado_nuevo_genera_cuotas_iniciales_y_redirige_al_detalle_aunque_pue
     )
     curso = Curso.objects.create(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
     ciclo = CicloLectivo.objects.create(anio=2026)
+    PeriodoCuota.objects.create(
+        mes=4,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="500.00",
+        importe_recargo_mes_siguiente="500.00",
+        fecha_vencimiento="2026-04-10",
+    )
     PeriodoCuota.objects.create(
         mes=5,
         ciclo_lectivo=ciclo,
@@ -1589,10 +1597,65 @@ def test_asociado_nuevo_genera_cuotas_iniciales_y_redirige_al_detalle_aunque_pue
     asociado = Asociado.objects.get(dni="44111223")
     assert response.status_code == 200
     assert response.redirect_chain[-1][0] == reverse("gestion:asociado_detalle", args=[asociado.id])
-    assert list(asociado.cuotas.order_by("periodo__mes").values_list("periodo__mes", flat=True)) == [5, 6]
+    assert list(asociado.cuotas.order_by("periodo__mes").values_list("periodo__mes", flat=True)) == [4, 5, 6]
     content = response.content.decode()
-    assert "Se generaron 2 cuotas iniciales" in content
+    assert "Se generaron 3 cuotas iniciales" in content
     assert "Cobrar" in content
+
+
+@pytest.mark.django_db
+def test_asociado_nuevo_incluye_proximo_periodo_ya_generado(client, monkeypatch):
+    monkeypatch.setattr("gestion.forms.timezone.localdate", lambda: date(2026, 6, 30))
+    staff = crear_usuario_gestion(
+        "staff_alta_futuro",
+        permisos=[GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS],
+    )
+    curso = Curso.objects.create(
+        anio="1ro",
+        curso="1ra",
+        division=Curso.DIVISION_CB,
+        turno=Curso.TURNO_TM,
+    )
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    for mes in (4, 5, 6):
+        PeriodoCuota.objects.create(
+            mes=mes,
+            ciclo_lectivo=ciclo,
+            importe="3000.00",
+            fecha_vencimiento=date(2026, mes, 10),
+        )
+    julio = PeriodoCuota.objects.create(
+        mes=7,
+        ciclo_lectivo=ciclo,
+        importe="3200.00",
+        fecha_vencimiento=date(2026, 7, 10),
+    )
+    generar_cuotas_para_periodo(julio)
+    client.force_login(staff)
+
+    response = client.post(
+        reverse("gestion:asociado_nuevo"),
+        {
+            "nombre": "Mara",
+            "apellido": "Futura",
+            "dni": "44111224",
+            "email": "",
+            "telefono": "",
+            "direccion": "",
+            "tipo": Asociado.TIPO_ASOCIADO,
+            "curso_actual": curso.id,
+        },
+        follow=True,
+    )
+
+    asociado = Asociado.objects.get(dni="44111224")
+    assert response.status_code == 200
+    assert list(
+        asociado.cuotas.order_by("periodo__ciclo_lectivo__anio", "periodo__mes").values_list(
+            "periodo__mes", flat=True
+        )
+    ) == [4, 5, 6, 7]
+    assert "Se generaron 4 cuotas iniciales" in response.content.decode()
 
 
 @pytest.mark.django_db
@@ -1726,7 +1789,7 @@ def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
         "TM",
         "1ro 2da CB TM",
         "2026-05-10",
-        "2026-05-01",
+        "2026-03-01",
         "activo",
         None,
     ]

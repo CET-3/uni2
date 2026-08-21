@@ -10,7 +10,9 @@ from cuotas.selectors import (
     calcular_estado_credencial,
     calcular_estado_cuota,
     describir_pago,
+    get_cuotas_deudoras,
     get_periodo_cuota_para_publicar,
+    get_total_deuda,
     precargar_cuotas_para_estado_credencial,
 )
 
@@ -112,6 +114,17 @@ def test_credencial_ignora_cuotas_de_periodos_futuros(asociado_activo):
 
     assert resultado.activa is True
     assert resultado.motivo is None
+
+
+@pytest.mark.django_db
+def test_periodo_futuro_no_se_considera_deuda(asociado_activo):
+    crear_cuota_para_credencial(asociado_activo, mes=9)
+
+    cuotas_deudoras = get_cuotas_deudoras(asociado_activo, date(2026, 8, 20))
+    total = get_total_deuda(asociado_activo, date(2026, 8, 20))
+
+    assert not cuotas_deudoras.exists()
+    assert total == Decimal("0")
 
 
 @pytest.mark.django_db

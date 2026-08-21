@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 from django.utils import timezone
 
-from asociados.models import Asociado, CicloLectivo, Curso
+from asociados.models import Asociado, CicloLectivo, ClasificacionAdherente, Curso
 from asociados.services import create_asociado
 from cuotas.models import Cuota, Donacion, Pago, PeriodoCuota
 from cuotas.services import (
@@ -154,6 +154,7 @@ def test_respeta_fecha_inicio_cobro(periodos):
         dni="37123456",
         tipo=Asociado.TIPO_ASOCIADO,
         fecha_alta=date(2026, 3, 20),
+        fecha_inicio_cobro=date(2026, 4, 1),
     )
     creadas_marzo = generar_cuotas_para_periodo(periodos[0])
     creadas_abril = generar_cuotas_para_periodo(periodos[1])
@@ -431,14 +432,182 @@ def test_generar_cuotas_iniciales_no_crea_periodos_faltantes():
     assert PeriodoCuota.objects.filter(mes=4, ciclo_lectivo__anio=2026).exists() is False
 
 
+@pytest.mark.django_db
+def test_cuotas_iniciales_dependen_del_tipo_del_alta():
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    periodos = [
+        PeriodoCuota.objects.create(
+            mes=mes,
+            ciclo_lectivo=ciclo,
+            importe=Decimal("3000"),
+            fecha_vencimiento=date(2026, mes, 10),
+        )
+        for mes in (3, 4, 5)
+    ]
+    asociado = create_asociado(
+        nombre="Ana",
+        apellido="Paz",
+        dni="43123457",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 5, 31),
+    )
+    adherente = create_asociado(
+        nombre="Luz",
+        apellido="Paz",
+        dni="43123458",
+        tipo=Asociado.TIPO_ADHERENTE,
+        fecha_alta=date(2026, 5, 31),
+        clasificacion_adherente=ClasificacionAdherente.objects.get(nombre="Familiar"),
+    )
+
+    cuotas_asociado = generar_cuotas_iniciales_para_asociado(
+        asociado=asociado,
+        fecha_referencia=date(2026, 5, 31),
+    )
+    cuotas_adherente = generar_cuotas_iniciales_para_asociado(
+        asociado=adherente,
+        fecha_referencia=date(2026, 5, 31),
+    )
+
+    assert [cuota.periodo for cuota in cuotas_asociado] == periodos
+    assert [cuota.periodo for cuota in cuotas_adherente] == [periodos[-1]]
+
+
+@pytest.mark.django_db
+def test_cuotas_iniciales_incluyen_solo_futuros_que_ya_fueron_generados():
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    mayo = PeriodoCuota.objects.create(
+        mes=5,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3000"),
+        fecha_vencimiento=date(2026, 5, 10),
+    )
+    junio = PeriodoCuota.objects.create(
+        mes=6,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3100"),
+        fecha_vencimiento=date(2026, 6, 10),
+    )
+    julio = PeriodoCuota.objects.create(
+        mes=7,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3200"),
+        fecha_vencimiento=date(2026, 7, 10),
+    )
+    agosto = PeriodoCuota.objects.create(
+        mes=8,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3300"),
+        fecha_vencimiento=date(2026, 8, 10),
+    )
+    generar_cuotas_para_periodo(junio)
+    generar_cuotas_para_periodo(agosto)
+    asociado = create_asociado(
+        nombre="Leo",
+        apellido="Sur",
+        dni="43123459",
+        tipo=Asociado.TIPO_ADHERENTE,
+        fecha_alta=date(2026, 5, 31),
+    )
+
+    cuotas = generar_cuotas_iniciales_para_asociado(
+        asociado=asociado,
+        fecha_referencia=date(2026, 5, 31),
+    )
+
+    assert [cuota.periodo for cuota in cuotas] == [mayo, junio, agosto]
+    assert not Cuota.objects.filter(asociado=asociado, periodo=julio).exists()
+
+
+@pytest.mark.django_db
+def test_cuotas_iniciales_ignoran_periodos_inactivos_y_cruzan_el_anio():
+    ciclo_2025 = CicloLectivo.objects.create(anio=2025)
+    ciclo_2026 = CicloLectivo.objects.create(anio=2026)
+    noviembre = PeriodoCuota.objects.create(
+        mes=11,
+        ciclo_lectivo=ciclo_2025,
+        importe=Decimal("3000"),
+        fecha_vencimiento=date(2025, 11, 10),
+    )
+    PeriodoCuota.objects.create(
+        mes=12,
+        ciclo_lectivo=ciclo_2025,
+        importe=Decimal("3000"),
+        fecha_vencimiento=date(2025, 12, 10),
+        activo=False,
+    )
+    enero = PeriodoCuota.objects.create(
+        mes=1,
+        ciclo_lectivo=ciclo_2026,
+        importe=Decimal("3000"),
+        fecha_vencimiento=date(2026, 1, 10),
+    )
+    asociado = create_asociado(
+        nombre="Noa",
+        apellido="Sur",
+        dni="43123460",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 1, 31),
+    )
+
+    cuotas = generar_cuotas_iniciales_para_asociado(
+        asociado=asociado,
+        fecha_referencia=date(2026, 1, 31),
+    )
+
+    assert [cuota.periodo for cuota in cuotas] == [noviembre, enero]
+
+
+@pytest.mark.django_db
+def test_reintentar_cuotas_iniciales_devuelve_solo_las_nuevas():
+    asociado = create_asociado(
+        nombre="Uma",
+        apellido="Sol",
+        dni="43123461",
+        tipo=Asociado.TIPO_ADHERENTE,
+        fecha_alta=date(2026, 5, 20),
+    )
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    PeriodoCuota.objects.create(
+        mes=5,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3000"),
+        fecha_vencimiento=date(2026, 5, 10),
+    )
+
+    primera = generar_cuotas_iniciales_para_asociado(
+        asociado=asociado,
+        fecha_referencia=date(2026, 5, 20),
+    )
+    segunda = generar_cuotas_iniciales_para_asociado(
+        asociado=asociado,
+        fecha_referencia=date(2026, 5, 20),
+    )
+
+    assert len(primera) == 1
+    assert segunda == []
+
+
 
 @pytest.mark.django_db
 def test_no_se_pueden_pagar_cuotas_adelantadas(asociado_activo):
-    """No hay cuotas futuras generadas, no se puede pagar por adelantado."""
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    futuro = PeriodoCuota.objects.create(
+        mes=9,
+        ciclo_lectivo=ciclo,
+        importe=Decimal("3000"),
+        fecha_vencimiento=date(2026, 9, 10),
+    )
+    Cuota.objects.create(
+        asociado=asociado_activo,
+        periodo=futuro,
+        importe=futuro.importe,
+    )
+
     with pytest.raises(ValueError, match="no tiene deuda"):
         registrar_pago(
             asociado=asociado_activo,
-            fecha=date(2026, 6, 15),
+            fecha=date(2026, 8, 20),
             importe=Decimal("3000"),
             metodo=Pago.METODO_EFECTIVO,
         )

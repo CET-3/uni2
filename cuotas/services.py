@@ -72,9 +72,11 @@ def _recompute_estado(cuota: Cuota, fecha_referencia=None):
     cuota.save(update_fields=["importe_pagado", "estado"])
 
 
-def _get_cuotas_para_cobro(asociado: Asociado, cuotas_ids):
+def _get_cuotas_para_cobro(asociado: Asociado, cuotas_ids, fecha_referencia):
     cuotas_deudoras = list(
-        get_cuotas_deudoras(asociado).order_by("periodo__ciclo_lectivo__anio", "periodo__mes", "id")
+        get_cuotas_deudoras(asociado, fecha_referencia).order_by(
+            "periodo__ciclo_lectivo__anio", "periodo__mes", "id"
+        )
     )
     if cuotas_ids is None:
         return cuotas_deudoras
@@ -168,21 +170,23 @@ def generar_cuotas_para_periodo(periodo: PeriodoCuota, *, actor=None) -> int:
 
 @transaction.atomic
 def generar_cuotas_iniciales_para_asociado(*, asociado: Asociado, fecha_referencia, actor=None) -> list[Cuota]:
-    meses = []
-    for i in range(2, -1, -1):
-        m = fecha_referencia.month - i
-        a = fecha_referencia.year
-        while m < 1:
-            m += 12
-            a -= 1
-        meses.append((a, m))
+    if asociado.fecha_inicio_cobro is None:
+        return []
 
     cuotas = []
     operacion_id = uuid.uuid4()
-    for anio, mes in meses:
-        try:
-            periodo = PeriodoCuota.objects.get(mes=mes, ciclo_lectivo__anio=anio, activo=True)
-        except PeriodoCuota.DoesNotExist:
+    inicio = (asociado.fecha_inicio_cobro.year, asociado.fecha_inicio_cobro.month)
+    periodo_actual = (fecha_referencia.year, fecha_referencia.month)
+    periodos = (
+        PeriodoCuota.objects.filter(activo=True)
+        .select_related("ciclo_lectivo")
+        .order_by("ciclo_lectivo__anio", "mes")
+    )
+    for periodo in periodos:
+        clave = _periodo_key(periodo)
+        if clave < inicio:
+            continue
+        if clave > periodo_actual and periodo.generado_el is None:
             continue
         cuota, created = Cuota.objects.get_or_create(
             asociado=asociado,
@@ -193,8 +197,8 @@ def generar_cuotas_iniciales_para_asociado(*, asociado: Asociado, fecha_referenc
                 "importe_recargo_mes_siguiente": periodo.importe_recargo_mes_siguiente,
             },
         )
-        cuotas.append(cuota)
         if created:
+            cuotas.append(cuota)
             _registrar_creacion(
                 obj=cuota,
                 fields=AUDIT_FIELDS_CUOTA,
@@ -212,7 +216,7 @@ def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por
     origen = EventoAuditoria.ORIGEN_GESTION if registrado_por else EventoAuditoria.ORIGEN_SISTEMA
     actor_etiqueta = "Sistema: registro de pago"
     importe = Decimal(str(importe))
-    cuotas = _get_cuotas_para_cobro(asociado, cuotas_ids)
+    cuotas = _get_cuotas_para_cobro(asociado, cuotas_ids, fecha)
     deuda_total = sum((cuota.get_saldo_pendiente(fecha) for cuota in cuotas), start=Decimal("0"))
     es_donacion_sin_deuda = not cuotas and cuotas_ids == []
     if deuda_total <= 0 and not es_donacion_sin_deuda:
@@ -312,7 +316,7 @@ def registrar_donacion(
 ):
     """Registra una donación cuando el asociado no tiene cuotas pendientes."""
 
-    if get_cuotas_deudoras(asociado).exists():
+    if get_cuotas_deudoras(asociado, fecha).exists():
         raise ValueError("El asociado tiene cuotas pendientes; primero debe registrar su cobro.")
     return registrar_pago(
         asociado=asociado,

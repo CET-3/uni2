@@ -164,9 +164,17 @@ def describir_pago(pago: Pago) -> ResumenPago:
     return ResumenPago(pago=pago, lineas=lineas)
 
 
-def get_cuotas_deudoras(asociado: Asociado):
-    return Cuota.objects.filter(asociado=asociado).exclude(estado=Cuota.ESTADO_PAGADA).select_related(
-        "periodo", "periodo__ciclo_lectivo"
+def get_cuotas_deudoras(asociado: Asociado, fecha_referencia=None):
+    fecha_referencia = fecha_referencia or timezone.localdate()
+    hasta_periodo_actual = Q(periodo__ciclo_lectivo__anio__lt=fecha_referencia.year) | Q(
+        periodo__ciclo_lectivo__anio=fecha_referencia.year,
+        periodo__mes__lte=fecha_referencia.month,
+    )
+    return (
+        Cuota.objects.filter(asociado=asociado)
+        .filter(hasta_periodo_actual)
+        .exclude(estado=Cuota.ESTADO_PAGADA)
+        .select_related("periodo", "periodo__ciclo_lectivo")
     )
 
 
@@ -186,6 +194,9 @@ def get_total_deuda(asociado: Asociado, fecha_referencia=None):
     if fecha_referencia is None:
         fecha_referencia = timezone.localdate()
     return sum(
-        (cuota.get_saldo_pendiente(fecha_referencia) for cuota in get_cuotas_deudoras(asociado)),
+        (
+            cuota.get_saldo_pendiente(fecha_referencia)
+            for cuota in get_cuotas_deudoras(asociado, fecha_referencia)
+        ),
         start=Decimal("0"),
     )
