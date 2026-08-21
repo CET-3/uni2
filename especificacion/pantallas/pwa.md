@@ -51,6 +51,9 @@ aviso destacado:
 > confirmar la vigencia.
 
 Una copia vencida o de otra cuenta nunca se representa.
+La copia reutiliza la misma tarjeta institucional que la credencial online:
+franja de marca, identidad, QR y banda semántica de estado. El UUID permanece
+en un detalle secundario como alternativa cuando el QR no se puede leer.
 El QR online y el guardado codifican la misma URL absoluta
 `/credenciales/<token UUID>/`. Mostrarla offline no evita que la validación
 necesite una sesión de comercio y conexión con el servidor.

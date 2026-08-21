@@ -100,7 +100,7 @@ def test_home_asociado_incluye_secciones_publicas(client):
 
 
 @pytest.mark.django_db
-def test_credencial_propia_informa_deuda_exigible_y_enlaza_a_cuotas(client, monkeypatch):
+def test_credencial_propia_con_deuda_solo_muestra_el_estado_inactivo(client, monkeypatch):
     monkeypatch.setattr("asociados.views.timezone.localdate", lambda: date(2026, 8, 20))
     asociado = create_asociado(
         nombre="Nora",
@@ -115,8 +115,9 @@ def test_credencial_propia_informa_deuda_exigible_y_enlaza_a_cuotas(client, monk
     content = client.get(reverse("asociados:credencial")).content.decode()
 
     assert "Credencial inactiva" in content
-    assert "cuotas pendientes" in content
-    assert reverse("asociados:cuotas") in content
+    assert content.count("Credencial inactiva") == 1
+    assert "cuotas pendientes" not in content
+    assert "Revisar Mis cuotas" not in content
     assert 'data-credential-estado="Inactiva"' in content
     assert "data-credential-deuda" not in content
 
@@ -140,7 +141,27 @@ def test_credencial_propia_al_dia_se_muestra_activa_sin_explicacion_de_deuda(cli
 
 
 @pytest.mark.django_db
-def test_credencial_propia_dada_de_baja_no_afirma_que_haya_deuda(client):
+def test_credencial_agrupa_identidad_validacion_y_respaldo_sin_repetir_la_cabecera(client):
+    asociado = create_asociado(
+        nombre="Nora",
+        apellido="Diseño",
+        dni="40999777",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 6, 1),
+    )
+    client.force_login(asociado.usuario)
+
+    content = client.get(reverse("asociados:credencial")).content.decode()
+
+    assert 'aria-label="Credencial digital de Nora Diseño"' in content
+    assert 'class="uni2-credential-brand"' in content
+    assert "<h1" in content and ">Mi credencial</h1>" in content
+    assert "<summary>Ver código de respaldo</summary>" in content
+    assert content.index("uni2-credential-state") < content.index("uni2-credential-technical")
+
+
+@pytest.mark.django_db
+def test_credencial_propia_dada_de_baja_solo_muestra_el_estado_inactivo(client):
     asociado = create_asociado(
         nombre="Nora",
         apellido="Baja",
@@ -155,7 +176,8 @@ def test_credencial_propia_dada_de_baja_no_afirma_que_haya_deuda(client):
     content = client.get(reverse("asociados:credencial")).content.decode()
 
     assert "Credencial inactiva" in content
-    assert "consultá a la mutual" in content
+    assert content.count("Credencial inactiva") == 1
+    assert "consultá a la mutual" not in content
     assert "cuotas pendientes" not in content
     assert 'data-credential-estado="Inactiva"' in content
 
@@ -246,3 +268,6 @@ def test_cuotas_asociado_muestran_un_badge_semantico_por_estado(client, monkeypa
     assert 'uni2-badge-danger">Vencida</span>' in table_content
     assert "uni2-badge-info" not in table_content
     assert table_content.count('class="uni2-badge ') == 3
+    assert '<th class="text-end">Pagado</th>' in table_content
+    assert '<th class="text-end">Saldo</th>' in table_content
+    assert table_content.count('<td class="text-end">') == 6

@@ -261,6 +261,15 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-badge` | Etiqueta amarilla tipo pill |
 | `uni2-discount` | Descuento verde en cards de publicidad |
 
+### Identidad y validación
+
+| Clase | Uso |
+|---|---|
+| `uni2-credential-card` | Credencial institucional compartida por la vista online y la copia offline |
+| `uni2-credential-brand` | Cabecera de marca con logo y denominación del documento |
+| `uni2-credential-state` | Banda semántica inferior; combina color fuerte, símbolo y texto |
+| `uni2-credential-technical` | Detalle secundario para el UUID de respaldo |
+
 ### Servicios
 
 | Clase | Uso |

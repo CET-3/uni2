@@ -82,6 +82,15 @@ def test_shell_de_credencial_no_contiene_una_credencial_embebida(client):
     assert "value=" not in content
 
 
+def test_shell_de_credencial_reutiliza_la_estructura_institucional(client):
+    content = client.get(reverse("pwa:offline_credential")).content.decode()
+
+    assert 'aria-label="Credencial digital guardada"' in content
+    assert 'class="uni2-credential-brand"' in content
+    assert "<summary>Ver código de respaldo</summary>" in content
+    assert "uni2-credential-technical" in content
+
+
 @pytest.mark.parametrize("name", OFFLINE_ROUTES)
 @pytest.mark.django_db
 def test_shells_offline_conservan_la_advertencia_de_staging(client, name, settings):

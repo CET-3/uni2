@@ -22,9 +22,9 @@ timestamp: 2026-06-22T00:00:00-03:00
 6. Muestra el tipo y el dato institucional: curso para un asociado o
    clasificación para un adherente.
 
-Si la credencial está inactiva por deuda, el titular ve una explicación breve
-y un acceso a `Mis cuotas`. Si está inactiva por una baja administrativa, se
-le indica que consulte a la mutual sin afirmar que exista deuda.
+La pantalla de credencial muestra únicamente el estado calculado y no informa
+la causa de una inactividad ni agrega acciones de cobro. El asociado consulta
+cuotas y deuda desde `Mis cuotas`.
 
 Si el asociado abre la URL del QR, el servidor compara primero el token con el
 de su perfil. Una URL ajena se rechaza sin confirmar si existe.

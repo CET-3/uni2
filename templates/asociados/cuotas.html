@@ -52,8 +52,8 @@
                         <tr>
                             <th>Período</th>
                             <th>Importes</th>
-                            <th>Pagado</th>
-                            <th>Saldo</th>
+                            <th class="text-end">Pagado</th>
+                            <th class="text-end">Saldo</th>
                             <th>Estado</th>
                         </tr>
                     </thead>
@@ -67,8 +67,8 @@
                                         <span>Recargo {{ item.recargo|moneda }}</span>
                                     </div>
                                 </td>
-                                <td>{{ item.importe_pagado|moneda }}</td>
-                                <td>
+                                <td class="text-end">{{ item.importe_pagado|moneda }}</td>
+                                <td class="text-end">
                                     <span{% if item.saldo > 0 %} class="fw-semibold"{% endif %}>{{ item.saldo|moneda }}</span>
                                 </td>
                                 <td>{% include "components/cuota_estado_badge.html" with estado=item.estado estado_display=item.estado_display only %}</td>

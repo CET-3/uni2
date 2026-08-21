@@ -18,68 +18,14 @@
         data-credential-token="{{ asociado.token_credencial }}"
         data-credential-url="{{ credencial_url }}"
     >
-        <header class="d-flex flex-column flex-md-row align-items-md-start justify-content-between gap-3 mb-4">
-            <div>
-                <span class="uni2-section-kicker">Credencial digital</span>
-                <h1 id="uni2-credential-title" class="uni2-titulo-seccion">{{ asociado.nombre }} {{ asociado.apellido }}</h1>
-                <p class="text-secondary mb-0">Mostrá esta credencial para validar tu estado de asociado en comercios y beneficios.</p>
-            </div>
-            <span class="uni2-credential-state {% if estado_credencial.activa %}uni2-credential-state-active{% else %}uni2-credential-state-inactive{% endif %}">
-                Credencial {{ estado_credencial.estado_display|lower }}
-            </span>
+        <header class="uni2-credential-page-heading">
+            <span class="uni2-section-kicker">Credencial digital</span>
+            <h1 id="uni2-credential-title" class="uni2-titulo-seccion">Mi credencial</h1>
+            <p>Presentala en los comercios para acceder a tus beneficios.</p>
         </header>
 
-        {% if estado_credencial.motivo == "deuda" %}
-            {% url "asociados:cuotas" as cuotas_url %}
-            {% include "components/alert.html" with variant="warning" title="Credencial inactiva" message="Tenés cuotas pendientes." action_url=cuotas_url action_label="Revisar Mis cuotas" only %}
-        {% elif estado_credencial.motivo == "baja" %}
-            {% include "components/alert.html" with variant="warning" title="Credencial inactiva" message="Para conocer el motivo, consultá a la mutual." only %}
-        {% endif %}
-
-        <div class="uni2-credential-card">
-            <div class="uni2-credential-heading">
-                <div>
-                    <p class="uni2-credential-kicker">UNI2</p>
-                    <h2 class="h3 mb-1">{{ asociado.apellido }}, {{ asociado.nombre }}</h2>
-                    <p class="mb-0 text-secondary">Asociado Nº {{ asociado.numero_asociado }}</p>
-                </div>
-            </div>
-
-            <div class="uni2-credential-body">
-                <div class="uni2-credential-qr-wrap">
-                    <div
-                        class="uni2-credential-qr"
-                        data-uni2-qr-value="{{ credencial_url }}"
-                        aria-label="Código QR de la credencial de {{ asociado.nombre }} {{ asociado.apellido }}"
-                    >
-                        <span class="small text-secondary">Generando código QR...</span>
-                    </div>
-                    <p class="small text-secondary mb-0">El comercio necesita conexión para confirmar la vigencia.</p>
-                </div>
-
-                <dl class="uni2-credential-data mb-0">
-                    <div>
-                        <dt>Tipo</dt>
-                        <dd>{{ asociado.get_tipo_display }}</dd>
-                    </div>
-                    <div>
-                        <dt>{{ dato_institucional_etiqueta }}</dt>
-                        <dd>{{ dato_institucional_valor|default:"-" }}</dd>
-                    </div>
-                    <div>
-                        <dt>Número</dt>
-                        <dd>{{ asociado.numero_asociado }}</dd>
-                    </div>
-                    <div>
-                        <dt>DNI</dt>
-                        <dd>{{ asociado.dni }}</dd>
-                    </div>
-                    <div>
-                        <dt>Token de validación</dt>
-                        <dd><code class="uni2-credential-token">{{ asociado.token_credencial }}</code></dd>
-                    </div>
-                </dl>
-            </div>
+        <div class="uni2-credential-layout">
+            {% include "components/credential_card.html" with asociado=asociado estado_credencial=estado_credencial dato_institucional_etiqueta=dato_institucional_etiqueta dato_institucional_valor=dato_institucional_valor credencial_url=credencial_url only %}
         </div>
 
         <aside class="uni2-credential-offline-panel mt-4" aria-labelledby="uni2-offline-save-title">

@@ -15,6 +15,10 @@ en `Asociado`. Una baja administrativa o una deuda exigible la inactivan. Si el
 asociado permanece de alta y cancela toda la deuda exigible, la credencial
 vuelve a estar activa automáticamente en la siguiente consulta.
 
+La credencial informa solamente el estado resultante. No expone la causa de la
+inactividad ni incorpora acciones de cobro; deuda y cuotas se consultan en su
+pantalla específica.
+
 ## CREDENCIAL-002
 
 La credencial debe validarse con un token UUID aleatorio. El QR codifica una
