@@ -26,6 +26,7 @@ def validar_credencial(*, comercio: Comercio, token=None, identificador=None, fe
         "valida": estado_credencial.activa,
         "nombre": asociado.nombre,
         "apellido": asociado.apellido,
+        "dni": asociado.dni,
         "tipo": asociado.get_tipo_display(),
         "estado_credencial": estado_credencial.estado_display,
         "dato_institucional_etiqueta": dato_etiqueta,

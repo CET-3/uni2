@@ -97,7 +97,7 @@ def test_comercio_firmado_valida_el_estado_actual(client, estado_asociado, texto
     assert response.status_code == 200
     assert texto_esperado in response.content.decode()
     assert asociado.nombre in response.content.decode()
-    assert asociado.dni not in response.content.decode()
+    assert asociado.dni in response.content.decode()
 
 
 @pytest.mark.django_db
@@ -121,7 +121,7 @@ def test_comercio_no_ve_causa_ni_importes_de_una_credencial_inactiva_por_deuda(c
 
     assert "Credencial inactiva" in content
     assert asociado.nombre in content
-    assert asociado.dni not in content
+    assert asociado.dni in content
     assert "deuda" not in content.lower()
     assert "cuota" not in content.lower()
     assert "1.234" not in content

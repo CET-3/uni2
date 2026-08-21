@@ -27,13 +27,13 @@ class ComercioRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class ValidarCredencialForm(forms.Form):
     identificador = forms.CharField(
-        label="DNI o token de credencial",
+        label="DNI o código de credencial",
         max_length=64,
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
                 "autocomplete": "off",
-                "placeholder": "Ej. 40123456 o UUID de la credencial",
+                "placeholder": "Ej. 40123456 o código UUID",
             }
         ),
     )

@@ -25,8 +25,9 @@ La credencial debe validarse con un token UUID aleatorio. El QR codifica una
 URL absoluta del entorno actual con la forma `/credenciales/<token UUID>/` y
 no expone IDs internos, correlativos ni datos personales.
 
-La pantalla autenticada del titular puede mostrar su DNI. Ese dato no forma
-parte del QR ni de la copia guardada para usar sin conexión.
+La pantalla autenticada del titular y el resultado de validación de un comercio
+habilitado pueden mostrar el DNI. Ese dato no forma parte del QR ni de la copia
+guardada para usar sin conexión.
 
 ## CREDENCIAL-003
 
@@ -35,7 +36,7 @@ revelar datos ni confirmar que una cuenta existe.
 
 ## CREDENCIAL-004
 
-El comercio solo debe ver nombre y apellido, tipo, el dato institucional
+El comercio solo debe ver nombre y apellido, DNI, tipo, el dato institucional
 correspondiente —curso o clasificación— y `Credencial activa` o
 `Credencial inactiva`. No debe conocer si la inactividad proviene de una baja o
 de deuda, ni ver cuotas, importes u otros datos sensibles. Un identificador

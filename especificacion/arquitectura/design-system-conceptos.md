@@ -269,6 +269,9 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-credential-brand` | Cabecera de marca con logo y denominación del documento |
 | `uni2-credential-state` | Banda semántica inferior; combina color fuerte, símbolo y texto |
 | `uni2-credential-technical` | Detalle secundario para el UUID de respaldo |
+| `uni2-validation-station` | Puesto de control compartido por el ingreso manual y el resultado de una validación |
+| `uni2-validation-spotlight` | Panel fuerte que comunica propósito o resultado con color, icono y texto |
+| `uni2-validation-panel` | Superficie clara para el formulario o los datos permitidos |
 
 ### Servicios
 

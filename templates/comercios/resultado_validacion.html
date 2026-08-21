@@ -4,31 +4,56 @@
 
 {% block content %}
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-7">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h1 class="h3 mb-3">Resultado de validación</h1>
-                    {% if resultado.encontrada and resultado.valida %}
-                        {% include "components/alert.html" with variant="success" title="Credencial activa" message="La credencial puede utilizarse." only %}
-                    {% elif resultado.encontrada %}
-                        {% include "components/alert.html" with variant="danger" title="Credencial inactiva" message="La credencial no puede utilizarse." only %}
-                    {% else %}
-                        {% include "components/alert.html" with variant="danger" title="Credencial inválida" message="No se encontró una credencial con ese identificador." only %}
-                    {% endif %}
+    <section
+        class="uni2-validation-station uni2-validation-station-result {% if resultado.encontrada and resultado.valida %}uni2-validation-result-active{% else %}uni2-validation-result-danger{% endif %}"
+        aria-labelledby="validation-result-title"
+    >
+        <div class="uni2-validation-spotlight" role="status">
+            <span class="uni2-validation-icon" aria-hidden="true">
+                <i class="bi {% if resultado.encontrada and resultado.valida %}bi-check-lg{% else %}bi-x-lg{% endif %}"></i>
+            </span>
+            <span class="uni2-validation-kicker">Resultado</span>
+            {% if resultado.encontrada and resultado.valida %}
+                <h1 id="validation-result-title">Credencial activa</h1>
+                <p>Podés aplicar el beneficio.</p>
+            {% elif resultado.encontrada %}
+                <h1 id="validation-result-title">Credencial inactiva</h1>
+                <p>No apliques el beneficio.</p>
+            {% else %}
+                <h1 id="validation-result-title">Credencial inválida</h1>
+                <p>No apliques el beneficio.</p>
+            {% endif %}
+        </div>
 
-                    {% if resultado.encontrada %}
-                        <p class="mb-2"><strong>Nombre:</strong> {{ resultado.nombre }} {{ resultado.apellido }}</p>
-                        <p class="mb-0"><strong>Tipo:</strong> {{ resultado.tipo }}</p>
-                        {% if resultado.dato_institucional_valor %}<p class="mb-0"><strong>{{ resultado.dato_institucional_etiqueta }}:</strong> {{ resultado.dato_institucional_valor }}</p>{% endif %}
-                    {% endif %}
+        <div class="uni2-validation-panel">
+            <div class="uni2-validation-result-content">
+                {% if resultado.encontrada %}
+                    <h2>{{ resultado.nombre }} {{ resultado.apellido }}</h2>
+                    <p class="uni2-validation-person-dni">DNI {{ resultado.dni }}</p>
+                    <dl class="uni2-validation-data">
+                        <div>
+                            <dt>Tipo</dt>
+                            <dd>{{ resultado.tipo }}</dd>
+                        </div>
+                        {% if resultado.dato_institucional_valor %}
+                            <div>
+                                <dt>{{ resultado.dato_institucional_etiqueta }}</dt>
+                                <dd>{{ resultado.dato_institucional_valor }}</dd>
+                            </div>
+                        {% endif %}
+                    </dl>
+                {% else %}
+                    <span class="uni2-section-kicker">Datos no válidos</span>
+                    <h2>Revisá el DNI o código e intentá nuevamente</h2>
+                    <p class="text-secondary mb-0">Verificá que no falten caracteres antes de volver a validar.</p>
+                {% endif %}
 
-                    <div class="mt-4">
-                        <a class="btn btn-outline-primary" href="{% url 'comercios:validar_credencial' %}">Validar otra credencial</a>
-                    </div>
-                </div>
+                <a class="btn btn-outline-primary uni2-validation-submit mt-4" href="{% url 'comercios:validar_credencial' %}">
+                    <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+                    Validar otra credencial
+                </a>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 {% endblock %}

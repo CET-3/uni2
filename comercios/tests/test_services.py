@@ -53,6 +53,7 @@ def test_validacion_de_credencial_activa(asociado, comercio):
     assert resultado["estado_credencial"] == "Activa"
     assert resultado["nombre"] == "Eva"
     assert resultado["tipo"] == "Asociado"
+    assert resultado["dni"] == asociado.dni
 
 
 @pytest.mark.django_db

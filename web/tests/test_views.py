@@ -672,7 +672,6 @@ def test_templates_usan_una_sola_familia_productiva_de_alertas():
     css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
     templates_con_alertas = (
         "includes/messages.html",
-        "comercios/resultado_validacion.html",
         "registration/login.html",
         "gestion/importar_cuotas_historicas.html",
         "gestion/importar_asociados.html",

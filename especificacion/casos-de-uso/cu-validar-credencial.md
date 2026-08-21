@@ -20,11 +20,11 @@ timestamp: 2026-06-22T00:00:00-03:00
    credencial.
 6. Muestra uno de tres resultados: `Credencial activa`, `Credencial inactiva`
    o `Credencial inválida`.
-7. Para una credencial encontrada muestra nombre y apellido, el tipo
+7. Para una credencial encontrada muestra nombre y apellido, DNI, el tipo
    `Asociado` o `Adherente` y su dato institucional: curso o clasificación.
 
 El comercio no conoce si una credencial inactiva se debe a una baja
-administrativa o a deuda, ni ve cuotas, importes o DNI.
+administrativa o a deuda, ni ve cuotas o importes.
 
 **Reglas relacionadas:** [Comercios — operación](../reglas/comercios-operacion.md), [Credenciales](../reglas/credenciales.md).
 
