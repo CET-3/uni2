@@ -138,6 +138,7 @@
                             <th>DNI</th>
                             <th>Tipo</th>
                             <th>Curso</th>
+                            <th>Clasificación</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -148,9 +149,10 @@
                                 <td>{{ row.dni }}</td>
                                 <td>{{ row.tipo }}</td>
                                 <td>{{ row.curso|default:"-" }}</td>
+                                <td>{{ row.clasificacion_adherente|default:"-" }}</td>
                             </tr>
                         {% empty %}
-                            <tr><td colspan="5">No hay filas importables.</td></tr>
+                            <tr><td colspan="6">No hay filas importables.</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -178,6 +180,7 @@
                                 <th>Original</th>
                                 <th>DNI</th>
                                 <th>Curso original</th>
+                                <th>Clasificación</th>
                                 <th>Observaciones</th>
                             </tr>
                         </thead>
@@ -188,6 +191,7 @@
                                     <td>{{ row.apellido_nombre_original }}</td>
                                     <td>{{ row.dni|default:"-" }}</td>
                                     <td>{{ row.curso_original|default:"-" }}</td>
+                                    <td>{{ row.clasificacion_adherente|default:"-" }}</td>
                                     <td>{{ row.observaciones }}</td>
                                 </tr>
                             {% endfor %}

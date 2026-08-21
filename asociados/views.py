@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 
 from django.utils import timezone
 
-from cuotas.selectors import calcular_estado_cuota, get_total_deuda
+from cuotas.selectors import calcular_estado_credencial, calcular_estado_cuota, get_total_deuda
 from usuarios.mixins import CredentialPrivacyHeadersMixin
 from usuarios.services import user_is_asociado
 
@@ -32,11 +32,16 @@ class AsociadoCredencialView(CredentialPrivacyHeadersMixin, AsociadoRequiredMixi
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["asociado"] = self.request.user.asociado
+        asociado = self.request.user.asociado
+        context["asociado"] = asociado
+        dato_etiqueta, dato_valor = asociado.get_dato_institucional()
+        context["dato_institucional_etiqueta"] = dato_etiqueta
+        context["dato_institucional_valor"] = dato_valor
+        context["estado_credencial"] = calcular_estado_credencial(asociado, timezone.localdate())
         context["credencial_url"] = self.request.build_absolute_uri(
             reverse(
                 "usuarios:resolver_credencial",
-                kwargs={"token": self.request.user.asociado.token_credencial},
+                kwargs={"token": asociado.token_credencial},
             )
         )
         return context

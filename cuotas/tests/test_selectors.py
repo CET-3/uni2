@@ -6,7 +6,13 @@ import pytest
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
 from cuotas.models import Cuota, Pago, PagoCuota, PeriodoCuota
-from cuotas.selectors import calcular_estado_cuota, describir_pago, get_periodo_cuota_para_publicar
+from cuotas.selectors import (
+    calcular_estado_credencial,
+    calcular_estado_cuota,
+    describir_pago,
+    get_periodo_cuota_para_publicar,
+    precargar_cuotas_para_estado_credencial,
+)
 
 
 @pytest.fixture
@@ -50,6 +56,122 @@ def crear_periodo(*, anio, mes, importe):
         importe=importe,
         fecha_vencimiento=date(anio, mes, 10),
     )
+
+
+def crear_cuota_para_credencial(asociado, *, anio=2026, mes=8, importe_pagado="0"):
+    periodo = crear_periodo(anio=anio, mes=mes, importe="1000")
+    return Cuota.objects.create(
+        asociado=asociado,
+        periodo=periodo,
+        importe="1000",
+        importe_recargo_mes="0",
+        importe_recargo_mes_siguiente="0",
+        importe_pagado=importe_pagado,
+    )
+
+
+@pytest.mark.django_db
+def test_credencial_sigue_activa_con_cuota_actual_impaga_hasta_el_dia_10(asociado_activo):
+    crear_cuota_para_credencial(asociado_activo)
+
+    resultado = calcular_estado_credencial(asociado_activo, date(2026, 8, 10))
+
+    assert resultado.activa is True
+    assert resultado.estado == "activa"
+    assert resultado.estado_display == "Activa"
+    assert resultado.motivo is None
+
+
+@pytest.mark.django_db
+def test_credencial_queda_inactiva_con_cuota_actual_impaga_desde_el_dia_11(asociado_activo):
+    crear_cuota_para_credencial(asociado_activo)
+
+    resultado = calcular_estado_credencial(asociado_activo, date(2026, 8, 11))
+
+    assert resultado.activa is False
+    assert resultado.estado == "inactiva"
+    assert resultado.estado_display == "Inactiva"
+    assert resultado.motivo == "deuda"
+
+
+@pytest.mark.django_db
+def test_credencial_queda_inactiva_con_cuota_de_un_mes_anterior(asociado_activo):
+    crear_cuota_para_credencial(asociado_activo, mes=7)
+
+    resultado = calcular_estado_credencial(asociado_activo, date(2026, 8, 1))
+
+    assert resultado.activa is False
+    assert resultado.motivo == "deuda"
+
+
+@pytest.mark.django_db
+def test_credencial_ignora_cuotas_de_periodos_futuros(asociado_activo):
+    crear_cuota_para_credencial(asociado_activo, mes=9)
+
+    resultado = calcular_estado_credencial(asociado_activo, date(2026, 8, 20))
+
+    assert resultado.activa is True
+    assert resultado.motivo is None
+
+
+@pytest.mark.django_db
+def test_credencial_sigue_activa_si_la_cuota_exigible_esta_pagada(asociado_activo):
+    crear_cuota_para_credencial(asociado_activo, importe_pagado="1000")
+
+    resultado = calcular_estado_credencial(asociado_activo, date(2026, 8, 11))
+
+    assert resultado.activa is True
+    assert resultado.motivo is None
+
+
+@pytest.mark.django_db
+def test_credencial_queda_inactiva_con_saldo_parcial(asociado_activo):
+    crear_cuota_para_credencial(asociado_activo, importe_pagado="400")
+
+    resultado = calcular_estado_credencial(asociado_activo, date(2026, 8, 11))
+
+    assert resultado.activa is False
+    assert resultado.motivo == "deuda"
+
+
+@pytest.mark.django_db
+def test_credencial_de_asociado_dado_de_baja_siempre_esta_inactiva(asociado_activo):
+    asociado_activo.estado = Asociado.ESTADO_INACTIVO
+    asociado_activo.save(update_fields=["estado"])
+
+    resultado = calcular_estado_credencial(asociado_activo, date(2026, 8, 10))
+
+    assert resultado.activa is False
+    assert resultado.estado_display == "Inactiva"
+    assert resultado.motivo == "baja"
+
+
+@pytest.mark.django_db
+def test_estado_credencial_usa_las_cuotas_precargadas_sin_consultas_por_asociado(
+    asociado_activo,
+    django_assert_num_queries,
+):
+    crear_cuota_para_credencial(asociado_activo, mes=7)
+    otro = create_asociado(
+        nombre="Luz",
+        apellido="Sin deuda",
+        dni="36123457",
+        tipo=Asociado.TIPO_ADHERENTE,
+        fecha_alta=date(2026, 3, 10),
+    )
+    asociados = list(
+        precargar_cuotas_para_estado_credencial(
+            Asociado.objects.filter(id__in=[asociado_activo.id, otro.id]).order_by("id")
+        )
+    )
+
+    with django_assert_num_queries(0):
+        estados = [
+            calcular_estado_credencial(asociado, date(2026, 8, 20))
+            for asociado in asociados
+        ]
+
+    assert [estado.estado_display for estado in estados] == ["Inactiva", "Activa"]
 
 
 @pytest.mark.django_db

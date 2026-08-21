@@ -11,7 +11,7 @@ from auditoria.models import EventoAuditoria
 from auditoria.services import construir_cambios, registrar_evento
 from usuarios.services import create_user_for_asociado, ensure_default_groups
 
-from .models import Asociado, Curso
+from .models import Asociado, ClasificacionAdherente, Curso
 
 
 CAMPOS_AUDITABLES_ASOCIADO = (
@@ -23,6 +23,7 @@ CAMPOS_AUDITABLES_ASOCIADO = (
     "direccion",
     "tipo",
     "curso_actual",
+    "clasificacion_adherente",
     "estado",
     "fecha_alta",
     "fecha_inicio_cobro",
@@ -53,6 +54,7 @@ def create_asociado(
     tipo: str,
     fecha_alta: date | str,
     curso_actual: Curso | None = None,
+    clasificacion_adherente=None,
     fecha_inicio_cobro: date | str | None = None,
     email: str = "",
     telefono: str = "",
@@ -70,12 +72,21 @@ def create_asociado(
         raise ValueError("Ya existe un asociado con ese DNI.")
 
     fecha_inicio = fecha_inicio_cobro or calculate_fecha_inicio_cobro(fecha_alta)
+    if tipo == Asociado.TIPO_ASOCIADO:
+        clasificacion_adherente = None
+    else:
+        curso_actual = None
+        if clasificacion_adherente is None:
+            clasificacion_adherente = ClasificacionAdherente.objects.get(
+                nombre=ClasificacionAdherente.NOMBRE_SIN_CLASIFICAR
+            )
     asociado = Asociado.objects.create(
         nombre=nombre,
         apellido=apellido,
         dni=dni,
         tipo=tipo,
         curso_actual=curso_actual,
+        clasificacion_adherente=clasificacion_adherente,
         fecha_alta=fecha_alta,
         fecha_inicio_cobro=fecha_inicio,
         email=email,

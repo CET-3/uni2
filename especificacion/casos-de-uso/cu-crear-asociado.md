@@ -15,7 +15,8 @@ timestamp: 2026-06-22T00:00:00-03:00
 **Flujo principal:**
 
 1.  Carga datos personales.
-2.  Selecciona tipo y curso si corresponde.
+2.  Selecciona el tipo. Si es `Asociado`, carga el curso; si es `Adherente`,
+    elige una clasificación activa.
 3.  Define fecha de alta.
 4.  El sistema calcula `fecha_inicio_cobro` según la fecha de alta.
 5.  Guarda el asociado.
@@ -27,6 +28,9 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Cancelación:** vuelve a `Atención al asociado` sin crear registros.
 
-**Situaciones especiales:** DNI duplicado, curso inexistente, alta después del día 15, asociado sin usuario y períodos de cuota faltantes.
+El formulario muestra y exige solamente el dato que corresponde al tipo. La
+clasificación transitoria `Sin clasificar` no se ofrece en el alta manual.
 
-**Modelos afectados:** Asociado, Curso, PeríodoCuota, Cuota.
+**Situaciones especiales:** DNI duplicado, curso inexistente, clasificación inexistente o inactiva, alta después del día 15, asociado sin usuario y períodos de cuota faltantes.
+
+**Modelos afectados:** Asociado, Curso, ClasificacionAdherente, PeríodoCuota, Cuota.

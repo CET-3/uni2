@@ -35,7 +35,8 @@ def test_validacion_credencial_comercio(client):
     )
 
     assert response.status_code == 200
-    assert "Credencial válida" in response.content.decode()
+    assert "Credencial activa" in response.content.decode()
+    assert "Asociado" in response.content.decode()
 
 
 @pytest.mark.django_db
@@ -64,5 +65,5 @@ def test_validacion_credencial_comercio_por_dni(client):
     )
 
     assert response.status_code == 200
-    assert "Credencial válida" in response.content.decode()
+    assert "Credencial activa" in response.content.decode()
     assert "Nora Díaz" in response.content.decode()

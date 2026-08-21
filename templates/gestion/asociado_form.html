@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Nuevo asociado | Uni2{% endblock %}
 
@@ -16,7 +17,7 @@
 
     <div class="row g-4 align-items-start">
         <div class="col-12">
-            <form method="post" class="card uni2-surface-card uni2-surface-card-info" novalidate>
+            <form method="post" class="card uni2-surface-card uni2-surface-card-info" data-asociado-tipo-form novalidate>
                 {% csrf_token %}
                 <div class="card-body">
                     <div class="mb-3">
@@ -52,10 +53,15 @@
                             {{ form.tipo }}
                             {{ form.tipo.errors }}
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4" data-asociado-field="curso">
                             <label class="form-label" for="{{ form.curso_actual.id_for_label }}">Curso actual</label>
                             {{ form.curso_actual }}
                             {{ form.curso_actual.errors }}
+                        </div>
+                        <div class="col-md-4" data-asociado-field="clasificacion">
+                            <label class="form-label" for="{{ form.clasificacion_adherente.id_for_label }}">Clasificación de adherente</label>
+                            {{ form.clasificacion_adherente }}
+                            {{ form.clasificacion_adherente.errors }}
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
@@ -90,4 +96,9 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ block.super }}
+    <script src="{% static 'gestion/asociado-form.js' %}"></script>
 {% endblock %}

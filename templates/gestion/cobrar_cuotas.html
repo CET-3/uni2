@@ -115,8 +115,8 @@
                                                 <span>Original {{ cuota.importe_original|moneda }} · recargo {{ cuota.recargo|moneda }}</span>
                                             </div>
                                         </td>
-                                        <td><span class="uni2-badge uni2-badge-danger">{{ cuota.saldo|moneda }}</span></td>
-                                        <td><span class="uni2-badge uni2-badge-warning">{{ cuota.estado_display }}</span></td>
+                                        <td><span class="fw-semibold">{{ cuota.saldo|moneda }}</span></td>
+                                        <td>{% include "components/cuota_estado_badge.html" with estado=cuota.estado estado_display=cuota.estado_display only %}</td>
                                     </tr>
                                 {% empty %}
                                     <tr><td colspan="5">El asociado no tiene cuotas pendientes.</td></tr>

@@ -135,6 +135,8 @@ def test_credencial_solo_expone_al_cliente_campos_offline_permitidos(client):
         "data-credential-apellido",
         "data-credential-numero",
         "data-credential-tipo",
+        "data-credential-dato-etiqueta",
+        "data-credential-dato-valor",
         "data-credential-estado",
         "data-credential-token",
         "data-credential-url",
@@ -165,6 +167,13 @@ def test_copia_offline_conserva_la_url_del_qr_y_admite_registros_anteriores():
     assert "credentialUrl: root.dataset.credentialUrl" in credential_script
     assert "credential.credentialUrl ||" in credential_script
     assert "credentialUrl: String(credential.credentialUrl)" in storage_script
+
+
+def test_copia_offline_interpreta_activa_como_estado_vigente():
+    credential_script = Path(finders.find("pwa/uni2-credential.js")).read_text(encoding="utf-8")
+
+    assert "credential.ultimoEstado.trim().toLowerCase() === 'activa'" in credential_script
+    assert "credential.ultimoEstado.trim().toLowerCase() === 'activo'" not in credential_script
 
 
 @pytest.mark.django_db

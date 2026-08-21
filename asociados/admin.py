@@ -4,7 +4,7 @@ from django.contrib import admin
 from auditoria.admin_mixins import AuditoriaAdminMixin
 
 from .services import calculate_fecha_inicio_cobro
-from .models import Asociado, CicloLectivo, Curso
+from .models import Asociado, CicloLectivo, ClasificacionAdherente, Curso
 
 
 @admin.register(CicloLectivo)
@@ -23,6 +23,14 @@ class CursoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
     search_fields = ("anio", "curso")
 
 
+@admin.register(ClasificacionAdherente)
+class ClasificacionAdherenteAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    audit_fields = ("nombre", "activa", "orden")
+    list_display = ("nombre", "activa", "orden")
+    list_filter = ("activa",)
+    search_fields = ("nombre",)
+
+
 class AsociadoAdminForm(forms.ModelForm):
     class Meta:
         model = Asociado
@@ -32,11 +40,20 @@ class AsociadoAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["fecha_inicio_cobro"].required = False
         self.fields["curso_actual"].required = False
+        self.fields["clasificacion_adherente"].required = False
 
     def clean(self):
         cleaned_data = super().clean()
         fecha_alta = cleaned_data.get("fecha_alta")
         fecha_inicio_cobro = cleaned_data.get("fecha_inicio_cobro")
+        tipo = cleaned_data.get("tipo")
+
+        if tipo == Asociado.TIPO_ASOCIADO:
+            cleaned_data["clasificacion_adherente"] = None
+            self.instance.clasificacion_adherente = None
+        elif tipo == Asociado.TIPO_ADHERENTE:
+            cleaned_data["curso_actual"] = None
+            self.instance.curso_actual = None
 
         if fecha_alta and not fecha_inicio_cobro:
             cleaned_data["fecha_inicio_cobro"] = calculate_fecha_inicio_cobro(fecha_alta)
@@ -58,6 +75,7 @@ class AsociadoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
         "tipo",
         "numero_asociado",
         "curso_actual",
+        "clasificacion_adherente",
         "estado",
         "fecha_alta",
         "fecha_inicio_cobro",
@@ -67,7 +85,7 @@ class AsociadoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
     )
     form = AsociadoAdminForm
     autocomplete_fields = ("usuario",)
-    list_select_related = ("curso_actual", "usuario")
+    list_select_related = ("curso_actual", "clasificacion_adherente", "usuario")
     list_display = (
         "numero_asociado",
         "apellido",
@@ -76,6 +94,7 @@ class AsociadoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
         "tipo",
         "estado",
         "curso_actual",
+        "clasificacion_adherente",
         "usuario",
         "last_login_display",
     )
@@ -105,6 +124,7 @@ class AsociadoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
                     "numero_asociado",
                     "estado",
                     "curso_actual",
+                    "clasificacion_adherente",
                     "fecha_alta",
                     "fecha_inicio_cobro",
                     "fecha_baja",
@@ -126,6 +146,7 @@ class AsociadoAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
                     "fields": (
                         "numero_asociado",
                         "curso_actual",
+                        "clasificacion_adherente",
                         "fecha_alta",
                         "fecha_inicio_cobro",
                         "token_credencial",

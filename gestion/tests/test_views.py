@@ -333,7 +333,7 @@ def test_importar_asociados_descarga_planilla_con_filas_a_revisar(client):
 
     workbook = load_workbook(BytesIO(response.content))
     worksheet = workbook["PADRÓN GENERAL"]
-    assert [worksheet.cell(1, column).value for column in range(1, 12)] == [
+    assert [worksheet.cell(1, column).value for column in range(1, 13)] == [
         "Fila original",
         "Número de asociado",
         "Apellido/nombre",
@@ -344,10 +344,11 @@ def test_importar_asociados_descarga_planilla_con_filas_a_revisar(client):
         "Celular",
         "Mail",
         "Dirección",
+        "Clasificación de adherente",
         "Motivo de revisión",
     ]
     assert worksheet.max_row == 2
-    row_values = [worksheet.cell(2, column).value for column in range(1, 12)]
+    row_values = [worksheet.cell(2, column).value for column in range(1, 13)]
     assert row_values[:10] == [
         3,
         "2",
@@ -360,8 +361,8 @@ def test_importar_asociados_descarga_planilla_con_filas_a_revisar(client):
         "joaquin@example.com",
         "Calle 2",
     ]
-    assert "Falta división/comisión del curso" in row_values[10]
-    assert "curso incompleto o dudoso para asociado" in row_values[10]
+    assert "Falta división/comisión del curso" in row_values[11]
+    assert "curso incompleto o dudoso para asociado" in row_values[11]
 
 
 @pytest.mark.django_db
@@ -722,6 +723,49 @@ def test_cobros_renderiza_saldo_y_etiqueta_accesible_para_cada_cuota(client):
 
 
 @pytest.mark.django_db
+def test_cobros_usa_un_unico_badge_semantico_para_el_estado_de_cada_cuota(client, monkeypatch):
+    fecha_referencia = date(2026, 8, 20)
+    monkeypatch.setattr("gestion.views.timezone.localdate", lambda: fecha_referencia)
+    staff = crear_usuario_gestion("staff_cobro_estados")
+    asociado = create_asociado(
+        nombre="Laura",
+        apellido="Estados",
+        dni="47777113",
+        tipo="asociado",
+        fecha_alta="2026-05-10",
+    )
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    periodo_vencido = PeriodoCuota.objects.create(
+        mes=7,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
+        fecha_vencimiento=date(2026, 7, 10),
+    )
+    periodo_pendiente = PeriodoCuota.objects.create(
+        mes=8,
+        ciclo_lectivo=ciclo,
+        importe="3000.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
+        fecha_vencimiento=date(2026, 8, 31),
+    )
+    Cuota.objects.create(asociado=asociado, periodo=periodo_vencido, importe="3000.00")
+    Cuota.objects.create(asociado=asociado, periodo=periodo_pendiente, importe="3000.00")
+    client.force_login(staff)
+
+    content = client.get(reverse("gestion:cobros"), {"asociado": asociado.id}).content.decode()
+    table_start = content.index('<table class="table table-soft uni2-cobro-table')
+    table_end = content.index("</table>", table_start)
+    table_content = content[table_start:table_end]
+
+    assert 'uni2-badge-warning">Pendiente</span>' in table_content
+    assert 'uni2-badge-danger">Vencida</span>' in table_content
+    assert table_content.count('class="uni2-badge ') == 2
+
+
+@pytest.mark.django_db
 def test_cobros_gestion_permite_pago_mayor_y_genera_donacion(client):
     staff = crear_usuario_gestion("staff_donacion")
     asociado = create_asociado(
@@ -1043,7 +1087,35 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert "Campos" in content
     assert reverse("gestion:exportar_asociados") in content
     assert "?q=Campos" in content
+    assert 'class="uni2-compact-hero mb-4"' in content
+    assert 'class="uni2-compact-hero-accent" aria-hidden="true"' in content
+    assert "uni2-surface-card-brand" not in content
+    assert 'class="card uni2-metric-card' not in content
+    assert "uni2-breadcrumbs" not in content
+    assert "Gestión diaria" not in content
+    assert "Buscá una persona" not in content
+    assert "Encontrar asociado" not in content
+    assert "Combiná texto libre" not in content
+    assert '<h2 id="resultados-title" class="uni2-titulo-componente mb-3">1 asociado encontrado</h2>' in content
+    assert "Seleccioná una fila" not in content
+    assert "Ver ficha completa" not in content
+    form_start = content.index('<form method="get"')
+    form_end = content.index("</form>", form_start)
+    form_content = content[form_start:form_end]
+    assert 'class="btn btn-outline-primary"' in form_content
+    assert "Limpiar filtros" in form_content
     assert "uni2-avatar" in content
+    resultados_start = content.index('<section class="card uni2-surface-card uni2-surface-card-info"')
+    resultados_content = content[resultados_start:]
+    assert "uni2-asociados-results" in resultados_content
+    assert 'data-label="Número"' in resultados_content
+    assert 'data-label="Credencial"' in resultados_content
+    assert 'class="uni2-asociados-credential-cell" data-label="Credencial"' in resultados_content
+    assert '<td data-label="Tipo">Asociado</td>' in resultados_content
+    assert ">Credencial inactiva</span>" in resultados_content
+    assert ">Activo</span>" not in resultados_content
+    assert "<th>Acceso</th>" not in resultados_content
+    assert 'data-label="Acceso"' not in resultados_content
     assert_usa_design_system_compartido(content)
 
     detalle = client.get(reverse("gestion:asociado_detalle", args=[asociado.id]))
@@ -1053,6 +1125,25 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert "Julia" in content
     assert "40000111" in content  # usuario = DNI
     assert f"?asociado={asociado.id}" in content
+    assert 'class="uni2-compact-hero uni2-compact-hero-with-summary mb-4"' in content
+    assert "uni2-compact-hero-title" in content
+    assert "uni2-compact-hero-identity" in content
+    assert "uni2-compact-hero-avatar" in content
+    assert "uni2-compact-hero-summary" in content
+    assert content.count("Deuda al") == 1
+    assert "uni2-metric-card" not in content
+    assert "Ficha del asociado" not in content
+    assert "Datos administrativos" not in content
+    assert "Acceso y comunicación" not in content
+    assert "Cuenta corriente" not in content
+    assert "Año actual" not in content
+    assert "Últimos movimientos" not in content
+    assert "Trazabilidad" not in content
+    assert "Estado general" in content
+    assert "Contacto y acceso" in content
+    assert 'class="row g-4 mb-4"' in content
+    assert content.count('class="col-lg-6"') >= 2
+    assert f"Cuotas {anio_actual}" in content
     assert "Editar asociado" in content
     assert "Guardar cambios" not in content
     assert "Cuotas" in content
@@ -1062,9 +1153,79 @@ def test_asociados_gestion_busca_y_muestra_detalle(client):
     assert "06/2025" not in content
     assert "05/2026" in content
     assert "Pagada" in content
+    hero_content = content[content.index("<header"):content.index("</header>")]
+    assert ">Asociado</span>" in hero_content
+    assert ">Credencial inactiva</span>" in hero_content
+    assert ">Activo</span>" not in hero_content
+    assert ">Baja</span>" not in hero_content
+    cuotas_start = content.index(f"Cuotas {anio_actual}")
+    cuotas_end = content.index("</table>", cuotas_start)
+    cuotas_content = content[cuotas_start:cuotas_end]
+    assert 'uni2-badge-success">Pagada</span>' in cuotas_content
+    assert 'uni2-badge-warning">Pendiente</span>' in cuotas_content
+    assert "uni2-badge-info" not in cuotas_content
     assert "Ver todas las cuotas" not in content
     assert "Ver auditoría" not in content
     assert "Crear usuario" not in content
+
+
+@pytest.mark.django_db
+def test_ficha_gestion_muestra_tipo_y_credencial_activa_sin_badge_activo(client):
+    staff = crear_usuario_gestion("staff_credencial_activa")
+    asociado = create_asociado(
+        nombre="Ana",
+        apellido="Al Día",
+        dni="40000222",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta="2026-05-10",
+        direccion="Av. Siempre Viva 742",
+    )
+    client.force_login(staff)
+
+    content = client.get(reverse("gestion:asociado_detalle", args=[asociado.id])).content.decode()
+    hero_content = content[content.index("<header"):content.index("</header>")]
+
+    assert ">Asociado</span>" in hero_content
+    assert ">Credencial activa</span>" in hero_content
+    assert ">Activo</span>" not in hero_content
+    assert ">Baja</span>" not in hero_content
+    assert f"Nº {asociado.numero_asociado}" not in hero_content
+    estado_start = content.index("Estado general")
+    estado_end = content.index("</section>", estado_start)
+    estado_content = content[estado_start:estado_end]
+    assert f"<dt>Número</dt><dd>{asociado.numero_asociado}</dd>" in estado_content
+    contacto_start = content.index("Contacto y acceso")
+    contacto_end = content.index("</section>", contacto_start)
+    contacto_content = content[contacto_start:contacto_end]
+    assert "<dt>Dirección</dt><dd>Av. Siempre Viva 742</dd>" in contacto_content
+
+
+@pytest.mark.django_db
+def test_ficha_gestion_muestra_baja_y_sus_datos_solo_para_adherente_inactivo(client):
+    staff = crear_usuario_gestion("staff_credencial_baja")
+    asociado = create_asociado(
+        nombre="Ana",
+        apellido="Baja",
+        dni="40000333",
+        tipo=Asociado.TIPO_ADHERENTE,
+        fecha_alta="2026-05-10",
+    )
+    asociado.estado = Asociado.ESTADO_INACTIVO
+    asociado.fecha_baja = date(2026, 8, 12)
+    asociado.motivo_baja = "Cambio de escuela"
+    asociado.save(update_fields=["estado", "fecha_baja", "motivo_baja"])
+    client.force_login(staff)
+
+    content = client.get(reverse("gestion:asociado_detalle", args=[asociado.id])).content.decode()
+    hero_content = content[content.index("<header"):content.index("</header>")]
+
+    assert ">Adherente</span>" in hero_content
+    assert ">Baja</span>" in hero_content
+    assert ">Credencial inactiva</span>" in hero_content
+    assert "Fecha de baja" in content
+    assert "12/08/2026" in content
+    assert "Motivo de baja" in content
+    assert "Cambio de escuela" in content
 
 
 @pytest.mark.django_db
@@ -1279,6 +1440,19 @@ def test_asociado_editar_muestra_formulario_separado(client):
     assert response.status_code == 200
     content = response.content.decode()
     assert "Editar asociado" in content
+    assert 'class="uni2-compact-hero mb-4"' in content
+    assert "uni2-compact-hero-identity" in content
+    assert "uni2-compact-hero-accent" in content
+    assert "Campos, Julia" in content
+    assert "Credencial activa" in content
+    assert "Identidad" in content
+    assert "Contacto" in content
+    assert "Datos administrativos" in content
+    assert 'for="id_fecha_inicio_cobro"' in content
+    assert 'for="id_estado"' not in content
+    assert 'for="id_fecha_baja"' not in content
+    assert 'for="id_motivo_baja"' not in content
+    assert "Actualizá solo los campos" not in content
     assert "Guardar cambios" in content
     assert reverse("gestion:asociado_detalle", args=[asociado.id]) in content
     assert "uni2-surface-card" in content
@@ -1499,12 +1673,13 @@ def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
 
     workbook = load_workbook(BytesIO(response.content))
     worksheet = workbook["ASOCIADOS"]
-    assert [worksheet.cell(1, column).value for column in range(1, 18)] == [
+    assert [worksheet.cell(1, column).value for column in range(1, 19)] == [
         "numero_asociado",
         "apellido",
         "nombre",
         "dni",
         "tipo",
+        "clasificacion_adherente",
         "email",
         "telefono",
         "direccion",
@@ -1519,12 +1694,13 @@ def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
         "motivo_baja",
     ]
     assert worksheet.max_row == 2
-    row_values = [worksheet.cell(2, column).value for column in range(1, 18)]
-    assert row_values[1:17] == [
+    row_values = [worksheet.cell(2, column).value for column in range(1, 19)]
+    assert row_values[1:18] == [
         "Campos",
         "Julia",
         "40000111",
         "asociado",
+        None,
         "julia@example.com",
         "2984 123456",
         "Calle 1",
@@ -1543,8 +1719,9 @@ def test_exportar_asociados_descarga_formato_uni2_filtrado(client):
 @pytest.mark.django_db
 def test_asociado_detalle_permite_editar_fecha_inicio_cobro(client):
     staff = crear_usuario_gestion("staff_edita_asoc")
+    curso = Curso.objects.create(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
     asociado = create_asociado(
-        nombre="Milena", apellido="Armada", dni="30000111", tipo="asociado", fecha_alta="2026-05-22"
+        nombre="Milena", apellido="Armada", dni="30000111", tipo="asociado", fecha_alta="2026-05-22", curso_actual=curso
     )
 
     return_url = f"{reverse('gestion:asociados')}?q=Armada"
@@ -1558,7 +1735,7 @@ def test_asociado_detalle_permite_editar_fecha_inicio_cobro(client):
             "email": "milena@example.com",
             "telefono": "123456",
             "tipo": "asociado",
-            "curso_actual": "",
+            "curso_actual": curso.pk,
             "estado": "activo",
             "fecha_alta": "2026-05-22",
             "fecha_inicio_cobro": "2026-05-01",

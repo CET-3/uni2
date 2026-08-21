@@ -20,10 +20,10 @@ timestamp: 2026-06-22T00:00:00-03:00
 4.  El sistema descarga una planilla `.xlsx` con la hoja `ASOCIADOS`.
 5.  Si había búsqueda o filtros activos, la planilla incluye solo esos resultados; si no había filtros, incluye el padrón completo.
 
-**Columnas:** `numero_asociado`, `apellido`, `nombre`, `dni`, `tipo`, `email`, `telefono`, `direccion`, `curso_anio`, `curso_division`, `division`, `turno`, `curso_nombre`, `fecha_alta`, `fecha_inicio_cobro`, `estado`, `motivo_baja`.
+**Columnas:** `numero_asociado`, `apellido`, `nombre`, `dni`, `tipo`, `email`, `telefono`, `direccion`, `curso_anio`, `curso_division`, `division`, `turno`, `curso_nombre`, `clasificacion_adherente`, `fecha_alta`, `fecha_inicio_cobro`, `estado`, `motivo_baja`.
 
 **Decisión funcional:** `curso_nombre` es una ayuda visual para personas. El formato regular futuro de importación no debe depender de ese texto y debe usar los campos normalizados de curso.
 
 **Restricción técnica:** la generación de planillas `.xlsx` usa la dependencia Python `openpyxl`, declarada en los archivos de dependencias del proyecto.
 
-**Modelos afectados:** Asociado, Curso.
+**Modelos afectados:** Asociado, Curso, ClasificacionAdherente.

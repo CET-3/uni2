@@ -336,6 +336,15 @@
                     </div>
                     <code class="small text-muted">.uni2-badge-{info|success|warning|danger} — estado semántico acompañado por texto</code>
                     <div>
+                        <p class="small text-muted mb-2">Estados de cuota · componente compartido</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% include "components/cuota_estado_badge.html" with estado="pagada" estado_display="Pagada" only %}
+                            {% include "components/cuota_estado_badge.html" with estado="pendiente" estado_display="Pendiente" only %}
+                            {% include "components/cuota_estado_badge.html" with estado="vencida" estado_display="Vencida" only %}
+                        </div>
+                        <code class="d-block small text-muted mt-2">components/cuota_estado_badge.html</code>
+                    </div>
+                    <div>
                         <strong class="uni2-discount">10% OFF</strong>
                         <code class="d-block small text-muted mt-2">.uni2-discount — descuento destacado en cards de publicidad</code>
                     </div>
@@ -633,6 +642,24 @@
                 <div class="col"><div class="card uni2-surface-card uni2-surface-card-warning h-100"><div class="card-body"><code>.uni2-surface-card-warning</code></div></div></div>
                 <div class="col"><div class="card uni2-surface-card uni2-surface-card-danger h-100"><div class="card-body"><code>.uni2-surface-card-danger</code></div></div></div>
                 <div class="col"><div class="card uni2-surface-card uni2-surface-card-brand h-100"><div class="card-body"><code>.uni2-surface-card-brand</code></div></div></div>
+            </div>
+            <div class="uni2-compact-hero uni2-compact-hero-with-summary mt-3">
+                <div class="uni2-compact-hero-copy uni2-compact-hero-identity">
+                    <span class="uni2-avatar uni2-avatar-blue uni2-compact-hero-avatar" aria-hidden="true">LF</span>
+                    <div>
+                        <h3 class="uni2-compact-hero-title">Fernández, Lucía</h3>
+                        <span class="uni2-badge uni2-badge-success">Activo</span>
+                    </div>
+                </div>
+                <div class="uni2-compact-hero-summary">
+                    <span>Deuda al 18/08/2026</span>
+                    <strong>$ 66.500,00</strong>
+                </div>
+                <div class="uni2-page-header-actions uni2-compact-hero-actions">
+                    <button class="btn btn-outline-primary" type="button">Acción secundaria</button>
+                    <button class="btn btn-primary" type="button">Acción principal</button>
+                </div>
+                <div class="uni2-compact-hero-accent" aria-hidden="true"></div>
             </div>
             <div class="row g-3 mt-0">
                 <div class="col-12 col-lg-4 d-flex align-items-center gap-3">

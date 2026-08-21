@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from asociados.models import Asociado, Curso
+from asociados.models import Asociado, ClasificacionAdherente, Curso
 from asociados.services import (
     calculate_fecha_inicio_cobro,
     create_asociado,
@@ -40,15 +40,48 @@ def test_alta_despues_del_dia_15():
 
 @pytest.mark.django_db
 def test_fecha_inicio_cobro_personalizada():
+    clasificacion = ClasificacionAdherente.objects.get(nombre="Familiar")
     asociado = create_asociado(
         nombre="Lia",
         apellido="Mora",
         dni="32123456",
         tipo=Asociado.TIPO_ADHERENTE,
+        clasificacion_adherente=clasificacion,
         fecha_alta=date(2026, 5, 20),
         fecha_inicio_cobro=date(2026, 8, 1),
     )
     assert asociado.fecha_inicio_cobro == date(2026, 8, 1)
+
+
+@pytest.mark.django_db
+def test_crear_adherente_limpia_curso_y_guarda_clasificacion(curso):
+    clasificacion = ClasificacionAdherente.objects.get(nombre="Docente")
+
+    asociado = create_asociado(
+        nombre="Lia",
+        apellido="Mora",
+        dni="32123457",
+        tipo=Asociado.TIPO_ADHERENTE,
+        fecha_alta=date(2026, 5, 20),
+        curso_actual=curso,
+        clasificacion_adherente=clasificacion,
+    )
+
+    assert asociado.curso_actual is None
+    assert asociado.clasificacion_adherente == clasificacion
+
+
+@pytest.mark.django_db
+def test_crear_adherente_sin_clasificacion_usa_valor_transitorio():
+    asociado = create_asociado(
+        nombre="Lia",
+        apellido="Mora",
+        dni="32123458",
+        tipo=Asociado.TIPO_ADHERENTE,
+        fecha_alta=date(2026, 5, 20),
+    )
+
+    assert asociado.clasificacion_adherente.nombre == "Sin clasificar"
 
 
 @pytest.mark.django_db

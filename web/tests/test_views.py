@@ -154,10 +154,19 @@ def test_design_system_porta_secciones_del_showcase(client):
         "uni2-surface-card-warning",
         "uni2-surface-card-danger",
         "uni2-surface-card-brand",
+        "uni2-compact-hero",
+        "uni2-compact-hero-with-summary",
+        "uni2-compact-hero-title",
+        "uni2-compact-hero-identity",
+        "uni2-compact-hero-avatar",
+        "uni2-compact-hero-summary",
         "uni2-avatar",
         "uni2-data-list",
     ):
         assert clase in content
+    assert 'uni2-badge-success">Pagada</span>' in content
+    assert 'uni2-badge-warning">Pendiente</span>' in content
+    assert 'uni2-badge-danger">Vencida</span>' in content
     assert "No representa un dashboard" not in content
     assert "uni2-breadcrumbs" in content
     assert "Fotocopias e impresiones" in content

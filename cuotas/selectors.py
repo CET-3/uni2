@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
 
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.utils import timezone
 
 from asociados.models import Asociado
@@ -25,9 +25,64 @@ class EstadoCuota:
 
 
 @dataclass(frozen=True)
+class EstadoCredencial:
+    activa: bool
+    estado: str
+    estado_display: str
+    motivo: str | None
+
+
+@dataclass(frozen=True)
 class ResumenPago:
     pago: Pago
     lineas: list[str]
+
+
+def calcular_estado_credencial(asociado: Asociado, fecha_referencia: date | None = None) -> EstadoCredencial:
+    fecha_referencia = fecha_referencia or timezone.localdate()
+    if asociado.estado != Asociado.ESTADO_ACTIVO:
+        return EstadoCredencial(
+            activa=False,
+            estado="inactiva",
+            estado_display="Inactiva",
+            motivo="baja",
+        )
+
+    periodo_actual = (fecha_referencia.year, fecha_referencia.month)
+    cuotas = getattr(asociado, "cuotas_para_estado_credencial", None)
+    if cuotas is None:
+        cuotas = asociado.cuotas.select_related("periodo", "periodo__ciclo_lectivo")
+    for cuota in cuotas:
+        periodo_cuota = (cuota.periodo.ciclo_lectivo.anio, cuota.periodo.mes)
+        if periodo_cuota > periodo_actual:
+            continue
+        if periodo_cuota == periodo_actual and fecha_referencia.day <= 10:
+            continue
+        if cuota.get_saldo_pendiente(fecha_referencia) > 0:
+            return EstadoCredencial(
+                activa=False,
+                estado="inactiva",
+                estado_display="Inactiva",
+                motivo="deuda",
+            )
+
+    return EstadoCredencial(
+        activa=True,
+        estado="activa",
+        estado_display="Activa",
+        motivo=None,
+    )
+
+
+def precargar_cuotas_para_estado_credencial(asociados):
+    cuotas = Cuota.objects.select_related("periodo", "periodo__ciclo_lectivo")
+    return asociados.prefetch_related(
+        Prefetch(
+            "cuotas",
+            queryset=cuotas,
+            to_attr="cuotas_para_estado_credencial",
+        )
+    )
 
 
 def get_periodo_cuota_para_publicar(fecha_referencia=None):

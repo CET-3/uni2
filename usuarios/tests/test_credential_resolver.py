@@ -1,12 +1,14 @@
 import uuid
+from datetime import date
 
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from asociados.models import Asociado
+from asociados.models import Asociado, CicloLectivo
 from asociados.services import create_asociado
 from comercios.models import ActividadComercial, Comercio
+from cuotas.models import Cuota, PeriodoCuota
 
 
 def crear_asociado(*, dni, nombre="Ana", apellido="Pérez"):
@@ -79,8 +81,8 @@ def test_asociado_solo_abre_su_propia_credencial(client):
 @pytest.mark.parametrize(
     ("estado_asociado", "texto_esperado"),
     [
-        (Asociado.ESTADO_ACTIVO, "Credencial válida"),
-        (Asociado.ESTADO_INACTIVO, "Credencial inválida"),
+        (Asociado.ESTADO_ACTIVO, "Credencial activa"),
+        (Asociado.ESTADO_INACTIVO, "Credencial inactiva"),
     ],
 )
 def test_comercio_firmado_valida_el_estado_actual(client, estado_asociado, texto_esperado):
@@ -96,6 +98,33 @@ def test_comercio_firmado_valida_el_estado_actual(client, estado_asociado, texto
     assert texto_esperado in response.content.decode()
     assert asociado.nombre in response.content.decode()
     assert asociado.dni not in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_comercio_no_ve_causa_ni_importes_de_una_credencial_inactiva_por_deuda(client, monkeypatch):
+    monkeypatch.setattr("cuotas.selectors.timezone.localdate", lambda: date(2026, 8, 11))
+    asociado = crear_asociado(dni="40111010")
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    periodo = PeriodoCuota.objects.create(
+        mes=8,
+        ciclo_lectivo=ciclo,
+        importe="1234.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
+        fecha_vencimiento=date(2026, 8, 10),
+    )
+    Cuota.objects.create(asociado=asociado, periodo=periodo, importe="1234.00")
+    user, _ = crear_comercio()
+    client.force_login(user)
+
+    content = client.get(url_credencial(asociado)).content.decode()
+
+    assert "Credencial inactiva" in content
+    assert asociado.nombre in content
+    assert asociado.dni not in content
+    assert "deuda" not in content.lower()
+    assert "cuota" not in content.lower()
+    assert "1.234" not in content
 
 
 @pytest.mark.django_db

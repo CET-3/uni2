@@ -4,50 +4,28 @@
 
 {% block content %}
 <div class="container py-5">
-    {% include "components/breadcrumbs.html" with current_label="Atención al asociado" only %}
-
-    <header class="d-flex flex-column flex-lg-row justify-content-between gap-4 mb-4">
-        <div>
-            <span class="uni2-section-kicker">Gestión diaria</span>
-            <h1 class="uni2-titulo-seccion">Atención al asociado</h1>
-            <p class="text-secondary mb-0">Buscá una persona, revisá su estado y entrá a su ficha para cobrar, editar o consultar movimientos.</p>
+    <header class="uni2-compact-hero mb-4">
+        <div class="uni2-compact-hero-copy">
+            <h1 class="uni2-titulo-seccion mb-0">Atención al asociado</h1>
         </div>
-        <div class="d-flex flex-column gap-3 align-items-lg-end">
-            <div class="card uni2-metric-card uni2-metric-card-warning" aria-label="Resumen de búsqueda">
-                <div class="card-body py-2">
-                    <div class="uni2-metric-label">Resultados</div>
-                    <div class="uni2-metric-value">{% if asociados %}{{ asociados|length }}{% else %}0{% endif %}</div>
-                </div>
-            </div>
-            <div class="uni2-page-header-actions">
-                {% if perms.gestion.exportar_asociados %}
-                    <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">
-                        <i class="bi bi-download" aria-hidden="true"></i> Exportar
-                    </a>
-                {% endif %}
-                {% if perms.gestion.editar_asociados %}
-                    <a class="btn btn-primary" href="{% url 'gestion:asociado_nuevo' %}">
-                        <i class="bi bi-person-plus" aria-hidden="true"></i> Nuevo asociado
-                    </a>
-                {% endif %}
-            </div>
+        <div class="uni2-page-header-actions uni2-compact-hero-actions">
+            {% if perms.gestion.exportar_asociados %}
+                <a class="btn btn-outline-primary" href="{% url 'gestion:exportar_asociados' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}">
+                    <i class="bi bi-download" aria-hidden="true"></i> Exportar
+                </a>
+            {% endif %}
+            {% if perms.gestion.editar_asociados %}
+                <a class="btn btn-primary" href="{% url 'gestion:asociado_nuevo' %}">
+                    <i class="bi bi-person-plus" aria-hidden="true"></i> Nuevo asociado
+                </a>
+            {% endif %}
         </div>
+        <div class="uni2-compact-hero-accent" aria-hidden="true"></div>
     </header>
 
     <section class="card uni2-surface-card uni2-surface-card-success mb-4" aria-labelledby="filtros-title">
         <div class="card-body">
-            <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-3">
-                <div>
-                    <span class="uni2-section-kicker">Búsqueda</span>
-                    <h2 id="filtros-title" class="uni2-titulo-componente">Encontrar asociado</h2>
-                    <p class="text-secondary mb-0">Combiná texto libre con filtros para achicar el listado.</p>
-                </div>
-                {% if form.is_bound %}
-                    <a class="btn btn-outline-primary btn-sm" href="{% url 'gestion:asociados' %}">
-                        <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar
-                    </a>
-                {% endif %}
-            </div>
+            <h2 id="filtros-title" class="uni2-titulo-componente mb-3">Buscar asociados</h2>
 
             <form method="get" class="row g-3 align-items-end">
                 <div class="col-lg-4">
@@ -67,6 +45,10 @@
                     {{ form.curso_actual }}
                 </div>
                 <div class="col-lg-2">
+                    <label class="form-label" for="{{ form.clasificacion_adherente.id_for_label }}">{{ form.clasificacion_adherente.label }}</label>
+                    {{ form.clasificacion_adherente }}
+                </div>
+                <div class="col-lg-2">
                     <label class="form-label" for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
                     {{ form.usuario }}
                 </div>
@@ -74,10 +56,15 @@
                     <label class="form-label" for="{{ form.deuda.id_for_label }}">{{ form.deuda.label }}</label>
                     {{ form.deuda }}
                 </div>
-                <div class="col-lg-2">
-                    <button class="btn btn-primary w-100" type="submit">
+                <div class="col-lg-4 d-flex flex-column flex-sm-row gap-2">
+                    <button class="btn btn-primary flex-grow-1" type="submit">
                         <i class="bi bi-search" aria-hidden="true"></i> Buscar
                     </button>
+                    {% if form.is_bound %}
+                        <a class="btn btn-outline-primary" href="{% url 'gestion:asociados' %}">
+                            <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar filtros
+                        </a>
+                    {% endif %}
                 </div>
             </form>
             {% if form.errors %}
@@ -86,53 +73,45 @@
         </div>
     </section>
 
-    {% if asociados %}
+    {% if resultados_asociados %}
         <section class="card uni2-surface-card uni2-surface-card-info" aria-labelledby="resultados-title">
             <div class="card-body">
-                <div class="mb-3">
-                    <div>
-                        <span class="uni2-section-kicker">Resultados</span>
-                        <h2 id="resultados-title" class="uni2-titulo-componente">Asociados encontrados</h2>
-                        <p class="text-secondary mb-0">Seleccioná una fila para abrir la ficha completa.</p>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-soft align-middle mb-0">
+                <h2 id="resultados-title" class="uni2-titulo-componente mb-3">{% if resultados_asociados|length == 1 %}1 asociado encontrado{% else %}{{ resultados_asociados|length }} asociados encontrados{% endif %}</h2>
+                <div class="table-responsive uni2-asociados-results-wrap">
+                    <table class="table table-soft align-middle mb-0 uni2-asociados-results">
                         <thead>
                             <tr>
                                 <th>Asociado</th>
                                 <th>Número</th>
                                 <th>DNI</th>
-                                <th>Curso</th>
-                                <th>Estado</th>
-                                <th>Usuario</th>
+                                <th>Curso o clasificación</th>
+                                <th>Tipo</th>
+                                <th>Credencial</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for asociado in asociados %}
+                            {% for resultado in resultados_asociados %}
+                                {% with asociado=resultado.asociado estado_credencial=resultado.estado_credencial %}
                                 <tr class="uni2-clickable-row">
-                                    <td>
+                                    <td data-label="Asociado">
                                         <a class="uni2-row-link d-inline-flex align-items-center gap-2" href="{% url 'gestion:asociado_detalle' asociado.id %}?volver={{ request.get_full_path|urlencode }}">
                                             {% cycle 'uni2-avatar-blue' 'uni2-avatar-green' 'uni2-avatar-yellow' 'uni2-avatar-red' as avatar_color silent %}
                                             <span class="uni2-avatar {{ avatar_color }}" aria-hidden="true">{{ asociado.nombre|first }}{{ asociado.apellido|first }}</span>
-                                            <span class="d-flex flex-column">
-                                                <strong>{{ asociado.apellido }}, {{ asociado.nombre }}</strong>
-                                                <small class="text-secondary">Ver ficha completa</small>
-                                            </span>
+                                            <strong>{{ asociado.apellido }}, {{ asociado.nombre }}</strong>
                                         </a>
                                     </td>
-                                    <td><strong>{{ asociado.numero_asociado }}</strong></td>
-                                    <td>{{ asociado.dni }}</td>
-                                    <td>{{ asociado.curso_actual|default:"-" }}</td>
-                                    <td><span class="uni2-badge uni2-badge-info">{{ asociado.get_estado_display }}</span></td>
-                                    <td>
-                                        {% if asociado.usuario %}
-                                            <span class="uni2-badge uni2-badge-success">{{ asociado.usuario.username }}</span>
-                                        {% else %}
-                                            <span class="uni2-badge uni2-badge-warning">Sin usuario</span>
-                                        {% endif %}
+                                    <td data-label="Número"><strong>{{ asociado.numero_asociado }}</strong></td>
+                                    <td data-label="DNI">{{ asociado.dni }}</td>
+                                    <td data-label="Curso o clasificación">{% if asociado.tipo == "asociado" %}{{ asociado.curso_actual|default:"-" }}{% else %}{{ asociado.clasificacion_adherente|default:"-" }}{% endif %}</td>
+                                    <td data-label="Tipo">{{ asociado.get_tipo_display }}</td>
+                                    <td class="uni2-asociados-credential-cell" data-label="Credencial">
+                                        <div class="d-flex flex-wrap gap-2">
+                                            {% if asociado.estado == "inactivo" %}<span class="uni2-badge uni2-badge-danger">Baja</span>{% endif %}
+                                            <span class="uni2-badge {% if estado_credencial.activa %}uni2-badge-success{% else %}uni2-badge-danger{% endif %}">Credencial {{ estado_credencial.estado_display|lower }}</span>
+                                        </div>
                                     </td>
                                 </tr>
+                                {% endwith %}
                             {% endfor %}
                         </tbody>
                     </table>

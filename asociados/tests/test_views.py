@@ -5,10 +5,24 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from asociados.models import Asociado
+from asociados.models import Asociado, CicloLectivo
 from asociados.services import create_asociado
 from comercios.models import ActividadComercial, Comercio
 from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publicidad
+from cuotas.models import Cuota, PeriodoCuota
+
+
+def crear_cuota_impaga(asociado, *, anio=2026, mes=7):
+    ciclo, _ = CicloLectivo.objects.get_or_create(anio=anio)
+    periodo = PeriodoCuota.objects.create(
+        mes=mes,
+        ciclo_lectivo=ciclo,
+        importe="1000.00",
+        importe_recargo_mes="0.00",
+        importe_recargo_mes_siguiente="0.00",
+        fecha_vencimiento=date(anio, mes, 10),
+    )
+    return Cuota.objects.create(asociado=asociado, periodo=periodo, importe="1000.00")
 
 
 @pytest.mark.django_db
@@ -86,6 +100,67 @@ def test_home_asociado_incluye_secciones_publicas(client):
 
 
 @pytest.mark.django_db
+def test_credencial_propia_informa_deuda_exigible_y_enlaza_a_cuotas(client, monkeypatch):
+    monkeypatch.setattr("asociados.views.timezone.localdate", lambda: date(2026, 8, 20))
+    asociado = create_asociado(
+        nombre="Nora",
+        apellido="Deudora",
+        dni="40999444",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 6, 1),
+    )
+    crear_cuota_impaga(asociado)
+    client.force_login(asociado.usuario)
+
+    content = client.get(reverse("asociados:credencial")).content.decode()
+
+    assert "Credencial inactiva" in content
+    assert "cuotas pendientes" in content
+    assert reverse("asociados:cuotas") in content
+    assert 'data-credential-estado="Inactiva"' in content
+    assert "data-credential-deuda" not in content
+
+
+@pytest.mark.django_db
+def test_credencial_propia_al_dia_se_muestra_activa_sin_explicacion_de_deuda(client):
+    asociado = create_asociado(
+        nombre="Nora",
+        apellido="Al Día",
+        dni="40999555",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 6, 1),
+    )
+    client.force_login(asociado.usuario)
+
+    content = client.get(reverse("asociados:credencial")).content.decode()
+
+    assert "Credencial activa" in content
+    assert 'data-credential-estado="Activa"' in content
+    assert "cuotas pendientes" not in content
+
+
+@pytest.mark.django_db
+def test_credencial_propia_dada_de_baja_no_afirma_que_haya_deuda(client):
+    asociado = create_asociado(
+        nombre="Nora",
+        apellido="Baja",
+        dni="40999666",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 6, 1),
+    )
+    asociado.estado = Asociado.ESTADO_INACTIVO
+    asociado.save(update_fields=["estado"])
+    client.force_login(asociado.usuario)
+
+    content = client.get(reverse("asociados:credencial")).content.decode()
+
+    assert "Credencial inactiva" in content
+    assert "consultá a la mutual" in content
+    assert "cuotas pendientes" not in content
+    assert 'data-credential-estado="Inactiva"' in content
+
+
+@pytest.mark.django_db
 @pytest.mark.parametrize("url_name", ["asociados:credencial", "asociados:cuotas"])
 def test_pantallas_asociado_usan_contenedor_sin_familias_paralelas(client, url_name):
     asociado = create_asociado(
@@ -119,3 +194,55 @@ def test_cuotas_asociado_usan_metricas_y_superficie_compartidas(client):
 
     assert "uni2-metric-card" in content
     assert "uni2-surface-card" in content
+
+
+@pytest.mark.django_db
+def test_cuotas_asociado_muestran_un_badge_semantico_por_estado(client, monkeypatch):
+    fecha_referencia = date(2026, 8, 20)
+    monkeypatch.setattr("asociados.views.timezone.localdate", lambda: fecha_referencia)
+    asociado = create_asociado(
+        nombre="Leo",
+        apellido="Estados",
+        dni="40999333",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 6, 1),
+    )
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    periodo_pagado = PeriodoCuota.objects.create(
+        mes=6,
+        ciclo_lectivo=ciclo,
+        importe="1000.00",
+        fecha_vencimiento=date(2026, 6, 10),
+    )
+    periodo_vencido = PeriodoCuota.objects.create(
+        mes=7,
+        ciclo_lectivo=ciclo,
+        importe="1000.00",
+        fecha_vencimiento=date(2026, 7, 10),
+    )
+    periodo_pendiente = PeriodoCuota.objects.create(
+        mes=8,
+        ciclo_lectivo=ciclo,
+        importe="1000.00",
+        fecha_vencimiento=date(2026, 8, 31),
+    )
+    Cuota.objects.create(
+        asociado=asociado,
+        periodo=periodo_pagado,
+        importe="1000.00",
+        importe_pagado="1000.00",
+    )
+    Cuota.objects.create(asociado=asociado, periodo=periodo_vencido, importe="1000.00")
+    Cuota.objects.create(asociado=asociado, periodo=periodo_pendiente, importe="1000.00")
+    client.force_login(asociado.usuario)
+
+    content = client.get(reverse("asociados:cuotas")).content.decode()
+    table_start = content.index('<table class="table table-soft')
+    table_end = content.index("</table>", table_start)
+    table_content = content[table_start:table_end]
+
+    assert 'uni2-badge-success">Pagada</span>' in table_content
+    assert 'uni2-badge-warning">Pendiente</span>' in table_content
+    assert 'uni2-badge-danger">Vencida</span>' in table_content
+    assert "uni2-badge-info" not in table_content
+    assert table_content.count('class="uni2-badge ') == 3

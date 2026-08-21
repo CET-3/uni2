@@ -18,6 +18,17 @@ timestamp: 2026-06-22T00:00:00-03:00
    - **Recargo por mora:** se aplica si la cuota no se saldó durante el mes del período. Se suma al recargo por vencimiento.
 5. El estado `Vencida` no se almacena: se determina en el momento de mostrar la cuota, comparando la fecha de vencimiento con una fecha de referencia explícita. Las pantallas siempre calculan el estado y el saldo para una fecha de referencia.
 
+## Exigibilidad para la credencial
+
+El estado de la credencial usa un corte fijo independiente del cálculo de
+recargos y de `PeriodoCuota.fecha_vencimiento`:
+
+1. Una cuota impaga de un mes anterior inactiva la credencial.
+2. La cuota del mes actual no la inactiva hasta el día 10 inclusive; desde el
+   día 11 la inactiva si conserva cualquier saldo, incluso parcial.
+3. Las cuotas de períodos futuros no afectan la credencial.
+4. Una cuota exigible totalmente pagada no la inactiva.
+
 ## Creación de cuotas
 
 Cada mes, el administrador del sistema crea el próximo período de cuota desde la sección Períodos de cuota. Al crearlo define la fecha, la fecha de vencimiento, el importe y el recargo por mora. Una vez creado el período, ejecuta la operación de generar cuotas, que crea una cuota por cada asociado activo elegible.

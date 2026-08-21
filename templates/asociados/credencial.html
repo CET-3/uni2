@@ -12,7 +12,9 @@
         data-credential-apellido="{{ asociado.apellido }}"
         data-credential-numero="{{ asociado.numero_asociado }}"
         data-credential-tipo="{{ asociado.get_tipo_display }}"
-        data-credential-estado="{{ asociado.get_estado_display }}"
+        data-credential-dato-etiqueta="{{ dato_institucional_etiqueta }}"
+        data-credential-dato-valor="{{ dato_institucional_valor }}"
+        data-credential-estado="{{ estado_credencial.estado_display }}"
         data-credential-token="{{ asociado.token_credencial }}"
         data-credential-url="{{ credencial_url }}"
     >
@@ -22,10 +24,17 @@
                 <h1 id="uni2-credential-title" class="uni2-titulo-seccion">{{ asociado.nombre }} {{ asociado.apellido }}</h1>
                 <p class="text-secondary mb-0">Mostrá esta credencial para validar tu estado de asociado en comercios y beneficios.</p>
             </div>
-            <span class="uni2-credential-state {% if asociado.estado == 'activo' %}uni2-credential-state-active{% else %}uni2-credential-state-inactive{% endif %}">
-                {{ asociado.get_estado_display }}
+            <span class="uni2-credential-state {% if estado_credencial.activa %}uni2-credential-state-active{% else %}uni2-credential-state-inactive{% endif %}">
+                Credencial {{ estado_credencial.estado_display|lower }}
             </span>
         </header>
+
+        {% if estado_credencial.motivo == "deuda" %}
+            {% url "asociados:cuotas" as cuotas_url %}
+            {% include "components/alert.html" with variant="warning" title="Credencial inactiva" message="Tenés cuotas pendientes." action_url=cuotas_url action_label="Revisar Mis cuotas" only %}
+        {% elif estado_credencial.motivo == "baja" %}
+            {% include "components/alert.html" with variant="warning" title="Credencial inactiva" message="Para conocer el motivo, consultá a la mutual." only %}
+        {% endif %}
 
         <div class="uni2-credential-card">
             <div class="uni2-credential-heading">
@@ -54,6 +63,10 @@
                         <dd>{{ asociado.get_tipo_display }}</dd>
                     </div>
                     <div>
+                        <dt>{{ dato_institucional_etiqueta }}</dt>
+                        <dd>{{ dato_institucional_valor|default:"-" }}</dd>
+                    </div>
+                    <div>
                         <dt>Número</dt>
                         <dd>{{ asociado.numero_asociado }}</dd>
                     </div>
@@ -75,7 +88,7 @@
                 <div>
                     <h2 class="h5 mb-2" id="uni2-offline-save-title">Tener la credencial sin conexión</h2>
                     <p class="mb-1">
-                        Podés guardar en este dispositivo tu nombre, número, tipo, último estado y URL de validación durante {{ pwa_credential_offline_ttl_days|default:7 }} días.
+                        Podés guardar en este dispositivo tu nombre, número, tipo, curso o clasificación, último estado y URL de validación durante {{ pwa_credential_offline_ttl_days|default:7 }} días.
                     </p>
                     <p class="small text-secondary mb-0">
                         Cualquier persona que use este dispositivo podrá verla. No se guardan cuotas, deuda ni otros datos.
