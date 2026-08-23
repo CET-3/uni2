@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.test import RequestFactory
 
 from asociados.admin import AsociadoAdmin, AsociadoAdminForm
-from asociados.models import Asociado, CicloLectivo, Curso
+from asociados.models import Asociado, CicloLectivo, ClasificacionAdherente, Curso
 from cuotas.models import Cuota, Donacion, Pago, PagoCuota, PeriodoCuota
 
 
@@ -38,7 +38,34 @@ def test_admin_form_calcula_fecha_inicio_cobro(curso):
     )
 
     assert form.is_valid(), form.errors
-    assert form.cleaned_data["fecha_inicio_cobro"] == date(2026, 6, 1)
+    assert form.cleaned_data["fecha_inicio_cobro"] == date(2026, 3, 1)
+
+
+@pytest.mark.django_db
+def test_admin_form_calcula_inicio_del_mes_para_adherente():
+    clasificacion = ClasificacionAdherente.objects.get(nombre="Familiar")
+    form = AsociadoAdminForm(
+        data={
+            "usuario": "",
+            "nombre": "Lia",
+            "apellido": "Mora",
+            "dni": "40111223",
+            "email": "",
+            "telefono": "",
+            "direccion": "",
+            "tipo": Asociado.TIPO_ADHERENTE,
+            "curso_actual": "",
+            "clasificacion_adherente": clasificacion.pk,
+            "estado": Asociado.ESTADO_ACTIVO,
+            "fecha_alta": "2026-05-31",
+            "fecha_inicio_cobro": "",
+            "fecha_baja": "",
+            "motivo_baja": "",
+        }
+    )
+
+    assert form.is_valid(), form.errors
+    assert form.cleaned_data["fecha_inicio_cobro"] == date(2026, 5, 1)
 
 
 def test_asociado_admin_usa_autocomplete_para_usuario():

@@ -16,7 +16,9 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 1.  El usuario busca un asociado desde `Atención al asociado`.
 2.  Entra al detalle.
-3.  El sistema muestra datos personales, contacto, usuario vinculado, estado, curso, deuda total, cuotas del año actual y pagos recientes.
+3.  El sistema muestra datos personales, contacto, usuario vinculado, estado,
+    curso si es asociado o clasificación si es adherente, deuda total, cuotas
+    del año actual y pagos recientes.
 4.  Si tiene permiso de edición, puede elegir `Editar asociado`.
 5.  Si tiene permiso de cobro, puede elegir `Cobrar` cuando existe deuda o `Registrar donación` cuando no hay cuotas pendientes.
 6.  Una navegación secundaria permite volver a `Atención al asociado` y conserva los filtros de la búsqueda de origen mediante un parámetro local validado.

@@ -1,11 +1,12 @@
 import uuid
+from datetime import date
 
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.urls import reverse
 
-from asociados.models import Asociado, CicloLectivo
+from asociados.models import Asociado, CicloLectivo, ClasificacionAdherente, Curso
 from auditoria.models import EventoAuditoria
 from cuotas.models import PeriodoCuota
 from gestion.permissions import (
@@ -137,12 +138,14 @@ def test_filtros_de_auditoria_muestran_busqueda_clara_y_entidades_disponibles(cl
 
 
 @pytest.mark.django_db
-def test_alta_y_edicion_desde_gestion_generan_eventos(client):
+def test_alta_y_edicion_desde_gestion_generan_eventos(client, monkeypatch):
+    monkeypatch.setattr("gestion.forms.timezone.localdate", lambda: date(2026, 8, 9))
     usuario = crear_usuario_con_permisos(
         "operadora",
         [GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS, GESTION_VER_AUDITORIA],
     )
     client.force_login(usuario)
+    curso = Curso.objects.create(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
 
     client.post(
         reverse("gestion:asociado_nuevo"),
@@ -154,8 +157,7 @@ def test_alta_y_edicion_desde_gestion_generan_eventos(client):
             "telefono": "111",
             "direccion": "Calle 1",
             "tipo": Asociado.TIPO_ASOCIADO,
-            "curso_actual": "",
-            "fecha_alta": "2026-08-09",
+            "curso_actual": curso.pk,
         },
     )
     asociado = Asociado.objects.get(dni="44111229")
@@ -175,10 +177,10 @@ def test_alta_y_edicion_desde_gestion_generan_eventos(client):
             "telefono": "222",
             "direccion": "Calle 1",
             "tipo": Asociado.TIPO_ASOCIADO,
-            "curso_actual": "",
+            "curso_actual": curso.pk,
             "estado": Asociado.ESTADO_ACTIVO,
             "fecha_alta": "2026-08-09",
-            "fecha_inicio_cobro": "2026-08-01",
+            "fecha_inicio_cobro": "2026-06-01",
             "fecha_baja": "",
             "motivo_baja": "",
         },
@@ -199,6 +201,63 @@ def test_alta_y_edicion_desde_gestion_generan_eventos(client):
         ("asociados.Asociado", EventoAuditoria.ACCION_VINCULAR),
         ("asociados.Asociado", EventoAuditoria.ACCION_CREAR),
     }
+
+
+@pytest.mark.django_db
+def test_cambio_a_adherente_audita_tipo_curso_y_clasificacion(client):
+    usuario = crear_usuario_con_permisos(
+        "operadora_tipo",
+        [GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS],
+    )
+    curso = Curso.objects.create(
+        anio="1ro",
+        curso="1ra",
+        division=Curso.DIVISION_CB,
+        turno=Curso.TURNO_TM,
+    )
+    clasificacion = ClasificacionAdherente.objects.get(nombre="Familiar")
+    asociado = Asociado.objects.create(
+        nombre="Mara",
+        apellido="López",
+        dni="44111239",
+        tipo=Asociado.TIPO_ASOCIADO,
+        curso_actual=curso,
+        fecha_alta="2026-08-09",
+        fecha_inicio_cobro="2026-08-01",
+    )
+    client.force_login(usuario)
+
+    response = client.post(
+        reverse("gestion:asociado_editar", args=[asociado.pk]),
+        {
+            "nombre": asociado.nombre,
+            "apellido": asociado.apellido,
+            "dni": asociado.dni,
+            "email": "",
+            "telefono": "",
+            "direccion": "",
+            "tipo": Asociado.TIPO_ADHERENTE,
+            "curso_actual": curso.pk,
+            "clasificacion_adherente": clasificacion.pk,
+            "estado": Asociado.ESTADO_ACTIVO,
+            "fecha_alta": "2026-08-09",
+            "fecha_inicio_cobro": "2026-08-01",
+            "fecha_baja": "",
+            "motivo_baja": "",
+        },
+    )
+
+    asociado.refresh_from_db()
+    evento = EventoAuditoria.objects.get(
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+        entidad="asociados.Asociado",
+        objeto_id=str(asociado.pk),
+    )
+    assert response.status_code == 302
+    assert asociado.tipo == Asociado.TIPO_ADHERENTE
+    assert asociado.curso_actual is None
+    assert asociado.clasificacion_adherente == clasificacion
+    assert set(evento.cambios) == {"tipo", "curso_actual", "clasificacion_adherente"}
 
 
 @pytest.mark.django_db
@@ -543,10 +602,21 @@ def test_creacion_y_generacion_de_periodo_desde_gestion_identifican_actor(client
         {"action": "generar_cuotas", "periodo_id": str(periodo.pk)},
     )
 
-    evento_periodo = EventoAuditoria.objects.get(entidad="cuotas.PeriodoCuota")
+    evento_creacion_periodo = EventoAuditoria.objects.get(
+        entidad="cuotas.PeriodoCuota",
+        accion=EventoAuditoria.ACCION_CREAR,
+    )
+    evento_generacion_periodo = EventoAuditoria.objects.get(
+        entidad="cuotas.PeriodoCuota",
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+    )
     evento_cuota = EventoAuditoria.objects.get(
         entidad="cuotas.Cuota",
         cambios__asociado__nuevo__id=asociado.pk,
     )
-    assert evento_periodo.actor == usuario
+    assert evento_creacion_periodo.actor == usuario
+    assert evento_generacion_periodo.actor == usuario
+    assert evento_generacion_periodo.cambios["generado_el"]["anterior"] is None
+    assert evento_generacion_periodo.cambios["generado_el"]["nuevo"]
+    assert evento_generacion_periodo.operacion_id == evento_cuota.operacion_id
     assert evento_cuota.actor == usuario

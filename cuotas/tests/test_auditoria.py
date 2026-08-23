@@ -70,3 +70,19 @@ def test_generacion_de_cuotas_registra_actor_y_operacion(escenario_cobro):
     assert creadas == 1
     assert eventos.count() == Cuota.objects.filter(periodo=periodo).count()
     assert set(eventos.values_list("actor", flat=True)) == {actor.pk}
+
+
+@pytest.mark.django_db
+def test_reintentar_generacion_no_repite_evento_del_periodo(escenario_cobro):
+    _, periodo = escenario_cobro
+
+    generar_cuotas_para_periodo(periodo)
+    generar_cuotas_para_periodo(periodo)
+
+    eventos = EventoAuditoria.objects.filter(
+        entidad="cuotas.PeriodoCuota",
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+        objeto_id=str(periodo.pk),
+    )
+    assert eventos.count() == 1
+    assert set(eventos.get().cambios) == {"generado_el"}

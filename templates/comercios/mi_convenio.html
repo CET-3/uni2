@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Mi convenio | Uni2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    {% url "web:home" as home_url %}
+    {% include "components/breadcrumbs.html" with ancestor_url=home_url ancestor_label="Inicio" current_label="Mi convenio" only %}
+
+    <header class="uni2-compact-hero mb-4">
+        <div class="uni2-compact-hero-copy uni2-compact-hero-identity">
+            {% if comercio.foto %}
+                <img class="uni2-compact-hero-avatar" src="{{ comercio.foto.url }}" alt="Foto de {{ comercio.nombre }}">
+            {% else %}
+                <span class="uni2-avatar uni2-avatar-blue uni2-compact-hero-avatar" aria-hidden="true">{{ comercio.nombre|first }}</span>
+            {% endif %}
+            <div>
+                <span class="uni2-section-kicker">Mi convenio</span>
+                <h1 class="uni2-compact-hero-title">{{ comercio.nombre }}</h1>
+                <p class="text-secondary mb-0">Consultá los datos registrados por la mutual para tu comercio.</p>
+            </div>
+        </div>
+        <div class="uni2-compact-hero-accent" aria-hidden="true"></div>
+    </header>
+
+    <div class="row g-4 align-items-stretch">
+        <div class="col-12 col-lg-6">
+            <section class="card uni2-surface-card h-100" aria-labelledby="datos-comercio-title">
+                <div class="card-body">
+                    <h2 id="datos-comercio-title" class="uni2-titulo-componente mb-3">Comercio</h2>
+                    <dl class="row mb-0 g-3">
+                        <dt class="col-sm-4 text-secondary">Nombre</dt>
+                        <dd class="col-sm-8 mb-0">{{ comercio.nombre }}</dd>
+                        <dt class="col-sm-4 text-secondary">Actividad</dt>
+                        <dd class="col-sm-8 mb-0">{{ comercio.actividad_comercial.nombre }}</dd>
+                        <dt class="col-sm-4 text-secondary">Descripción</dt>
+                        <dd class="col-sm-8 mb-0">{{ comercio.descripcion|default:"Sin informar" }}</dd>
+                        <dt class="col-sm-4 text-secondary">Propietario o referente</dt>
+                        <dd class="col-sm-8 mb-0">{{ comercio.propietario|default:"Sin informar" }}</dd>
+                    </dl>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <section class="card uni2-surface-card uni2-surface-card-info h-100" aria-labelledby="convenio-title">
+                <div class="card-body">
+                    <h2 id="convenio-title" class="uni2-titulo-componente mb-3">Convenio</h2>
+                    <dl class="row mb-0 g-3">
+                        <dt class="col-sm-4 text-secondary">Estado</dt>
+                        <dd class="col-sm-8 mb-0">{{ comercio.get_estado_display }}</dd>
+                        <dt class="col-sm-4 text-secondary">Fecha</dt>
+                        <dd class="col-sm-8 mb-0">{% if comercio.fecha_convenio %}{{ comercio.fecha_convenio|date:"d/m/Y" }}{% else %}Sin informar{% endif %}</dd>
+                        <dt class="col-sm-4 text-secondary">Beneficio acordado</dt>
+                        <dd class="col-sm-8 mb-0">{{ comercio.beneficio_texto|default:"Sin informar" }}</dd>
+                    </dl>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-12">
+            <section class="card uni2-surface-card h-100" aria-labelledby="contacto-title">
+                <div class="card-body">
+                    <h2 id="contacto-title" class="uni2-titulo-componente mb-3">Contacto</h2>
+                    <dl class="row mb-0 g-3">
+                        <dt class="col-sm-3 text-secondary">Email</dt>
+                        <dd class="col-sm-9 mb-0">{{ comercio.email|default:"Sin informar" }}</dd>
+                        <dt class="col-sm-3 text-secondary">Teléfono</dt>
+                        <dd class="col-sm-9 mb-0">{{ comercio.telefono|default:"Sin informar" }}</dd>
+                        <dt class="col-sm-3 text-secondary">Dirección</dt>
+                        <dd class="col-sm-9 mb-0">{{ comercio.direccion|default:"Sin informar" }}</dd>
+                        <dt class="col-sm-3 text-secondary">Ciudad</dt>
+                        <dd class="col-sm-9 mb-0">{{ comercio.ciudad|default:"Sin informar" }}</dd>
+                        <dt class="col-sm-3 text-secondary">Provincia</dt>
+                        <dd class="col-sm-9 mb-0">{{ comercio.provincia|default:"Sin informar" }}</dd>
+                        <dt class="col-sm-3 text-secondary">Presencia web</dt>
+                        <dd class="col-sm-9 mb-0">
+                            {% if comercio.url_presencia_web %}
+                                <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">{{ comercio.url_presencia_web }}</a>
+                            {% else %}
+                                Sin informar
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

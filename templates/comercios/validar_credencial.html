@@ -4,26 +4,37 @@
 
 {% block content %}
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h1 class="h3 mb-3">Validar credencial</h1>
-                    <p class="text-secondary">Ingresá el DNI del asociado o el token escrito en la credencial.</p>
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold" for="{{ form.identificador.id_for_label }}">{{ form.identificador.label }}</label>
-                            {{ form.identificador }}
-                            {% if form.identificador.errors %}
-                                <div class="text-danger small mt-1">{{ form.identificador.errors|join:", " }}</div>
-                            {% endif %}
-                        </div>
-                        <button class="btn btn-primary" type="submit">Validar</button>
-                    </form>
-                </div>
+    <section class="uni2-validation-station" aria-labelledby="validation-title">
+        <div class="uni2-validation-spotlight">
+            <span class="uni2-validation-icon" aria-hidden="true">
+                <i class="bi bi-qr-code-scan"></i>
+            </span>
+            <span class="uni2-validation-kicker">Control de beneficios</span>
+            <h1 id="validation-title">Validar credencial</h1>
+            <p>Confirmá en segundos si la credencial puede utilizarse.</p>
+        </div>
+
+        <div class="uni2-validation-panel">
+            <div class="uni2-validation-form-wrap">
+                <span class="uni2-section-kicker">Ingreso manual</span>
+                <h2 class="uni2-titulo-componente">Identificá al asociado</h2>
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold" for="{{ form.identificador.id_for_label }}">{{ form.identificador.label }}</label>
+                        {{ form.identificador }}
+                        <div class="form-text">Ingresá el DNI o copiá el código de respaldo que figura debajo del QR.</div>
+                        {% if form.identificador.errors %}
+                            <div class="text-danger small mt-2">{{ form.identificador.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                    <button class="btn btn-primary uni2-validation-submit" type="submit">
+                        <i class="bi bi-shield-check" aria-hidden="true"></i>
+                        Validar credencial
+                    </button>
+                </form>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 {% endblock %}

@@ -22,12 +22,11 @@ def request_for(path):
     UNI2_DEPLOYMENT_ENVIRONMENT="production",
     GOOGLE_ANALYTICS_MEASUREMENT_ID=MEASUREMENT_ID,
 )
-def test_analytics_expone_el_nombre_estable_de_la_vista_en_produccion():
+def test_analytics_expone_solo_el_identificador_en_produccion():
     context = analytics_context(request_for("/productos-servicios/15/"))
 
     assert context == {
         "google_analytics_measurement_id": MEASUREMENT_ID,
-        "google_analytics_page_name": "web:producto_servicio_detalle",
     }
 
 
@@ -35,13 +34,12 @@ def test_analytics_expone_el_nombre_estable_de_la_vista_en_produccion():
     UNI2_DEPLOYMENT_ENVIRONMENT="production",
     GOOGLE_ANALYTICS_MEASUREMENT_ID=MEASUREMENT_ID,
 )
-def test_analytics_no_expone_el_uuid_de_una_credencial():
+def test_analytics_no_normaliza_una_ruta_privada_en_el_contexto():
     token = "123e4567-e89b-12d3-a456-426614174000"
 
     context = analytics_context(request_for(f"/credenciales/{token}/"))
 
-    assert context["google_analytics_page_name"] == "usuarios:resolver_credencial"
-    assert token not in str(context)
+    assert context == {"google_analytics_measurement_id": MEASUREMENT_ID}
 
 
 @pytest.mark.parametrize("environment", ["development", "staging"])
@@ -54,7 +52,6 @@ def test_analytics_permanece_deshabilitado_fuera_de_produccion(environment):
 
     assert context == {
         "google_analytics_measurement_id": "",
-        "google_analytics_page_name": "",
     }
 
 
@@ -66,7 +63,6 @@ def test_analytics_rechaza_identificadores_vacios_o_invalidos(measurement_id):
 
     assert context == {
         "google_analytics_measurement_id": "",
-        "google_analytics_page_name": "",
     }
 
 
@@ -75,7 +71,7 @@ def test_analytics_rechaza_identificadores_vacios_o_invalidos(measurement_id):
     UNI2_DEPLOYMENT_ENVIRONMENT="production",
     GOOGLE_ANALYTICS_MEASUREMENT_ID=MEASUREMENT_ID,
 )
-def test_base_carga_google_tag_y_envia_una_vista_normalizada(client):
+def test_base_carga_google_tag_con_la_configuracion_estandar(client):
     content = client.get("/").content.decode()
 
     assert (
@@ -83,14 +79,13 @@ def test_base_carga_google_tag_y_envia_una_vista_normalizada(client):
         in content
     )
     assert 'id="uni2-google-analytics-config"' in content
-    assert 'const uni2AnalyticsPageName = "web:home";' in content
-    assert "send_page_view: false" in content
-    assert 'gtag("event", "page_view"' in content
-    assert content.count("page_title: uni2AnalyticsPageName") == 2
-    assert content.count("page_location: uni2AnalyticsPageLocation") == 2
-    assert content.count("page_referrer: uni2AnalyticsPageReferrer") == 2
-    assert "window.location.href" not in content
-    assert 'new URL("/", document.referrer).href' in content
+    assert 'gtag("config", "G\\u002DTEST123");' in content
+    assert 'gtag("event", "page_view"' not in content
+    assert "send_page_view" not in content
+    assert "page_title" not in content
+    assert "page_location" not in content
+    assert "page_referrer" not in content
+    assert "/__analytics__/" not in content
 
 
 @pytest.mark.django_db

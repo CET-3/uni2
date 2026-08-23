@@ -10,7 +10,11 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 **Situación:** el alta ocurre cerca del cierre del período mensual.
 
-**Respuesta esperada:** si ocurre antes del día 15, paga el mes actual; si ocurre después del día 15, comienza a pagar desde el mes siguiente. El administrador puede ajustar `fecha_inicio_cobro`.
+**Respuesta esperada:** el día del alta no cambia el cálculo. Un `Asociado`
+comienza dos meses antes y un `Adherente` comienza en el mes actual. Si la
+administración ya ejecutó la generación de un período futuro, el alta también
+recibe esa cuota; si el período sólo fue creado, no la recibe. El administrador
+puede ajustar `fecha_inicio_cobro` de manera explícita.
 
 **Caso de uso relacionado:** [CU-crear-asociado](../casos-de-uso/cu-crear-asociado.md).
 
