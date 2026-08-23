@@ -261,6 +261,18 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-badge` | Etiqueta amarilla tipo pill |
 | `uni2-discount` | Descuento verde en cards de publicidad |
 
+### Identidad y validación
+
+| Clase | Uso |
+|---|---|
+| `uni2-credential-card` | Credencial institucional compartida por la vista online y la copia offline |
+| `uni2-credential-brand` | Cabecera de marca con logo y denominación del documento |
+| `uni2-credential-state` | Banda semántica inferior; combina color fuerte, símbolo y texto |
+| `uni2-credential-technical` | Detalle secundario para el UUID de respaldo |
+| `uni2-validation-station` | Puesto de control compartido por el ingreso manual y el resultado de una validación |
+| `uni2-validation-spotlight` | Panel fuerte que comunica propósito o resultado con color, icono y texto |
+| `uni2-validation-panel` | Superficie clara para el formulario o los datos permitidos |
+
 ### Servicios
 
 | Clase | Uso |
@@ -408,6 +420,13 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-commerce-identity-copy` | Rubro, nombre y descripción del comercio |
 | `uni2-commerce-benefit-block` | Bloque amarillo destacado del beneficio |
 | `uni2-commerce-benefit-text` | Descripción del beneficio |
+| `uni2-commerce-modal-dialog` | Ancho compacto del diálogo de comercio |
+| `uni2-commerce-modal-card` | Composición centrada de la ficha modal |
+| `uni2-commerce-modal-logo` | Logo circular principal del modal |
+| `uni2-commerce-modal-logo--fallback` | Variante del logo con iniciales |
+| `uni2-commerce-modal-benefit` | Beneficio amarillo debajo del logo |
+| `uni2-commerce-modal-meta` | Datos públicos compactos y centrados |
+| `uni2-commerce-modal-actions` | Acciones secundarias al pie del modal |
 
 ### Dashboard / Admin
 
@@ -416,13 +435,36 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-dashboard-page` | Contexto de página de dashboard |
 | `uni2-dashboard-pill` | Pill de contexto en el hero |
 | `uni2-section-title-row` | Fila de título + acción de sección |
-| `uni2-metric-card` | Resumen numérico de una previsualización de importación |
+| `uni2-metric-card` | Resumen de un dato operativo real |
+| `uni2-metric-card-{info,success,warning,danger}` | Variantes semánticas de una métrica |
 | `uni2-metric-label` | Etiqueta de la métrica |
 | `uni2-metric-value` | Valor de la métrica |
-| `uni2-surface-card` | Card genérica sin borde |
+| `uni2-surface-card` | Card genérica para una unidad temática |
+| `uni2-surface-card-{info,success,warning,danger}` | Variantes de acento semántico de una superficie |
+| `uni2-badge-{info,success,warning,danger}` | Variantes semánticas de una etiqueta de estado |
+| `uni2-avatar` | Imagen o iniciales que identifican a una persona |
+| `uni2-avatar-{blue,green,yellow,red}` | Variantes cromáticas del avatar |
+| `uni2-data-list` | Lista de pares etiqueta/valor para una ficha |
 | `uni2-page-header-actions` | Grupo de acciones del header de página |
 | `uni2-pill-row` | Fila de pills |
 | `uni2-schedule-card` | Card de horario/turno |
+
+### Estructuras de flujos operativos
+
+| Clase | Uso |
+|---|---|
+| `uni2-periods-table` | Ajuste de densidad de la tabla de períodos |
+| `uni2-period-amounts` | Agrupa importe y recargos de un período |
+| `uni2-period-generate-action` | Alinea cantidad y acción de generación de cuotas |
+| `uni2-cobro-summary` | Distribuye los datos del asociado antes del cobro |
+| `uni2-cobro-section` | Delimita la selección de cuotas dentro del formulario |
+| `uni2-cobro-table` | Ancho mínimo de la tabla seleccionable de cuotas |
+| `uni2-cobro-check` | Área visible y accesible del checkbox de una cuota |
+| `uni2-cobro-fields` | Distribuye fecha, importe, método y observaciones |
+| `uni2-cobro-field-full` | Hace que observaciones ocupe todo el ancho disponible |
+
+Estas clases describen estructura exclusiva del flujo y no definen colores,
+títulos, badges, cards ni acciones alternativas al sistema compartido.
 
 ### Footer
 

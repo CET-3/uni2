@@ -4,6 +4,7 @@
 * [CicloLectivo](ciclo-lectivo.md) - Representa un año lectivo. Se usa como referencia en inscripciones y períodos de cuota.
 * [Curso](curso.md) - Representa un curso comisión de la escuela.
 * [Asociado](asociado.md) - Representa a una persona asociada o adherente a la mutual.
+* [ClasificacionAdherente](clasificacion-adherente.md) - Clasifica la relación institucional de una persona adherente.
 * [PeríodoCuota](periodo-cuota.md) - Representa un período mensual de cuota.
 * [Cuota](cuota.md) - Representa una cuota concreta de un asociado para un período.
 * [Pago](pago.md) - Representa un ingreso de dinero.

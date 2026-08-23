@@ -27,13 +27,13 @@ class ComercioRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class ValidarCredencialForm(forms.Form):
     identificador = forms.CharField(
-        label="DNI o token de credencial",
+        label="DNI o código de credencial",
         max_length=64,
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
                 "autocomplete": "off",
-                "placeholder": "Ej. 40123456 o UUID de la credencial",
+                "placeholder": "Ej. 40123456 o código UUID",
             }
         ),
     )
@@ -56,3 +56,12 @@ class ValidarCredencialView(ComercioRequiredMixin, FormView):
 
         context = self.get_context_data(form=form, resultado=resultado, comercio=comercio)
         return render(self.request, "comercios/resultado_validacion.html", context)
+
+
+class MiConvenioView(ComercioRequiredMixin, TemplateView):
+    template_name = "comercios/mi_convenio.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comercio"] = self.request.user.comercio
+        return context

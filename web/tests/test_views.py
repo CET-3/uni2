@@ -140,6 +140,34 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "benefit-list-body" in content
     assert "uni2-discount" in content
     assert "uni2-metric-card" in content
+    for clase in (
+        "uni2-metric-card-info",
+        "uni2-metric-card-success",
+        "uni2-metric-card-warning",
+        "uni2-metric-card-danger",
+        "uni2-badge-info",
+        "uni2-badge-success",
+        "uni2-badge-warning",
+        "uni2-badge-danger",
+        "uni2-surface-card-info",
+        "uni2-surface-card-success",
+        "uni2-surface-card-warning",
+        "uni2-surface-card-danger",
+        "uni2-surface-card-brand",
+        "uni2-compact-hero",
+        "uni2-compact-hero-with-summary",
+        "uni2-compact-hero-title",
+        "uni2-compact-hero-identity",
+        "uni2-compact-hero-avatar",
+        "uni2-compact-hero-summary",
+        "uni2-avatar",
+        "uni2-data-list",
+    ):
+        assert clase in content
+    assert 'uni2-badge-success">Pagada</span>' in content
+    assert 'uni2-badge-warning">Pendiente</span>' in content
+    assert 'uni2-badge-danger">Vencida</span>' in content
+    assert "No representa un dashboard" not in content
     assert "uni2-breadcrumbs" in content
     assert "Fotocopias e impresiones" in content
     assert 'aria-current="page"' in content
@@ -174,6 +202,24 @@ def test_css_design_system_acota_navegacion_y_no_conserva_aliases_huerfanos():
 
     # El catálogo usa Bootstrap para su mobiliario y no mantiene una capa CSS paralela.
     assert "ds-page" not in css
+
+
+def test_redisenio_no_conserva_familias_visuales_paralelas():
+    project_root = Path(__file__).resolve().parents[2]
+    archivos = [project_root / "static/css/uni2-design-system.css"]
+    archivos.extend((project_root / "templates").rglob("*.html"))
+    contenido = "\n".join(path.read_text(encoding="utf-8") for path in archivos)
+
+    for familia in (
+        "uni2-ops-",
+        "uni2-member-",
+        "uni2-access-",
+        "uni2-form-error-summary",
+        "uni2-record-list",
+        "uni2-record-",
+        "uni2-payment-",
+    ):
+        assert familia not in contenido
 
 
 def test_catalogo_muestra_todos_los_tokens_publicos():
@@ -626,7 +672,6 @@ def test_templates_usan_una_sola_familia_productiva_de_alertas():
     css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
     templates_con_alertas = (
         "includes/messages.html",
-        "comercios/resultado_validacion.html",
         "registration/login.html",
         "gestion/importar_cuotas_historicas.html",
         "gestion/importar_asociados.html",

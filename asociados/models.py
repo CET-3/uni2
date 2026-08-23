@@ -1,6 +1,7 @@
 import uuid
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Max
 
@@ -78,6 +79,35 @@ class Curso(models.Model):
         return f"{self.anio} {self.curso} {self.division} {self.turno}"
 
 
+class ClasificacionAdherente(models.Model):
+    NOMBRE_SIN_CLASIFICAR = "Sin clasificar"
+
+    nombre = models.CharField(
+        "nombre",
+        max_length=100,
+        unique=True,
+        help_text="Nombre visible de la clasificación del adherente.",
+    )
+    activa = models.BooleanField(
+        "activa",
+        default=True,
+        help_text="Indica si puede asignarse en nuevas altas y ediciones.",
+    )
+    orden = models.PositiveIntegerField(
+        "orden",
+        default=0,
+        help_text="Posición en formularios y listados.",
+    )
+
+    class Meta:
+        verbose_name = "Clasificación de adherente"
+        verbose_name_plural = "Clasificaciones de adherentes"
+        ordering = ["orden", "nombre"]
+
+    def __str__(self):
+        return self.nombre
+
+
 class Asociado(models.Model):
     TIPO_ASOCIADO = "asociado"
     TIPO_ADHERENTE = "adherente"
@@ -121,6 +151,15 @@ class Asociado(models.Model):
         blank=True,
         null=True,
     )
+    clasificacion_adherente = models.ForeignKey(
+        ClasificacionAdherente,
+        on_delete=models.PROTECT,
+        related_name="adherentes",
+        verbose_name="clasificación de adherente",
+        blank=True,
+        null=True,
+        help_text="Clasificación institucional; corresponde únicamente a adherentes.",
+    )
     estado = models.CharField(max_length=20, choices=ESTADOS, default=ESTADO_ACTIVO)
     fecha_alta = models.DateField()
     fecha_inicio_cobro = models.DateField()
@@ -139,6 +178,30 @@ class Asociado(models.Model):
 
     def __str__(self):
         return f"{self.apellido}, {self.nombre}"
+
+    def get_dato_institucional(self):
+        if self.tipo == self.TIPO_ASOCIADO:
+            return "Curso", str(self.curso_actual) if self.curso_actual else ""
+        return (
+            "Clasificación",
+            str(self.clasificacion_adherente) if self.clasificacion_adherente else "",
+        )
+
+    def clean(self):
+        super().clean()
+        errores = {}
+        if self.tipo == self.TIPO_ASOCIADO:
+            if self.curso_actual is None:
+                errores["curso_actual"] = "Elegí un curso para el asociado."
+            if self.clasificacion_adherente is not None:
+                errores["clasificacion_adherente"] = "La clasificación corresponde únicamente a adherentes."
+        elif self.tipo == self.TIPO_ADHERENTE:
+            if self.clasificacion_adherente is None:
+                errores["clasificacion_adherente"] = "Elegí una clasificación para el adherente."
+            if self.curso_actual is not None:
+                errores["curso_actual"] = "El adherente no puede tener un curso actual."
+        if errores:
+            raise ValidationError(errores)
 
     @classmethod
     def next_numero_asociado(cls) -> int:

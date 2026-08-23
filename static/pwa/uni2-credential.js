@@ -102,6 +102,8 @@
         apellido: root.dataset.credentialApellido,
         numero: root.dataset.credentialNumero,
         tipo: root.dataset.credentialTipo,
+        datoEtiqueta: root.dataset.credentialDatoEtiqueta,
+        datoValor: root.dataset.credentialDatoValor,
         ultimoEstado: root.dataset.credentialEstado,
         token: root.dataset.credentialToken,
         credentialUrl: root.dataset.credentialUrl,
@@ -225,6 +227,15 @@
     );
     setText('[data-offline-credential-number]', credential.numero, content);
     setText('[data-offline-credential-type]', credential.tipo, content);
+    const institutional = content.querySelector('[data-offline-credential-institutional]');
+    if (institutional) {
+      const hasInstitutionalData = Boolean(credential.datoEtiqueta && credential.datoValor);
+      institutional.hidden = !hasInstitutionalData;
+      if (hasInstitutionalData) {
+        setText('[data-offline-credential-institutional-label]', credential.datoEtiqueta, institutional);
+        setText('[data-offline-credential-institutional-value]', credential.datoValor, institutional);
+      }
+    }
     setText('[data-offline-credential-token]', credential.token, content);
     setText('[data-offline-credential-updated]', formatDateTime(credential.updatedAt), content);
     setText('[data-offline-credential-expires]', formatDate(credential.expiresAt), content);
@@ -232,7 +243,7 @@
     const state = content.querySelector('[data-offline-credential-state]');
     if (state) {
       state.textContent = credential.ultimoEstado + ' al actualizar';
-      const wasActive = credential.ultimoEstado.trim().toLowerCase() === 'activo';
+      const wasActive = credential.ultimoEstado.trim().toLowerCase() === 'activa';
       state.classList.toggle('uni2-credential-state-active', wasActive);
       state.classList.toggle('uni2-credential-state-inactive', !wasActive);
     }

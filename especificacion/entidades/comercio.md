@@ -40,4 +40,4 @@ Comercio adherido a la mutual.
 
 **Administración:** en el MVP se carga y edita desde el admin técnico de Django. En el listado, el nombre del comercio abre el formulario de edición. El formulario muestra primero los datos principales obligatorios y ubica la descripción inmediatamente después del nombre. La puesta en marcha puede usar el [comando de importación inicial](../casos-de-uso/cu-importar-comercios-iniciales.md).
 
-**Referencias funcionales:** ver [comercios públicos](../reglas/comercios-publicos.md), [comercios operación](../reglas/comercios-operacion.md), [credenciales](../reglas/credenciales.md), [importar comercios iniciales](../casos-de-uso/cu-importar-comercios-iniciales.md) y [validar credencial](../casos-de-uso/cu-validar-credencial.md).
+**Referencias funcionales:** ver [comercios públicos](../reglas/comercios-publicos.md), [comercios operación](../reglas/comercios-operacion.md), [credenciales](../reglas/credenciales.md), [importar comercios iniciales](../casos-de-uso/cu-importar-comercios-iniciales.md), [validar credencial](../casos-de-uso/cu-validar-credencial.md) y [ver convenio propio](../casos-de-uso/cu-ver-convenio-propio.md).

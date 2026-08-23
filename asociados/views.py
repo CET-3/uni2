@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 
 from django.utils import timezone
 
-from cuotas.selectors import calcular_estado_cuota, get_total_deuda
+from cuotas.selectors import calcular_estado_credencial, calcular_estado_cuota, get_total_deuda
 from usuarios.mixins import CredentialPrivacyHeadersMixin
 from usuarios.services import user_is_asociado
 
@@ -32,11 +32,16 @@ class AsociadoCredencialView(CredentialPrivacyHeadersMixin, AsociadoRequiredMixi
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["asociado"] = self.request.user.asociado
+        asociado = self.request.user.asociado
+        context["asociado"] = asociado
+        dato_etiqueta, dato_valor = asociado.get_dato_institucional()
+        context["dato_institucional_etiqueta"] = dato_etiqueta
+        context["dato_institucional_valor"] = dato_valor
+        context["estado_credencial"] = calcular_estado_credencial(asociado, timezone.localdate())
         context["credencial_url"] = self.request.build_absolute_uri(
             reverse(
                 "usuarios:resolver_credencial",
-                kwargs={"token": self.request.user.asociado.token_credencial},
+                kwargs={"token": asociado.token_credencial},
             )
         )
         return context
@@ -54,6 +59,9 @@ class AsociadoCuotasView(AsociadoRequiredMixin, TemplateView):
             "-periodo__ciclo_lectivo__anio", "-periodo__mes"
         )
         context["fecha_referencia"] = fecha_referencia
-        context["cuotas"] = [calcular_estado_cuota(cuota, fecha_referencia) for cuota in cuotas]
+        cuotas_calculadas = [calcular_estado_cuota(cuota, fecha_referencia) for cuota in cuotas]
+        context["cuotas"] = cuotas_calculadas
         context["total_deuda"] = get_total_deuda(asociado, fecha_referencia)
+        context["cuotas_total"] = len(cuotas_calculadas)
+        context["cuotas_con_saldo"] = sum(1 for cuota in cuotas_calculadas if cuota.saldo > 0)
         return context

@@ -22,6 +22,7 @@ AUDIT_FIELDS_PERIODO = (
     "importe_recargo_mes_siguiente",
     "fecha_vencimiento",
     "activo",
+    "generado_el",
 )
 AUDIT_FIELDS_CUOTA = (
     "asociado",
@@ -64,6 +65,15 @@ def _periodo_key(periodo: PeriodoCuota) -> tuple[int, int]:
     return periodo.ciclo_lectivo.anio, periodo.mes
 
 
+def _get_periodos_activos_para_alta():
+    return (
+        PeriodoCuota.objects.select_for_update()
+        .filter(activo=True)
+        .select_related("ciclo_lectivo")
+        .order_by("ciclo_lectivo__anio", "mes")
+    )
+
+
 def _recompute_estado(cuota: Cuota, fecha_referencia=None):
     if fecha_referencia is None:
         fecha_referencia = timezone.localdate()
@@ -71,9 +81,11 @@ def _recompute_estado(cuota: Cuota, fecha_referencia=None):
     cuota.save(update_fields=["importe_pagado", "estado"])
 
 
-def _get_cuotas_para_cobro(asociado: Asociado, cuotas_ids):
+def _get_cuotas_para_cobro(asociado: Asociado, cuotas_ids, fecha_referencia):
     cuotas_deudoras = list(
-        get_cuotas_deudoras(asociado).order_by("periodo__ciclo_lectivo__anio", "periodo__mes", "id")
+        get_cuotas_deudoras(asociado, fecha_referencia).order_by(
+            "periodo__ciclo_lectivo__anio", "periodo__mes", "id"
+        )
     )
     if cuotas_ids is None:
         return cuotas_deudoras
@@ -97,7 +109,9 @@ def _get_cuotas_para_cobro(asociado: Asociado, cuotas_ids):
 
 @transaction.atomic
 def crear_periodo_cuota(*, datos, actor):
-    periodo = PeriodoCuota.objects.create(**datos)
+    periodo = PeriodoCuota(**datos)
+    periodo.full_clean()
+    periodo.save()
     _registrar_creacion(
         obj=periodo,
         fields=AUDIT_FIELDS_PERIODO,
@@ -113,6 +127,7 @@ def crear_periodo_cuota(*, datos, actor):
 def generar_cuotas_para_periodo(periodo: PeriodoCuota, *, actor=None) -> int:
     created = 0
     operacion_id = uuid.uuid4()
+    periodo = PeriodoCuota.objects.select_for_update().get(pk=periodo.pk)
     asociados = Asociado.objects.filter(
         estado=Asociado.ESTADO_ACTIVO,
         fecha_inicio_cobro__isnull=False,
@@ -140,26 +155,42 @@ def generar_cuotas_para_periodo(periodo: PeriodoCuota, *, actor=None) -> int:
                 operacion_id=operacion_id,
                 actor_etiqueta="Sistema: generación de cuotas",
             )
+    if periodo.generado_el is None:
+        anteriores = {"generado_el": None}
+        periodo.generado_el = timezone.now()
+        periodo.save(update_fields=["generado_el"])
+        registrar_evento(
+            actor=actor,
+            actor_etiqueta="Sistema: generación de cuotas",
+            accion=EventoAuditoria.ACCION_MODIFICAR,
+            entidad=periodo._meta.label,
+            objeto_id=periodo.pk,
+            objeto_descripcion=str(periodo),
+            cambios=construir_cambios(
+                anteriores=anteriores,
+                nuevos={"generado_el": periodo.generado_el},
+                campos=("generado_el",),
+            ),
+            origen=EventoAuditoria.ORIGEN_GESTION if actor else EventoAuditoria.ORIGEN_SISTEMA,
+            operacion_id=operacion_id,
+        )
     return created
 
 
 @transaction.atomic
 def generar_cuotas_iniciales_para_asociado(*, asociado: Asociado, fecha_referencia, actor=None) -> list[Cuota]:
-    meses = []
-    for i in range(2, -1, -1):
-        m = fecha_referencia.month - i
-        a = fecha_referencia.year
-        while m < 1:
-            m += 12
-            a -= 1
-        meses.append((a, m))
+    if asociado.fecha_inicio_cobro is None:
+        return []
 
     cuotas = []
     operacion_id = uuid.uuid4()
-    for anio, mes in meses:
-        try:
-            periodo = PeriodoCuota.objects.get(mes=mes, ciclo_lectivo__anio=anio, activo=True)
-        except PeriodoCuota.DoesNotExist:
+    inicio = (asociado.fecha_inicio_cobro.year, asociado.fecha_inicio_cobro.month)
+    periodo_actual = (fecha_referencia.year, fecha_referencia.month)
+    for periodo in _get_periodos_activos_para_alta():
+        clave = _periodo_key(periodo)
+        if clave < inicio:
+            continue
+        if clave > periodo_actual and periodo.generado_el is None:
             continue
         cuota, created = Cuota.objects.get_or_create(
             asociado=asociado,
@@ -170,8 +201,8 @@ def generar_cuotas_iniciales_para_asociado(*, asociado: Asociado, fecha_referenc
                 "importe_recargo_mes_siguiente": periodo.importe_recargo_mes_siguiente,
             },
         )
-        cuotas.append(cuota)
         if created:
+            cuotas.append(cuota)
             _registrar_creacion(
                 obj=cuota,
                 fields=AUDIT_FIELDS_CUOTA,
@@ -189,7 +220,7 @@ def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por
     origen = EventoAuditoria.ORIGEN_GESTION if registrado_por else EventoAuditoria.ORIGEN_SISTEMA
     actor_etiqueta = "Sistema: registro de pago"
     importe = Decimal(str(importe))
-    cuotas = _get_cuotas_para_cobro(asociado, cuotas_ids)
+    cuotas = _get_cuotas_para_cobro(asociado, cuotas_ids, fecha)
     deuda_total = sum((cuota.get_saldo_pendiente(fecha) for cuota in cuotas), start=Decimal("0"))
     es_donacion_sin_deuda = not cuotas and cuotas_ids == []
     if deuda_total <= 0 and not es_donacion_sin_deuda:
@@ -289,7 +320,7 @@ def registrar_donacion(
 ):
     """Registra una donación cuando el asociado no tiene cuotas pendientes."""
 
-    if get_cuotas_deudoras(asociado).exists():
+    if get_cuotas_deudoras(asociado, fecha).exists():
         raise ValueError("El asociado tiene cuotas pendientes; primero debe registrar su cobro.")
     return registrar_pago(
         asociado=asociado,
