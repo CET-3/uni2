@@ -10,7 +10,7 @@ from typing import Any
 
 from django.db import transaction
 
-from .models import Asociado, Curso
+from .models import Asociado, ClasificacionAdherente, Curso
 
 
 
@@ -20,23 +20,23 @@ PADRON_IMPORT_LOG_EVERY = 25
 logger = logging.getLogger(__name__)
 
 ROLE_MAP = {
-    "docente": "docente",
-    "docentes": "docente",
-    "profesor": "docente",
-    "profesora": "docente",
-    "profe": "docente",
-    "preceptor": "preceptor",
-    "preceptora": "preceptor",
-    "director": "directivo",
-    "directora": "directivo",
-    "vicedirector": "directivo",
-    "vicedirectora": "directivo",
-    "portera": "auxiliar",
-    "portero": "auxiliar",
-    "bibliotecaria": "biblioteca",
-    "bibliotecario": "biblioteca",
-    "padrino mutual": "padrino_mutual",
-    "particular": "particular",
+    "docente": "Docente",
+    "docentes": "Docente",
+    "profesor": "Docente",
+    "profesora": "Docente",
+    "profe": "Docente",
+    "preceptor": "Preceptor",
+    "preceptora": "Preceptor",
+    "director": "Directivo",
+    "directora": "Directivo",
+    "vicedirector": "Directivo",
+    "vicedirectora": "Directivo",
+    "portera": "Auxiliar",
+    "portero": "Auxiliar",
+    "bibliotecaria": "Biblioteca",
+    "bibliotecario": "Biblioteca",
+    "padrino mutual": "Padrino mutual",
+    "particular": "Particular",
 }
 
 ORD_ANIO = {"1": "1ro", "2": "2do", "3": "3ro", "4": "4to", "5": "5to", "6": "6to", "7": "7mo"}
@@ -57,6 +57,7 @@ PADRON_HEADERS = [
     "Celular",
     "Mail",
     "Dirección",
+    "Clasificación de adherente",
     "Motivo de revisión",
 ]
 
@@ -322,6 +323,30 @@ def _normalize_row(row, dni_counts, dni_conflict_filas=None):
     if rol:
         observaciones.append(f"Rol deducido: {rol}")
 
+    clasificacion_adherente = ""
+    clasificacion_bloqueante = ""
+    if tipo == Asociado.TIPO_ADHERENTE:
+        if rol:
+            clasificacion_adherente = rol
+        else:
+            valor_clasificacion = _normalize_course_text(row["curso_original"])
+            if not valor_clasificacion or set(valor_clasificacion) <= {"-"}:
+                clasificacion_adherente = ClasificacionAdherente.NOMBRE_SIN_CLASIFICAR
+                clasificacion_bloqueante = "falta clasificación de adherente"
+            else:
+                clasificacion = next(
+                    (
+                        item
+                        for item in ClasificacionAdherente.objects.filter(activa=True)
+                        if _normalize_course_text(item.nombre) == valor_clasificacion
+                    ),
+                    None,
+                )
+                if clasificacion:
+                    clasificacion_adherente = clasificacion.nombre
+                else:
+                    clasificacion_bloqueante = f'clasificación de adherente desconocida: "{row["curso_original"]}"'
+
     output = {
         "estado_importacion": "IMPORTAR",
         "numero_asociado": row["numero_asociado"],
@@ -335,6 +360,7 @@ def _normalize_row(row, dni_counts, dni_conflict_filas=None):
         "division": course_data.get("division", ""),
         "turno": course_data.get("turno", ""),
         "rol_deducido": rol,
+        "clasificacion_adherente": clasificacion_adherente,
         "telefono": row["telefono"],
         "email": row["email"],
         "direccion": row["direccion"],
@@ -371,6 +397,8 @@ def _normalize_row(row, dni_counts, dni_conflict_filas=None):
         blockers.append("tipo dudoso")
     if tipo == Asociado.TIPO_ASOCIADO and not output["curso"]:
         blockers.append("curso incompleto o dudoso para asociado")
+    if tipo == Asociado.TIPO_ADHERENTE and clasificacion_bloqueante:
+        blockers.append(clasificacion_bloqueante)
 
     if blockers:
         output["estado_importacion"] = "REVISAR"
@@ -455,6 +483,7 @@ def build_revisar_padron_xlsx(preview: PadronPreview) -> bytes:
                 row.get("telefono", ""),
                 row.get("email", ""),
                 row.get("direccion", ""),
+                row.get("clasificacion_adherente", ""),
                 row.get("observaciones", ""),
             ]
         )
@@ -509,11 +538,17 @@ def import_padron_preview(preview: PadronPreview, fecha_alta: date) -> PadronImp
 
 
 def _upsert_asociado(row, curso, fecha_alta, result):
+    clasificacion = None
+    if row["tipo"] == Asociado.TIPO_ADHERENTE:
+        nombre_clasificacion = row.get("clasificacion_adherente") or ClasificacionAdherente.NOMBRE_SIN_CLASIFICAR
+        clasificacion = ClasificacionAdherente.objects.get(nombre=nombre_clasificacion)
+        curso = None
     defaults = {
         "apellido": row["apellido"],
         "nombre": row["nombre"],
         "tipo": row["tipo"],
         "curso_actual": curso,
+        "clasificacion_adherente": clasificacion,
         "telefono": row.get("telefono", ""),
         "email": row.get("email", ""),
         "direccion": row.get("direccion", ""),

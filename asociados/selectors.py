@@ -8,17 +8,17 @@ from cuotas.selectors import get_total_deuda
 
 
 def get_asociados_activos():
-    return Asociado.objects.filter(estado=Asociado.ESTADO_ACTIVO).select_related("curso_actual", "usuario")
+    return Asociado.objects.filter(estado=Asociado.ESTADO_ACTIVO).select_related("curso_actual", "clasificacion_adherente", "usuario")
 
 
 def get_asociado_by_dni(dni: str):
-    return Asociado.objects.filter(dni=dni).select_related("curso_actual", "usuario").first()
+    return Asociado.objects.filter(dni=dni).select_related("curso_actual", "clasificacion_adherente", "usuario").first()
 
 
 def get_asociado_by_credential_token(token):
     """Busca una credencial sin decidir quién tiene permiso para verla."""
 
-    return Asociado.objects.filter(token_credencial=token).first()
+    return Asociado.objects.select_related("curso_actual", "clasificacion_adherente").filter(token_credencial=token).first()
 
 
 def get_asociado_by_credential_identifier(identifier):
@@ -51,7 +51,7 @@ def search_asociados(query: str):
 
 
 def _base_queryset():
-    return Asociado.objects.select_related("curso_actual", "usuario")
+    return Asociado.objects.select_related("curso_actual", "clasificacion_adherente", "usuario")
 
 
 def _asociados_con_deuda_ids(fecha_referencia=None):
@@ -70,6 +70,7 @@ def filter_asociados(
     estado: str = "",
     tipo: str = "",
     curso_id=None,
+    clasificacion_adherente_id=None,
     usuario: str = "",
     deuda: str = "",
 ):
@@ -77,7 +78,7 @@ def filter_asociados(
     if hasattr(curso_id, "pk"):
         curso_id = curso_id.pk
     curso_id = curso_id or None
-    has_filters = any([query, estado, tipo, curso_id, usuario, deuda])
+    has_filters = any([query, estado, tipo, curso_id, clasificacion_adherente_id, usuario, deuda])
     if not has_filters:
         return Asociado.objects.none()
 
@@ -95,6 +96,8 @@ def filter_asociados(
         asociados = asociados.filter(tipo=tipo)
     if curso_id:
         asociados = asociados.filter(curso_actual_id=curso_id)
+    if clasificacion_adherente_id:
+        asociados = asociados.filter(clasificacion_adherente_id=clasificacion_adherente_id)
     if usuario == "con":
         asociados = asociados.filter(usuario__isnull=False)
     elif usuario == "sin":
@@ -116,4 +119,4 @@ def get_asociados_for_export(filters=None):
 
 
 def get_asociado_by_id(asociado_id: int):
-    return Asociado.objects.select_related("curso_actual", "usuario").filter(id=asociado_id).first()
+    return Asociado.objects.select_related("curso_actual", "clasificacion_adherente", "usuario").filter(id=asociado_id).first()

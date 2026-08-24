@@ -45,8 +45,9 @@ después de la última actualización correcta y debe mostrar esa fecha.
 ## PWA-007
 
 La copia offline no puede incluir DNI, deuda, cuotas, domicilio, correo,
-cookie, CSRF ni datos de sesión. La página autenticada completa tampoco puede
-persistirse.
+causa de inactividad, cookie, CSRF ni datos de sesión. Puede conservar nombre,
+tipo, curso o clasificación y `Activa` o `Inactiva` como último estado calculado. La página
+autenticada completa tampoco puede persistirse.
 
 ## PWA-008
 

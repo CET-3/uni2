@@ -33,12 +33,14 @@ from cuotas.importers import (
 )
 from cuotas.models import Pago, PeriodoCuota
 from cuotas.selectors import (
+    calcular_estado_credencial,
     calcular_estado_cuota,
     describir_pago,
     get_cuotas_deudoras,
     get_cuotas_del_anio,
     get_cuotas_del_asociado,
     get_total_deuda,
+    precargar_cuotas_para_estado_credencial,
 )
 from cuotas.services import (
     crear_periodo_cuota,
@@ -160,16 +162,34 @@ class GestionAsociadosView(GestionPermissionRequiredMixin, TemplateView):
                 "estado": form.cleaned_data["estado"],
                 "tipo": form.cleaned_data["tipo"],
                 "curso_id": form.cleaned_data["curso_actual"].id if form.cleaned_data["curso_actual"] else None,
+                "clasificacion_adherente_id": form.cleaned_data["clasificacion_adherente"].id if form.cleaned_data["clasificacion_adherente"] else None,
                 "usuario": form.cleaned_data["usuario"],
                 "deuda": form.cleaned_data["deuda"],
             }
-            asociados = get_asociados_for_export(filters)
+            asociados = list(
+                precargar_cuotas_para_estado_credencial(
+                    get_asociados_for_export(filters)
+                )
+            )
+            fecha_referencia = timezone.localdate()
+            resultados_asociados = [
+                {
+                    "asociado": asociado,
+                    "estado_credencial": calcular_estado_credencial(
+                        asociado,
+                        fecha_referencia,
+                    ),
+                }
+                for asociado in asociados
+            ]
         else:
             filters = {}
             asociados = []
+            resultados_asociados = []
         context["form"] = form
         context["query"] = form.data.get("q", "") if form.is_bound else ""
         context["asociados"] = asociados
+        context["resultados_asociados"] = resultados_asociados
         return context
 
 
@@ -215,6 +235,7 @@ class GestionExportarAsociadosView(GestionPermissionRequiredMixin, TemplateView)
                 "estado": form.cleaned_data["estado"],
                 "tipo": form.cleaned_data["tipo"],
                 "curso_id": form.cleaned_data["curso_actual"].id if form.cleaned_data["curso_actual"] else None,
+                "clasificacion_adherente_id": form.cleaned_data["clasificacion_adherente"].id if form.cleaned_data["clasificacion_adherente"] else None,
                 "usuario": form.cleaned_data["usuario"],
                 "deuda": form.cleaned_data["deuda"],
             }
@@ -493,6 +514,7 @@ class GestionAsociadoDetalleView(GestionPermissionRequiredMixin, TemplateView):
             cuotas_anio_actual.append(calcular_estado_cuota(cuota, fecha_referencia))
         context["asociado"] = asociado
         context["fecha_referencia"] = fecha_referencia
+        context["estado_credencial"] = calcular_estado_credencial(asociado, fecha_referencia)
         context["total_deuda"] = get_total_deuda(asociado, fecha_referencia)
         context["cuotas_anio_actual"] = cuotas_anio_actual
         pagos_recientes = Pago.objects.filter(asociado=asociado).order_by("-fecha", "-id")[:10]
@@ -555,7 +577,7 @@ class GestionAsociadoEditarView(GestionPermissionRequiredMixin, TemplateView):
             actualizar_asociado(
                 asociado=self.asociado,
                 datos=form.cleaned_data,
-                campos_modificados=form.changed_data,
+                campos_modificados=set(form.changed_data) | {"curso_actual", "clasificacion_adherente"},
                 actor=request.user,
             )
             messages.success(request, "Asociado actualizado correctamente.")
@@ -568,6 +590,7 @@ class GestionAsociadoEditarView(GestionPermissionRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["asociado"] = self.asociado
         context["form"] = getattr(self.request, "_asociado_form", AsociadoGestionForm(instance=self.asociado))
+        context["estado_credencial"] = calcular_estado_credencial(self.asociado, timezone.localdate())
         context["return_url"] = get_asociados_return_url(self.request)
         context["detail_url"] = get_asociado_detail_url(self.asociado.id, context["return_url"])
         return context

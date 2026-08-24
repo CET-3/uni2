@@ -11,7 +11,7 @@ from auditoria.models import EventoAuditoria
 from auditoria.services import construir_cambios, registrar_evento
 from usuarios.services import create_user_for_asociado, ensure_default_groups
 
-from .models import Asociado, Curso
+from .models import Asociado, ClasificacionAdherente, Curso
 
 
 CAMPOS_AUDITABLES_ASOCIADO = (
@@ -23,6 +23,7 @@ CAMPOS_AUDITABLES_ASOCIADO = (
     "direccion",
     "tipo",
     "curso_actual",
+    "clasificacion_adherente",
     "estado",
     "fecha_alta",
     "fecha_inicio_cobro",
@@ -35,13 +36,16 @@ def _valores_auditables_asociado(asociado):
     return {campo: getattr(asociado, campo) for campo in CAMPOS_AUDITABLES_ASOCIADO}
 
 
-def calculate_fecha_inicio_cobro(fecha_alta: date) -> date:
-    if fecha_alta.day <= 15:
-        return fecha_alta.replace(day=1)
+def calculate_fecha_inicio_cobro(fecha_alta: date, tipo: str) -> date:
+    inicio_mes = fecha_alta.replace(day=1)
+    if tipo == Asociado.TIPO_ADHERENTE:
+        return inicio_mes
+    if tipo != Asociado.TIPO_ASOCIADO:
+        raise ValueError("Tipo de asociado inválido.")
 
-    if fecha_alta.month == 12:
-        return date(fecha_alta.year + 1, 1, 1)
-    return date(fecha_alta.year, fecha_alta.month + 1, 1)
+    indice_mes = inicio_mes.year * 12 + inicio_mes.month - 1 - 2
+    anio, mes_desde_cero = divmod(indice_mes, 12)
+    return date(anio, mes_desde_cero + 1, 1)
 
 
 @transaction.atomic
@@ -53,6 +57,7 @@ def create_asociado(
     tipo: str,
     fecha_alta: date | str,
     curso_actual: Curso | None = None,
+    clasificacion_adherente=None,
     fecha_inicio_cobro: date | str | None = None,
     email: str = "",
     telefono: str = "",
@@ -69,13 +74,22 @@ def create_asociado(
     if Asociado.objects.filter(dni=dni).exists():
         raise ValueError("Ya existe un asociado con ese DNI.")
 
-    fecha_inicio = fecha_inicio_cobro or calculate_fecha_inicio_cobro(fecha_alta)
+    fecha_inicio = fecha_inicio_cobro or calculate_fecha_inicio_cobro(fecha_alta, tipo)
+    if tipo == Asociado.TIPO_ASOCIADO:
+        clasificacion_adherente = None
+    else:
+        curso_actual = None
+        if clasificacion_adherente is None:
+            clasificacion_adherente = ClasificacionAdherente.objects.get(
+                nombre=ClasificacionAdherente.NOMBRE_SIN_CLASIFICAR
+            )
     asociado = Asociado.objects.create(
         nombre=nombre,
         apellido=apellido,
         dni=dni,
         tipo=tipo,
         curso_actual=curso_actual,
+        clasificacion_adherente=clasificacion_adherente,
         fecha_alta=fecha_alta,
         fecha_inicio_cobro=fecha_inicio,
         email=email,

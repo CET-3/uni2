@@ -5,19 +5,18 @@
 
 {% block content %}
 <div class="container py-5">
+{% url 'gestion:asociado_detalle' asociado.id as detalle_url %}
+{% include "components/breadcrumbs.html" with ancestor_url=detalle_url ancestor_label=asociado current_label="Cuotas" only %}
 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
     <div>
-        <h1 class="h2 mb-1">Cuotas de {{ asociado.apellido }}, {{ asociado.nombre }}</h1>
+        <h1 class="uni2-titulo-seccion">Cuotas de {{ asociado.apellido }}, {{ asociado.nombre }}</h1>
         <p class="text-secondary mb-0">Número {{ asociado.numero_asociado }} · DNI {{ asociado.dni }}</p>
-    </div>
-    <div class="uni2-page-header-actions">
-        <a class="btn btn-outline-primary" href="{% url 'gestion:asociado_detalle' asociado.id %}">Volver al detalle</a>
     </div>
 </div>
 
 <div class="row g-4">
     <div class="col-lg-8">
-        <div class="card uni2-surface-card">
+        <div class="card uni2-surface-card uni2-surface-card-info">
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-soft align-middle mb-0">
@@ -53,7 +52,7 @@
         </div>
     </div>
     <div class="col-lg-4">
-        <div class="card uni2-surface-card">
+        <div class="card uni2-surface-card {% if total_deuda > 0 %}uni2-surface-card-danger{% else %}uni2-surface-card-success{% endif %}">
             <div class="card-body">
                 <h2 class="h5 mb-3">Deuda</h2>
                 <p class="display-6 mb-2">{{ total_deuda|moneda }}</p>

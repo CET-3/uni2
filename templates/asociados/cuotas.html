@@ -2,48 +2,86 @@
 {% load formatos %}
 
 {% block title %}Mis cuotas | Uni2{% endblock %}
-
 {% block content %}
 <div class="container py-5">
-    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
-        <h1 class="h2 mb-0">Mis cuotas</h1>
-        <div class="text-end">
-            <div class="small text-secondary">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</div>
-            <div class="h4 mb-0">{{ total_deuda|moneda }}</div>
+    <header class="mb-4">
+        <span class="uni2-section-kicker">Estado de cuenta</span>
+        <h1 class="uni2-titulo-seccion">Mis cuotas</h1>
+        <p class="text-secondary mb-0">Consultá el estado actualizado de tus cuotas sociales y saldos pendientes.</p>
+    </header>
+
+    <div class="row g-3 mb-4" aria-label="Resumen de cuotas">
+        <div class="col-12 col-sm-4">
+            <div class="card uni2-metric-card {% if total_deuda > 0 %}uni2-metric-card-danger{% else %}uni2-metric-card-success{% endif %} h-100">
+                <div class="card-body">
+                    <div class="uni2-metric-label">Deuda al {{ fecha_referencia|date:"d/m/Y" }}</div>
+                    <div class="uni2-metric-value">{{ total_deuda|moneda }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-4">
+            <div class="card uni2-metric-card uni2-metric-card-info h-100">
+                <div class="card-body">
+                    <div class="uni2-metric-label">Cuotas</div>
+                    <div class="uni2-metric-value">{{ cuotas_total }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-4">
+            <div class="card uni2-metric-card uni2-metric-card-warning h-100">
+                <div class="card-body">
+                    <div class="uni2-metric-label">Con saldo</div>
+                    <div class="uni2-metric-value">{{ cuotas_con_saldo }}</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="table-responsive">
-            <table class="table mb-0">
-                <thead>
-                    <tr>
-                        <th>Periodo</th>
-                        <th>Original</th>
-                        <th>Recargo</th>
-                        <th>Saldo</th>
-                        <th>Pagado</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in cuotas %}
+    <section class="card uni2-surface-card uni2-surface-card-info" aria-labelledby="cuotas-list-title">
+        <div class="card-body">
+            <div class="mb-3">
+                <div>
+                    <span class="uni2-section-kicker">Historial</span>
+                    <h2 id="cuotas-list-title" class="uni2-titulo-componente">Detalle de cuotas</h2>
+                    <p class="text-secondary mb-0">Los saldos se calculan a la fecha de consulta.</p>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-soft align-middle mb-0">
+                    <thead>
                         <tr>
-                            <td>{{ item.cuota.periodo }}</td>
-                            <td>{{ item.importe_original|moneda }}</td>
-                            <td>{{ item.recargo|moneda }}</td>
-                            <td>{{ item.saldo|moneda }}</td>
-                            <td>{{ item.importe_pagado|moneda }}</td>
-                            <td>{{ item.estado_display }}</td>
+                            <th>Período</th>
+                            <th>Importes</th>
+                            <th class="text-end">Pagado</th>
+                            <th class="text-end">Saldo</th>
+                            <th>Estado</th>
                         </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="6">Todavía no hay cuotas generadas.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for item in cuotas %}
+                            <tr>
+                                <td><strong>{{ item.cuota.periodo }}</strong></td>
+                                <td>
+                                    <div class="uni2-period-amounts">
+                                        <strong>{{ item.importe_original|moneda }}</strong>
+                                        <span>Recargo {{ item.recargo|moneda }}</span>
+                                    </div>
+                                </td>
+                                <td class="text-end">{{ item.importe_pagado|moneda }}</td>
+                                <td class="text-end">
+                                    <span{% if item.saldo > 0 %} class="fw-semibold"{% endif %}>{{ item.saldo|moneda }}</span>
+                                </td>
+                                <td>{% include "components/cuota_estado_badge.html" with estado=item.estado estado_display=item.estado_display only %}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5">Todavía no hay cuotas generadas.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    </section>
 </div>
 {% endblock %}

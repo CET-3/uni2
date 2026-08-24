@@ -10,7 +10,14 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 ## CREDENCIAL-001
 
-Solo asociados activos poseen credenciales válidas.
+El estado operativo de la credencial se calcula al consultarla y no se almacena
+en `Asociado`. Una baja administrativa o una deuda exigible la inactivan. Si el
+asociado permanece de alta y cancela toda la deuda exigible, la credencial
+vuelve a estar activa automáticamente en la siguiente consulta.
+
+La credencial informa solamente el estado resultante. No expone la causa de la
+inactividad ni incorpora acciones de cobro; deuda y cuotas se consultan en su
+pantalla específica.
 
 ## CREDENCIAL-002
 
@@ -18,8 +25,9 @@ La credencial debe validarse con un token UUID aleatorio. El QR codifica una
 URL absoluta del entorno actual con la forma `/credenciales/<token UUID>/` y
 no expone IDs internos, correlativos ni datos personales.
 
-La pantalla autenticada del titular puede mostrar su DNI. Ese dato no forma
-parte del QR ni de la copia guardada para usar sin conexión.
+La pantalla autenticada del titular y el resultado de validación de un comercio
+habilitado pueden mostrar el DNI. Ese dato no forma parte del QR ni de la copia
+guardada para usar sin conexión.
 
 ## CREDENCIAL-003
 
@@ -28,7 +36,11 @@ revelar datos ni confirmar que una cuenta existe.
 
 ## CREDENCIAL-004
 
-El comercio solo debe ver válida/inválida, nombre y apellido, tipo y estado. No debe ver deuda ni datos sensibles.
+El comercio solo debe ver nombre y apellido, DNI, tipo, el dato institucional
+correspondiente —curso o clasificación— y `Credencial activa` o
+`Credencial inactiva`. No debe conocer si la inactividad proviene de una baja o
+de deuda, ni ver cuotas, importes u otros datos sensibles. Un identificador
+inexistente se informa como `Credencial inválida`.
 
 ## CREDENCIAL-005
 
@@ -44,8 +56,9 @@ siempre requiere conexión y la respuesta actual del servidor.
 ## CREDENCIAL-007
 
 La copia offline debe eliminarse al cerrar sesión, al cambiar de usuario, al
-vencer o cuando el asociado elige quitarla. No debe incluir DNI, deuda, cuotas
-ni información de sesión.
+vencer o cuando el asociado elige quitarla. Puede incluir nombre, tipo y el
+dato institucional visible —curso o clasificación—. No debe incluir DNI,
+deuda, cuotas ni información de sesión.
 
 ## CREDENCIAL-008
 
