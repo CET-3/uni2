@@ -1,24 +1,20 @@
 {% load auditoria %}
-<article class="uni2-audit-event uni2-audit-event-{{ evento.accion }}{% if evento_agrupado %} uni2-audit-event-nested{% endif %}">
+<article class="uni2-audit-event{% if evento_agrupado %} uni2-audit-event-nested{% endif %}">
     <div class="uni2-audit-event-main">
         <div class="uni2-audit-subject">
-            {% if contextual %}<h3>{% else %}<h2>{% endif %}
-                <span class="uni2-audit-icon{% if evento.accion == 'crear' %} uni2-audit-icon-create{% endif %}" aria-hidden="true">
-                    <i class="bi {% if evento.accion == 'crear' %}bi-plus-lg{% else %}bi-pencil{% endif %}"></i>
-                </span>
-                <span>
-                    <strong class="uni2-audit-actor">{{ evento|actor_evento_auditoria }}</strong>
-                    {{ evento|verbo_evento_auditoria }}
-                    <strong class="uni2-audit-object">{{ evento|objeto_evento_auditoria }}</strong>
-                    el día {{ evento.fecha|date:"d/m/Y" }} a las {{ evento.fecha|date:"H:i" }}.
-                </span>
-            {% if contextual %}</h3>{% else %}</h2>{% endif %}
-            <p class="uni2-audit-meta">
-                <span>Entidad: {{ evento.entidad|etiqueta_entidad_auditoria }}</span>
-                <span>ID: {{ evento.objeto_id }}</span>
-                <span>Origen: {{ evento.get_origen_display }}</span>
-                {% if evento.motivo %}<span>Motivo: {{ evento.motivo }}</span>{% endif %}
-            </p>
+            <div class="uni2-audit-subject-heading">
+                {% if contextual %}<h3>{% else %}<h2>{% endif %}
+                    {% if not evento_agrupado %}<span class="uni2-audit-operation-icon" aria-hidden="true"><i class="bi {{ operacion.icono }}"></i></span>{% endif %}
+                    <span>
+                        <strong class="uni2-audit-actor">{{ evento|actor_evento_auditoria }}</strong>
+                        {{ evento|verbo_evento_auditoria }}
+                        <strong class="uni2-audit-object">{{ evento|objeto_evento_auditoria }}</strong>{% if evento_agrupado %}.{% else %}
+                        el {{ evento.fecha|date:"d/m/Y" }} a las {{ evento.fecha|date:"H:i" }}.{% endif %}
+                    </span>
+                {% if contextual %}</h3>{% else %}</h2>{% endif %}
+                <span class="uni2-audit-reference">#{{ evento.objeto_id }}</span>
+            </div>
+            {% if evento.motivo %}<p class="uni2-audit-reason"><strong>Motivo:</strong> {{ evento.motivo }}</p>{% endif %}
         </div>
     </div>
 

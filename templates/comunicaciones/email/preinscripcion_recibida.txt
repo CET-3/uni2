@@ -1,0 +1,8 @@
+Hola {{ nombre }}:
+
+Recibimos tu solicitud de preinscripción. Se encuentra en proceso de revisión.
+
+Podés consultar su estado desde este enlace privado:
+{{ seguimiento_url }}
+
+Mutual Escolar del CET 3

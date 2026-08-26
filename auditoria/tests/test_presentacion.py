@@ -51,6 +51,17 @@ def test_presentacion_humaniza_aplicacion_de_pago():
     )
 
 
+def test_objeto_de_auditoria_incluye_tipo_y_descripcion():
+    evento = SimpleNamespace(
+        entidad="asociados.Asociado",
+        accion="modificar",
+        objeto_descripcion="Campos, Julia",
+        cambios={},
+    )
+
+    assert objeto_evento_auditoria(evento) == "el asociado Campos, Julia"
+
+
 def test_valores_financieros_de_auditoria_se_muestran_legibles():
     assert valor_campo_auditoria("1000.00", "importe", "cuotas.Pago") == "$ 1.000,00"
     assert valor_campo_auditoria("efectivo", "metodo", "cuotas.Pago") == "Efectivo"

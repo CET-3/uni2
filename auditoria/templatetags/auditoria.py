@@ -122,7 +122,7 @@ def objeto_evento_auditoria(evento):
     if evento.entidad == "cuotas.Pago" and evento.accion == "crear":
         importe = _valor_nuevo(evento, "importe")
         asociado = _texto_relacion(_valor_nuevo(evento, "asociado"))
-        return f"un pago de {formatear_moneda(importe)} para {asociado}"
+        return f"un pago de {formatear_moneda(importe)} de {asociado}"
     if evento.entidad == "cuotas.PagoCuota" and evento.accion == "crear":
         importe = _valor_nuevo(evento, "importe")
         cuota = _cuota_legible(_texto_relacion(_valor_nuevo(evento, "cuota")))
@@ -130,10 +130,28 @@ def objeto_evento_auditoria(evento):
     if evento.entidad == "cuotas.Donacion" and evento.accion == "crear":
         importe = _valor_nuevo(evento, "importe")
         asociado = _texto_relacion(_valor_nuevo(evento, "asociado"))
-        return f"una donación de {formatear_moneda(importe)} para {asociado}"
+        return f"una donación de {formatear_moneda(importe)} de {asociado}"
     if evento.entidad == "cuotas.Cuota" and evento.accion == "modificar":
         return f"la cuota {_cuota_legible(evento.objeto_descripcion)}"
-    return evento.objeto_descripcion
+    objetos = {
+        "asociados.Asociado": "el asociado",
+        "asociados.SolicitudAsociacion": "la solicitud de asociación",
+        "auth.User": "el usuario",
+        "cuotas.Cuota": "la cuota",
+        "cuotas.PeriodoCuota": "el período de cuota",
+        "comercios.Comercio": "el comercio",
+        "comercios.ActividadComercial": "la actividad comercial",
+        "contenidos.ProductoServicio": "el producto o servicio",
+        "contenidos.CategoriaProductoServicio": "la categoría",
+        "contenidos.Publicidad": "la publicidad",
+        "comunicaciones.Comunicacion": "la comunicación",
+        "comunicaciones.EntregaComunicacion": "la entrega de comunicación",
+    }
+    objeto = objetos.get(
+        evento.entidad,
+        f"el registro de {etiqueta_entidad(evento.entidad).lower()}",
+    )
+    return f"{objeto} {evento.objeto_descripcion}"
 
 
 @register.filter

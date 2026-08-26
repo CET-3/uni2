@@ -127,6 +127,15 @@ def test_staging_no_hereda_google_analytics_de_produccion():
     assert json.loads(result.stdout)["analytics_measurement_id"] == ""
 
 
+def test_staging_ignora_un_intento_de_habilitar_correo_real():
+    result = load_staging_settings(UNI2_TRANSACTIONAL_EMAIL_MODE="enabled")
+
+    assert result.returncode == 0, result.stderr
+    staging = json.loads(result.stdout)
+    assert staging["transactional_email_mode"] == "disabled"
+    assert staging["email_backend"] == "django.core.mail.backends.dummy.EmailBackend"
+
+
 def test_staging_rechaza_una_base_con_huella_productiva():
     fingerprint = database_fingerprint(STAGING_DATABASE)
     result = load_staging_settings(UNI2_PRODUCTION_DATABASE_FINGERPRINT=fingerprint)

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block title %}Correcciones recibidas | Uni2{% endblock %}
+
+{% block content %}
+{% include "components/preinscripcion_resultado.html" with title="Recibimos tus correcciones" message="La solicitud volvió a revisión." email_note="Si el correo pudo enviarse, vas a recibir un nuevo enlace privado de seguimiento. Revisá también la carpeta de correo no deseado." process_note="Las correcciones todavía deben ser revisadas por la Mutual." only %}
+{% endblock %}

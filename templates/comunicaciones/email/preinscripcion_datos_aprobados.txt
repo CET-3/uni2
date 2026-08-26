@@ -1,0 +1,7 @@
+Hola {{ nombre }}:
+
+La documentación de tu preinscripción fue aprobada.
+
+Acercate a la Mutual durante los horarios de atención para completar el alta. Esta aprobación todavía no te incorpora al padrón.
+
+Mutual Escolar del CET 3

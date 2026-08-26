@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block title %}Preinscripción recibida | Uni2{% endblock %}
+
+{% block content %}
+{% include "components/preinscripcion_resultado.html" with title="Recibimos tu preinscripción" message="Ahora revisaremos los datos de tu solicitud." email_note="Si el correo pudo enviarse, vas a recibir un enlace privado para consultar el estado. Revisá también la carpeta de correo no deseado." process_note="La preinscripción todavía no significa que el alta esté completada." only %}
+{% endblock %}

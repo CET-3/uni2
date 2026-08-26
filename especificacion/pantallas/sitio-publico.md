@@ -26,7 +26,19 @@ pero no forman parte de las acciones principales ni de `Más accesos`.
   - Servicios: sección estable `#productos-servicios` con una grilla responsive de Bootstrap y `uni2-service-card` para los servicios principales de la mutual. Cada card muestra ícono, nombre, descripción y enlace cuando corresponda. La home productiva usa el mismo patrón visual que el bloque `Servicios` del design system interno.
   - Beneficios: sección estable `#beneficios` con una grilla de rubros (`ActividadComercial`) que tienen al menos un comercio con estado `Firmado`. La home usa la misma estructura visual del bloque `Club de Beneficios` del design system (`uni2-benefit-band`, `uni2-benefit-mix-card` y `uni2-benefit-rubric`). La nube de logos reales se arma con `uni2-benefit-logo-cloud` y `uni2-benefit-logo-dot`. Cada card muestra hasta 3 fotos de comercios del rubro en un diseño de "nube de logos" (izquierda, centro, derecha) con el nombre del rubro como etiqueta inferior. Las fotos se toman del campo `foto` de cada `Comercio`. Si un rubro tiene menos de 3 comercios con foto, se centran los disponibles. El bloque se muestra como grilla de cards visibles en pantalla: tres cards por fila desde el ancho de tablet y dos cards por fila en mobile. Cada card enlaza al detalle de la actividad comercial.
   - Nuestros favoritos: publicidades activas en cards productivas `uni2-ad-card`, con `uni2-badge` para etiqueta principal y `uni2-discount` para etiqueta secundaria. Cada card muestra etiqueta principal, título, etiqueta secundaria (descuento), descripción y enlace al detalle vinculado (producto/servicio o comercio). Si la publicidad tiene foto, la muestra como imagen de fondo; si no tiene foto, se muestra con una presentación simple sin imagen. Cuando hay más de una publicidad, el carrusel ofrece anterior, pausa/reanudación, siguiente, indicadores y navegación con flechas del teclado. El avance se pausa durante la interacción y comienza desactivado si el dispositivo solicita movimiento reducido. Con una sola publicidad se ocultan los controles.
-  - Cómo asociarse: grilla responsive de Bootstrap con cuatro pasos numerados mediante `uni2-step-card` y `uni2-step-number`, más información de cuota social y horarios de atención en `uni2-info-box` y `uni2-hours-table`. El importe de la cuota se obtiene del período del mes actual o, si no existe, del último período anterior disponible; nunca queda escrito como un valor fijo en el template. Sin períodos configurados, invita a consultar el valor vigente. Los indicadores amarillos y verdes usan texto oscuro; los azules y rojos oscuros usan texto claro. En mobile, los horarios cambian a tarjetas compactas con chips de horario para que no se desborde la tabla y sus combinaciones de color siguen el mismo criterio de contraste.
+  - Cómo ser parte de nuestra comunidad: reemplaza el recorrido totalmente
+    presencial por cuatro etapas: `Completá la preinscripción`, `Revisamos tus
+    datos`, `Acercate a la Mutual` y `Disfrutá tus beneficios`. El tercer paso
+    aclara que el alta termina presencialmente y presenta el importe mensual
+    vigente. El CTA principal `Quiero asociarme` navega a una página propia en
+    lugar de insertar el formulario en la home o abrirlo en un modal. Conserva
+    también el importe en el recuadro informativo de cuota social y los horarios
+    de atención. En ambos lugares el valor se obtiene del período del mes actual
+    o, si no existe, del último período anterior disponible; nunca queda escrito
+    como un valor fijo en el template. Sin períodos publicables muestra
+    `Consultá el valor vigente`. En mobile, el título usa todo el ancho y el CTA
+    ocupa una fila propia debajo; desde el breakpoint `sm` recuperan la
+    composición horizontal.
   - Footer: enlaces de contacto, ubicación y texto institucional. En mobile se apila en una columna compacta, sin reservar espacio para barras flotantes que no existen en la implementación Django.
 
 Las secciones de servicios, beneficios, favoritos y asociación se renderizan desde la misma plantilla para visitantes y usuarios autenticados. No existe una segunda home pública en `/inicio/` ni dashboards separados por experiencia.
@@ -37,3 +49,47 @@ Las secciones de servicios, beneficios, favoritos y asociación se renderizan de
 - Comercios: la navegación principal lleva a `/#beneficios`; el listado público vertical `/comercios/` continúa disponible por compatibilidad.
   - Comercio detalle (`/comercios/<pk>/`): es la página individual, indexable y compartible del comercio; no se reemplaza por el modal contextual del listado. Es el destino de publicidades, enlaces externos, accesos sin JavaScript y la acción `Ver ficha completa` del modal. Muestra `Comercios > {actividad comercial} > {comercio}`, sin `Inicio`. `Comercios` lleva a la sección de beneficios de la home, la actividad lleva a `/actividades-comerciales/<pk>/` y el comercio actual no enlaza. La columna de identidad reúne logo o iniciales, actividad, nombre y descripción; el logo se muestra grande encima del rubro y del nombre, evitando una tercera columna visual y sin asociarlo al descuento. El título usa una escala menor que el título general de página para mantener equilibrio con el logo. El panel de datos comienza con un bloque amarillo de beneficio independiente: la etiqueta queda a la izquierda y el contenido a la derecha, con salto natural cuando es largo. Continúa con los datos públicos disponibles. Cuando existen, muestra dirección, teléfono, email y un CTA único "Visitar online" hacia la presencia web del comercio. En mobile, se conservan la identidad vertical, el beneficio apilado dentro de su bloque y el panel debajo de la identidad. La dirección se muestra inmediatamente después del beneficio, en un bloque propio igual al teléfono; los emprendimientos sin dirección física no muestran ese bloque. Tanto en el listado como en el detalle, `Visitar online` abre la presencia web en una pestaña nueva. Si el comercio no está firmado, conserva el mismo breadcrumb y muestra el mensaje "Este comercio estará disponible próximamente" con enlace a `/#beneficios`.
 - Login: formulario centrado dentro de `container py-5`, con ancho acotado en desktop y margen lateral seguro en mobile.
+
+## Preinscripción pública
+
+- El formulario vive en `/sumate/`, en una sola página responsive.
+- Solicita nombre, apellido, DNI o documento, correo, teléfono, domicilio y la
+  respuesta a `¿Sos estudiante del CET 3?`.
+- Al responder sí muestra y exige curso. Al responder no muestra y exige
+  clasificación de adherente. Sin JavaScript, el servidor continúa siendo la
+  fuente de verdad de ambas validaciones.
+- Los errores aparecen en un resumen accesible y junto al campo correspondiente.
+  Cada control inválido usa borde y foco rojos, declara `aria-invalid` y enlaza
+  mediante `aria-describedby` una franja rosada compacta con ícono y texto sin
+  viñetas. El grupo de condición respecto del CET 3 vincula el mensaje al
+  `fieldset`. El patrón se reutiliza en las correcciones mediante enlace.
+- El resumen `Revisá los datos del formulario` aparece solamente cuando existe
+  al menos un error asociado a un campo. Si los datos tienen formato válido pero
+  el registro se rechaza por una regla general, se muestra un único aviso neutro
+  y no se marca como inválido ningún campo correcto ni se revela qué dato ya
+  estaba registrado.
+- En mobile, el formulario reduce de manera uniforme el padding de la card y de
+  su alerta para mantener alineados resumen, campos y mensajes. En escritorio
+  conserva el espaciado amplio.
+- La página se titula `Preinscripción`, sin el kicker anterior. Las acciones
+  `Enviar preinscripción`, `Enviar correcciones` y `Volver` acompañan el texto
+  con iconos; el nombre accesible continúa dado por el texto visible. No muestra
+  breadcrumb: la acción `Volver` ya resuelve el regreso a la sección de la home.
+- Al abrir el formulario inicial o una corrección, `Nombre` recibe el foco. Si
+  el envío contiene errores de campo, el foco pasa al resumen; si el rechazo es
+  general, pasa al aviso único. Los destinos usan un contorno visible y nunca
+  existen dos elementos con `autofocus` en la misma respuesta.
+- Después del envío muestra una confirmación sin repetir datos personales.
+- Las confirmaciones de preinscripción y correcciones usan una única card de
+  resultado con acento verde, estado `En revisión`, indicaciones internas y
+  acción `Volver al inicio`. La card no afirma que el correo llegó: indica el
+  enlace privado de seguimiento de manera condicional a que la entrega haya
+  podido realizarse. El CTA ocupa todo el ancho en mobile y ancho automático
+  desde `sm`.
+- El seguimiento usa únicamente el enlace privado recibido por correo; no hay
+  buscador por DNI, correo o número.
+- La página de seguimiento muestra estado e indicaciones. Solo cuando está
+  `observada` presenta el formulario editable y la explicación del personal.
+- Un enlace inválido o vencido presenta un mensaje neutro y los datos de
+  contacto de la Mutual.
+- Formulario, confirmación y seguimiento usan `noindex` y `no-store`.

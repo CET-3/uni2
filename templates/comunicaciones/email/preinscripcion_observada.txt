@@ -1,0 +1,9 @@
+Hola {{ nombre }}:
+
+Necesitamos que corrijas información de tu preinscripción:
+{{ explicacion }}
+
+Abrí este enlace privado para enviar las correcciones:
+{{ seguimiento_url }}
+
+Mutual Escolar del CET 3

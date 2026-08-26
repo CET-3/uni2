@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 
-def load_production_settings(**variables):
+def run_production_settings(**variables):
     environment = os.environ.copy()
     for name in (
         "ALLOWED_HOSTS",
@@ -14,7 +14,16 @@ def load_production_settings(**variables):
         "VERCEL_BRANCH_URL",
         "VERCEL_PROJECT_PRODUCTION_URL",
         "VERCEL_URL",
+        "VERCEL",
         "UNI2_PRIVATE_DATA_EPOCH",
+        "UNI2_SITE_URL",
+        "UNI2_TRANSACTIONAL_EMAIL_MODE",
+        "DEFAULT_FROM_EMAIL",
+        "EMAIL_HOST",
+        "EMAIL_PORT",
+        "EMAIL_HOST_USER",
+        "EMAIL_HOST_PASSWORD",
+        "EMAIL_USE_TLS",
     ):
         environment.pop(name, None)
     for name in tuple(environment):
@@ -25,6 +34,7 @@ def load_production_settings(**variables):
         {
             "DATABASE_URL": "sqlite:///:memory:",
             "SECRET_KEY": "test-secret-key",
+            "UNI2_TRANSACTIONAL_EMAIL_MODE": "disabled",
             **variables,
         }
     )
@@ -40,20 +50,32 @@ print(json.dumps({
     "debug": production.DEBUG,
     "hsts_seconds": production.SECURE_HSTS_SECONDS,
     "deployment_environment": production.UNI2_DEPLOYMENT_ENVIRONMENT,
+    "email_backend": getattr(production, "EMAIL_BACKEND", ""),
+    "email_host": getattr(production, "EMAIL_HOST", ""),
+    "email_port": getattr(production, "EMAIL_PORT", 0),
+    "email_use_tls": getattr(production, "EMAIL_USE_TLS", False),
+    "from_email": production.DEFAULT_FROM_EMAIL,
     "private_data_epoch": production.PWA_PRIVATE_DATA_EPOCH,
     "secure_ssl_redirect": production.SECURE_SSL_REDIRECT,
     "session_cookie_secure": production.SESSION_COOKIE_SECURE,
     "storages": production.STORAGES,
+    "site_url": production.UNI2_SITE_URL,
+    "transactional_email_mode": production.UNI2_TRANSACTIONAL_EMAIL_MODE,
+    "trust_vercel_client_ip": production.UNI2_TRUST_VERCEL_CLIENT_IP,
     "uses_legacy_staticfiles_storage": hasattr(production, "STATICFILES_STORAGE"),
 }))
 """
-    result = subprocess.run(
+    return subprocess.run(
         [sys.executable, "-c", script],
-        check=True,
         capture_output=True,
         env=environment,
         text=True,
     )
+
+
+def load_production_settings(**variables):
+    result = run_production_settings(**variables)
+    result.check_returncode()
     return json.loads(result.stdout)
 
 
@@ -80,6 +102,13 @@ def test_produccion_no_permite_activar_debug_desde_el_entorno():
         "whitenoise.storage.CompressedManifestStaticFilesStorage"
     )
     assert production["uses_legacy_staticfiles_storage"] is False
+    assert production["trust_vercel_client_ip"] is False
+
+
+def test_produccion_confia_en_el_encabezado_de_ip_solo_dentro_de_vercel():
+    production = load_production_settings(VERCEL="1")
+
+    assert production["trust_vercel_client_ip"] is True
 
 
 def test_produccion_admite_hosts_configurados_y_urls_exactas_de_vercel():
@@ -115,3 +144,31 @@ def test_produccion_usa_s3_para_media_sin_cambiar_el_storage_de_estaticos():
     assert production["storages"]["staticfiles"]["BACKEND"] == (
         "whitenoise.storage.CompressedManifestStaticFilesStorage"
     )
+
+
+def test_produccion_rechaza_correo_habilitado_sin_configuracion():
+    result = run_production_settings(UNI2_TRANSACTIONAL_EMAIL_MODE="enabled")
+
+    assert result.returncode != 0
+    assert "EMAIL_HOST" in result.stderr
+
+
+def test_produccion_configura_smtp_cuando_el_correo_esta_habilitado():
+    production = load_production_settings(
+        UNI2_TRANSACTIONAL_EMAIL_MODE="enabled",
+        UNI2_SITE_URL="https://uni2.example",
+        DEFAULT_FROM_EMAIL="UNI2 <no-responder@uni2.example>",
+        EMAIL_HOST="smtp.example",
+        EMAIL_PORT="587",
+        EMAIL_HOST_USER="uni2",
+        EMAIL_HOST_PASSWORD="secret-for-tests",
+        EMAIL_USE_TLS="true",
+    )
+
+    assert production["transactional_email_mode"] == "enabled"
+    assert production["site_url"] == "https://uni2.example"
+    assert production["from_email"] == "UNI2 <no-responder@uni2.example>"
+    assert production["email_backend"] == "django.core.mail.backends.smtp.EmailBackend"
+    assert production["email_host"] == "smtp.example"
+    assert production["email_port"] == 587
+    assert production["email_use_tls"] is True

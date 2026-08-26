@@ -22,6 +22,7 @@ def test_build_id_productivo_proviene_del_commit_de_vercel():
         {
             "DATABASE_URL": "sqlite:///:memory:",
             "SECRET_KEY": "test-secret-key",
+            "UNI2_TRANSACTIONAL_EMAIL_MODE": "disabled",
             "VERCEL_GIT_COMMIT_SHA": "abc123def456",
         }
     )

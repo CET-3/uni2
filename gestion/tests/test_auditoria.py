@@ -5,6 +5,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.urls import reverse
+from django.utils import timezone
 
 from asociados.models import Asociado, CicloLectivo, ClasificacionAdherente, Curso
 from auditoria.models import EventoAuditoria
@@ -99,12 +100,21 @@ def test_auditoria_muestra_acceso_y_eventos_con_permiso(client):
     assert "Campos, Julia" in contenido
     assert "con_auditoria" in contenido
     assert "Teléfono" in contenido
+    assert "con_auditoria" in contenido
     assert "modificó" in contenido
-    assert "el día" in contenido
-    assert "Entidad:" in contenido
-    assert "Asociado" in contenido
+    assert "el asociado Campos, Julia" in contenido
+    assert "el " in contenido and " a las " in contenido
+    assert "#7" in contenido
+    assert "Entidad:" not in contenido
+    assert "Origen:" not in contenido
+    assert "uni2-audit-meta" not in contenido
     assert "<details" not in contenido
     assert "uni2-audit-event" in contenido
+    assert "uni2-audit-operation-icon" in contenido
+    assert "bi-arrow-repeat" in contenido
+    assert "uni2-breadcrumbs" not in contenido
+    assert 'class="bi bi-funnel"' in contenido
+    assert 'class="bi bi-x-circle"' in contenido
 
 
 @pytest.mark.django_db
@@ -511,6 +521,18 @@ def test_auditoria_agrupa_la_operacion_sin_ocultar_eventos(client):
     assert "Rivas, Mora" in contenido
     assert "111" in contenido
     assert "222" in contenido
+    assert "bi-layers" not in contenido
+    assert 'class="uni2-audit-icon' not in contenido
+    assert "uni2-audit-operation-reference" in contenido
+    assert "uni2-audit-operation-icon" in contenido
+    assert "bi-arrow-repeat" in contenido
+    assert "#20" in contenido
+    assert "#21" in contenido
+    assert contenido.index("Rivas, Mora") < contenido.rindex(str(operacion_id))
+    fecha_operacion = timezone.localtime(
+        EventoAuditoria.objects.filter(operacion_id=operacion_id).first().fecha
+    ).strftime("%d/%m/%Y %H:%M")
+    assert contenido.count(fecha_operacion) == 1
 
 
 @pytest.mark.django_db
