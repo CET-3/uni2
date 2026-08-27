@@ -4,7 +4,7 @@ from auditoria.admin_mixins import AuditoriaAdminMixin
 from config.formatting import formatear_moneda
 
 from .forms import ProductoServicioAdminForm
-from .models import CategoriaProductoServicio, ProductoServicio, Publicidad
+from .models import CategoriaProductoServicio, Novedad, ProductoServicio, Publicidad
 
 
 class ProductoServicioInline(admin.TabularInline):
@@ -119,3 +119,23 @@ class PublicidadAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
     list_filter = ("activa", "etiqueta_principal")
     search_fields = ("titulo", "descripcion", "etiqueta_principal", "etiqueta_secundaria")
     list_select_related = ("producto_servicio", "comercio")
+
+
+@admin.register(Novedad)
+class NovedadAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    audit_fields = (
+        "titulo",
+        "slug",
+        "etiqueta",
+        "resumen",
+        "contenido",
+        "imagen",
+        "color",
+        "fecha_publicacion",
+        "destacada",
+        "activa",
+    )
+    list_display = ("titulo", "etiqueta", "fecha_publicacion", "color", "destacada", "activa")
+    list_filter = ("activa", "destacada", "color", "fecha_publicacion")
+    search_fields = ("titulo", "etiqueta", "resumen", "contenido")
+    prepopulated_fields = {"slug": ("titulo",)}

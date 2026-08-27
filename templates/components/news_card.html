@@ -1,0 +1,15 @@
+<article class="uni2-news-card uni2-news-card-{{ color|default:'azul' }}{% if imagen %} uni2-news-card-image{% endif %}{% if compacta %} uni2-news-card-compact{% endif %}"
+         {% if imagen %}style="--uni2-news-image: url('{{ imagen.url }}');"{% endif %}>
+    <div class="uni2-news-decoration" aria-hidden="true">
+        <i class="bi bi-megaphone-fill"></i>
+    </div>
+    <div class="uni2-news-content">
+        <span class="uni2-news-label"><i class="bi bi-stars" aria-hidden="true"></i> {{ etiqueta|default:"Novedad" }}</span>
+        <h2 class="uni2-news-title">{{ titulo }}</h2>
+        <p class="uni2-news-description">{{ descripcion }}</p>
+    </div>
+    <a class="uni2-news-link" href="{{ url }}">
+        Ver más
+        <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+    </a>
+</article>

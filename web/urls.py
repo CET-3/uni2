@@ -9,6 +9,7 @@ from .views import (
     DesignSystemEstructuraView,
     DesignSystemView,
     HomeView,
+    NovedadDetalleView,
     ProductoServicioDetalleView,
     ProductosServiciosPublicosView,
 )
@@ -18,6 +19,7 @@ app_name = "web"
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
+    path("novedades/<slug:slug>/", NovedadDetalleView.as_view(), name="novedad_detalle"),
     path("productos-servicios/", ProductosServiciosPublicosView.as_view(), name="productos_servicios"),
     path("productos-servicios/<int:pk>/", ProductoServicioDetalleView.as_view(), name="producto_servicio_detalle"),
     path("comercios/", ComerciosPublicosView.as_view(), name="comercios"),

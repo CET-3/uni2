@@ -2,10 +2,11 @@ import re
 from itertools import groupby
 
 from django.db.models import Prefetch, Q
+from django.utils import timezone
 
 from asociados.models import Curso
 from comercios.models import Comercio
-from .models import CategoriaProductoServicio, ProductoServicio, Publicidad
+from .models import CategoriaProductoServicio, Novedad, ProductoServicio, Publicidad
 
 
 ETIQUETAS_CORTAS_CICLO = {
@@ -103,4 +104,12 @@ def get_publicidades_home():
         .filter(Q(comercio__isnull=True) | Q(comercio__estado=Comercio.ESTADO_FIRMADO))
         .select_related("producto_servicio", "producto_servicio__categoria", "comercio", "comercio__actividad_comercial")
         .order_by("orden", "titulo")
+    )
+
+
+def get_novedades_publicas():
+    return Novedad.objects.filter(activa=True, fecha_publicacion__lte=timezone.now()).order_by(
+        "-destacada",
+        "-fecha_publicacion",
+        "titulo",
     )

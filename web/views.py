@@ -9,10 +9,11 @@ from comercios.selectors import (
     get_rubros_con_comercios,
 )
 from comercios.models import ActividadComercial, Comercio
-from contenidos.models import CategoriaProductoServicio, ProductoServicio
+from contenidos.models import CategoriaProductoServicio, Novedad, ProductoServicio
 from contenidos.selectors import (
     get_bloques_productos_publicos,
     get_categorias_productos_servicios_publicas,
+    get_novedades_publicas,
     get_publicidades_home,
 )
 from cuotas.selectors import get_periodo_cuota_para_publicar
@@ -27,6 +28,7 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["categorias_productos_servicios"] = get_categorias_productos_servicios_publicas()
         context["publicidades"] = get_publicidades_home()
+        context["novedades"] = get_novedades_publicas()[:4]
         context["rubros_beneficio"] = get_rubros_con_comercios()
         context["comercios"] = get_comercios_firmados()[:3]
         context["periodo_cuota_publicado"] = get_periodo_cuota_para_publicar()
@@ -44,6 +46,15 @@ class ProductosServiciosPublicosView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["categorias_productos_servicios"] = get_categorias_productos_servicios_publicas()
         return context
+
+
+class NovedadDetalleView(DetailView):
+    model = Novedad
+    template_name = "web/novedad_detalle.html"
+    context_object_name = "novedad"
+
+    def get_queryset(self):
+        return get_novedades_publicas()
 
 
 class ComerciosPublicosView(TemplateView):

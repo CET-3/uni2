@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 from asociados.models import Curso
 from comercios.models import Comercio
@@ -267,3 +268,82 @@ class Publicidad(models.Model):
         if self.comercio_id:
             return reverse("web:comercio_detalle", args=[self.comercio_id])
         return ""
+
+
+class Novedad(models.Model):
+    COLOR_AZUL = "azul"
+    COLOR_VERDE = "verde"
+    COLOR_AMARILLO = "amarillo"
+    COLOR_ROJO = "rojo"
+    COLORES = (
+        (COLOR_AZUL, "Azul"),
+        (COLOR_VERDE, "Verde"),
+        (COLOR_AMARILLO, "Amarillo"),
+        (COLOR_ROJO, "Rojo"),
+    )
+
+    titulo = models.CharField(
+        "título",
+        max_length=150,
+        help_text="Nombre visible de la novedad o evento.",
+    )
+    slug = models.SlugField(
+        "identificador para URL",
+        max_length=170,
+        unique=True,
+        help_text="Texto único usado en la dirección pública de la novedad.",
+    )
+    etiqueta = models.CharField(
+        "etiqueta",
+        max_length=80,
+        default="Novedad",
+        help_text="Categoría breve, por ejemplo Próximo evento o Comunidad.",
+    )
+    resumen = models.TextField(
+        "resumen",
+        help_text="Descripción breve que se muestra en la tarjeta de la home.",
+    )
+    contenido = models.TextField(
+        "contenido",
+        help_text="Información completa que se muestra en la página de detalle.",
+    )
+    imagen = models.ImageField(
+        "imagen",
+        upload_to="novedades/",
+        blank=True,
+        help_text="Imagen horizontal opcional. Se recomienda 1600x900 px, WebP o JPG.",
+    )
+    color = models.CharField(
+        "color",
+        max_length=10,
+        choices=COLORES,
+        default=COLOR_AZUL,
+        help_text="Color de marca usado cuando la novedad no tiene imagen.",
+    )
+    fecha_publicacion = models.DateTimeField(
+        "fecha de publicación",
+        default=timezone.now,
+        help_text="La novedad se vuelve visible a partir de esta fecha.",
+    )
+    destacada = models.BooleanField(
+        "destacada",
+        default=False,
+        help_text="Prioriza esta novedad como tarjeta principal en la home.",
+    )
+    activa = models.BooleanField(
+        "activa",
+        default=True,
+        help_text="Indica si la novedad se publica en el sitio.",
+    )
+
+    class Meta:
+        verbose_name = "Novedad"
+        verbose_name_plural = "Novedades"
+        ordering = ["-destacada", "-fecha_publicacion", "titulo"]
+        indexes = [models.Index(fields=["activa", "fecha_publicacion"])]
+
+    def __str__(self):
+        return self.titulo
+
+    def get_absolute_url(self):
+        return reverse("web:novedad_detalle", kwargs={"slug": self.slug})

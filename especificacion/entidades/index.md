@@ -13,6 +13,7 @@
 * [CategoriaProductoServicio](categoria-producto-servicio.md) - Agrupa productos y servicios publicados por la mutual.
 * [ProductoServicio](producto-servicio.md) - Representa un producto o servicio publicado por la mutual.
 * [Publicidad](publicidad.md) - Card destacada con foto para la home pública.
+* [Novedad](novedad.md) - Noticia, actividad o evento con tarjeta en la home y ficha pública.
 * [ActividadComercial](actividad-comercial.md) - Clasifica el rubro o actividad principal de un comercio adherido.
 * [Comercio](comercio.md) - Comercio adherido a la mutual.
 * [EstadoDatosStaging](estado-datos-staging.md) - Marcador técnico que habilita una copia endurecida en staging.

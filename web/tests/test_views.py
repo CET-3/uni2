@@ -11,7 +11,7 @@ from django.utils import timezone
 
 from asociados.models import CicloLectivo
 from comercios.models import ActividadComercial, Comercio
-from contenidos.models import CategoriaProductoServicio, ProductoServicio, Publicidad
+from contenidos.models import CategoriaProductoServicio, Novedad, ProductoServicio, Publicidad
 from cuotas.models import PeriodoCuota
 
 
@@ -52,6 +52,64 @@ def test_home_sin_periodos_no_inventa_un_importe(client):
 
     assert "Consultá en la mutual el valor actual de la cuota social." in contenido
     assert "Consultá el valor vigente." in contenido
+
+
+@pytest.mark.django_db
+def test_home_muestra_novedad_destacada_y_enlaces_a_detalle(client):
+    secundaria = Novedad.objects.create(
+        titulo="Taller abierto",
+        slug="taller-abierto",
+        etiqueta="Taller",
+        resumen="Una propuesta para aprender en comunidad.",
+        contenido="Información completa del taller.",
+        color=Novedad.COLOR_VERDE,
+    )
+    destacada = Novedad.objects.create(
+        titulo="Feria Uni2",
+        slug="feria-uni2",
+        etiqueta="Próximo evento",
+        resumen="Una jornada para encontrarnos.",
+        contenido="Información completa de la feria.",
+        destacada=True,
+    )
+
+    contenido = client.get(reverse("web:home")).content.decode()
+
+    assert contenido.index(destacada.titulo) < contenido.index(secundaria.titulo)
+    assert f'href="{destacada.get_absolute_url()}"' in contenido
+    assert "Ver todas las novedades" in contenido
+
+
+@pytest.mark.django_db
+def test_detalle_novedad_publica_muestra_contenido(client):
+    novedad = Novedad.objects.create(
+        titulo="Feria Uni2",
+        slug="feria-uni2",
+        etiqueta="Próximo evento",
+        resumen="Una jornada para encontrarnos.",
+        contenido="Traé a tu familia.\n\nLa entrada es libre.",
+    )
+
+    response = client.get(novedad.get_absolute_url())
+    contenido = response.content.decode()
+
+    assert response.status_code == 200
+    assert novedad.titulo in contenido
+    assert "Traé a tu familia." in contenido
+    assert "Volver a novedades" in contenido
+
+
+@pytest.mark.django_db
+def test_detalle_novedad_inactiva_no_es_publico(client):
+    novedad = Novedad.objects.create(
+        titulo="Borrador",
+        slug="borrador",
+        resumen="Todavía no se publica.",
+        contenido="Contenido en preparación.",
+        activa=False,
+    )
+
+    assert client.get(novedad.get_absolute_url()).status_code == 404
 
 
 def test_url_beneficios_no_se_mantiene(client):

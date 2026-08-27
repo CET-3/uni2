@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ novedad.titulo }} | Uni2{% endblock %}
+{% block body_class %} uni2-detail-page{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  {% url "web:home" as breadcrumb_home_url %}
+  {% include "components/breadcrumbs.html" with root_url=breadcrumb_home_url|add:"#novedades" root_label="Novedades" current_label=novedad.titulo only %}
+</div>
+
+<article class="uni2-news-detail">
+  <div class="container pb-5">
+    <div class="uni2-news-detail-layout">
+      <header class="uni2-news-detail-copy">
+        <span class="uni2-badge uni2-badge-info">{{ novedad.etiqueta }}</span>
+        <p class="uni2-news-date"><i class="bi bi-calendar3" aria-hidden="true"></i> {{ novedad.fecha_publicacion|date:"j \d\e F \d\e Y" }}</p>
+        <h1 id="novedad-title" class="uni2-titulo-principal">{{ novedad.titulo }}</h1>
+        <p class="uni2-news-lead">{{ novedad.resumen }}</p>
+      </header>
+
+      <div class="uni2-news-detail-visual uni2-news-detail-visual-{{ novedad.color }}{% if novedad.imagen %} uni2-news-detail-visual-image{% endif %}"
+           {% if novedad.imagen %}style="--uni2-news-image: url('{{ novedad.imagen.url }}');"{% endif %}>
+        <i class="bi bi-megaphone-fill" aria-hidden="true"></i>
+      </div>
+
+      <div class="uni2-news-article-body">
+        {{ novedad.contenido|linebreaks }}
+        <a class="uni2-cta uni2-cta-secondary" href="{% url 'web:home' %}#novedades">
+          <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver a novedades
+        </a>
+      </div>
+    </div>
+  </div>
+</article>
+{% endblock %}
