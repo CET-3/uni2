@@ -15,6 +15,13 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Credencial offline opt-in con vencimiento de siete días.
 - Actualización y rollback controlados.
 
+### Próxima etapa aprobada
+
+- Preinscripción pública de asociados y adherentes.
+- Revisión en gestión y finalización presencial del alta.
+- Primeros correos transaccionales individuales.
+- Base común de comunicaciones y entregas.
+
 ### Versión 2
 
 - Productos.
@@ -31,7 +38,8 @@ timestamp: 2026-06-22T00:00:00-03:00
 ### Versión 3
 
 - Notificaciones push.
-- Correos transaccionales y por lote.
+- Correos operativos por lote, incluidos avisos de cuotas generadas.
+- Comunicados institucionales y definición de comunicaciones promocionales.
 - Mapa de comercios.
 - Pago online.
 - Contabilidad completa.

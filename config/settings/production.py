@@ -1,6 +1,7 @@
 import os
 
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 from .base import *  # noqa: F403
 
@@ -19,6 +20,41 @@ GOOGLE_ANALYTICS_MEASUREMENT_ID = os.getenv(
     "GOOGLE_ANALYTICS_MEASUREMENT_ID", ""
 ).strip()
 PWA_PRIVATE_DATA_EPOCH = os.getenv("UNI2_PRIVATE_DATA_EPOCH", "production")
+UNI2_TRUST_VERCEL_CLIENT_IP = os.getenv("VERCEL") == "1"
+
+UNI2_TRANSACTIONAL_EMAIL_MODE = os.getenv(
+    "UNI2_TRANSACTIONAL_EMAIL_MODE", "disabled"
+).strip()
+if UNI2_TRANSACTIONAL_EMAIL_MODE not in {"disabled", "enabled"}:
+    raise ImproperlyConfigured(
+        "UNI2_TRANSACTIONAL_EMAIL_MODE debe ser 'disabled' o 'enabled'."
+    )
+
+UNI2_SITE_URL = os.getenv("UNI2_SITE_URL", "").strip().rstrip("/")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "").strip()
+if UNI2_TRANSACTIONAL_EMAIL_MODE == "enabled":
+    required_email_settings = (
+        "UNI2_SITE_URL",
+        "DEFAULT_FROM_EMAIL",
+        "EMAIL_HOST",
+        "EMAIL_PORT",
+        "EMAIL_HOST_USER",
+        "EMAIL_HOST_PASSWORD",
+    )
+    missing_email_settings = [
+        name for name in required_email_settings if not os.getenv(name, "").strip()
+    ]
+    if missing_email_settings:
+        raise ImproperlyConfigured(
+            "El correo transaccional requiere: " + ", ".join(missing_email_settings)
+        )
+
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.environ["EMAIL_HOST"]
+    EMAIL_PORT = int(os.environ["EMAIL_PORT"])
+    EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+    EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+    EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "true").strip().lower() == "true"
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 

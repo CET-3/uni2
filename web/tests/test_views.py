@@ -41,17 +41,57 @@ def test_home_muestra_el_importe_del_periodo_actual(client):
     )
 
     contenido = client.get(reverse("web:home")).content.decode()
+    paso_cuota = re.search(
+        r'<article class="uni2-step-card uni2-step-card-green">(.*?)</article>',
+        contenido,
+        re.DOTALL,
+    ).group(1)
 
-    assert "$ 1.234,56" in contenido
+    assert "$ 1.234,56 por mes" in paso_cuota
     assert "$ 700,00" not in contenido
 
 
 @pytest.mark.django_db
 def test_home_sin_periodos_no_inventa_un_importe(client):
     contenido = client.get(reverse("web:home")).content.decode()
+    paso_cuota = re.search(
+        r'<article class="uni2-step-card uni2-step-card-green">(.*?)</article>',
+        contenido,
+        re.DOTALL,
+    ).group(1)
 
-    assert "Consultá en la mutual el valor actual de la cuota social." in contenido
-    assert "Consultá el valor vigente." in contenido
+    assert "Consultá el valor vigente." in paso_cuota
+
+
+@pytest.mark.django_db
+def test_home_presenta_preinscripcion_sin_prometer_pago_online(client):
+    contenido = client.get(reverse("web:home")).content.decode()
+    inicio_seccion = re.search(
+        r'<section[^>]+id="como-asociarse".*?(?=<div class="row g-3 mb-5">)',
+        contenido,
+        re.DOTALL,
+    ).group(0)
+    clases_encabezado = re.search(
+        r'<div class="([^"]*uni2-section-heading[^"]*)">', inicio_seccion
+    ).group(1)
+
+    assert {
+        "flex-column",
+        "flex-sm-row",
+        "align-items-stretch",
+        "align-items-sm-end",
+    }.issubset(set(clases_encabezado.split()))
+    assert 'class="d-grid d-sm-block"' in inicio_seccion
+    assert "Cómo ser parte de nuestra comunidad" in contenido
+    assert reverse("web:preinscripcion") in contenido
+    assert "Quiero asociarme" in contenido
+    assert "Completá la preinscripción" in contenido
+    assert "Revisamos tus datos" in contenido
+    assert "Acercate a la Mutual" in contenido
+    assert "Disfrutá tus beneficios" in contenido
+    assert "Unite a la Mutual" not in contenido
+    assert "Completá tus datos online." not in contenido
+    assert "pago online" not in contenido.lower()
 
 
 def test_url_beneficios_no_se_mantiene(client):
@@ -162,6 +202,8 @@ def test_design_system_porta_secciones_del_showcase(client):
         "uni2-compact-hero-summary",
         "uni2-avatar",
         "uni2-data-list",
+        "uni2-timeline",
+        "uni2-timeline-marker",
     ):
         assert clase in content
     assert 'uni2-badge-success">Pagada</span>' in content

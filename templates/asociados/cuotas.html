@@ -22,7 +22,7 @@
         <div class="col-6 col-sm-4">
             <div class="card uni2-metric-card uni2-metric-card-info h-100">
                 <div class="card-body">
-                    <div class="uni2-metric-label">Cuotas</div>
+                    <div class="uni2-metric-label">Cuotas generadas</div>
                     <div class="uni2-metric-value">{{ cuotas_total }}</div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
         <div class="col-6 col-sm-4">
             <div class="card uni2-metric-card uni2-metric-card-warning h-100">
                 <div class="card-body">
-                    <div class="uni2-metric-label">Con saldo</div>
+                    <div class="uni2-metric-label">Cuotas con deuda</div>
                     <div class="uni2-metric-value">{{ cuotas_con_saldo }}</div>
                 </div>
             </div>
@@ -46,8 +46,8 @@
                     <p class="text-secondary mb-0">Los saldos se calculan a la fecha de consulta.</p>
                 </div>
             </div>
-            <div class="table-responsive">
-                <table class="table table-soft align-middle mb-0">
+            <div class="table-responsive uni2-records-table-wrap">
+                <table class="table table-soft align-middle mb-0 uni2-records-table uni2-cuotas-table">
                     <thead>
                         <tr>
                             <th>Período</th>
@@ -59,19 +59,19 @@
                     </thead>
                     <tbody>
                         {% for item in cuotas %}
-                            <tr>
-                                <td><strong>{{ item.cuota.periodo }}</strong></td>
-                                <td>
+                            <tr class="uni2-records-table-row uni2-cuota-record">
+                                <td data-label="Período"><strong>{{ item.cuota.periodo }}</strong></td>
+                                <td data-label="Importe">
                                     <div class="uni2-period-amounts">
                                         <strong>{{ item.importe_original|moneda }}</strong>
                                         <span>Recargo {{ item.recargo|moneda }}</span>
                                     </div>
                                 </td>
-                                <td class="text-end">{{ item.importe_pagado|moneda }}</td>
-                                <td class="text-end">
+                                <td class="text-end" data-label="Pagado">{{ item.importe_pagado|moneda }}</td>
+                                <td class="text-end" data-label="Saldo">
                                     <span{% if item.saldo > 0 %} class="fw-semibold"{% endif %}>{{ item.saldo|moneda }}</span>
                                 </td>
-                                <td>{% include "components/cuota_estado_badge.html" with estado=item.estado estado_display=item.estado_display only %}</td>
+                                <td data-label="Estado">{% include "components/cuota_estado_badge.html" with estado=item.estado estado_display=item.estado_display only %}</td>
                             </tr>
                         {% empty %}
                             <tr>

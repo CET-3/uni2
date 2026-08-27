@@ -10,6 +10,29 @@ timestamp: 2026-07-13T00:00:00-03:00
 
 - La variante administrativa de la home muestra hasta dos accesos autorizados en el hero y los restantes en `Más accesos`. `Atención al asociado` tiene prioridad cuando el usuario puede consultar asociados. Los roles que solo operan mediante el admin técnico reciben ese acceso sin ver acciones de otros dominios.
 - `Atención al asociado` es la consulta operativa con búsqueda y filtros. Cada fila completa contiene un único enlace accesible al detalle, con estados visibles de foco y hover; no hay columna de acciones ni cobro directo desde el listado. Los resultados priorizan `Credencial activa` o `Credencial inactiva`, muestran `Baja` sólo cuando corresponde y reservan los badges para estados. Número, DNI, curso o clasificación y tipo se presentan como datos; curso y clasificación también pueden filtrarse. El acceso de usuario puede filtrarse, pero no ocupa una columna del resultado.
+- `Solicitudes de asociación` es una bandeja separada del padrón. Usa una lista
+  con búsqueda y filtros por estado, tipo y fecha; distingue `Todas las
+  solicitudes abiertas` de `Todas las solicitudes`, además de cada estado. No
+  usa tablero de columnas. Cada fila presenta persona, documento, tipo, estado
+  y fecha, abre una ficha operativa mediante un único enlace accesible y se
+  reorganiza como card en mobile sin desplazamiento horizontal.
+- La ficha de solicitud reúne datos, estado, historial y entregas de correo.
+  En `recibida` ofrece `Aprobar datos`, `Observar` y `Cancelar solicitud`. En
+  `datos_aprobados`, la acción principal es `Completar alta`; observar y
+  cancelar continúan disponibles. Las acciones se ocultan o bloquean según
+  estado y permisos, pero la validación definitiva siempre ocurre en el
+  servidor. Las comunicaciones muestran nombres funcionales, destino, estado y
+  fecha; el reenvío del correo correspondiente al estado actual vive en esa
+  sección. El historial usa la línea de tiempo compartida y muestra también el
+  motivo de observaciones y cancelaciones. Una solicitud con alta completada
+  enlaza la ficha y el número del asociado generado.
+- Observar y cancelar abren confirmaciones que exigen explicación o motivo.
+  Observar enfoca inicialmente la explicación. Los breadcrumbs de estas
+  acciones conservan bandeja, persona y acción sin repetir la identidad sobre
+  el título. `Completar alta` muestra datos de la persona, consecuencias de la
+  operación y el aviso de que no registra pagos; conserva `Volver` y, al
+  confirmar, crea el asociado y sus cuotas y navega a su detalle. Una entrega
+  de correo fallida queda visible y ofrece reenvío autorizado.
 - La consulta conserva `Nuevo asociado` y `Exportar asociados` según permisos. La importación del padrón inicial se mantiene como acceso administrativo de puesta en marcha, pero no aparece en esta pantalla cotidiana.
 - Nuevo asociado desde pantalla propia de `gestion`, sin depender del admin
   técnico. La fecha de alta toma el día local y el inicio de cobro se calcula
@@ -35,7 +58,7 @@ timestamp: 2026-07-13T00:00:00-03:00
 
 ## Pantallas operativas de gestión
 
-Las pantallas `Atención al asociado`, `Nuevo asociado`, `Deudores` y `Períodos de cuota` reutilizan el mismo design system que el resto de Uni2:
+Las pantallas `Atención al asociado`, `Solicitudes de asociación`, `Nuevo asociado`, `Deudores` y `Períodos de cuota` reutilizan el mismo design system que el resto de Uni2:
 
 - `Atención al asociado` presenta únicamente el título y las acciones autorizadas dentro de `uni2-compact-hero`: una cabecera operativa de superficie neutra que termina en escritorio con una geometría lateral de colores institucionales plenos y la reduce a una banda por debajo de `lg`; la alternativa `uni2-surface-card-brand` permanece documentada y visible en el catálogo para su validación separada;
 - la búsqueda usa el título único `Buscar asociados`, sin kicker ni texto auxiliar; después de enviar filtros, `Limpiar filtros` aparece junto al botón `Buscar`, dentro del formulario, y usa el mismo tratamiento secundario con contorno que `Exportar`;
@@ -44,8 +67,12 @@ Las pantallas `Atención al asociado`, `Nuevo asociado`, `Deudores` y `Períodos
 - `uni2-metric-card` para resúmenes reales y `uni2-surface-card` para búsqueda, carga, seguimiento y tablas;
 - tablas con lectura densa que destacan nombre, estado, usuario, deuda o cantidad mediante `uni2-avatar` y `uni2-badge` semánticos;
 - Bootstrap Icons en acciones principales y utilidades Bootstrap para grillas, alineación y adaptación responsive;
-- en mobile las acciones se apilan y las tablas conservan desplazamiento horizontal.
-- como excepción, el listado de asociados evita el desplazamiento horizontal: conserva la tabla comparativa en desktop y reorganiza cada fila como un registro de dos columnas por debajo de `md`, con identidad y credencial a ancho completo y todos los datos visibles. Los rótulos se muestran pequeños y atenuados, mientras los valores tienen mayor peso para distinguir ambos niveles;
+- en mobile las acciones se apilan. Las tablas de registros que usan
+  `uni2-records-table` evitan el desplazamiento horizontal: conservan la tabla
+  comparativa en desktop y reorganizan cada fila como una card de dos columnas
+  por debajo de `md`. La consulta de asociados y la bandeja de solicitudes
+  agregan enlace de fila; `Mis cuotas` reutiliza la estructura sin ser
+  clickeable;
 - cuando estas pantallas usan breadcrumbs, omiten `Inicio` porque el logo global ya cumple esa navegación; `Atención al asociado`, al ser una entrada operativa de primer nivel, no muestra un breadcrumb que repita su título;
 - las acciones del encabezado se agrupan separadas de las métricas para evitar confundir comandos con indicadores;
 - el alta manual muestra los errores de validación en una alerta destacada arriba de los campos del formulario.
@@ -57,3 +84,17 @@ Las pantallas `Atención al asociado`, `Nuevo asociado`, `Deudores` y `Períodos
 - los pares etiqueta/valor de la ficha usan `uni2-data-list`; cobros conserva clases `uni2-cobro-*` únicamente para la selección de cuotas, el resumen y la distribución de sus campos.
 - el alta y la edición muestran curso o clasificación según el tipo seleccionado, deshabilitan el campo que no corresponde y exigen el visible. La edición reutiliza el hero compacto para mantener visible la identidad y el estado actual de la credencial. Presenta un único formulario, dividido mediante `fieldset` en `Identidad`, `Contacto` y `Datos administrativos`; evita textos auxiliares repetidos y no ofrece campos de baja, porque esa operación no forma parte de la edición cotidiana.
 - los formularios de alta, edición, períodos y cobro usan `components/alert.html` como resumen general y muestran cada error junto al campo correspondiente.
+
+## Auditoría de gestión
+
+- La consulta general usa un único título y no repite un breadcrumb de un solo
+  nivel. Los botones de filtro, limpieza y paginación incluyen iconos.
+- Cada evento se expresa como una oración natural: actor, acción, tipo y nombre
+  del objeto, y fecha y hora. El origen técnico no se muestra; el identificador
+  del objeto queda como referencia secundaria `#n` y el motivo aparece en un
+  renglón propio cuando existe.
+- Una operación compuesta usa una sola superficie con cabecera, icono
+  representativo, responsable, fecha y cantidad de eventos. Los eventos
+  internos se separan mediante líneas, sin cards, iconos ni bordes de color
+  anidados. La referencia UUID de la operación queda al pie. Una operación
+  individual conserva su icono representativo dentro de su única cabecera.

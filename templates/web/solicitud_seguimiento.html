@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Estado de tu preinscripción | Uni2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <header class="mb-4">
+        <span class="uni2-section-kicker">Preinscripción</span>
+        <h1 class="uni2-titulo-seccion">Estado de tu solicitud</h1>
+        <p><span class="uni2-badge uni2-badge-info">{{ solicitud.get_estado_display }}</span></p>
+    </header>
+
+    {% if form %}
+        {% if explicacion %}
+            {% include "components/alert.html" with variant="warning" title="Necesitamos que corrijas información" message=explicacion extra_classes="mb-4" is_static=True only %}
+        {% endif %}
+        <form method="post" class="card uni2-surface-card uni2-surface-card-warning uni2-preinscription-form" data-solicitud-asociacion-form novalidate>
+            {% csrf_token %}
+            <div class="card-body p-3 p-md-4">
+                {% if form.tiene_errores_de_campo %}
+                    <div class="uni2-form-error-focus" tabindex="-1" autofocus>
+                        {% include "components/alert.html" with variant="danger" title="Revisá las correcciones" message="Hay datos incompletos o inválidos." only %}
+                    </div>
+                {% endif %}
+                {% for error in form.non_field_errors %}
+                    <div class="uni2-form-error-focus" tabindex="-1"{% if forloop.first and not form.tiene_errores_de_campo %} autofocus{% endif %}>
+                        {% include "components/alert.html" with variant="danger" message=error extra_classes="mb-3" only %}
+                    </div>
+                {% endfor %}
+                <div class="row g-3">
+                    {% for field in form %}
+                        {% if field.name == "es_estudiante_cet3" %}
+                            <fieldset class="col-12"{% if field.errors %} aria-describedby="{{ field.auto_id }}-errors"{% endif %}>
+                                <legend class="form-label">{{ field.label }}</legend>
+                                <div class="d-flex gap-4">{% for opcion in field %}<div class="form-check">{{ opcion.tag }} <label class="form-check-label" for="{{ opcion.id_for_label }}">{{ opcion.choice_label }}</label></div>{% endfor %}</div>
+                                {% include "components/field_errors.html" with field=field only %}
+                            </fieldset>
+                        {% else %}
+                            <div class="col-md-6"{% if field.name == "curso_actual" %} data-solicitud-field="curso"{% elif field.name == "clasificacion_adherente" %} data-solicitud-field="clasificacion"{% endif %}>
+                                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% include "components/field_errors.html" with field=field only %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <button class="btn btn-primary mt-4" type="submit"><i class="bi bi-send" aria-hidden="true"></i> Enviar correcciones</button>
+            </div>
+        </form>
+    {% elif solicitud.estado == "recibida" %}
+        {% include "components/alert.html" with variant="info" message="La Mutual está revisando los datos. Te avisaremos por correo cuando haya novedades." is_static=True only %}
+    {% elif solicitud.estado == "datos_aprobados" %}
+        {% include "components/alert.html" with variant="success" title="Documentación aprobada" message="Acercate a la Mutual para completar el alta." is_static=True only %}
+    {% elif solicitud.estado == "alta_completada" %}
+        {% include "components/alert.html" with variant="success" title="Alta completada" message="La solicitud ya fue incorporada al padrón." is_static=True only %}
+    {% else %}
+        {% include "components/alert.html" with variant="warning" title="Solicitud cancelada" message="Esta solicitud fue cerrada definitivamente." is_static=True only %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ block.super }}
+    {% if form %}<script src="{% static 'web/solicitud-asociacion-form.js' %}"></script>{% endif %}
+{% endblock %}

@@ -2,9 +2,14 @@ import pytest
 from django.contrib.auth.models import Group
 
 from gestion.permissions import (
+    GESTION_CANCELAR_SOLICITUDES_ASOCIACION,
     GESTION_COBRAR_CUOTAS,
+    GESTION_COMPLETAR_SOLICITUDES_ASOCIACION,
+    GESTION_CONSULTAR_SOLICITUDES_ASOCIACION,
     GESTION_IMPORTAR_ASOCIADOS,
     GESTION_IMPORTAR_CUOTAS_HISTORICAS,
+    GESTION_REENVIAR_COMUNICACIONES,
+    GESTION_REVISAR_SOLICITUDES_ASOCIACION,
     GESTION_VER_AUDITORIA,
     GESTION_VER_MOVIMIENTOS_ASOCIADO,
 )
@@ -45,6 +50,23 @@ def test_atencion_solo_recibe_permisos_de_operacion_diaria():
     assert _tiene_permiso(grupo, GESTION_VER_MOVIMIENTOS_ASOCIADO)
     assert not _tiene_permiso(grupo, GESTION_VER_AUDITORIA)
     assert not _tiene_permiso(grupo, GESTION_IMPORTAR_ASOCIADOS)
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "grupo_nombre",
+    [ATENCION_ASOCIADO_GROUP, ADMINISTRADOR_MUTUAL_GROUP],
+)
+def test_roles_de_atencion_reciben_permisos_de_solicitudes(grupo_nombre):
+    grupo = Group.objects.get(name=grupo_nombre)
+    for permiso in (
+        GESTION_CONSULTAR_SOLICITUDES_ASOCIACION,
+        GESTION_REVISAR_SOLICITUDES_ASOCIACION,
+        GESTION_COMPLETAR_SOLICITUDES_ASOCIACION,
+        GESTION_CANCELAR_SOLICITUDES_ASOCIACION,
+        GESTION_REENVIAR_COMUNICACIONES,
+    ):
+        assert _tiene_permiso(grupo, permiso)
 
 
 @pytest.mark.django_db

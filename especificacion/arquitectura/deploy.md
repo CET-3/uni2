@@ -41,6 +41,14 @@ Estas variables pertenecen al proyecto Vercel productivo.
 | `AWS_S3_REGION_NAME` | No secreto | Opcional | Región del storage. |
 | `AWS_S3_CUSTOM_DOMAIN` | No secreto | Opcional | Dominio público opcional del storage. |
 | `GOOGLE_ANALYTICS_MEASUREMENT_ID` | No secreto | Opcional | Activa en Producción la medición de visitas y navegación con GA4. |
+| `UNI2_SITE_URL` | No secreto | Condicional | Origen público usado para construir enlaces privados; obligatorio al habilitar correos. |
+| `UNI2_TRANSACTIONAL_EMAIL_MODE` | No secreto | Obligatoria | Barrera explícita: `disabled` o `enabled`. |
+| `DEFAULT_FROM_EMAIL` | No secreto | Condicional | Remitente visible; obligatorio al habilitar correos. |
+| `EMAIL_HOST` | No secreto | Condicional | Servidor SMTP. |
+| `EMAIL_PORT` | No secreto | Condicional | Puerto SMTP. |
+| `EMAIL_HOST_USER` | Sensible | Condicional | Usuario del proveedor SMTP. |
+| `EMAIL_HOST_PASSWORD` | Secreto | Condicional | Contraseña del proveedor SMTP. |
+| `EMAIL_USE_TLS` | No secreto | Opcional | Habilita TLS; por defecto `true`. |
 
 Los valores vigentes para los hosts públicos y técnicos admitidos son:
 
@@ -55,6 +63,18 @@ crear un nuevo deployment para que el runtime reciba las variables actualizadas.
 Vercel agrega automáticamente variables como `VERCEL_URL`,
 `VERCEL_BRANCH_URL` y `VERCEL_PROJECT_PRODUCTION_URL`. No se copian ni se
 versionan manualmente.
+
+Cuando la variable automática `VERCEL` vale `1`, Uni2 reconoce que el runtime
+está detrás del proxy de la plataforma y usa `X-Vercel-Forwarded-For` para
+identificar la dirección que alimenta los límites de formularios públicos.
+Fuera de Vercel usa `REMOTE_ADDR` y no confía en encabezados reenviados por el
+cliente.
+
+El correo real se configura mediante el backend SMTP estándar de Django para
+no acoplar el dominio a un proveedor. Si el modo está `enabled` y falta una
+variable condicional, Producción no inicia. Staging fuerza el modo `disabled`
+antes de heredar la configuración productiva, aun si alguien copia por error
+una variable que intentara habilitarlo.
 
 ## Vercel — staging
 

@@ -4,7 +4,45 @@ from django.contrib import admin
 from auditoria.admin_mixins import AuditoriaAdminMixin
 
 from .services import calculate_fecha_inicio_cobro
-from .models import Asociado, CicloLectivo, ClasificacionAdherente, Curso
+from .models import (
+    Asociado,
+    CicloLectivo,
+    ClasificacionAdherente,
+    Curso,
+    LimiteSolicitudPublica,
+    SolicitudAsociacion,
+)
+
+
+class SolicitudSoloLecturaAdminMixin:
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(SolicitudAsociacion)
+class SolicitudAsociacionAdmin(SolicitudSoloLecturaAdminMixin, admin.ModelAdmin):
+    list_display = ("creado_en", "apellido", "nombre", "dni", "tipo", "estado")
+    list_filter = ("estado", "tipo", "es_estudiante_cet3", "creado_en")
+    search_fields = ("apellido", "nombre", "dni", "dni_normalizado", "email")
+    readonly_fields = tuple(
+        field.name for field in SolicitudAsociacion._meta.fields
+    )
+
+
+@admin.register(LimiteSolicitudPublica)
+class LimiteSolicitudPublicaAdmin(SolicitudSoloLecturaAdminMixin, admin.ModelAdmin):
+    list_display = ("ventana_inicio", "accion", "intentos")
+    list_filter = ("accion", "ventana_inicio")
+    search_fields = ("accion", "clave_hash")
+    readonly_fields = tuple(
+        field.name for field in LimiteSolicitudPublica._meta.fields
+    )
 
 
 @admin.register(CicloLectivo)

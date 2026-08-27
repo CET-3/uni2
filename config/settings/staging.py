@@ -10,6 +10,11 @@ from config.database_identity import (
     storage_fingerprint,
 )
 
+# Staging nunca puede activar correo real, aunque una variable del proyecto se
+# haya copiado por error desde Producción. Se fuerza la barrera antes de
+# importar ese perfil para que tampoco intente validar credenciales SMTP.
+os.environ["UNI2_TRANSACTIONAL_EMAIL_MODE"] = "disabled"
+
 from .production import *  # noqa: F403
 
 

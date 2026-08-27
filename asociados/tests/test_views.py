@@ -141,7 +141,7 @@ def test_credencial_propia_al_dia_se_muestra_activa_sin_explicacion_de_deuda(cli
 
 
 @pytest.mark.django_db
-def test_credencial_agrupa_identidad_validacion_y_respaldo_sin_repetir_la_cabecera(client):
+def test_credencial_agrupa_identidad_validacion_y_respaldo_sin_cabecera_visual(client):
     asociado = create_asociado(
         nombre="Nora",
         apellido="Diseño",
@@ -155,7 +155,9 @@ def test_credencial_agrupa_identidad_validacion_y_respaldo_sin_repetir_la_cabece
 
     assert 'aria-label="Credencial digital de Nora Diseño"' in content
     assert 'class="uni2-credential-brand"' in content
-    assert "<h1" in content and ">Mi credencial</h1>" in content
+    assert 'class="uni2-credential-page-heading"' not in content
+    assert ">Mi credencial</h1>" not in content
+    assert "Presentala en los comercios para acceder a tus beneficios." not in content
     assert "<summary>Ver código de respaldo</summary>" in content
     assert content.index("uni2-credential-state") < content.index("uni2-credential-technical")
 
@@ -216,6 +218,8 @@ def test_cuotas_asociado_usan_metricas_y_superficie_compartidas(client):
 
     assert "uni2-metric-card" in content
     assert "uni2-surface-card" in content
+    assert "Cuotas generadas" in content
+    assert "Cuotas con deuda" in content
 
 
 @pytest.mark.django_db
@@ -263,6 +267,13 @@ def test_cuotas_asociado_muestran_un_badge_semantico_por_estado(client, monkeypa
     table_end = content.index("</table>", table_start)
     table_content = content[table_start:table_end]
 
+    assert "uni2-records-table-wrap" in content
+    assert "uni2-records-table uni2-cuotas-table" in table_content
+    assert table_content.count('class="uni2-records-table-row uni2-cuota-record"') == 3
+    assert 'data-label="Importe"' in table_content
+    assert 'data-label="Pagado"' in table_content
+    assert 'data-label="Saldo"' in table_content
+    assert 'data-label="Estado"' in table_content
     assert 'uni2-badge-success">Pagada</span>' in table_content
     assert 'uni2-badge-warning">Pendiente</span>' in table_content
     assert 'uni2-badge-danger">Vencida</span>' in table_content
@@ -270,4 +281,4 @@ def test_cuotas_asociado_muestran_un_badge_semantico_por_estado(client, monkeypa
     assert table_content.count('class="uni2-badge ') == 3
     assert '<th class="text-end">Pagado</th>' in table_content
     assert '<th class="text-end">Saldo</th>' in table_content
-    assert table_content.count('<td class="text-end">') == 6
+    assert table_content.count('<td class="text-end" data-label=') == 6

@@ -1,9 +1,10 @@
 import uuid
+import hashlib
 
 from django.db.models import Q
 from django.utils import timezone
 
-from .models import Asociado
+from .models import Asociado, SolicitudAsociacion
 from cuotas.selectors import get_total_deuda
 
 
@@ -120,3 +121,78 @@ def get_asociados_for_export(filters=None):
 
 def get_asociado_by_id(asociado_id: int):
     return Asociado.objects.select_related("curso_actual", "clasificacion_adherente", "usuario").filter(id=asociado_id).first()
+
+
+def obtener_solicitud_por_token(token: str, ahora=None):
+    if not token:
+        return None
+    ahora = ahora or timezone.now()
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+    return (
+        SolicitudAsociacion.objects.select_related(
+            "curso_actual",
+            "clasificacion_adherente",
+            "asociado",
+        )
+        .filter(
+            token_seguimiento_hash=token_hash,
+            token_seguimiento_vence_en__gt=ahora,
+        )
+        .first()
+    )
+
+
+def filtrar_solicitudes_asociacion(
+    *,
+    query="",
+    estado="",
+    incluir_finales=False,
+    tipo="",
+    fecha_desde=None,
+    fecha_hasta=None,
+):
+    solicitudes = SolicitudAsociacion.objects.select_related(
+        "curso_actual",
+        "clasificacion_adherente",
+        "asociado",
+    )
+    query = (query or "").strip()
+    if query:
+        documento = query.replace(".", "").replace("-", "").replace(" ", "")
+        solicitudes = solicitudes.filter(
+            Q(nombre__icontains=query)
+            | Q(apellido__icontains=query)
+            | Q(dni__icontains=query)
+            | Q(dni_normalizado__icontains=documento)
+            | Q(email__icontains=query)
+        )
+    if estado:
+        solicitudes = solicitudes.filter(estado=estado)
+    elif not incluir_finales:
+        solicitudes = solicitudes.exclude(
+            estado__in=(
+                SolicitudAsociacion.ESTADO_ALTA_COMPLETADA,
+                SolicitudAsociacion.ESTADO_CANCELADA,
+            )
+        )
+    if tipo:
+        solicitudes = solicitudes.filter(tipo=tipo)
+    if fecha_desde:
+        solicitudes = solicitudes.filter(creado_en__date__gte=fecha_desde)
+    if fecha_hasta:
+        solicitudes = solicitudes.filter(creado_en__date__lte=fecha_hasta)
+    return solicitudes.order_by("creado_en", "id")
+
+
+def obtener_solicitud_gestion(solicitud_id):
+    return (
+        SolicitudAsociacion.objects.select_related(
+            "curso_actual",
+            "clasificacion_adherente",
+            "asociado",
+            "creado_por",
+            "modificado_por",
+        )
+        .filter(pk=solicitud_id)
+        .first()
+    )

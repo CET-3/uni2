@@ -178,12 +178,18 @@ def generar_cuotas_para_periodo(periodo: PeriodoCuota, *, actor=None) -> int:
 
 
 @transaction.atomic
-def generar_cuotas_iniciales_para_asociado(*, asociado: Asociado, fecha_referencia, actor=None) -> list[Cuota]:
+def generar_cuotas_iniciales_para_asociado(
+    *,
+    asociado: Asociado,
+    fecha_referencia,
+    actor=None,
+    operacion_id=None,
+) -> list[Cuota]:
     if asociado.fecha_inicio_cobro is None:
         return []
 
     cuotas = []
-    operacion_id = uuid.uuid4()
+    operacion_id = operacion_id or uuid.uuid4()
     inicio = (asociado.fecha_inicio_cobro.year, asociado.fecha_inicio_cobro.month)
     periodo_actual = (fecha_referencia.year, fecha_referencia.month)
     for periodo in _get_periodos_activos_para_alta():

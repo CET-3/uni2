@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}{{ accion_titulo }} | Uni2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mx-auto" style="max-width: 44rem;">
+        {% url 'gestion:solicitud_asociacion_detalle' solicitud.pk as solicitud_detalle_url %}
+        {% url 'gestion:solicitudes_asociacion' as solicitudes_url %}
+        {% include "components/breadcrumbs.html" with root_url=solicitudes_url root_label="Solicitudes de asociación" ancestor_url=solicitud_detalle_url ancestor_label=solicitud.nombre_completo|title current_label=accion_titulo only %}
+        <h1 class="uni2-titulo-seccion">{{ accion_titulo }}</h1>
+        <p class="text-secondary">{{ accion_descripcion }}</p>
+        <form method="post" class="card uni2-surface-card"><div class="card-body p-4">
+            {% csrf_token %}
+            {% if form.non_field_errors %}{% include "components/alert.html" with variant="danger" message=form.non_field_errors only %}{% endif %}
+            {% if es_confirmacion_alta %}
+                <h2 class="uni2-titulo-componente mb-3">Datos del alta</h2>
+                <dl class="uni2-data-list mb-4">
+                    <div><dt>Persona</dt><dd>{{ solicitud.apellido|title }}, {{ solicitud.nombre|title }}</dd></div>
+                    <div><dt>DNI o documento</dt><dd>{{ solicitud.dni }}</dd></div>
+                    <div><dt>Tipo</dt><dd>{{ solicitud.get_tipo_display }}</dd></div>
+                    <div><dt>Curso o clasificación</dt><dd>{% if solicitud.es_estudiante_cet3 %}{{ solicitud.curso_actual }}{% else %}{{ solicitud.clasificacion_adherente }}{% endif %}</dd></div>
+                </dl>
+                <h2 class="uni2-titulo-componente mb-3">Qué hará el sistema</h2>
+                <ul class="list-unstyled d-grid gap-2 mb-4">
+                    <li class="d-flex gap-2"><i class="bi bi-check-circle-fill text-success" aria-hidden="true"></i><span>Se creará el asociado y se le asignará su número.</span></li>
+                    <li class="d-flex gap-2"><i class="bi bi-check-circle-fill text-success" aria-hidden="true"></i><span>Se generarán sus cuotas iniciales según las reglas vigentes.</span></li>
+                </ul>
+                {% include "components/alert.html" with variant="info" title="Importante" message="No registra ningún pago." is_static=True extra_classes="mb-4" only %}
+            {% endif %}
+            {% for field in form %}
+                {% if field.is_hidden %}
+                    {{ field }}
+                {% else %}
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {{ field.errors }}
+                {% endif %}
+            {% endfor %}
+            <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+                <button class="btn {{ boton_clase }}" type="submit"><i class="bi {{ boton_icono }}" aria-hidden="true"></i> {{ boton_label }}</button>
+                <a class="btn btn-outline-primary" href="{% url 'gestion:solicitud_asociacion_detalle' solicitud.pk %}"><i class="bi bi-arrow-left" aria-hidden="true"></i> Volver</a>
+            </div>
+        </div></form>
+    </div>
+</div>
+{% endblock %}

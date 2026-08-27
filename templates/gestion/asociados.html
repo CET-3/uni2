@@ -77,8 +77,8 @@
         <section class="card uni2-surface-card uni2-surface-card-info" aria-labelledby="resultados-title">
             <div class="card-body">
                 <h2 id="resultados-title" class="uni2-titulo-componente mb-3">{% if resultados_asociados|length == 1 %}1 asociado encontrado{% else %}{{ resultados_asociados|length }} asociados encontrados{% endif %}</h2>
-                <div class="table-responsive uni2-asociados-results-wrap">
-                    <table class="table table-soft align-middle mb-0 uni2-asociados-results">
+                <div class="table-responsive uni2-asociados-results-wrap uni2-records-table-wrap">
+                    <table class="table table-soft align-middle mb-0 uni2-asociados-results uni2-records-table">
                         <thead>
                             <tr>
                                 <th>Asociado</th>
@@ -92,7 +92,7 @@
                         <tbody>
                             {% for resultado in resultados_asociados %}
                                 {% with asociado=resultado.asociado estado_credencial=resultado.estado_credencial %}
-                                <tr class="uni2-clickable-row">
+                                <tr class="uni2-records-table-row uni2-clickable-row">
                                     <td data-label="Asociado">
                                         <a class="uni2-row-link d-inline-flex align-items-center gap-2" href="{% url 'gestion:asociado_detalle' asociado.id %}?volver={{ request.get_full_path|urlencode }}">
                                             {% cycle 'uni2-avatar-blue' 'uni2-avatar-green' 'uni2-avatar-yellow' 'uni2-avatar-red' as avatar_color silent %}

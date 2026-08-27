@@ -2,6 +2,9 @@
 
 * [CB-alta-mitad-mes](cb-alta-mitad-mes.md) - Situación: el alta ocurre cerca del cierre del período mensual.
 * [CB-asociado-sin-usuario](cb-asociado-sin-usuario.md) - Situación: el asociado existe en el padrón, pero todavía no tiene usuario vinculado.
+* [CB-solicitud-asociacion-duplicada](cb-solicitud-asociacion-duplicada.md) - Situación: el DNI ya pertenece a un asociado o a otra solicitud abierta.
+* [CB-enlace-solicitud-invalido](cb-enlace-solicitud-invalido.md) - Situación: el enlace privado no existe, venció o fue reemplazado.
+* [CB-alta-solicitud-concurrente](cb-alta-solicitud-concurrente.md) - Situación: dos operadores actúan sobre la misma solicitud.
 * [CB-usuario-desactivado](cb-usuario-desactivado.md) - Situación: existe un asociado activo con usuario desactivado.
 * [CB-baja-con-deuda](cb-baja-con-deuda.md) - Situación: se da de baja a un asociado que mantiene deuda.
 * [CB-cuota-ya-generada](cb-cuota-ya-generada.md) - Situación: se intenta generar una cuota para un asociado y período que ya existen.

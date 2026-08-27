@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitud de {{ solicitud.apellido }}, {{ solicitud.nombre }} | Uni2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    {% url 'gestion:solicitudes_asociacion' as solicitudes_url %}
+    {% include "components/breadcrumbs.html" with ancestor_url=solicitudes_url ancestor_label="Solicitudes de asociación" current_label=solicitud.nombre_completo|title only %}
+
+    <header class="uni2-compact-hero uni2-compact-hero-with-summary mb-4">
+        <div class="uni2-compact-hero-copy">
+            <span class="uni2-section-kicker">Solicitud #{{ solicitud.pk }}</span>
+            <h1 class="uni2-titulo-seccion mb-2">{{ solicitud.apellido|title }}, {{ solicitud.nombre|title }}</h1>
+            <span class="uni2-badge {% if solicitud.estado == 'observada' %}uni2-badge-warning{% elif solicitud.estado == 'datos_aprobados' or solicitud.estado == 'alta_completada' %}uni2-badge-success{% elif solicitud.estado == 'cancelada' %}uni2-badge-danger{% else %}uni2-badge-info{% endif %}">{{ solicitud.get_estado_display }}</span>
+        </div>
+        <div class="uni2-compact-hero-accent" aria-hidden="true"></div>
+    </header>
+
+    <div class="d-grid d-sm-flex flex-wrap gap-2 mb-4">
+        {% if solicitud.asociado_id %}
+            <a class="btn btn-primary" href="{% url 'gestion:asociado_detalle' solicitud.asociado_id %}"><i class="bi bi-person-vcard" aria-hidden="true"></i> Ver asociado</a>
+        {% endif %}
+        {% if solicitud.estado == "recibida" and perms.gestion.revisar_solicitudes_asociacion %}
+            <form class="d-grid" method="post" action="{% url 'gestion:solicitud_asociacion_aprobar' solicitud.pk %}">{% csrf_token %}<button class="btn btn-primary" type="submit"><i class="bi bi-file-earmark-check" aria-hidden="true"></i> Aprobar documentación</button></form>
+            <a class="btn btn-outline-primary" href="{% url 'gestion:solicitud_asociacion_observar' solicitud.pk %}"><i class="bi bi-eye" aria-hidden="true"></i> Observar</a>
+        {% elif solicitud.estado == "datos_aprobados" %}
+            {% if perms.gestion.completar_solicitudes_asociacion %}<a class="btn btn-primary" href="{% url 'gestion:solicitud_asociacion_completar' solicitud.pk %}"><i class="bi bi-person-check" aria-hidden="true"></i> Completar alta</a>{% endif %}
+            {% if perms.gestion.revisar_solicitudes_asociacion %}<a class="btn btn-outline-primary" href="{% url 'gestion:solicitud_asociacion_observar' solicitud.pk %}"><i class="bi bi-eye" aria-hidden="true"></i> Observar</a>{% endif %}
+        {% endif %}
+        {% if solicitud.estado != "alta_completada" and solicitud.estado != "cancelada" and perms.gestion.cancelar_solicitudes_asociacion %}<a class="btn btn-outline-danger" href="{% url 'gestion:solicitud_asociacion_cancelar' solicitud.pk %}"><i class="bi bi-x-circle" aria-hidden="true"></i> Cancelar solicitud</a>{% endif %}
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <section class="card uni2-surface-card uni2-surface-card-info mb-4">
+                <div class="card-body">
+                    <h2 class="uni2-titulo-componente">Datos declarados</h2>
+                    <dl class="uni2-data-list">
+                        <div><dt>DNI o documento</dt><dd>{{ solicitud.dni }}</dd></div>
+                        <div><dt>Correo</dt><dd>{{ solicitud.email }}</dd></div>
+                        <div><dt>Teléfono</dt><dd>{{ solicitud.telefono }}</dd></div>
+                        <div><dt>Domicilio</dt><dd>{{ solicitud.direccion }}</dd></div>
+                        <div><dt>Tipo</dt><dd>{{ solicitud.get_tipo_display }}</dd></div>
+                        <div><dt>Curso o clasificación</dt><dd>{% if solicitud.es_estudiante_cet3 %}{{ solicitud.curso_actual }}{% else %}{{ solicitud.clasificacion_adherente }}{% endif %}</dd></div>
+                        {% if solicitud.asociado_id %}<div><dt>Asociado generado</dt><dd><a href="{% url 'gestion:asociado_detalle' solicitud.asociado_id %}">N.º {{ solicitud.asociado.numero_asociado }}</a></dd></div>{% endif %}
+                    </dl>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-5">
+            <section class="card uni2-surface-card mb-4"><div class="card-body">
+                <h2 class="uni2-titulo-componente mb-3">Comunicaciones</h2>
+                <div class="d-grid gap-3">
+                    {% for entrega in entregas %}
+                        <article class="border-bottom pb-3">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-1">
+                                <strong><i class="bi bi-envelope" aria-hidden="true"></i> {{ entrega.comunicacion.get_tipo_display }}</strong>
+                                <span class="uni2-badge {% if entrega.estado == 'enviada' %}uni2-badge-success{% elif entrega.estado == 'fallida' %}uni2-badge-danger{% elif entrega.estado == 'pendiente' %}uni2-badge-warning{% else %}uni2-badge-info{% endif %}">{{ entrega.get_estado_display }}</span>
+                            </div>
+                            <div class="text-secondary small">{{ entrega.destino }}</div>
+                            <div class="text-secondary small">{{ entrega.enviado_en|default:entrega.ultimo_intento_en|default:entrega.creado_en|date:"d/m/Y H:i" }}</div>
+                        </article>
+                    {% empty %}<p class="text-secondary mb-0">Todavía no hay entregas registradas.</p>{% endfor %}
+                </div>
+                {% if solicitud.estado != "alta_completada" and perms.gestion.reenviar_comunicaciones %}
+                    <form class="d-grid d-sm-block mt-3" method="post" action="{% url 'gestion:solicitud_asociacion_reenviar' solicitud.pk %}">{% csrf_token %}<button class="btn btn-outline-secondary" type="submit"><i class="bi bi-envelope-arrow-up" aria-hidden="true"></i> Reenviar correo del estado actual</button></form>
+                {% endif %}
+            </div></section>
+            <section class="card uni2-surface-card"><div class="card-body">
+                <h2 class="uni2-titulo-componente mb-3">Historial</h2>
+                {% if operaciones %}
+                    <ol class="uni2-timeline">
+                        {% for operacion in operaciones %}
+                            <li class="uni2-timeline-item">
+                                <span class="uni2-timeline-marker" aria-hidden="true"></span>
+                                <div class="uni2-timeline-content">
+                                    <strong>{{ operacion.titulo }}</strong>
+                                    {% if operacion.motivo %}<p class="mb-1">{{ operacion.motivo }}</p>{% endif %}
+                                    <div class="text-secondary small">{{ operacion.actor_etiqueta }}</div>
+                                    <time class="text-secondary small" datetime="{{ operacion.fecha|date:'c' }}">{{ operacion.fecha|date:"d/m/Y H:i" }}</time>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% else %}
+                    <p class="text-secondary mb-0">Todavía no hay movimientos registrados.</p>
+                {% endif %}
+            </div></section>
+        </div>
+    </div>
+</div>
+{% endblock %}

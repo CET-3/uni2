@@ -18,11 +18,35 @@ from .views import (
     GestionImportarCuotasHistoricasView,
     GestionPeriodosCuotaView,
 )
+from .views_solicitudes import (
+    GestionSolicitudAprobarView,
+    GestionSolicitudAsociacionDetalleView,
+    GestionSolicitudCancelarView,
+    GestionSolicitudCompletarView,
+    GestionSolicitudObservarView,
+    GestionSolicitudReenviarView,
+    GestionSolicitudesAsociacionView,
+)
 
 
 app_name = "gestion"
 
 urlpatterns = [
+    path(
+        "gestion/solicitudes-asociacion/",
+        GestionSolicitudesAsociacionView.as_view(),
+        name="solicitudes_asociacion",
+    ),
+    path(
+        "gestion/solicitudes-asociacion/<int:solicitud_id>/",
+        GestionSolicitudAsociacionDetalleView.as_view(),
+        name="solicitud_asociacion_detalle",
+    ),
+    path("gestion/solicitudes-asociacion/<int:solicitud_id>/observar/", GestionSolicitudObservarView.as_view(), name="solicitud_asociacion_observar"),
+    path("gestion/solicitudes-asociacion/<int:solicitud_id>/aprobar/", GestionSolicitudAprobarView.as_view(), name="solicitud_asociacion_aprobar"),
+    path("gestion/solicitudes-asociacion/<int:solicitud_id>/cancelar/", GestionSolicitudCancelarView.as_view(), name="solicitud_asociacion_cancelar"),
+    path("gestion/solicitudes-asociacion/<int:solicitud_id>/completar/", GestionSolicitudCompletarView.as_view(), name="solicitud_asociacion_completar"),
+    path("gestion/solicitudes-asociacion/<int:solicitud_id>/reenviar/", GestionSolicitudReenviarView.as_view(), name="solicitud_asociacion_reenviar"),
     path("gestion/auditoria/", GestionAuditoriaView.as_view(), name="auditoria"),
     path("gestion/asociados/", GestionAsociadosView.as_view(), name="asociados"),
     path("gestion/asociados/nuevo/", GestionAsociadoNuevoView.as_view(), name="asociado_nuevo"),

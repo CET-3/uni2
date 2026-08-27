@@ -101,8 +101,9 @@ validarla. Si cambia el epoch de datos, la copia anterior se elimina cuando el
 dispositivo vuelve a conectarse; el offline absoluto no permite revocación
 remota antes del vencimiento local.
 
-Esta etapa no incluye notificaciones push ni correos transaccionales o por
-lote.
+Esta etapa no incluye notificaciones push ni correos por lote. Los correos
+transaccionales de preinscripción se imprimen en la consola en desarrollo y no
+se envían a direcciones reales.
 
 ## Tests
 
