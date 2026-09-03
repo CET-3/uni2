@@ -3,7 +3,7 @@ type: "Arquitectura"
 title: "Configuración de deploy"
 description: "Inventario de variables de entorno, secretos y valores automáticos usados por Production, staging y GitHub Actions."
 tags: [mvp, arquitectura, deploy, seguridad, releases]
-timestamp: 2026-08-04T00:00:00-03:00
+timestamp: 2026-09-03T00:00:00-03:00
 ---
 
 # Configuración de deploy
@@ -72,9 +72,9 @@ cliente.
 
 El correo real se configura mediante el backend SMTP estándar de Django para
 no acoplar el dominio a un proveedor. Si el modo está `enabled` y falta una
-variable condicional, Producción no inicia. Staging fuerza el modo `disabled`
-antes de heredar la configuración productiva, aun si alguien copia por error
-una variable que intentara habilitarlo.
+variable condicional, Producción no inicia. Staging neutraliza las variables
+productivas antes de importar el perfil y sólo puede habilitar SMTP mediante su
+configuración exclusiva y redirigida.
 
 ## Vercel — staging
 
@@ -98,6 +98,29 @@ convierte en el ambiente productivo de Uni2.
 | `UNI2_STAGING_DATABASE_ROLE_FINGERPRINT` | No secreto | Obligatoria | Huella del rol PostgreSQL staging. |
 | `UNI2_PRODUCTION_DATABASE_ROLE_FINGERPRINT` | No secreto | Obligatoria | Huella del rol PostgreSQL productivo. |
 | `UNI2_PRIVATE_DATA_EPOCH` | Sensible | Obligatoria | Identificador del refresco de datos privados. |
+
+### Correo transaccional de staging opcional
+
+Staging usa el backend ficticio y no exige credenciales mientras el modo sea
+`disabled`. Para probar el SMTP real se cambia el modo a `redirect`; en ese
+caso todas las variables condicionales pasan a ser obligatorias y el perfil no
+inicia si falta alguna.
+
+| Variable | Clasificación | Estado | Propósito |
+| --- | --- | --- | --- |
+| `UNI2_STAGING_TRANSACTIONAL_EMAIL_MODE` | No secreto | Opcional | Barrera explícita: `disabled` o `redirect`; por defecto `disabled`. |
+| `UNI2_STAGING_SITE_URL` | No secreto | Condicional | Origen HTTPS estable usado en enlaces privados de prueba. |
+| `UNI2_STAGING_DEFAULT_FROM_EMAIL` | No secreto | Condicional | Remitente visible con la dirección autenticada. |
+| `UNI2_STAGING_EMAIL_REDIRECT_TO` | Sensible | Condicional | Único destinatario SMTP permitido en staging. |
+| `UNI2_STAGING_EMAIL_HOST` | No secreto | Condicional | Servidor SMTP. |
+| `UNI2_STAGING_EMAIL_PORT` | No secreto | Condicional | Puerto SMTP. |
+| `UNI2_STAGING_EMAIL_HOST_USER` | Sensible | Condicional | Usuario SMTP de staging. |
+| `UNI2_STAGING_EMAIL_HOST_PASSWORD` | Secreto | Condicional | Contraseña de aplicación exclusiva de staging. |
+| `UNI2_STAGING_EMAIL_USE_TLS` | No secreto | Opcional | Habilita TLS; por defecto `true`. |
+
+El modo `enabled` está prohibido en staging. El destino original permanece en
+la entrega para trazabilidad, pero nunca se entrega al backend SMTP. Ver
+[Correo transaccional](correo-transaccional.md).
 
 ### Storage staging opcional
 

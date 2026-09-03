@@ -14,4 +14,5 @@
 * [Configuración de deploy](deploy.md) - Inventario de variables, secretos y valores automáticos de Production, staging y GitHub Actions.
 * [Configuración de grupos](configuracion-grupos.md) - Fuente única, sincronización y despliegue de la matriz de permisos.
 * [Comunicaciones](comunicaciones.md) - Eventos, mensajes y entregas por correo con preparación para lotes y push.
+* [Correo transaccional](correo-transaccional.md) - SMTP institucional, redirección segura de staging y activación posterior de Producción.
 * [Medición de navegación con Google Analytics](google-analytics.md) - Integración estándar de GA4 exclusiva de Producción, con URLs originales.

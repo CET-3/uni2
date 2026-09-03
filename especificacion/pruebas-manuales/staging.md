@@ -3,7 +3,7 @@ type: "Pruebas manuales"
 title: "Staging y refresco de datos"
 description: "Controles operativos antes de habilitar una copia y antes de promover a Producción."
 tags: [mvp, staging, pruebas, seguridad]
-timestamp: 2026-08-02T00:00:00-03:00
+timestamp: 2026-09-03T00:00:00-03:00
 ---
 
 # Staging y refresco de datos
@@ -35,7 +35,11 @@ timestamp: 2026-08-02T00:00:00-03:00
   ese destino.
 - [ ] Todas las rutas `Comercio.foto` y `Publicidad.foto` vigentes existen en
   el bucket staging y se muestran mediante URLs firmadas.
-- [ ] Correo transaccional, correo por lote y push están deshabilitados.
+- [ ] Durante el refresco, correo transaccional, correo por lote y push están
+  deshabilitados.
+- [ ] Si se prueba SMTP, el correo transaccional usa `redirect`, entrega sólo a
+  la casilla segura y marca el asunto con `[STAGING]`; `enabled` está rechazado.
+- [ ] Correo por lote y push permanecen deshabilitados durante toda la prueba.
 
 ### PWA
 

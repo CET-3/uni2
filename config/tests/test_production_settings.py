@@ -153,6 +153,14 @@ def test_produccion_rechaza_correo_habilitado_sin_configuracion():
     assert "EMAIL_HOST" in result.stderr
 
 
+def test_produccion_rechaza_el_modo_redirect_de_staging():
+    result = run_production_settings(UNI2_TRANSACTIONAL_EMAIL_MODE="redirect")
+
+    assert result.returncode != 0
+    assert "disabled" in result.stderr
+    assert "enabled" in result.stderr
+
+
 def test_produccion_configura_smtp_cuando_el_correo_esta_habilitado():
     production = load_production_settings(
         UNI2_TRANSACTIONAL_EMAIL_MODE="enabled",

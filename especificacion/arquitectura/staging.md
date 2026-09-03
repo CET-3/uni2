@@ -3,7 +3,7 @@ type: "Arquitectura"
 title: "Entorno de staging"
 description: "Separación, protección, despliegue y promoción del entorno previo a Producción."
 tags: [mvp, arquitectura, staging, despliegue, seguridad]
-timestamp: 2026-08-02T00:00:00-03:00
+timestamp: 2026-09-03T00:00:00-03:00
 ---
 
 # Entorno de staging
@@ -101,7 +101,8 @@ con URLs firmadas breves y sin dominio público.
 - un marcador de endurecimiento que coincide con
   `UNI2_PRIVATE_DATA_EPOCH`; si falta, la aplicación responde `503`;
 - cookies y redirección HTTPS heredadas del perfil productivo;
-- backend de correo dummy;
+- correo transaccional omitido por defecto; una prueba SMTP real requiere el
+  modo `redirect`, variables exclusivas de staging y una única casilla segura;
 - canales de correo por lote y web push deshabilitados.
 
 Vercel Authentication, la barrera HTTP y el login de Uni2 son capas

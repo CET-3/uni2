@@ -79,6 +79,58 @@ def test_modo_deshabilitado_registra_entrega_omitida_sin_enviar():
 
 
 @pytest.mark.django_db(transaction=True)
+@override_settings(
+    UNI2_TRANSACTIONAL_EMAIL_MODE="redirect",
+    UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO="uni2.app.cet3@gmail.com",
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    DEFAULT_FROM_EMAIL=(
+        "UNI2 App — Mutual CET 3 <uni2.app.cet3@gmail.com>"
+    ),
+)
+def test_modo_redirect_conserva_destino_y_envia_solo_a_casilla_segura():
+    entrega = programar_email_transaccional(
+        tipo="preinscripcion_recibida",
+        destino="persona-real@example.com",
+        clave_idempotencia="solicitud:redirect:1",
+        origen_entidad="asociados.SolicitudAsociacion",
+        origen_id=1,
+        contexto=CONTEXTO,
+    )
+
+    entrega.refresh_from_db()
+    assert entrega.destino == "persona-real@example.com"
+    assert entrega.estado == EntregaComunicacion.ESTADO_ENVIADA
+    assert len(mail.outbox) == 1
+    assert mail.outbox[0].to == ["uni2.app.cet3@gmail.com"]
+    assert mail.outbox[0].subject.startswith("[STAGING] ")
+    assert "persona-real@example.com" not in mail.outbox[0].subject
+
+
+@pytest.mark.django_db(transaction=True)
+@override_settings(
+    UNI2_TRANSACTIONAL_EMAIL_MODE="redirect",
+    UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO="",
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+)
+def test_modo_redirect_sin_destino_seguro_falla_sin_enviar_al_original():
+    entrega = programar_email_transaccional(
+        tipo="preinscripcion_recibida",
+        destino="persona-real@example.com",
+        clave_idempotencia="solicitud:redirect:incompleto",
+        origen_entidad="asociados.SolicitudAsociacion",
+        origen_id=2,
+        contexto=CONTEXTO,
+    )
+
+    entrega.refresh_from_db()
+    assert entrega.estado == EntregaComunicacion.ESTADO_FALLIDA
+    assert entrega.intentos == 1
+    assert "destinatario seguro" in entrega.ultimo_error
+    assert "persona-real@example.com" not in entrega.ultimo_error
+    assert len(mail.outbox) == 0
+
+
+@pytest.mark.django_db(transaction=True)
 @override_settings(UNI2_TRANSACTIONAL_EMAIL_MODE="enabled")
 def test_fallo_del_backend_queda_registrado(monkeypatch):
     monkeypatch.setattr(
@@ -99,3 +151,33 @@ def test_fallo_del_backend_queda_registrado(monkeypatch):
     assert entrega.estado == EntregaComunicacion.ESTADO_FALLIDA
     assert entrega.intentos == 1
     assert "sin conexión" in entrega.ultimo_error
+
+
+@pytest.mark.django_db(transaction=True)
+@override_settings(
+    UNI2_TRANSACTIONAL_EMAIL_MODE="enabled",
+    EMAIL_HOST_PASSWORD="clave-de-aplicacion-secreta",
+)
+def test_fallo_del_backend_no_guarda_la_contrasena_smtp(monkeypatch):
+    monkeypatch.setattr(
+        "comunicaciones.services.EmailMultiAlternatives.send",
+        Mock(
+            side_effect=OSError(
+                "autenticación rechazada: clave-de-aplicacion-secreta"
+            )
+        ),
+    )
+
+    entrega = programar_email_transaccional(
+        tipo="preinscripcion_recibida",
+        destino="ana@example.com",
+        clave_idempotencia="solicitud:4:recibida:1",
+        origen_entidad="asociados.SolicitudAsociacion",
+        origen_id=4,
+        contexto=CONTEXTO,
+    )
+
+    entrega.refresh_from_db()
+    assert entrega.estado == EntregaComunicacion.ESTADO_FALLIDA
+    assert "clave-de-aplicacion-secreta" not in entrega.ultimo_error
+    assert "[secreto oculto]" in entrega.ultimo_error

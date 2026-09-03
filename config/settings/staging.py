@@ -2,7 +2,8 @@ import os
 import re
 import secrets
 
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, ValidationError
+from django.core.validators import validate_email
 
 from config.database_identity import (
     database_fingerprint,
@@ -55,8 +56,52 @@ PWA_THEME_COLOR_DARK = "#2a1208"
 PWA_BACKGROUND_COLOR = "#fff4e8"
 PWA_ICON_DIRECTORY = "pwa/icons/staging"
 
+_staging_email_mode = os.getenv(
+    "UNI2_STAGING_TRANSACTIONAL_EMAIL_MODE", "disabled"
+).strip()
+if _staging_email_mode not in {"disabled", "redirect"}:
+    raise ImproperlyConfigured(
+        "Staging sólo admite correo transaccional 'disabled' o 'redirect'."
+    )
+
 EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
-UNI2_TRANSACTIONAL_EMAIL_MODE = "disabled"
+EMAIL_HOST = ""
+EMAIL_PORT = 0
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = ""
+UNI2_SITE_URL = ""
+UNI2_TRANSACTIONAL_EMAIL_MODE = _staging_email_mode
+UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO = ""
+
+if UNI2_TRANSACTIONAL_EMAIL_MODE == "redirect":
+    UNI2_SITE_URL = _required_environment("UNI2_STAGING_SITE_URL").rstrip("/")
+    DEFAULT_FROM_EMAIL = _required_environment(
+        "UNI2_STAGING_DEFAULT_FROM_EMAIL"
+    )
+    UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO = _required_environment(
+        "UNI2_STAGING_EMAIL_REDIRECT_TO"
+    )
+    try:
+        validate_email(UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO)
+    except ValidationError as error:
+        raise ImproperlyConfigured(
+            "UNI2_STAGING_EMAIL_REDIRECT_TO debe ser una dirección válida."
+        ) from error
+
+    EMAIL_HOST = _required_environment("UNI2_STAGING_EMAIL_HOST")
+    EMAIL_PORT = int(_required_environment("UNI2_STAGING_EMAIL_PORT"))
+    EMAIL_HOST_USER = _required_environment("UNI2_STAGING_EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = _required_environment(
+        "UNI2_STAGING_EMAIL_HOST_PASSWORD"
+    )
+    EMAIL_USE_TLS = (
+        os.getenv("UNI2_STAGING_EMAIL_USE_TLS", "true").strip().lower()
+        == "true"
+    )
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
 UNI2_BATCH_EMAIL_MODE = "disabled"
 UNI2_WEB_PUSH_MODE = "disabled"
 ALLOW_DEMO_DATA = False

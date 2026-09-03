@@ -3,7 +3,7 @@ type: "Roadmap"
 title: "Roadmap"
 description: "Evolución prevista por versión."
 tags: [roadmap]
-timestamp: 2026-06-22T00:00:00-03:00
+timestamp: 2026-09-03T00:00:00-03:00
 ---
 
 # Roadmap
@@ -21,6 +21,16 @@ timestamp: 2026-06-22T00:00:00-03:00
 - Revisión en gestión y finalización presencial del alta.
 - Primeros correos transaccionales individuales.
 - Base común de comunicaciones y entregas.
+
+### Mantenimiento técnico pendiente
+
+- Crear y mantener un inventario de los servicios externos utilizados por
+  Uni2 —por ejemplo, Gmail, Vercel, Supabase, GitHub, almacenamiento y
+  Analytics— que indique para cada uno el plan vigente, los límites y las
+  restricciones de la modalidad gratuita, qué ocurre al superar esos límites,
+  las señales para migrar de plan y la fecha de la última revisión. El
+  relevamiento resultante debe documentarse en una página propia de
+  `especificacion/arquitectura/` y enlazarse desde su índice.
 
 ### Versión 2
 

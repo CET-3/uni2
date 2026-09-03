@@ -27,6 +27,7 @@ from asociados.services import (
     corregir_solicitud_asociacion,
     crear_solicitud_asociacion,
     observar_solicitud_asociacion,
+    reenviar_comunicacion_solicitud,
     rotar_token_seguimiento,
 )
 from auditoria.models import EventoAuditoria
@@ -112,6 +113,32 @@ def test_crear_solicitud_registra_auditoria_y_correo_sin_persistir_token(curso):
     assert token not in solicitud.token_seguimiento_hash
     assert token not in str(evento.cambios)
     assert token not in str(Comunicacion.objects.values().get())
+
+
+@pytest.mark.django_db(transaction=True)
+@override_settings(
+    UNI2_TRANSACTIONAL_EMAIL_MODE="redirect",
+    UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO="uni2.app.cet3@gmail.com",
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    DEFAULT_FROM_EMAIL=(
+        "UNI2 App — Mutual CET 3 <uni2.app.cet3@gmail.com>"
+    ),
+    UNI2_SITE_URL="https://uni2-staging.example",
+)
+def test_reenvio_de_staging_tambien_usa_la_casilla_segura(curso, actor):
+    solicitud = crear_solicitud_directa(curso)
+
+    entrega = reenviar_comunicacion_solicitud(
+        solicitud_id=solicitud.pk,
+        actor=actor,
+    )
+
+    entrega.refresh_from_db()
+    assert entrega.destino == "ana@example.com"
+    assert entrega.estado == EntregaComunicacion.ESTADO_ENVIADA
+    assert len(mail.outbox) == 1
+    assert mail.outbox[0].to == ["uni2.app.cet3@gmail.com"]
+    assert mail.outbox[0].subject.startswith("[STAGING] ")
 
 
 @pytest.mark.django_db

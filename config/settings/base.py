@@ -151,6 +151,7 @@ GOOGLE_ANALYTICS_MEASUREMENT_ID = ""
 # Las integraciones todavía no están implementadas. Declarar la política desde
 # ahora evita que staging herede por accidente proveedores reales en el futuro.
 UNI2_TRANSACTIONAL_EMAIL_MODE = "disabled"
+UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO = ""
 UNI2_BATCH_EMAIL_MODE = "disabled"
 UNI2_WEB_PUSH_MODE = "disabled"
 UNI2_SITE_URL = os.getenv("UNI2_SITE_URL", "http://localhost:8000").rstrip("/")
