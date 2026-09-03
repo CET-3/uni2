@@ -10,7 +10,11 @@ timestamp: 2026-06-22T00:00:00-03:00
 
 ## USUARIO-001
 
-Crear asociado no crea automáticamente un usuario.
+El alta individual de un asociado crea automáticamente un usuario vinculado.
+Esto comprende el alta manual desde Gestión y la finalización de una
+preinscripción. La importación inicial del padrón, las escrituras desde el admin
+técnico o el ORM y otros procesos masivos no crean ni notifican usuarios de
+forma implícita.
 
 ## USUARIO-002
 
@@ -22,7 +26,9 @@ No se puede crear un nuevo usuario para un asociado que ya tiene uno vinculado.
 
 ## USUARIO-004
 
-El username puede ser el DNI.
+El username y la contraseña inicial del asociado son su DNI. Si el alta
+individual tiene email, el sistema envía una comunicación `alta_usuario`. Si no
+tiene email, la cuenta se crea igualmente sin intentar el envío.
 
 ## USUARIO-005
 
@@ -78,7 +84,7 @@ grupos de experiencia `Asociados` y `Comercios`.
 
 ## USUARIO-014
 
-`GestionCrearUsuariosAsociadosFaltantesView` en `gestion/views.py` permite a un usuario con permiso `importar_asociados` crear usuarios para los asociados sin usuario vinculado desde la pantalla de importación de padrón. Usa el DNI como username y contraseña inicial. Si ya existe un usuario con username igual al DNI y no está vinculado a otro asociado, lo vincula al asociado. Si un asociado falla, registra el error y sigue con los demás. La acción se ejecuta por tandas para evitar timeouts de Vercel y puede repetirse hasta completar el padrón. El comportamiento sigue siendo idempotente: si se ejecuta otra vez, no duplica usuarios ya vinculados.
+`GestionCrearUsuariosAsociadosFaltantesView` en `gestion/views.py` permite a un usuario con permiso `importar_asociados` crear usuarios para los asociados sin usuario vinculado desde la pantalla de importación de padrón. Usa el DNI como username y contraseña inicial. Si ya existe un usuario con username igual al DNI y no está vinculado a otro asociado, lo vincula al asociado. Si un asociado falla, registra el error y sigue con los demás. La acción se ejecuta por tandas para evitar timeouts de Vercel y puede repetirse hasta completar el padrón. El comportamiento sigue siendo idempotente: si se ejecuta otra vez, no duplica usuarios ya vinculados. Esta acción masiva nunca envía correos de alta.
 
 ## USUARIO-015
 
@@ -199,3 +205,34 @@ Al borrar un usuario, el asociado vinculado queda sin usuario. Los demás
 modelos administrados mantienen bloqueado el borrado directo. Un período que
 tenga cuotas relacionadas conserva la protección de integridad y no puede
 eliminarse.
+
+## USUARIO-025 — Cambio de contraseña
+
+Un asociado autenticado puede cambiar su contraseña indicando la contraseña
+actual y confirmando la nueva. El cambio conserva su sesión actual y no envía
+correo. Si no conoce la contraseña vigente debe usar el recorrido de
+recuperación.
+
+## USUARIO-026 — Recuperación de contraseña
+
+La recuperación pública solicita DNI y email para identificar una cuenta
+concreta aunque varias personas compartan una dirección. Solo genera el correo
+`recuperacion_contrasena` cuando existe un asociado activo con usuario activo,
+email no vacío y coincidencia de ambos datos.
+
+La respuesta pública es la misma para coincidencias, datos incorrectos,
+cuentas no habilitadas y solicitudes limitadas. Cada cuenta admite un envío
+dentro de una ventana configurable, inicialmente de 15 minutos. El enlace
+firmado vence inicialmente después de una hora y se invalida al establecer una
+contraseña.
+
+El email vigente de `Asociado` es la fuente de verdad. Los tokens y las
+contraseñas no se persisten en comunicaciones, auditoría ni logs.
+
+## USUARIO-027 — Sincronización de identidad y contacto
+
+Cuando el asociado modifica sus propios nombre, apellido o email, el sistema
+actualiza en la misma operación `User.first_name`, `User.last_name` o
+`User.email`. El email puede quedar vacío; en ese caso deja de estar disponible
+la recuperación por correo. Cargar un email después del alta no origina un
+correo `alta_usuario` retroactivo.

@@ -32,6 +32,13 @@ timestamp: 2026-07-13T00:00:00-03:00
   sin desplazamiento horizontal, con período y estado en la cabecera e importes
   en una grilla de dos columnas. Cada registro usa un único badge semántico:
   verde para `Pagada`, amarillo para `Pendiente` y rojo para `Vencida`.
+- Mis datos: formulario exclusivo del asociado autenticado con nombre,
+  apellido, teléfono, email y dirección. Nombre y apellido son obligatorios;
+  los datos de contacto son opcionales. Junto al email se explica que, si queda
+  vacío, no estarán disponibles los correos transaccionales ni `Olvidé mi
+  contraseña`. La pantalla no muestra ni acepta datos institucionales,
+  credenciales, estado o cuotas. Después de guardar presenta los datos
+  actualizados y una confirmación.
 - Productos y servicios.
 - Comercios adheridos.
 

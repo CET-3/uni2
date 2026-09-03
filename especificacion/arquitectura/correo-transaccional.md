@@ -1,7 +1,7 @@
 ---
 type: "Arquitectura"
 title: "Correo transaccional"
-description: "Diseño del envío SMTP de preinscripciones en staging y Producción."
+description: "Diseño del envío SMTP transaccional en staging y Producción."
 tags: [post-mvp, arquitectura, comunicaciones, diseno-aprobado]
 timestamp: 2026-09-03T00:00:00-03:00
 ---
@@ -9,8 +9,8 @@ timestamp: 2026-09-03T00:00:00-03:00
 # Correo transaccional
 
 Este documento define cómo Uni2 enviará los correos individuales de
-preinscripción mediante SMTP sin permitir que staging contacte por accidente a
-las direcciones guardadas en su base.
+preinscripción y acceso mediante SMTP sin permitir que staging contacte por
+accidente a las direcciones guardadas en su base.
 
 ## Cuenta institucional inicial
 
@@ -133,6 +133,16 @@ La prueba manual comienza con datos ficticios, confirma la recepción en
 `uni2.app.cet3@gmail.com`, abre el enlace sobre staging y recorre al menos una
 observación, una corrección y un reenvío. Producción permanece desactivada hasta
 que este recorrido sea aceptado.
+
+## Correos de acceso
+
+`alta_usuario` y `recuperacion_contrasena` atraviesan la misma frontera de
+ambientes, registro de entregas y fallos. Los enlaces de recuperación se
+construyen con la URL estable del ambiente. El contenido se prepara para la
+entrega, pero el token no se persiste en comunicaciones, auditoría ni logs.
+
+Los procesos masivos no habilitan `alta_usuario`. Esta exclusión pertenece a la
+regla de origen y no depende del backend SMTP ni del modo del ambiente.
 
 ## Fuera de alcance
 

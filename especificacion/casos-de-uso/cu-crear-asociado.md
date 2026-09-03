@@ -21,11 +21,13 @@ timestamp: 2026-06-22T00:00:00-03:00
 4.  El sistema calcula `fecha_inicio_cobro` según el tipo: dos meses antes para
     `Asociado` y el mismo mes para `Adherente`, sin usar un corte por día.
 5.  Guarda el asociado.
-6.  El sistema genera cuotas iniciales para los períodos activos existentes
+6.  Crea y vincula un usuario activo cuyo username y contraseña inicial son el
+    DNI. Si el asociado tiene email, programa el correo individual de alta.
+7.  El sistema genera cuotas iniciales para los períodos activos existentes
     entre `fecha_inicio_cobro` y el mes del alta. También agrega períodos
     futuros activos que ya tengan `generado_el`.
-7.  El sistema informa el alta y la cantidad de cuotas iniciales generadas.
-8.  Siempre redirige al detalle operativo del asociado, donde la persona decide si quiere cobrar o editar.
+8.  El sistema informa el alta y la cantidad de cuotas iniciales generadas.
+9.  Siempre redirige al detalle operativo del asociado, donde la persona decide si quiere cobrar o editar.
 
 **Reglas relacionadas:** [Asociados](../reglas/asociados.md), [Altas de asociado](../reglas/altas-de-asociado.md).
 
@@ -37,9 +39,11 @@ clasificación transitoria `Sin clasificar` no se ofrece en el alta manual.
 editables en este flujo; permanecen disponibles en la edición administrativa y
 en el admin técnico.
 
-**Situaciones especiales:** DNI duplicado, curso inexistente, clasificación
-inexistente o inactiva, asociado sin usuario, períodos faltantes o inactivos y
-períodos futuros creados pero todavía no generados. Reintentar la operación no
-duplica cuotas.
+**Situaciones especiales:** DNI o username duplicado, curso inexistente,
+clasificación inexistente o inactiva, email vacío, fallo del correo, períodos
+faltantes o inactivos y períodos futuros creados pero todavía no generados.
+Reintentar la operación no duplica asociado, usuario, correo ni cuotas. Un
+fallo del correo no revierte el alta.
 
-**Modelos afectados:** Asociado, Curso, ClasificacionAdherente, PeríodoCuota, Cuota.
+**Modelos afectados:** Asociado, User, Curso, ClasificacionAdherente,
+PeríodoCuota, Cuota, Comunicacion y EntregaComunicacion.

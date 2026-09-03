@@ -9,8 +9,8 @@ timestamp: 2026-09-03T00:00:00-03:00
 # Preinscripción de asociados
 
 Esta guía verifica el recorrido incorporado en esta etapa. No comprueba pagos
-online, notificaciones push ni el correo posterior al alta porque todavía no
-forman parte del alcance.
+online ni notificaciones push. El cierre incorpora el usuario y correo de alta
+definidos en la etapa posterior de acceso y autogestión.
 
 ## Preparación
 
@@ -79,9 +79,10 @@ forman parte del alcance.
 ## Cierres posibles
 
 1. Desde una solicitud con datos aprobados, confirmar `Completar alta`.
-   Debe crear un único asociado con sus cuotas iniciales, vincular la solicitud,
-   cambiarla a `Alta completada` y abrir el detalle del asociado.
-2. Confirmar que esta acción no registra un pago y no envía correo de bienvenida.
+   Debe crear un único asociado con usuario y cuotas iniciales, vincular la
+   solicitud, cambiarla a `Alta completada` y abrir el detalle del asociado.
+2. Confirmar que esta acción no registra un pago y programa un único correo de
+   alta al email de la solicitud.
 3. Con otra solicitud abierta, elegir `Cancelar solicitud`. El motivo es
    obligatorio y el estado `Cancelada` es definitivo.
 4. Presentar una solicitud nueva con el documento de la cancelada. Debe estar

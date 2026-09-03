@@ -50,6 +50,7 @@ La relación entre ambos debe deducirse por el objetivo y el actor de cada caso.
 * [CU-ver-credencial](cu-ver-credencial.md) - Consultar la credencial digital.
 * [CU-guardar-credencial-offline](cu-guardar-credencial-offline.md) - Conservar temporalmente la credencial sin conexión.
 * [CU-ver-estado-cuotas](cu-ver-estado-cuotas.md) - Consultar el estado de las cuotas propias.
+* [CU-actualizar-datos-propios-asociado](cu-actualizar-datos-propios-asociado.md) - Actualizar los datos personales permitidos.
 
 ### Comercio
 
@@ -61,6 +62,8 @@ La relación entre ambos debe deducirse por el objetivo y el actor de cada caso.
 ### Acceso y perfiles
 
 * [CU-iniciar-sesion-elegir-experiencia](cu-iniciar-sesion-elegir-experiencia.md) - Iniciar sesión y elegir una experiencia autorizada.
+* [CU-cambiar-contrasena](cu-cambiar-contrasena.md) - Cambiar la contraseña con una sesión autenticada.
+* [CU-recuperar-contrasena](cu-recuperar-contrasena.md) - Restablecer mediante DNI, email y un enlace temporal.
 * [CU-crear-usuario-asociado](cu-crear-usuario-asociado.md) - Crear una cuenta vinculada a un asociado.
 * [CU-administrar-usuarios-accesos](cu-administrar-usuarios-accesos.md) - Crear usuarios y asignar grupos.
 

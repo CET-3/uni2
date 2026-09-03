@@ -67,9 +67,11 @@ La cuenta inicial, los modos y la configuración de staging se detallan en
 - Push tendrá suscripciones por dispositivo y no incluirá datos privados en la
   notificación visible.
 
-## Primer uso
+## Usos individuales
 
 La preinscripción incorpora los primeros correos transaccionales. Recuperación
-de contraseña, correo posterior al alta, avisos obligatorios de cuotas por lote,
-comunicados institucionales, promociones y push reutilizarán esta frontera,
-pero cada caso deberá definir sus propias reglas antes de implementarse.
+de contraseña y correo posterior al alta son los siguientes usos individuales,
+definidos en la [etapa de acceso y autogestión](../alcance/acceso-autogestion-asociado.md).
+Avisos obligatorios de cuotas por lote, comunicados institucionales,
+promociones y push reutilizarán esta frontera, pero cada caso deberá definir sus
+propias reglas antes de implementarse.
