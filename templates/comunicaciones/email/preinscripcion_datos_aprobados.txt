@@ -1,6 +1,6 @@
 Hola {{ nombre }}:
 
-La documentación de tu preinscripción fue aprobada.
+Revisamos y aprobamos los datos de tu preinscripción.
 
 Acercate a la Mutual durante los horarios de atención para completar el alta. Esta aprobación todavía no te incorpora al padrón.
 

@@ -47,8 +47,9 @@ forman parte del alcance.
    explicación y permitir corregirlo; el enlace anterior debe quedar inválido.
 4. Enviar la corrección. La solicitud debe volver a `Recibida`, mostrar una
    confirmación y registrar el correo de correcciones recibidas.
-5. Aprobar los datos. El estado visible debe ser `Documentación aprobada` y el
-   correo debe indicar que falta finalizar presencialmente.
+5. Aprobar los datos. El estado visible debe ser `Datos aprobados` y el correo
+   debe confirmar la aprobación de los datos e indicar que falta finalizar
+   presencialmente.
 6. Si una entrega queda fallida, usar `Reenviar comunicación`. Debe registrarse
    un intento nuevo sin repetir la transición de estado.
 

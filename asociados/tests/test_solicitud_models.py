@@ -45,6 +45,14 @@ def datos_solicitud(**overrides):
     return datos
 
 
+def test_solicitud_muestra_estado_datos_aprobados():
+    solicitud = SolicitudAsociacion(
+        estado=SolicitudAsociacion.ESTADO_DATOS_APROBADOS
+    )
+
+    assert solicitud.get_estado_display() == "Datos aprobados"
+
+
 @pytest.mark.django_db
 def test_solicitud_deriva_asociado_y_exige_curso(curso):
     solicitud = SolicitudAsociacion(**datos_solicitud(curso_actual=curso))
