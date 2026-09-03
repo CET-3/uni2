@@ -167,7 +167,7 @@ def test_detalle_muestra_datos_y_oculta_acciones_sin_permiso(client, curso):
     assert response.status_code == 200
     assert "Flores, Ana" in contenido
     assert "48111111" in contenido
-    assert "Aprobar documentación" not in contenido
+    assert "Aprobar datos" not in contenido
     assert "Cancelar solicitud" not in contenido
 
 
