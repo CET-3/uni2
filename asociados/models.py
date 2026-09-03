@@ -226,7 +226,7 @@ class SolicitudAsociacion(models.Model):
     ESTADOS = [
         (ESTADO_RECIBIDA, "Recibida"),
         (ESTADO_OBSERVADA, "Observada"),
-        (ESTADO_DATOS_APROBADOS, "Documentación aprobada"),
+        (ESTADO_DATOS_APROBADOS, "Datos aprobados"),
         (ESTADO_ALTA_COMPLETADA, "Alta completada"),
         (ESTADO_CANCELADA, "Cancelada"),
     ]

@@ -5,13 +5,26 @@ from django.core import mail
 from django.test import override_settings
 
 from comunicaciones.models import EntregaComunicacion
-from comunicaciones.services import programar_email_transaccional
+from comunicaciones.services import programar_email_transaccional, render_email
 
 
 CONTEXTO = {
     "nombre": "Ana",
     "seguimiento_url": "https://uni2.test/sumate/solicitud/token/",
 }
+
+
+def test_email_datos_aprobados_habla_de_datos_y_no_de_documentacion():
+    contenido = render_email(
+        tipo="preinscripcion_datos_aprobados",
+        contexto={"nombre": "Ana"},
+    )
+
+    assert contenido.subject == "Los datos de tu preinscripción fueron aprobados"
+    assert "Revisamos y aprobamos los datos de tu preinscripción." in contenido.text
+    assert "Revisamos y aprobamos los datos de tu preinscripción." in contenido.html
+    assert "documentación" not in contenido.text.lower()
+    assert "documentación" not in contenido.html.lower()
 
 
 @pytest.mark.django_db(transaction=True)

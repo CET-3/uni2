@@ -90,7 +90,7 @@ class OperacionAuditoria:
             estado_nuevo = evento.cambios.get("estado", {}).get("nuevo")
             titulos_por_estado = {
                 "observada": "Solicitud observada",
-                "datos_aprobados": "Documentación aprobada",
+                "datos_aprobados": "Datos aprobados",
                 "cancelada": "Solicitud cancelada",
             }
             if estado_nuevo in titulos_por_estado:

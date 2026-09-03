@@ -25,8 +25,8 @@ EMAIL_TYPES = {
         template_base="comunicaciones/email/preinscripcion_observada",
     ),
     "preinscripcion_datos_aprobados": EmailType(
-        label="Documentación aprobada",
-        subject="La documentación de tu preinscripción fue aprobada",
+        label="Datos aprobados",
+        subject="Los datos de tu preinscripción fueron aprobados",
         template_base="comunicaciones/email/preinscripcion_datos_aprobados",
     ),
     "preinscripcion_cancelada": EmailType(

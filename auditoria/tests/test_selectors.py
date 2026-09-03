@@ -141,7 +141,7 @@ def test_operacion_usa_un_titulo_de_negocio_para_una_donacion_sin_cuotas():
     ("estado_nuevo", "titulo"),
     [
         ("observada", "Solicitud observada"),
-        ("datos_aprobados", "Documentación aprobada"),
+        ("datos_aprobados", "Datos aprobados"),
         ("cancelada", "Solicitud cancelada"),
     ],
 )

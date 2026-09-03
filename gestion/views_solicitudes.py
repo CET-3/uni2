@@ -155,7 +155,7 @@ class GestionSolicitudAprobarView(GestionPermissionRequiredMixin, View):
                 solicitud_id=solicitud_id,
                 actor=request.user,
             )
-            messages.success(request, "La documentación quedó aprobada.")
+            messages.success(request, "Los datos quedaron aprobados.")
         except (TransicionSolicitudInvalida, ValidationError):
             messages.error(request, "La solicitud cambió o sus datos ya no son válidos.")
         return redirect("gestion:solicitud_asociacion_detalle", solicitud_id)
