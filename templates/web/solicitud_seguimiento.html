@@ -51,7 +51,7 @@
     {% elif solicitud.estado == "recibida" %}
         {% include "components/alert.html" with variant="info" message="La Mutual está revisando los datos. Te avisaremos por correo cuando haya novedades." is_static=True only %}
     {% elif solicitud.estado == "datos_aprobados" %}
-        {% include "components/alert.html" with variant="success" title="Documentación aprobada" message="Acercate a la Mutual para completar el alta." is_static=True only %}
+        {% include "components/alert.html" with variant="success" title="Datos aprobados" message="Acercate a la Mutual para completar el alta." is_static=True only %}
     {% elif solicitud.estado == "alta_completada" %}
         {% include "components/alert.html" with variant="success" title="Alta completada" message="La solicitud ya fue incorporada al padrón." is_static=True only %}
     {% else %}

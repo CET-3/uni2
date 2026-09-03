@@ -47,14 +47,15 @@ forman parte del alcance.
    explicación y permitir corregirlo; el enlace anterior debe quedar inválido.
 4. Enviar la corrección. La solicitud debe volver a `Recibida`, mostrar una
    confirmación y registrar el correo de correcciones recibidas.
-5. Aprobar los datos. El estado visible debe ser `Documentación aprobada` y el
-   correo debe indicar que falta finalizar presencialmente.
+5. Aprobar los datos. El estado visible debe ser `Datos aprobados` y el correo
+   debe confirmar la aprobación de los datos e indicar que falta finalizar
+   presencialmente.
 6. Si una entrega queda fallida, usar `Reenviar comunicación`. Debe registrarse
    un intento nuevo sin repetir la transición de estado.
 
 ## Cierres posibles
 
-1. Desde una solicitud con documentación aprobada, confirmar `Completar alta`.
+1. Desde una solicitud con datos aprobados, confirmar `Completar alta`.
    Debe crear un único asociado con sus cuotas iniciales, vincular la solicitud,
    cambiarla a `Alta completada` y abrir el detalle del asociado.
 2. Confirmar que esta acción no registra un pago y no envía correo de bienvenida.

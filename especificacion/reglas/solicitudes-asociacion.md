@@ -96,9 +96,9 @@ consumo elimina las ventanas anteriores vencidas de esa misma acción.
 
 ## SOLICITUD-ASOCIACION-009 — Alta presencial
 
-`datos_aprobados` significa que la revisión terminó y que la persona debe
-acercarse a la Mutual. No representa aprobación definitiva, pago ni pertenencia
-al padrón.
+`datos_aprobados` se muestra como `Datos aprobados`: refiere a los datos
+declarados revisados y significa que la persona debe acercarse a la Mutual. No
+supone documentación digital, alta definitiva, pago ni pertenencia al padrón.
 
 Completar el alta es una operación atómica e idempotente: crea el asociado con
 las reglas vigentes, genera sus cuotas iniciales, lo vincula a la solicitud y

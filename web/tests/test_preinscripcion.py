@@ -252,6 +252,21 @@ def test_seguimiento_recibido_muestra_estado_pero_no_formulario(client, curso):
 
 
 @pytest.mark.django_db
+def test_seguimiento_datos_aprobados_muestra_estado_sin_documentacion(client, curso):
+    _, token = solicitud_con_token(
+        curso,
+        estado=SolicitudAsociacion.ESTADO_DATOS_APROBADOS,
+    )
+
+    response = client.get(reverse("web:solicitud_seguimiento", args=[token]))
+    contenido = response.content.decode()
+
+    assert response.status_code == 200
+    assert "Datos aprobados" in contenido
+    assert "Documentación aprobada" not in contenido
+
+
+@pytest.mark.django_db
 def test_seguimiento_observado_muestra_explicacion_y_formulario(client, curso):
     solicitud, token = solicitud_con_token(
         curso,
