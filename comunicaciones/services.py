@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives
 from django.db import transaction
 from django.template.loader import render_to_string
@@ -26,6 +27,26 @@ def render_email(*, tipo: str, contexto: dict) -> RenderedEmail:
     )
 
 
+def resolver_entrega_email(*, destino: str, subject: str) -> tuple[list[str], str]:
+    if settings.UNI2_TRANSACTIONAL_EMAIL_MODE != "redirect":
+        return [destino], subject
+
+    redirect_to = settings.UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO.strip()
+    if not redirect_to:
+        raise ImproperlyConfigured(
+            "El modo redirect requiere un destinatario seguro."
+        )
+    return [redirect_to], f"[STAGING] {subject}"
+
+
+def resumir_error_entrega(error: Exception) -> str:
+    mensaje = str(error)
+    email_password = getattr(settings, "EMAIL_HOST_PASSWORD", "")
+    if email_password:
+        mensaje = mensaje.replace(email_password, "[secreto oculto]")
+    return mensaje[:500]
+
+
 def enviar_entrega_email(entrega_id: int, contenido: RenderedEmail) -> None:
     entrega = EntregaComunicacion.objects.get(pk=entrega_id)
     if settings.UNI2_TRANSACTIONAL_EMAIL_MODE == "disabled":
@@ -36,17 +57,21 @@ def enviar_entrega_email(entrega_id: int, contenido: RenderedEmail) -> None:
     entrega.intentos += 1
     entrega.ultimo_intento_en = timezone.now()
     try:
-        mensaje = EmailMultiAlternatives(
+        destinatarios, subject = resolver_entrega_email(
+            destino=entrega.destino,
             subject=contenido.subject,
+        )
+        mensaje = EmailMultiAlternatives(
+            subject=subject,
             body=contenido.text,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[entrega.destino],
+            to=destinatarios,
         )
         mensaje.attach_alternative(contenido.html, "text/html")
         mensaje.send()
     except Exception as error:  # El backend puede fallar con excepciones propias.
         entrega.estado = EntregaComunicacion.ESTADO_FALLIDA
-        entrega.ultimo_error = str(error)[:500]
+        entrega.ultimo_error = resumir_error_entrega(error)
         entrega.save(
             update_fields=("estado", "intentos", "ultimo_intento_en", "ultimo_error")
         )
