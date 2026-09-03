@@ -3,7 +3,7 @@ type: "Regla de negocio"
 title: "Comunicaciones"
 description: "Reglas comunes para mensajes y entregas por correo o canales futuros."
 tags: [post-mvp, reglas, diseno-aprobado]
-timestamp: 2026-08-26T00:00:00-03:00
+timestamp: 2026-09-03T00:00:00-03:00
 ---
 
 # Comunicaciones
@@ -62,9 +62,12 @@ logs. Un reenvío genera un enlace nuevo.
 ## COMUNICACION-007 — Ambientes
 
 Cada clase de canal tiene un modo explícito. Desarrollo y tests capturan los
-mensajes. Staging no envía a direcciones reales. Producción solo habilita el
-proveedor real cuando toda la configuración requerida está presente; una
-configuración incompleta no cae silenciosamente en un backend inseguro.
+mensajes. Staging no envía a los destinos originales: omite los correos por
+defecto y sólo permite SMTP real mediante el modo `redirect`, con una casilla
+segura obligatoria y un prefijo visible en el asunto. Producción sólo habilita
+el proveedor real cuando toda la configuración requerida está presente, no
+admite `redirect` y una configuración incompleta no cae silenciosamente en un
+backend inseguro.
 
 ## COMUNICACION-008 — Correos de preinscripción
 

@@ -3,7 +3,7 @@ type: "Prueba manual"
 title: "Preinscripción de asociados"
 description: "Recorrido de verificación del formulario público y su gestión interna."
 tags: [post-mvp, pruebas-manuales]
-timestamp: 2026-08-26T00:00:00-03:00
+timestamp: 2026-09-03T00:00:00-03:00
 ---
 
 # Preinscripción de asociados
@@ -19,8 +19,31 @@ forman parte del alcance.
    de la mutual`.
 3. Verificar que `.env` tenga `UNI2_TRANSACTIONAL_EMAIL_MODE=enabled`. En
    desarrollo, consultar los correos impresos por la consola; el backend local
-   no usa SMTP ni envía a direcciones reales. En tests se capturan en memoria y
-   en staging quedan omitidos.
+   no usa SMTP ni envía a direcciones reales. En tests se capturan en memoria.
+
+## Correo real redirigido en staging
+
+1. Desplegar primero con `UNI2_STAGING_TRANSACTIONAL_EMAIL_MODE=disabled`.
+2. Configurar las variables `UNI2_STAGING_SITE_URL`,
+   `UNI2_STAGING_DEFAULT_FROM_EMAIL`, `UNI2_STAGING_EMAIL_REDIRECT_TO`,
+   `UNI2_STAGING_EMAIL_HOST`, `UNI2_STAGING_EMAIL_PORT`,
+   `UNI2_STAGING_EMAIL_HOST_USER`, `UNI2_STAGING_EMAIL_HOST_PASSWORD` y
+   `UNI2_STAGING_EMAIL_USE_TLS` en el proyecto Vercel `uni2-staging`. La
+   contraseña de aplicación sólo se pega en el almacén de secretos de Vercel.
+3. Usar `UNI2_STAGING_TRANSACTIONAL_EMAIL_MODE=redirect` y volver a desplegar.
+   Staging no admite `enabled`.
+4. Crear una solicitud con datos inequívocamente ficticios y una dirección de
+   destino distinta de la casilla segura.
+5. Confirmar que `EntregaComunicacion` conserva el destino ficticio original,
+   pero el mensaje llega únicamente a `uni2.app.cet3@gmail.com` y su asunto
+   comienza con `[STAGING]`.
+6. Confirmar que el enlace del mensaje comienza con
+   `https://uni2-staging.vercel.app/` y abre la solicitud en staging.
+7. Observar la solicitud, enviar una corrección y ejecutar `Reenviar
+   comunicación`; todos los mensajes deben conservar la misma redirección.
+8. Ante un problema, volver el modo a `disabled` y desplegar. Si existe riesgo
+   de exposición, revocar además la contraseña de aplicación
+   `UNI2 Staging Vercel` desde Google.
 
 ## Presentación pública
 

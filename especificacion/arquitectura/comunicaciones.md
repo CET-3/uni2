@@ -3,7 +3,7 @@ type: "Arquitectura"
 title: "Comunicaciones"
 description: "Separación de eventos, mensajes y entregas por correo y canales futuros."
 tags: [post-mvp, arquitectura, diseno-aprobado]
-timestamp: 2026-08-26T00:00:00-03:00
+timestamp: 2026-09-03T00:00:00-03:00
 ---
 
 # Comunicaciones
@@ -42,12 +42,19 @@ Los settings separados `UNI2_TRANSACTIONAL_EMAIL_MODE`,
 independientes.
 
 - Local y tests usan captura o memoria.
-- Staging conserva correo real y push deshabilitados para no contactar datos copiados.
-- Producción falla de forma explícita al habilitar un canal sin su configuración completa.
+- Staging omite el correo transaccional por defecto. Puede probar el backend
+  SMTP solamente en modo `redirect`, que conserva el destino original en la
+  entrega pero envía a una única casilla segura y marca el asunto con
+  `[STAGING]`.
+- Staging mantiene deshabilitados el correo por lote y push.
+- Producción falla de forma explícita al habilitar un canal sin su
+  configuración completa y no admite el modo `redirect`.
 
 El proveedor real de correo queda detrás de la configuración estándar y del
 adaptador. Remitente, `Reply-To`, SPF, DKIM y DMARC forman parte de la puesta en
 marcha productiva y no se escriben como secretos en el repositorio.
+La cuenta inicial, los modos y la configuración de staging se detallan en
+[Correo transaccional](correo-transaccional.md).
 
 ## Seguridad y observabilidad
 

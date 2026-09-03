@@ -102,8 +102,10 @@ dispositivo vuelve a conectarse; el offline absoluto no permite revocación
 remota antes del vencimiento local.
 
 Esta etapa no incluye notificaciones push ni correos por lote. Los correos
-transaccionales de preinscripción se imprimen en la consola en desarrollo y no
-se envían a direcciones reales.
+transaccionales de preinscripción se imprimen en la consola en desarrollo.
+Staging los omite por defecto y puede probar SMTP real únicamente mediante una
+redirección obligatoria a una casilla controlada; Producción los envía a sus
+destinatarios sólo cuando el canal se habilita explícitamente.
 
 ## Tests
 
@@ -215,9 +217,15 @@ un `SECRET_KEY` propios. También exige:
 
 El proyecto usa Vercel Authentication y el perfil agrega una segunda barrera
 HTTP, `noindex`, respuestas `private, no-store`, un banner visible, iconos con
-insignia `STG`, un nombre PWA distinto y bloquea correo transaccional, correo
-por lote y push. Si no existe un marcador de copia endurecida para el epoch
-actual, responde `503`.
+insignia `STG` y un nombre PWA distinto. El correo transaccional queda omitido
+por defecto y sólo admite el modo seguro `redirect`; el correo por lote y push
+continúan bloqueados. Si no existe un marcador de copia endurecida para el
+epoch actual, responde `503`.
+
+La configuración SMTP de prueba usa exclusivamente variables
+`UNI2_STAGING_*`, sustituye todos los destinatarios por una casilla controlada
+y agrega `[STAGING]` al asunto. El inventario y el procedimiento están en
+[Correo transaccional](especificacion/arquitectura/correo-transaccional.md).
 
 Los archivos media quedan deshabilitados por defecto. Un bucket staging
 opcional debe ser privado, exclusivo y configurarse solamente mediante

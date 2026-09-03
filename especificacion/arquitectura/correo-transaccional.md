@@ -14,7 +14,7 @@ las direcciones guardadas en su base.
 
 ## Cuenta institucional inicial
 
-La primera puesta en marcha usará la cuenta gratuita de Gmail
+La primera puesta en marcha usa la cuenta gratuita de Gmail
 `uni2.app.cet3@gmail.com`, con el remitente visible
 `UNI2 App — Mutual CET 3`.
 
@@ -75,7 +75,7 @@ Producción. Para activar `redirect` deben estar presentes:
 | `UNI2_STAGING_EMAIL_HOST_PASSWORD` | Secreto | Contraseña de aplicación exclusiva de staging. |
 | `UNI2_STAGING_EMAIL_USE_TLS` | No secreto | TLS; por defecto `true`. |
 
-El primer destinatario seguro será la misma cuenta institucional:
+El primer destinatario seguro es la misma cuenta institucional:
 `uni2.app.cet3@gmail.com`.
 
 Si el modo es `redirect` y falta una variable obligatoria, staging no debe
@@ -117,7 +117,7 @@ otra contraseña de aplicación y no depende de ese secreto.
 
 ## Verificación requerida
 
-La implementación debe probar automáticamente que:
+La suite automática verifica que:
 
 - staging continúa desactivado por defecto;
 - el intento de usar `enabled` en staging es rechazado;
