@@ -222,6 +222,12 @@ def test_aprobar_datos_es_post_y_programa_correo(client, curso):
     client.force_login(usuario)
     url = reverse("gestion:solicitud_asociacion_aprobar", args=[solicitud.pk])
 
+    detalle_recibida = client.get(
+        reverse("gestion:solicitud_asociacion_detalle", args=[solicitud.pk])
+    ).content.decode()
+    assert "Aprobar datos" in detalle_recibida
+    assert "Aprobar documentación" not in detalle_recibida
+
     assert client.get(url).status_code == 405
     response = client.post(url)
 
@@ -235,6 +241,7 @@ def test_aprobar_datos_es_post_y_programa_correo(client, curso):
     ).content.decode()
     assert "uni2-badge-success" in detalle
     assert "Datos aprobados" in detalle
+    assert "Los datos quedaron aprobados." in detalle
     assert "preinscripcion_datos_aprobados" not in detalle
     assert "bi-eye" in detalle
     assert "bi-envelope" in detalle

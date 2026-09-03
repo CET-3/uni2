@@ -55,7 +55,7 @@ forman parte del alcance.
 
 ## Cierres posibles
 
-1. Desde una solicitud con documentación aprobada, confirmar `Completar alta`.
+1. Desde una solicitud con datos aprobados, confirmar `Completar alta`.
    Debe crear un único asociado con sus cuotas iniciales, vincular la solicitud,
    cambiarla a `Alta completada` y abrir el detalle del asociado.
 2. Confirmar que esta acción no registra un pago y no envía correo de bienvenida.
