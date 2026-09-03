@@ -100,14 +100,6 @@ consumo elimina las ventanas anteriores vencidas de esa misma acción.
 acercarse a la Mutual. No representa aprobación definitiva, pago ni pertenencia
 al padrón.
 
-La denominación visible de este estado es `Datos aprobados`. El flujo no usa
-`Documentación aprobada` porque la preinscripción no recibe archivos ni exige
-presentar documentación digital. El correo correspondiente tiene como asunto
-`Los datos de tu preinscripción fueron aprobados`, confirma que se revisaron y
-aprobaron los datos declarados, e indica que todavía falta acercarse a la Mutual
-para completar el alta. Tampoco se lo denomina `Preinscripción aprobada`, para
-no dar a entender que el alta ya fue completada.
-
 Completar el alta es una operación atómica e idempotente: crea el asociado con
 las reglas vigentes, genera sus cuotas iniciales, lo vincula a la solicitud y
 cambia el estado a `alta_completada`. Si una parte falla, no queda un alta
