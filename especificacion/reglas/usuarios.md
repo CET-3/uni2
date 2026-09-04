@@ -51,8 +51,10 @@ controlan con permisos Django propios de cada app.
 ## USUARIO-010
 
 El grupo `Atención al asociado` representa a quienes realizan la operación
-diaria. Puede abrir gestión, consultar y editar datos ordinarios de asociados y
-cobrar cuotas. No puede dar de baja, importar, exportar, consultar deudores,
+diaria. Puede abrir gestión, consultar y editar datos ordinarios de asociados,
+gestionar solicitudes de asociación —incluida su cancelación y el reenvío de
+sus comunicaciones— y cobrar cuotas.
+No puede dar de baja asociados, importar, exportar, consultar deudores,
 administrar períodos ni ver la auditoría general. En la carga inicial, el
 usuario `atencion` también queda vinculado a un asociado de prueba para probar
 la variante multiperfil de la home.
@@ -119,7 +121,7 @@ El logo y el resultado exitoso del login enlazan a `/`. La selección no se guar
 
 | Grupo | Gestión propia | Admin técnico | Exclusiones principales |
 |---|---|---|---|
-| Atención al asociado | Consulta y edición ordinaria de asociados; cobros; últimos movimientos de la ficha | No requerido | Baja, importaciones, exportación, deudores, períodos y auditoría general |
+| Atención al asociado | Consulta y edición ordinaria de asociados; solicitudes de asociación y reenvío de sus comunicaciones; cobros; últimos movimientos de la ficha | No requerido | Baja de asociados, importaciones, exportación, deudores, períodos y auditoría general |
 | Administrador de permisos | Experiencia administrativa y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No modifica la definición de grupos, no edita superusuarios ni puede asignar `Administrador de la app` |
 | Gestión de convenios | Experiencia administrativa | Actividades comerciales y comercios | Usuarios, asociados, publicidades y auditoría general |
 | Gestión de productos y servicios | Experiencia administrativa | Categorías y productos/servicios | Publicidades, comercios, usuarios, asociados y auditoría general |
@@ -184,3 +186,16 @@ La experiencia `Administración` no tiene un permiso propio de dashboard. Se
 ofrece cuando la persona posee al menos un permiso operativo real de `gestion`
 o la capacidad `usuarios.acceder_admin_tecnico`. Cada pantalla mantiene su
 control específico y entrar a la experiencia no autoriza otras operaciones.
+
+## USUARIO-024 — Borrado excepcional de la carga inicial
+
+El Administrador de la app, identificado por `is_superuser=True`, puede borrar
+`Curso`, `Asociado`, `PeriodoCuota` y `User` desde el admin técnico durante la
+depuración de la carga inicial. La excepción incluye el borrado individual y la
+acción masiva de Django. Los roles delegados no reciben esta capacidad aunque
+tengan permisos de consulta o modificación sobre esas entidades.
+
+Al borrar un usuario, el asociado vinculado queda sin usuario. Los demás
+modelos administrados mantienen bloqueado el borrado directo. Un período que
+tenga cuotas relacionadas conserva la protección de integridad y no puede
+eliminarse.

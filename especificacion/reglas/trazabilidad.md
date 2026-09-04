@@ -34,6 +34,15 @@ timestamp: 2026-08-09T00:00:00-03:00
 6. La auditoría conserva los datos mínimos necesarios y excluye contraseñas,
    tokens, secretos, binarios y contenido completo de archivos importados.
 7. Ver la consulta general de auditoría requiere `gestion.ver_auditoria`; ver los movimientos recientes dentro de la ficha de un asociado requiere `gestion.ver_movimientos_asociado`. Ese historial contextual incluye eventos directos y relaciones estructuradas con el asociado; nunca infiere relaciones por coincidencias de texto ni expone eventos de otras personas dentro de operaciones masivas.
+8. La presentación operativa redacta cada evento como una oración natural con
+   actor, acción, tipo y descripción del objeto, fecha y hora. El origen queda
+   disponible para filtros y soporte, pero no se muestra en cada resultado. El
+   identificador del objeto y el UUID de una operación se presentan como
+   referencias secundarias.
+9. Las operaciones compuestas reúnen sus eventos bajo una única cabecera con
+   título e icono funcional. La fecha se muestra una sola vez en esa cabecera;
+   las operaciones individuales conservan fecha, hora e icono en su propia
+   presentación.
 
 ## Bajas, anulaciones y eliminación
 
@@ -109,3 +118,11 @@ Los importadores de padrón, cuotas históricas y comercios no están integrados
 todavía con `EventoAuditoria`. La carga inicial y el endurecimiento de staging
 siguen siendo operaciones técnicas, no acciones humanas de gestión. La anulación
 de pagos permanece pendiente hasta que exista su regla y flujo funcional.
+
+## Alcance aprobado para solicitudes de asociación
+
+La futura implementación de `SolicitudAsociacion` registra la recepción, las
+correcciones públicas, las observaciones, las aprobaciones, las cancelaciones y
+el alta completada. Una corrección mediante enlace usa origen
+`sitio_publico`, actor vacío y una etiqueta explícita; nunca se atribuye a un
+usuario interno. Los tokens y enlaces privados quedan excluidos de `cambios`.

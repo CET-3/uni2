@@ -22,6 +22,44 @@ class OperacionAuditoria:
         return self.eventos[0].fecha
 
     @property
+    def actor_etiqueta(self):
+        return self.eventos[0].actor_etiqueta
+
+    @property
+    def icono(self):
+        tipos_evento = {(evento.entidad, evento.accion) for evento in self.eventos}
+        if ("cuotas.Pago", EventoAuditoria.ACCION_CREAR) in tipos_evento:
+            return "bi-cash-coin"
+        if ("cuotas.Donacion", EventoAuditoria.ACCION_CREAR) in tipos_evento:
+            return "bi-heart"
+        if ("asociados.Asociado", EventoAuditoria.ACCION_CREAR) in tipos_evento:
+            return "bi-person-plus"
+        if ("auth.User", EventoAuditoria.ACCION_CREAR) in tipos_evento:
+            return "bi-person-lock"
+        if all(evento.entidad == "cuotas.Cuota" for evento in self.eventos):
+            return "bi-receipt"
+        eventos_solicitud = [
+            evento
+            for evento in self.eventos
+            if evento.entidad == "asociados.SolicitudAsociacion"
+        ]
+        if eventos_solicitud:
+            evento = eventos_solicitud[0]
+            if evento.accion == EventoAuditoria.ACCION_CREAR:
+                return "bi-clipboard-plus"
+            estado_nuevo = evento.cambios.get("estado", {}).get("nuevo")
+            if estado_nuevo in {"observada", "cancelada"}:
+                return "bi-clipboard-x"
+            if estado_nuevo == "datos_aprobados":
+                return "bi-clipboard-check"
+            return "bi-clipboard"
+        return "bi-arrow-repeat"
+
+    @property
+    def motivo(self):
+        return next((evento.motivo for evento in self.eventos if evento.motivo), "")
+
+    @property
     def titulo(self):
         """Describe la operación con vocabulario de negocio cuando es posible."""
 
@@ -46,6 +84,21 @@ class OperacionAuditoria:
             for evento in self.eventos
         ):
             return "Generación de cuotas"
+        for evento in self.eventos:
+            if evento.entidad != "asociados.SolicitudAsociacion":
+                continue
+            estado_nuevo = evento.cambios.get("estado", {}).get("nuevo")
+            titulos_por_estado = {
+                "observada": "Solicitud observada",
+                "datos_aprobados": "Datos aprobados",
+                "cancelada": "Solicitud cancelada",
+            }
+            if estado_nuevo in titulos_por_estado:
+                return titulos_por_estado[estado_nuevo]
+            if estado_nuevo == "recibida" and evento.accion == EventoAuditoria.ACCION_MODIFICAR:
+                return "Correcciones recibidas"
+            if evento.accion == EventoAuditoria.ACCION_CREAR:
+                return "Solicitud recibida"
         return "Cambios relacionados"
 
 
@@ -98,6 +151,20 @@ def listar_entidades_auditadas():
     )
 
 
+def obtener_motivo_ultima_observacion_solicitud(solicitud_id):
+    evento = (
+        EventoAuditoria.objects.filter(
+            entidad="asociados.SolicitudAsociacion",
+            objeto_id=str(solicitud_id),
+            cambios__estado__nuevo="observada",
+        )
+        .exclude(motivo="")
+        .order_by("-fecha", "-id")
+        .first()
+    )
+    return evento.motivo if evento else ""
+
+
 def buscar_operaciones(**filtros):
     """Busca operaciones que tengan al menos un evento coincidente.
 
@@ -139,6 +206,13 @@ def buscar_operaciones_asociado(asociado_id):
             ultimo_evento_id=Max("id"),
         )
         .order_by("-ultima_fecha", "-ultimo_evento_id")
+    )
+
+
+def buscar_operaciones_solicitud(solicitud_id):
+    return buscar_operaciones(
+        entidad="asociados.SolicitudAsociacion",
+        objeto_id=str(solicitud_id),
     )
 
 

@@ -20,7 +20,8 @@ asigna a Atención al asociado ni al Administrador de la mutual.
 1.  Sube la planilla heredada en formato `.xlsx` con la hoja `PADRÓN GENERAL`.
 2.  El sistema analiza la planilla sin guardar datos.
 3.  El sistema clasifica filas como `IMPORTAR`, `REVISAR` o `NO IMPORTAR`.
-4.  El sistema muestra resumen, filas a revisar y cursos nuevos que se crearían.
+4.  El sistema muestra resumen, filas a revisar, la clasificación interpretada
+    para cada adherente y los cursos nuevos que se crearían.
 5.  El sistema explica el criterio de cada estado para que el administrador entienda por qué algunas filas no se importan.
 6.  La previsualización queda guardada temporalmente en la sesión del usuario.
 7.  Si hay filas a revisar, el administrador puede descargar una planilla `.xlsx` con la hoja `PADRÓN GENERAL`, solo con esas filas, una primera columna `Fila original`, la columna `Número de asociado` y una columna final con el motivo de revisión.
@@ -29,7 +30,11 @@ asigna a Atención al asociado ni al Administrador de la mutual.
 
 **Reglas relacionadas:** [Asociados](../reglas/asociados.md), [Cursos](../reglas/cursos.md).
 
-**Reglas de importación:** la primera palabra de `Apellido/nombre` se toma como apellido y el resto como nombre. Si falta nombre se completa con `[completar]`. Si no se pueden deducir año, división, ciclo y turno del curso, la fila queda para revisar. Los cargos como docente, preceptora o director no se toman como curso. Si la planilla no indica turno y el curso es completo, se usa `TM` como valor provisorio y se lista el curso antes de confirmar.
+**Reglas de importación:** la primera palabra de `Apellido/nombre` se toma como apellido y el resto como nombre. Si falta nombre se completa con `[completar]`. Si no se pueden deducir año, división, ciclo y turno del curso, la fila queda para revisar. Para un adherente, los cargos conocidos se normalizan a una clasificación activa: Docente, Preceptor, Directivo, Auxiliar, Biblioteca, Padrino mutual, Particular, Familiar o Estudiante. Un cargo desconocido o vacío queda para revisar. Si la planilla no indica turno y el curso es completo, se usa `TM` como valor provisorio y se lista el curso antes de confirmar.
+
+Si una fila declara tipo `Asociado` y contiene un curso válido, prevalecen ese
+tipo y ese curso. Si declara `Asociado` pero contiene un cargo en lugar de un
+curso, no se convierte automáticamente en adherente: queda para revisar.
 
 **Corrección de ciclo:** CB no tiene 3ro ni 4to. Si la planilla indica CB para un curso de 3er o 4to año, el sistema lo corrige automáticamente a CS y lo registra como observación.
 
@@ -47,4 +52,4 @@ asigna a Atención al asociado ni al Administrador de la mutual.
 
 **Situaciones especiales:** curso incompleto, asociado ya existente, email faltante, teléfono faltante, tipo inválido.
 
-**Modelos afectados:** Asociado, Curso.
+**Modelos afectados:** Asociado, Curso, ClasificacionAdherente.

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitudes de asociación | Uni2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <header class="uni2-compact-hero mb-4">
+        <div class="uni2-compact-hero-copy">
+            <span class="uni2-section-kicker">Atención al asociado</span>
+            <h1 class="uni2-titulo-seccion mb-0">Solicitudes de asociación</h1>
+        </div>
+        <div class="uni2-compact-hero-accent" aria-hidden="true"></div>
+    </header>
+
+    <section class="card uni2-surface-card uni2-surface-card-info mb-4" aria-labelledby="filtros-solicitudes-title">
+        <div class="card-body">
+            <h2 id="filtros-solicitudes-title" class="uni2-titulo-componente">Filtrar solicitudes</h2>
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-lg-4"><label class="form-label" for="{{ form.q.id_for_label }}">{{ form.q.label }}</label>{{ form.q }}</div>
+                <div class="col-lg-2"><label class="form-label" for="{{ form.estado.id_for_label }}">Estado</label>{{ form.estado }}</div>
+                <div class="col-lg-2"><label class="form-label" for="{{ form.tipo.id_for_label }}">Tipo</label>{{ form.tipo }}</div>
+                <div class="col-lg-2"><label class="form-label" for="{{ form.fecha_desde.id_for_label }}">{{ form.fecha_desde.label }}</label>{{ form.fecha_desde }}</div>
+                <div class="col-lg-2"><label class="form-label" for="{{ form.fecha_hasta.id_for_label }}">{{ form.fecha_hasta.label }}</label>{{ form.fecha_hasta }}</div>
+                <div class="col-12 col-lg-4 d-flex flex-column flex-sm-row gap-2">
+                    <button class="btn btn-primary flex-grow-1" type="submit">
+                        <i class="bi bi-funnel" aria-hidden="true"></i> Filtrar
+                    </button>
+                    {% if form.is_bound %}
+                        <a class="btn btn-outline-primary" href="{% url 'gestion:solicitudes_asociacion' %}">
+                            <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar filtros
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </section>
+
+    {% if solicitudes %}
+        <section class="card uni2-surface-card uni2-surface-card-info" aria-labelledby="resultados-solicitudes-title">
+            <div class="card-body">
+                <h2 id="resultados-solicitudes-title" class="uni2-titulo-componente mb-3">{% if page_obj.paginator.count == 1 %}1 solicitud encontrada{% else %}{{ page_obj.paginator.count }} solicitudes encontradas{% endif %}</h2>
+                <div class="table-responsive uni2-records-table-wrap">
+                    <table class="table table-soft align-middle mb-0 uni2-records-table">
+                        <thead><tr><th>Persona</th><th>Documento</th><th>Tipo</th><th>Estado</th><th>Recibida</th></tr></thead>
+                        <tbody>
+                            {% for solicitud in solicitudes %}
+                                <tr class="uni2-records-table-row uni2-clickable-row">
+                                    <td data-label="Persona">
+                                        <a class="uni2-row-link d-inline-flex align-items-center gap-2" href="{% url 'gestion:solicitud_asociacion_detalle' solicitud.pk %}">
+                                            {% cycle 'uni2-avatar-blue' 'uni2-avatar-green' 'uni2-avatar-yellow' 'uni2-avatar-red' as avatar_color silent %}
+                                            <span class="uni2-avatar {{ avatar_color }}" aria-hidden="true">{{ solicitud.nombre|first }}{{ solicitud.apellido|first }}</span>
+                                            <strong>{{ solicitud.apellido }}, {{ solicitud.nombre }}</strong>
+                                        </a>
+                                    </td>
+                                    <td data-label="Documento">{{ solicitud.dni }}</td>
+                                    <td data-label="Tipo">{{ solicitud.get_tipo_display }}</td>
+                                    <td data-label="Estado">
+                                        <span class="uni2-badge {% if solicitud.estado == 'observada' %}uni2-badge-warning{% elif solicitud.estado == 'datos_aprobados' or solicitud.estado == 'alta_completada' %}uni2-badge-success{% elif solicitud.estado == 'cancelada' %}uni2-badge-danger{% else %}uni2-badge-info{% endif %}">{{ solicitud.get_estado_display }}</span>
+                                    </td>
+                                    <td data-label="Recibida">{{ solicitud.creado_en|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    {% else %}
+        {% include "components/alert.html" with variant="info" title="Sin solicitudes" message="No hay solicitudes para los filtros seleccionados." is_static=True only %}
+    {% endif %}
+
+    {% if page_obj.paginator.num_pages > 1 %}
+        <nav aria-label="Páginas de solicitudes"><ul class="pagination">
+            {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">Anterior</a></li>{% endif %}
+            <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}">Siguiente</a></li>{% endif %}
+        </ul></nav>
+    {% endif %}
+</div>
+{% endblock %}

@@ -110,6 +110,8 @@
       apellido: String(credential.apellido),
       numero: String(credential.numero),
       tipo: String(credential.tipo),
+      datoEtiqueta: String(credential.datoEtiqueta || ''),
+      datoValor: String(credential.datoValor || ''),
       ultimoEstado: String(credential.ultimoEstado),
       token: String(credential.token),
       credentialUrl: String(credential.credentialUrl),

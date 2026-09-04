@@ -205,6 +205,8 @@ def test_home_muestra_variante_comercio_con_esa_experiencia(client):
     content = response.content.decode()
     assert "Libreria" in content
     assert "Validar credencial" in content
+    assert "Mi convenio" in content
+    assert f'href="{reverse("comercios:mi_convenio")}"' in content
     assert "Cómo ser parte de nuestra comunidad" in content
 
 

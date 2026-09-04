@@ -1,0 +1,7 @@
+Hola {{ nombre }}:
+
+Tu solicitud de preinscripción fue cancelada.
+
+Motivo: {{ motivo }}
+
+Si necesitás más información, contactate con la Mutual.

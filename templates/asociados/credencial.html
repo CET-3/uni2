@@ -2,100 +2,58 @@
 {% load static %}
 
 {% block title %}Mi credencial | Uni2{% endblock %}
-
 {% block content %}
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-xl-7 col-lg-8">
-            <section
-                id="uni2-credential"
-                class="uni2-credential"
-                aria-labelledby="uni2-credential-title"
-                data-credential-nombre="{{ asociado.nombre }}"
-                data-credential-apellido="{{ asociado.apellido }}"
-                data-credential-numero="{{ asociado.numero_asociado }}"
-                data-credential-tipo="{{ asociado.get_tipo_display }}"
-                data-credential-estado="{{ asociado.get_estado_display }}"
-                data-credential-token="{{ asociado.token_credencial }}"
-                data-credential-url="{{ credencial_url }}"
-            >
-                <div class="uni2-credential-card">
-                    <div class="uni2-credential-heading">
-                        <div>
-                            <p class="uni2-credential-kicker">Credencial digital UNI2</p>
-                            <h1 class="h2 mb-1" id="uni2-credential-title">{{ asociado.nombre }} {{ asociado.apellido }}</h1>
-                            <p class="mb-0 text-secondary">Asociado N.º {{ asociado.numero_asociado }}</p>
-                        </div>
-                        <span class="uni2-credential-state {% if asociado.estado == 'activo' %}uni2-credential-state-active{% else %}uni2-credential-state-inactive{% endif %}">
-                            {{ asociado.get_estado_display }}
-                        </span>
-                    </div>
-
-                    <div class="uni2-credential-body">
-                        <div class="uni2-credential-qr-wrap">
-                            <div
-                                class="uni2-credential-qr"
-                                data-uni2-qr-value="{{ credencial_url }}"
-                                aria-label="Código QR de la credencial de {{ asociado.nombre }} {{ asociado.apellido }}"
-                            >
-                                <span class="small text-secondary">Generando código QR…</span>
-                            </div>
-                            <p class="small text-secondary mb-0">Al escanear, Uni2 solicita iniciar sesión. El comercio necesita conexión para confirmar la vigencia.</p>
-                        </div>
-
-                        <dl class="uni2-credential-data mb-0">
-                            <div>
-                                <dt>Tipo</dt>
-                                <dd>{{ asociado.get_tipo_display }}</dd>
-                            </div>
-                            <div>
-                                <dt>Número</dt>
-                                <dd>{{ asociado.numero_asociado }}</dd>
-                            </div>
-                            <div>
-                                <dt>DNI</dt>
-                                <dd>{{ asociado.dni }}</dd>
-                            </div>
-                            <div>
-                                <dt>Token de validación</dt>
-                                <dd><code class="uni2-credential-token">{{ asociado.token_credencial }}</code></dd>
-                            </div>
-                        </dl>
-                    </div>
-                </div>
-
-                <aside class="uni2-credential-offline-panel mt-4" aria-labelledby="uni2-offline-save-title">
-                    <div>
-                        <h2 class="h5 mb-2" id="uni2-offline-save-title">Tener la credencial sin conexión</h2>
-                        <p class="mb-1">
-                            Podés guardar en este dispositivo tu nombre, número, tipo, último estado y URL de validación durante {{ pwa_credential_offline_ttl_days|default:7 }} días.
-                        </p>
-                        <p class="small text-secondary mb-0">
-                            Cualquier persona que use este dispositivo podrá verla. No se guardan cuotas, deuda ni otros datos.
-                        </p>
-                    </div>
-                    <div class="uni2-credential-offline-actions">
-                        <button
-                            class="btn btn-primary"
-                            id="uni2-credential-save"
-                            type="button"
-                            data-bs-toggle="modal"
-                            data-bs-target="#uni2-credential-consent"
-                            hidden
-                        >
-                            <i class="bi bi-phone" aria-hidden="true"></i>
-                            Guardar en este dispositivo
-                        </button>
-                        <button class="btn btn-outline-primary" id="uni2-credential-delete" type="button" hidden>
-                            <i class="bi bi-trash3" aria-hidden="true"></i>
-                            Eliminar de este dispositivo
-                        </button>
-                    </div>
-                    <p class="uni2-credential-storage-status mb-0" id="uni2-credential-storage-status" role="status" aria-live="polite"></p>
-                </aside>
-            </section>
+    <section
+        id="uni2-credential"
+        class="uni2-credential"
+        data-credential-nombre="{{ asociado.nombre }}"
+        data-credential-apellido="{{ asociado.apellido }}"
+        data-credential-numero="{{ asociado.numero_asociado }}"
+        data-credential-tipo="{{ asociado.get_tipo_display }}"
+        data-credential-dato-etiqueta="{{ dato_institucional_etiqueta }}"
+        data-credential-dato-valor="{{ dato_institucional_valor }}"
+        data-credential-estado="{{ estado_credencial.estado_display }}"
+        data-credential-token="{{ asociado.token_credencial }}"
+        data-credential-url="{{ credencial_url }}"
+    >
+        <div class="uni2-credential-layout">
+            {% include "components/credential_card.html" with asociado=asociado estado_credencial=estado_credencial dato_institucional_etiqueta=dato_institucional_etiqueta dato_institucional_valor=dato_institucional_valor credencial_url=credencial_url only %}
         </div>
-    </div>
+
+        <aside class="uni2-credential-offline-panel mt-4" aria-labelledby="uni2-offline-save-title">
+            <div class="d-flex flex-column flex-md-row gap-3 align-items-md-start">
+                <span class="uni2-service-icon uni2-service-card-blue" aria-hidden="true"><i class="bi bi-phone"></i></span>
+                <div>
+                    <h2 class="h5 mb-2" id="uni2-offline-save-title">Tener la credencial sin conexión</h2>
+                    <p class="mb-1">
+                        Podés guardar en este dispositivo tu nombre, número, tipo, curso o clasificación, último estado y URL de validación durante {{ pwa_credential_offline_ttl_days|default:7 }} días.
+                    </p>
+                    <p class="small text-secondary mb-0">
+                        Cualquier persona que use este dispositivo podrá verla. No se guardan cuotas, deuda ni otros datos.
+                    </p>
+                </div>
+            </div>
+            <div class="uni2-credential-offline-actions">
+                <button
+                    class="btn btn-primary"
+                    id="uni2-credential-save"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#uni2-credential-consent"
+                    hidden
+                >
+                    <i class="bi bi-download" aria-hidden="true"></i>
+                    Guardar
+                </button>
+                <button class="btn btn-outline-primary" id="uni2-credential-delete" type="button" hidden>
+                    <i class="bi bi-trash3" aria-hidden="true"></i>
+                    Eliminar
+                </button>
+            </div>
+            <p class="uni2-credential-storage-status mb-0" id="uni2-credential-storage-status" role="status" aria-live="polite"></p>
+        </aside>
+    </section>
 </div>
 
 <div

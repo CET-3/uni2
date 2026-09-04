@@ -58,6 +58,7 @@ el comercio no puede confirmar su vigencia.
 - Cuotas, deuda, gestión o administración disponibles offline.
 - Publicación en tiendas de aplicaciones.
 
-Push y correo se diseñarán como etapas posteriores. Pueden reutilizar eventos
-de negocio y preferencias, pero no forman parte de la instalación ni del
-almacenamiento offline de la PWA.
+Push y correo pertenecen a etapas posteriores y no forman parte de la
+instalación ni del almacenamiento offline de la PWA. Los primeros correos se
+definen en la [etapa de preinscripción y correo transaccional](preinscripcion-comunicaciones.md);
+push continúa fuera de alcance.

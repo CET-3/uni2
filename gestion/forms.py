@@ -1,13 +1,71 @@
 from django import forms
+from django.db.models import Q
 from django.utils import timezone
 
 from auditoria.models import EventoAuditoria
 from auditoria.presentacion import etiqueta_entidad
 from auditoria.selectors import listar_entidades_auditadas
-from asociados.models import Asociado
+from asociados.models import Asociado, ClasificacionAdherente, SolicitudAsociacion
 from asociados.models import Curso
 from asociados.services import create_asociado
 from cuotas.models import Pago, PeriodoCuota
+
+
+class FiltroSolicitudesAsociacionForm(forms.Form):
+    ESTADO_TODAS = "todas"
+
+    q = forms.CharField(required=False, label="Buscar")
+    estado = forms.ChoiceField(
+        required=False,
+        choices=[
+            ("", "Todas las solicitudes abiertas"),
+            (ESTADO_TODAS, "Todas las solicitudes"),
+            *SolicitudAsociacion.ESTADOS,
+        ],
+    )
+    tipo = forms.ChoiceField(
+        required=False,
+        choices=[("", "Todos los tipos")] + Asociado.TIPOS,
+    )
+    fecha_desde = forms.DateField(required=False, label="Desde")
+    fecha_hasta = forms.DateField(required=False, label="Hasta")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["q"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Nombre, documento o correo"}
+        )
+        for nombre in ("estado", "tipo"):
+            self.fields[nombre].widget.attrs["class"] = "form-select"
+        for nombre in ("fecha_desde", "fecha_hasta"):
+            self.fields[nombre].widget.attrs.update(
+                {"class": "form-control", "type": "date"}
+            )
+
+
+class ObservacionSolicitudForm(forms.Form):
+    explicacion = forms.CharField(
+        label="Explicación para la persona",
+        max_length=500,
+        widget=forms.Textarea(
+            attrs={"class": "form-control", "rows": 4, "autofocus": True}
+        ),
+    )
+
+
+class CancelacionSolicitudForm(forms.Form):
+    motivo = forms.CharField(
+        label="Motivo de cancelación",
+        max_length=500,
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+    )
+
+
+class ConfirmarAltaSolicitudForm(forms.Form):
+    confirmar = forms.BooleanField(
+        widget=forms.HiddenInput,
+        initial=True,
+    )
 
 
 class FiltroAuditoriaForm(forms.Form):
@@ -101,7 +159,29 @@ class PeriodoCuotaForm(forms.ModelForm):
         self.fields["activo"].widget.attrs.update({"class": "form-check-input"})
 
 
-class AsociadoGestionForm(forms.ModelForm):
+class AsociadoTipoFormMixin:
+    def _configurar_campos_tipo(self):
+        clasificaciones = ClasificacionAdherente.objects.filter(activa=True).exclude(
+            nombre=ClasificacionAdherente.NOMBRE_SIN_CLASIFICAR
+        )
+        clasificacion_actual_id = getattr(self.instance, "clasificacion_adherente_id", None)
+        if clasificacion_actual_id:
+            clasificaciones = ClasificacionAdherente.objects.filter(
+                Q(activa=True) | Q(pk=clasificacion_actual_id)
+            )
+        self.fields["clasificacion_adherente"].queryset = clasificaciones.order_by("orden", "nombre")
+
+    def clean(self):
+        cleaned_data = super().clean()
+        tipo = cleaned_data.get("tipo")
+        if tipo == Asociado.TIPO_ASOCIADO:
+            cleaned_data["clasificacion_adherente"] = None
+        elif tipo == Asociado.TIPO_ADHERENTE:
+            cleaned_data["curso_actual"] = None
+        return cleaned_data
+
+
+class AsociadoGestionForm(AsociadoTipoFormMixin, forms.ModelForm):
     class Meta:
         model = Asociado
         fields = [
@@ -113,12 +193,14 @@ class AsociadoGestionForm(forms.ModelForm):
             "direccion",
             "tipo",
             "curso_actual",
+            "clasificacion_adherente",
             "fecha_alta",
             "fecha_inicio_cobro",
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._configurar_campos_tipo()
         for field_name, field in self.fields.items():
             if isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({"class": "form-check-input"})
@@ -130,7 +212,7 @@ class AsociadoGestionForm(forms.ModelForm):
                 field.widget.attrs.update({"type": "date"})
 
 
-class AsociadoAltaForm(forms.ModelForm):
+class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
     class Meta:
         model = Asociado
         fields = [
@@ -142,20 +224,17 @@ class AsociadoAltaForm(forms.ModelForm):
             "direccion",
             "tipo",
             "curso_actual",
-            "fecha_alta",
+            "clasificacion_adherente",
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not self.is_bound:
-            self.initial.setdefault("fecha_alta", timezone.localdate())
+        self._configurar_campos_tipo()
         for field_name, field in self.fields.items():
             if isinstance(field.widget, forms.Select):
                 field.widget.attrs.update({"class": "form-select"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
-            if field_name == "fecha_alta":
-                field.widget.attrs.update({"type": "date"})
 
     def save(self, commit=True, actor=None):
         data = self.cleaned_data
@@ -164,8 +243,9 @@ class AsociadoAltaForm(forms.ModelForm):
             apellido=data["apellido"],
             dni=data["dni"],
             tipo=data["tipo"],
-            fecha_alta=data["fecha_alta"],
+            fecha_alta=timezone.localdate(),
             curso_actual=data["curso_actual"],
+            clasificacion_adherente=data["clasificacion_adherente"],
             email=data["email"],
             telefono=data["telefono"],
             direccion=data["direccion"],
@@ -217,6 +297,12 @@ class FiltroAsociadosForm(forms.Form):
         empty_label="Todos los cursos",
         label="Curso actual",
     )
+    clasificacion_adherente = forms.ModelChoiceField(
+        required=False,
+        queryset=ClasificacionAdherente.objects.order_by("orden", "nombre"),
+        empty_label="Todas las clasificaciones",
+        label="Clasificación de adherente",
+    )
     usuario = forms.ChoiceField(
         required=False,
         choices=[
@@ -242,5 +328,6 @@ class FiltroAsociadosForm(forms.Form):
         self.fields["estado"].widget.attrs.update({"class": "form-select"})
         self.fields["tipo"].widget.attrs.update({"class": "form-select"})
         self.fields["curso_actual"].widget.attrs.update({"class": "form-select"})
+        self.fields["clasificacion_adherente"].widget.attrs.update({"class": "form-select"})
         self.fields["usuario"].widget.attrs.update({"class": "form-select"})
         self.fields["deuda"].widget.attrs.update({"class": "form-select"})

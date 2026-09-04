@@ -1,0 +1,42 @@
+<article class="uni2-commerce-modal-card">
+  <span class="uni2-commerce-modal-logo{% if not comercio.foto %} uni2-commerce-modal-logo--fallback{% endif %}" aria-hidden="true">
+    {% if comercio.foto %}
+      <img src="{{ comercio.foto.url }}" alt="" loading="lazy">
+    {% else %}
+      {{ comercio.nombre|slice:":2"|upper }}
+    {% endif %}
+  </span>
+
+  {% if comercio.beneficio_texto %}
+    <strong class="uni2-discount uni2-commerce-modal-benefit">{{ comercio.beneficio_texto }}</strong>
+  {% endif %}
+
+  <h2 id="comercio-modal-title" class="uni2-commerce-modal-title">{{ comercio.nombre }}</h2>
+  {% if comercio.descripcion %}
+    <p class="uni2-commerce-modal-description">{{ comercio.descripcion }}</p>
+  {% endif %}
+
+  {% if comercio.direccion or comercio.telefono or comercio.email or comercio.url_presencia_web %}
+    <div class="uni2-commerce-modal-meta" aria-label="Datos de contacto">
+      {% if comercio.direccion %}
+        <span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i>{{ comercio.direccion }}</span>
+      {% endif %}
+      {% if comercio.telefono %}
+        <a href="tel:{{ comercio.telefono }}"><i class="bi bi-telephone-fill" aria-hidden="true"></i>{{ comercio.telefono }}</a>
+      {% endif %}
+      {% if comercio.email %}
+        <a href="mailto:{{ comercio.email }}"><i class="bi bi-envelope-fill" aria-hidden="true"></i>{{ comercio.email }}</a>
+      {% endif %}
+      {% if comercio.url_presencia_web %}
+        <a href="{{ comercio.url_presencia_web }}" target="_blank" rel="noopener noreferrer">
+          <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>Visitar online
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="uni2-commerce-modal-actions">
+    <a class="btn btn-outline-primary btn-sm"
+       href="{% url 'web:comercio_detalle' comercio.pk %}">Ver ficha completa</a>
+  </div>
+</article>

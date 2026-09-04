@@ -19,6 +19,7 @@ class RegistroFinancieroSoloLecturaAdmin:
 
 @admin.register(PeriodoCuota)
 class PeriodoCuotaAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    allow_superuser_delete = True
     audit_fields = (
         "mes",
         "ciclo_lectivo",
@@ -27,8 +28,17 @@ class PeriodoCuotaAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
         "importe_recargo_mes_siguiente",
         "fecha_vencimiento",
         "activo",
+        "generado_el",
     )
-    list_display = ("mes", "ciclo_lectivo", "importe_formateado", "fecha_vencimiento", "activo")
+    readonly_fields = ("generado_el",)
+    list_display = (
+        "mes",
+        "ciclo_lectivo",
+        "importe_formateado",
+        "fecha_vencimiento",
+        "activo",
+        "generado_el",
+    )
     list_filter = ("ciclo_lectivo", "activo")
 
     @admin.display(description="Importe", ordering="importe")

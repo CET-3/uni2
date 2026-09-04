@@ -3,7 +3,7 @@ type: "Arquitectura"
 title: "Refresco de datos de staging"
 description: "Procedimiento seguro para copiar Producción y endurecer el destino antes de habilitarlo."
 tags: [mvp, arquitectura, staging, postgresql, seguridad]
-timestamp: 2026-08-02T00:00:00-03:00
+timestamp: 2026-09-03T00:00:00-03:00
 ---
 
 # Refresco de datos de staging
@@ -194,7 +194,9 @@ Luego se verifica:
 - conteos agregados razonables;
 - manifest `UNI2 STG`;
 - barrera HTTP y `noindex`;
-- correo y push deshabilitados.
+- correo transaccional en `disabled` durante el refresco; una activación
+  posterior sólo puede usar `redirect` hacia la casilla segura;
+- correo por lote y push deshabilitados.
 
 ### Copia de archivos media
 

@@ -7,6 +7,7 @@ from auditoria.models import EventoAuditoria
 from auditoria.selectors import (
     buscar_operaciones,
     buscar_operaciones_asociado,
+    buscar_operaciones_solicitud,
     obtener_operaciones,
     obtener_operaciones_asociado,
 )
@@ -38,6 +39,34 @@ def test_buscar_operaciones_devuelve_una_fila_por_operacion():
     assert {operacion["operacion_id"] for operacion in operaciones} == {
         operacion_compuesta,
         EventoAuditoria.objects.get(objeto_id="3").operacion_id,
+    }
+
+
+@pytest.mark.django_db
+def test_buscar_operaciones_solicitud_incluye_toda_la_operacion_de_alta():
+    operacion_id = uuid.uuid4()
+    evento_solicitud = EventoAuditoria.objects.create(
+        actor_etiqueta="Proceso de prueba",
+        accion=EventoAuditoria.ACCION_CAMBIAR_ESTADO,
+        entidad="asociados.SolicitudAsociacion",
+        objeto_id="17",
+        objeto_descripcion="Flores, Ana",
+        cambios={"estado": {"anterior": "datos_aprobados", "nuevo": "alta_completada"}},
+        origen=EventoAuditoria.ORIGEN_GESTION,
+        operacion_id=operacion_id,
+    )
+    evento_asociado = crear_evento(
+        operacion_id=operacion_id,
+        objeto_id="23",
+        descripcion="Flores, Ana",
+    )
+
+    operaciones = obtener_operaciones(buscar_operaciones_solicitud(17))
+
+    assert len(operaciones) == 1
+    assert {evento.id for evento in operaciones[0].eventos} == {
+        evento_solicitud.id,
+        evento_asociado.id,
     }
 
 
@@ -81,6 +110,7 @@ def test_operacion_usa_un_titulo_de_negocio_para_un_cobro():
         evento_relacionado.id,
     }
     assert operacion.titulo == "Cobro de cuotas"
+    assert operacion.icono == "bi-cash-coin"
 
 
 @pytest.mark.django_db
@@ -104,6 +134,37 @@ def test_operacion_usa_un_titulo_de_negocio_para_una_donacion_sin_cuotas():
     operacion = obtener_operaciones([{"operacion_id": operacion_id}])[0]
 
     assert operacion.titulo == "Registro de donación"
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    ("estado_nuevo", "titulo"),
+    [
+        ("observada", "Solicitud observada"),
+        ("datos_aprobados", "Datos aprobados"),
+        ("cancelada", "Solicitud cancelada"),
+    ],
+)
+def test_operacion_humaniza_los_estados_de_una_solicitud(estado_nuevo, titulo):
+    operacion_id = uuid.uuid4()
+    EventoAuditoria.objects.create(
+        actor_etiqueta="Operadora",
+        accion=EventoAuditoria.ACCION_CAMBIAR_ESTADO,
+        entidad="asociados.SolicitudAsociacion",
+        objeto_id="17",
+        objeto_descripcion="Flores, Ana",
+        cambios={"estado": {"anterior": "recibida", "nuevo": estado_nuevo}},
+        origen=EventoAuditoria.ORIGEN_GESTION,
+        operacion_id=operacion_id,
+    )
+
+    operacion = obtener_operaciones([{"operacion_id": operacion_id}])[0]
+
+    assert operacion.titulo == titulo
+    assert operacion.actor_etiqueta == "Operadora"
+    assert operacion.icono == (
+        "bi-clipboard-x" if estado_nuevo in {"observada", "cancelada"} else "bi-clipboard-check"
+    )
 
 
 @pytest.mark.django_db

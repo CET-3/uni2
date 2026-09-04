@@ -52,12 +52,14 @@ class EventoAuditoria(models.Model):
     ORIGEN_IMPORTACION = "importacion"
     ORIGEN_COMANDO = "comando"
     ORIGEN_SISTEMA = "sistema"
+    ORIGEN_SITIO_PUBLICO = "sitio_publico"
     ORIGENES = [
         (ORIGEN_GESTION, "Gestión"),
         (ORIGEN_ADMIN, "Admin de Django"),
         (ORIGEN_IMPORTACION, "Importación"),
         (ORIGEN_COMANDO, "Comando"),
         (ORIGEN_SISTEMA, "Sistema"),
+        (ORIGEN_SITIO_PUBLICO, "Sitio público"),
     ]
 
     fecha = models.DateTimeField(auto_now_add=True)
@@ -81,7 +83,7 @@ class EventoAuditoria(models.Model):
     objeto_id = models.CharField(max_length=100)
     objeto_descripcion = models.CharField(max_length=255)
     cambios = models.JSONField(default=dict, blank=True)
-    motivo = models.CharField(max_length=255, blank=True)
+    motivo = models.CharField(max_length=500, blank=True)
     origen = models.CharField(max_length=30, choices=ORIGENES)
     operacion_id = models.UUIDField(default=uuid.uuid4, editable=False)
 

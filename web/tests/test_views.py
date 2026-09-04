@@ -41,17 +41,57 @@ def test_home_muestra_el_importe_del_periodo_actual(client):
     )
 
     contenido = client.get(reverse("web:home")).content.decode()
+    paso_cuota = re.search(
+        r'<article class="uni2-step-card uni2-step-card-green">(.*?)</article>',
+        contenido,
+        re.DOTALL,
+    ).group(1)
 
-    assert "$ 1.234,56" in contenido
+    assert "$ 1.234,56 por mes" in paso_cuota
     assert "$ 700,00" not in contenido
 
 
 @pytest.mark.django_db
 def test_home_sin_periodos_no_inventa_un_importe(client):
     contenido = client.get(reverse("web:home")).content.decode()
+    paso_cuota = re.search(
+        r'<article class="uni2-step-card uni2-step-card-green">(.*?)</article>',
+        contenido,
+        re.DOTALL,
+    ).group(1)
 
-    assert "Consultá en la mutual el valor actual de la cuota social." in contenido
-    assert "Consultá el valor vigente." in contenido
+    assert "Consultá el valor vigente." in paso_cuota
+
+
+@pytest.mark.django_db
+def test_home_presenta_preinscripcion_sin_prometer_pago_online(client):
+    contenido = client.get(reverse("web:home")).content.decode()
+    inicio_seccion = re.search(
+        r'<section[^>]+id="como-asociarse".*?(?=<div class="row g-3 mb-5">)',
+        contenido,
+        re.DOTALL,
+    ).group(0)
+    clases_encabezado = re.search(
+        r'<div class="([^"]*uni2-section-heading[^"]*)">', inicio_seccion
+    ).group(1)
+
+    assert {
+        "flex-column",
+        "flex-sm-row",
+        "align-items-stretch",
+        "align-items-sm-end",
+    }.issubset(set(clases_encabezado.split()))
+    assert 'class="d-grid d-sm-block"' in inicio_seccion
+    assert "Cómo ser parte de nuestra comunidad" in contenido
+    assert reverse("web:preinscripcion") in contenido
+    assert "Quiero asociarme" in contenido
+    assert "Completá la preinscripción" in contenido
+    assert "Revisamos tus datos" in contenido
+    assert "Acercate a la Mutual" in contenido
+    assert "Disfrutá tus beneficios" in contenido
+    assert "Unite a la Mutual" not in contenido
+    assert "Completá tus datos online." not in contenido
+    assert "pago online" not in contenido.lower()
 
 
 def test_url_beneficios_no_se_mantiene(client):
@@ -140,6 +180,36 @@ def test_design_system_porta_secciones_del_showcase(client):
     assert "benefit-list-body" in content
     assert "uni2-discount" in content
     assert "uni2-metric-card" in content
+    for clase in (
+        "uni2-metric-card-info",
+        "uni2-metric-card-success",
+        "uni2-metric-card-warning",
+        "uni2-metric-card-danger",
+        "uni2-badge-info",
+        "uni2-badge-success",
+        "uni2-badge-warning",
+        "uni2-badge-danger",
+        "uni2-surface-card-info",
+        "uni2-surface-card-success",
+        "uni2-surface-card-warning",
+        "uni2-surface-card-danger",
+        "uni2-surface-card-brand",
+        "uni2-compact-hero",
+        "uni2-compact-hero-with-summary",
+        "uni2-compact-hero-title",
+        "uni2-compact-hero-identity",
+        "uni2-compact-hero-avatar",
+        "uni2-compact-hero-summary",
+        "uni2-avatar",
+        "uni2-data-list",
+        "uni2-timeline",
+        "uni2-timeline-marker",
+    ):
+        assert clase in content
+    assert 'uni2-badge-success">Pagada</span>' in content
+    assert 'uni2-badge-warning">Pendiente</span>' in content
+    assert 'uni2-badge-danger">Vencida</span>' in content
+    assert "No representa un dashboard" not in content
     assert "uni2-breadcrumbs" in content
     assert "Fotocopias e impresiones" in content
     assert 'aria-current="page"' in content
@@ -174,6 +244,24 @@ def test_css_design_system_acota_navegacion_y_no_conserva_aliases_huerfanos():
 
     # El catálogo usa Bootstrap para su mobiliario y no mantiene una capa CSS paralela.
     assert "ds-page" not in css
+
+
+def test_redisenio_no_conserva_familias_visuales_paralelas():
+    project_root = Path(__file__).resolve().parents[2]
+    archivos = [project_root / "static/css/uni2-design-system.css"]
+    archivos.extend((project_root / "templates").rglob("*.html"))
+    contenido = "\n".join(path.read_text(encoding="utf-8") for path in archivos)
+
+    for familia in (
+        "uni2-ops-",
+        "uni2-member-",
+        "uni2-access-",
+        "uni2-form-error-summary",
+        "uni2-record-list",
+        "uni2-record-",
+        "uni2-payment-",
+    ):
+        assert familia not in contenido
 
 
 def test_catalogo_muestra_todos_los_tokens_publicos():
@@ -626,7 +714,6 @@ def test_templates_usan_una_sola_familia_productiva_de_alertas():
     css = (project_root / "static/css/uni2-design-system.css").read_text(encoding="utf-8")
     templates_con_alertas = (
         "includes/messages.html",
-        "comercios/resultado_validacion.html",
         "registration/login.html",
         "gestion/importar_cuotas_historicas.html",
         "gestion/importar_asociados.html",

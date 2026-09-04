@@ -25,6 +25,7 @@ Representa a una persona asociada o adherente a la mutual.
 - número_asociado
 - token_credencial\*
 - curso_actual
+- clasificación_adherente
 - estado\*
 - fecha_alta\*
 - fecha_inicio_cobro\*
@@ -36,6 +37,16 @@ Representa a una persona asociada o adherente a la mutual.
 **Estados:** activo, inactivo.
 
 **Restricciones de datos:** DNI único, número automático, token UUID único, usuario opcional.
+
+Curso y clasificación son alternativos: un asociado requiere `curso_actual` y
+no tiene clasificación; un adherente requiere `clasificación_adherente` y no
+tiene curso. `Sin clasificar` permite migrar registros heredados pendientes de
+revisión.
+
+`fecha_inicio_cobro` indica el primer período que puede asignarse a la persona.
+En un alta manual se calcula desde tipo y fecha de alta: dos meses antes para
+Asociado y el mismo mes para Adherente. Los valores importados o corregidos
+explícitamente se conservan y un cambio posterior de tipo no los recalcula.
 
 **Admin técnico:** la selección de `usuario` debe usar búsqueda/autocompletado para soportar muchos usuarios y evitar combos largos.
 

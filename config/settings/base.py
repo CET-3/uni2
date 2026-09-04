@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "usuarios",
     "gestion",
     "auditoria",
+    "comunicaciones",
     "asociados",
     "cuotas",
     "comercios",
@@ -150,8 +151,19 @@ GOOGLE_ANALYTICS_MEASUREMENT_ID = ""
 # Las integraciones todavía no están implementadas. Declarar la política desde
 # ahora evita que staging herede por accidente proveedores reales en el futuro.
 UNI2_TRANSACTIONAL_EMAIL_MODE = "disabled"
+UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO = ""
 UNI2_BATCH_EMAIL_MODE = "disabled"
 UNI2_WEB_PUSH_MODE = "disabled"
+UNI2_SITE_URL = os.getenv("UNI2_SITE_URL", "http://localhost:8000").rstrip("/")
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", "UNI2 <no-responder@example.com>"
+)
+UNI2_SOLICITUD_TOKEN_TTL_DAYS = 30
+UNI2_SOLICITUD_CREACION_MAX_INTENTOS = 30
+UNI2_SOLICITUD_CREACION_VENTANA_MINUTOS = 10
+UNI2_SOLICITUD_CORRECCION_MAX_INTENTOS = 5
+UNI2_SOLICITUD_CORRECCION_VENTANA_MINUTOS = 60
+UNI2_TRUST_VERCEL_CLIENT_IP = False
 
 # El admin técnico puede recibir acciones masivas sobre muchas cuotas luego de
 # importaciones iniciales. El valor por defecto de Django queda corto para ese uso.

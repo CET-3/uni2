@@ -1,3 +1,1 @@
-{% include "components/comercio_publico.html" with comercio=comercio en_modal=True only %}
-<a class="uni2-cta uni2-cta-secondary uni2-commerce-full-link"
-   href="{% url 'web:comercio_detalle' comercio.pk %}">Ver ficha completa</a>
+{% include "components/comercio_modal.html" with comercio=comercio only %}

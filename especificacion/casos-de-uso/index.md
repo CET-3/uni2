@@ -7,6 +7,7 @@ La relación entre ambos debe deducirse por el objetivo y el actor de cada caso.
 
 ### Alta, consulta y actualización
 
+* [CU-gestionar-solicitud-asociacion](cu-gestionar-solicitud-asociacion.md) - Revisar preinscripciones y completar el alta presencial.
 * [CU-consultar-asociados](cu-consultar-asociados.md) - Buscar y filtrar asociados.
 * [CU-ver-detalle-asociado](cu-ver-detalle-asociado.md) - Consultar la ficha operativa de un asociado.
 * [CU-crear-asociado](cu-crear-asociado.md) - Registrar un asociado y generar sus cuotas iniciales.
@@ -53,6 +54,7 @@ La relación entre ambos debe deducirse por el objetivo y el actor de cada caso.
 ### Comercio
 
 * [CU-validar-credencial](cu-validar-credencial.md) - Validar una credencial mediante DNI, UUID o QR.
+* [CU-ver-convenio-propio](cu-ver-convenio-propio.md) - Consultar los datos propios del comercio y su convenio.
 
 ## Usuarios, control y documentación
 
@@ -89,6 +91,7 @@ La relación entre ambos debe deducirse por el objetivo y el actor de cada caso.
 ### Sitio público
 
 * [CU-consultar-sitio-publico](cu-consultar-sitio-publico.md) - Recorrer la información pública de Uni2.
+* [CU-preinscribirse-asociacion](cu-preinscribirse-asociacion.md) - Presentar, seguir y corregir una solicitud de asociación.
 * [CU-listar-productos-servicios-publicos](cu-listar-productos-servicios-publicos.md) - Consultar productos y servicios publicados.
 * [CU-listar-comercios-publicos](cu-listar-comercios-publicos.md) - Consultar comercios y beneficios publicados.
 

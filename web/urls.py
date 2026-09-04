@@ -9,8 +9,12 @@ from .views import (
     DesignSystemEstructuraView,
     DesignSystemView,
     HomeView,
+    PreinscripcionCorreccionesRecibidasView,
+    PreinscripcionRecibidaView,
+    PreinscripcionView,
     ProductoServicioDetalleView,
     ProductosServiciosPublicosView,
+    SolicitudSeguimientoView,
 )
 
 
@@ -18,6 +22,22 @@ app_name = "web"
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
+    path("sumate/", PreinscripcionView.as_view(), name="preinscripcion"),
+    path(
+        "sumate/recibida/",
+        PreinscripcionRecibidaView.as_view(),
+        name="preinscripcion_recibida",
+    ),
+    path(
+        "sumate/correcciones-recibidas/",
+        PreinscripcionCorreccionesRecibidasView.as_view(),
+        name="preinscripcion_correcciones_recibidas",
+    ),
+    path(
+        "sumate/solicitud/<str:token>/",
+        SolicitudSeguimientoView.as_view(),
+        name="solicitud_seguimiento",
+    ),
     path("productos-servicios/", ProductosServiciosPublicosView.as_view(), name="productos_servicios"),
     path("productos-servicios/<int:pk>/", ProductoServicioDetalleView.as_view(), name="producto_servicio_detalle"),
     path("comercios/", ComerciosPublicosView.as_view(), name="comercios"),
