@@ -14,11 +14,13 @@ timestamp: 2026-09-03T00:00:00-03:00
 
 1. Desde el login elige `Olvidé mi contraseña`.
 2. Ingresa su DNI y email.
-3. El sistema muestra siempre `Solicitud recibida` y aclara: `Por seguridad no
-   informamos si los datos coinciden. Si corresponden a una cuenta habilitada,
-   vas a recibir un correo con los pasos para elegir una contraseña nueva.`
-4. Cuando existe un asociado activo con usuario activo y ambos datos
-   coinciden, registra y envía la comunicación `recuperacion_contrasena`.
+3. Si no existe un asociado activo con usuario activo y coincidencia de ambos
+   datos, el formulario informa `No encontramos una cuenta activa con ese DNI
+   y email. Revisá los datos ingresados.`
+4. Cuando la cuenta existe, registra y envía la comunicación
+   `recuperacion_contrasena` y muestra `Solicitud recibida`. Si ya se originó
+   una comunicación dentro de la ventana de 15 minutos, muestra igualmente la
+   confirmación pero no genera otra.
 5. La persona abre el enlace temporal recibido.
 6. Ingresa y confirma una contraseña nueva.
 7. El sistema guarda la contraseña, invalida el enlace y la dirige al login.
@@ -28,9 +30,10 @@ cuenta dentro de una ventana inicialmente de 15 minutos. El enlace vence
 inicialmente después de una hora. El token se genera mediante los mecanismos
 firmados de Django y no se persiste en la comunicación, auditoría ni logs.
 
-**Respuesta neutra:** datos inexistentes, email incorrecto, asociado sin email,
-cuenta inactiva o límite alcanzado producen la misma presentación pública y no
-revelan qué condición ocurrió.
+**Respuesta explícita:** datos inexistentes, email incorrecto, asociado sin
+email o cuenta inactiva muestran el mismo error de cuenta no encontrada. La
+decisión prioriza que la persona pueda corregir sus datos y acepta que la
+coincidencia de una cuenta quede expuesta.
 
 **Situaciones especiales:** enlace vencido, alterado o ya utilizado; fallo del
 backend de correo; varias cuentas que comparten email.

@@ -72,7 +72,18 @@ class RecuperarContrasenaView(CredentialPrivacyHeadersMixin, FormView):
     success_url = reverse_lazy("usuarios:recuperacion_solicitada")
 
     def form_valid(self, form):
-        solicitar_recuperacion_contrasena(**form.cleaned_data)
+        cuenta_encontrada = solicitar_recuperacion_contrasena(
+            **form.cleaned_data
+        )
+        if not cuenta_encontrada:
+            form.add_error(
+                None,
+                (
+                    "No encontramos una cuenta activa con ese DNI y email. "
+                    "Revisá los datos ingresados."
+                ),
+            )
+            return self.form_invalid(form)
         return super().form_valid(form)
 
 

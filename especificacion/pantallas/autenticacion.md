@@ -24,12 +24,12 @@ principal `Guardar contraseña` usa el ícono `bi-key`.
 
 ## Recuperar contraseña
 
-La solicitud pública pide DNI y email. La pantalla posterior siempre muestra
-el mismo resultado neutro y no confirma si los datos existen, coinciden, están
-limitados o pertenecen a una cuenta habilitada. Su título es `Solicitud
-recibida` y explica que, por seguridad, no se informa si los datos coinciden;
-solo si corresponden a una cuenta habilitada llegará el correo. `Enviar
-instrucciones` usa `bi-envelope-arrow-up`.
+La solicitud pública pide DNI y email. Si no corresponden a una cuenta activa,
+el mismo formulario muestra `No encontramos una cuenta activa con ese DNI y
+email. Revisá los datos ingresados.` Cuando la cuenta existe, la pantalla
+posterior muestra `Solicitud recibida` y pide revisar el correo. Una cuenta
+dentro del límite de 15 minutos también llega a esa confirmación, aunque no se
+origine otro envío. `Enviar instrucciones` usa `bi-envelope-arrow-up`.
 
 El enlace del correo abre una pantalla para ingresar y confirmar una contraseña
 nueva. Un enlace inválido, vencido o utilizado informa que ya no está

@@ -35,8 +35,12 @@ administrar la contraseña y los datos personales propios.
   la recuperación por correo.
 - El formulario de recuperación pide DNI y email porque una dirección puede
   estar compartida por más de un asociado.
-- La respuesta de recuperación es idéntica para datos válidos, inexistentes,
-  incorrectos o limitados.
+- Si DNI y email no corresponden a una cuenta activa, la recuperación lo
+  informa explícitamente en el formulario. Esta decisión facilita la
+  corrección de datos, aunque permite a terceros probar combinaciones y
+  confirmar la existencia de cuentas.
+- Una cuenta encontrada muestra la confirmación aunque una solicitud previa
+  dentro de los últimos 15 minutos impida generar otro correo.
 - El email vigente de `Asociado` es la fuente de verdad para recuperar la
   cuenta. Un cambio propio también actualiza `User.email`.
 - Cargar un email después del alta no envía retroactivamente `alta_usuario`.

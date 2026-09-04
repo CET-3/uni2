@@ -218,11 +218,11 @@ def _datos_recuperacion_siguen_vigentes(
 @transaction.atomic
 def solicitar_recuperacion_contrasena(
     *, dni: str, email: str, ahora=None
-) -> None:
+) -> bool:
     ahora = ahora or timezone.now()
     coincidencia = _buscar_asociado_recuperable(dni=dni, email=email)
     if coincidencia is None:
-        return None
+        return False
     asociado, dni_normalizado, email_normalizado = coincidencia
 
     usuario = get_user_model().objects.select_for_update().get(
@@ -235,7 +235,7 @@ def solicitar_recuperacion_contrasena(
         dni_normalizado=dni_normalizado,
         email_normalizado=email_normalizado,
     ):
-        return None
+        return False
     desde = ahora - timedelta(
         minutes=settings.UNI2_PASSWORD_RESET_EMAIL_COOLDOWN_MINUTES
     )
@@ -245,7 +245,7 @@ def solicitar_recuperacion_contrasena(
         origen_id=str(usuario.pk),
         creado_en__gte=desde,
     ).exists():
-        return None
+        return True
 
     uidb64 = urlsafe_base64_encode(force_bytes(usuario.pk))
     token = default_token_generator.make_token(usuario)
@@ -262,7 +262,7 @@ def solicitar_recuperacion_contrasena(
         recuperacion_url=recuperacion_url,
         operacion_id=uuid.uuid4(),
     )
-    return None
+    return True
 
 
 @transaction.atomic

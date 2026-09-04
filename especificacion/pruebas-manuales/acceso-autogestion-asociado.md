@@ -85,14 +85,15 @@ escrituras directas por ORM.
 
 1. Desde `/login/`, elegir `Olvidé mi contraseña`.
 2. Enviar primero un DNI inexistente y un email ficticio. La respuesta debe
-   indicar solamente que se enviará un correo si corresponde a una cuenta
-   habilitada.
+   mostrar `No encontramos una cuenta activa con ese DNI y email. Revisá los
+   datos ingresados.` y conservar el formulario.
 3. Repetir con el DNI correcto y un email incorrecto. La respuesta visible debe
-   ser idéntica.
+   mostrar el mismo error.
 4. Enviar el DNI y email vigentes de un asociado activo. Debe registrarse una
-   comunicación `recuperacion_contrasena` y aparecer un correo en la consola.
-5. Volver a solicitarlo antes de 15 minutos. Debe mostrarse la misma respuesta
-   pública y no crearse otra comunicación.
+   comunicación `recuperacion_contrasena`, aparecer un correo en la consola y
+   mostrarse `Solicitud recibida`.
+5. Volver a solicitarlo antes de 15 minutos. Debe mostrarse nuevamente la
+   confirmación y no crearse otra comunicación.
 6. Abrir el enlace del primer correo, elegir una contraseña nueva y confirmar
    que permite ingresar.
 7. Volver a abrir el enlace usado. Debe indicar que ya no está disponible.
@@ -103,7 +104,7 @@ escrituras directas por ORM.
    controla el reloj del generador sin cambiar la hora del equipo.
 
 Un asociado inactivo, un usuario inactivo o una cuenta sin email deben recibir
-la misma respuesta pública y no originar una comunicación.
+el error de cuenta no encontrada y no originar una comunicación.
 
 ## Mis datos
 

@@ -220,11 +220,14 @@ concreta aunque varias personas compartan una dirección. Solo genera el correo
 `recuperacion_contrasena` cuando existe un asociado activo con usuario activo,
 email no vacío y coincidencia de ambos datos.
 
-La respuesta pública es la misma para coincidencias, datos incorrectos,
-cuentas no habilitadas y solicitudes limitadas. Cada cuenta admite un envío
-dentro de una ventana configurable, inicialmente de 15 minutos. El enlace
-firmado vence inicialmente después de una hora y se invalida al establecer una
-contraseña.
+Si DNI y email no corresponden a una cuenta activa y habilitada, el formulario
+informa `No encontramos una cuenta activa con ese DNI y email. Revisá los datos
+ingresados.` Esta respuesta explícita acepta que terceros puedan probar
+combinaciones y confirmar la existencia de cuentas. Una cuenta encontrada
+avanza a la confirmación. Cada cuenta admite un envío dentro de una ventana
+configurable, inicialmente de 15 minutos; durante esa ventana sigue
+considerándose encontrada, pero no genera otro correo. El enlace firmado vence
+inicialmente después de una hora y se invalida al establecer una contraseña.
 
 El email vigente de `Asociado` es la fuente de verdad. Los tokens y las
 contraseñas no se persisten en comunicaciones, auditoría ni logs.

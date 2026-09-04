@@ -39,12 +39,13 @@ def extraer_ruta_recuperacion(mensaje):
 
 @pytest.mark.django_db
 def test_solicitud_valida_programa_una_comunicacion(asociado):
-    solicitar_recuperacion_contrasena(
+    cuenta_encontrada = solicitar_recuperacion_contrasena(
         dni="48.123.456",
         email="ANA@example.com",
         ahora=timezone.now(),
     )
 
+    assert cuenta_encontrada is True
     comunicacion = Comunicacion.objects.get(tipo="recuperacion_contrasena")
     assert comunicacion.origen_entidad == "auth.User"
     assert comunicacion.origen_id == str(asociado.usuario_id)
@@ -64,8 +65,12 @@ def test_datos_no_recuperables_no_crean_comunicacion(
     dni,
     email,
 ):
-    solicitar_recuperacion_contrasena(dni=dni, email=email)
+    cuenta_encontrada = solicitar_recuperacion_contrasena(
+        dni=dni,
+        email=email,
+    )
 
+    assert cuenta_encontrada is False
     assert not Comunicacion.objects.exists()
 
 
@@ -175,12 +180,13 @@ def test_cooldown_permite_un_correo_por_cuenta_cada_quince_minutos(asociado):
         email=asociado.email,
         ahora=ahora,
     )
-    solicitar_recuperacion_contrasena(
+    cuenta_encontrada = solicitar_recuperacion_contrasena(
         dni=asociado.dni,
         email=asociado.email,
         ahora=ahora + timedelta(minutes=14),
     )
 
+    assert cuenta_encontrada is True
     assert Comunicacion.objects.filter(tipo="recuperacion_contrasena").count() == 1
 
 
@@ -219,28 +225,47 @@ def test_formulario_recuperacion_identifica_la_accion_de_envio(client):
 
 
 @pytest.mark.django_db
-def test_respuesta_publica_es_igual_para_datos_validos_e_inexistentes(
+@pytest.mark.parametrize(
+    ("dni", "email"),
+    [
+        ("49999999", "ana@example.com"),
+        ("48123456", "nadie@example.com"),
+    ],
+)
+def test_dni_o_email_inexistente_muestra_error_explicito(
     client,
     asociado,
+    dni,
+    email,
 ):
-    respuesta_valida = client.post(
+    respuesta = client.post(
+        reverse("usuarios:recuperar_contrasena"),
+        {"dni": dni, "email": email},
+    )
+
+    contenido = respuesta.content.decode()
+    assert respuesta.status_code == 200
+    assert (
+        "No encontramos una cuenta activa con ese DNI y email. "
+        "Revisá los datos ingresados."
+    ) in contenido
+    assert "Solicitud recibida" not in contenido
+
+
+@pytest.mark.django_db
+def test_datos_existentes_avanzan_a_la_confirmacion(client, asociado):
+    respuesta = client.post(
         reverse("usuarios:recuperar_contrasena"),
         {"dni": asociado.dni, "email": asociado.email},
         follow=True,
     )
-    respuesta_inexistente = client.post(
-        reverse("usuarios:recuperar_contrasena"),
-        {"dni": "49999999", "email": "nadie@example.com"},
-        follow=True,
-    )
 
-    assert respuesta_valida.status_code == 200
-    assert respuesta_inexistente.status_code == 200
-    assert respuesta_valida.content == respuesta_inexistente.content
-    contenido = respuesta_valida.content.decode()
+    contenido = respuesta.content.decode()
+    assert respuesta.redirect_chain[-1][0] == reverse(
+        "usuarios:recuperacion_solicitada"
+    )
     assert "Solicitud recibida" in contenido
-    assert "Por seguridad no informamos si los datos coinciden" in contenido
-    assert "Revisá tu correo" not in contenido
+    assert "Encontramos una cuenta activa con esos datos" in contenido
 
 
 @pytest.mark.django_db(transaction=True)
