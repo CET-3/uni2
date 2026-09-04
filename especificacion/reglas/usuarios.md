@@ -229,6 +229,11 @@ contraseña.
 El email vigente de `Asociado` es la fuente de verdad. Los tokens y las
 contraseñas no se persisten en comunicaciones, auditoría ni logs.
 
+La solicitud bloquea primero el `Asociado` y después su `User`, y vuelve a
+validar DNI, email, estados y vínculo antes de programar el correo. Así, una
+edición simultánea de datos propios no puede enviar un enlace válido a una
+dirección que dejó de pertenecer a la cuenta.
+
 ## USUARIO-027 — Sincronización de identidad y contacto
 
 Cuando el asociado modifica sus propios nombre, apellido o email, el sistema

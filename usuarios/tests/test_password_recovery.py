@@ -132,6 +132,39 @@ def test_recuperacion_usa_email_del_asociado_y_no_el_del_user(asociado):
 
 
 @pytest.mark.django_db
+def test_recuperacion_no_usa_un_email_modificado_mientras_bloquea_la_cuenta(
+    asociado,
+    monkeypatch,
+):
+    user_model = asociado.usuario.__class__
+
+    class UsuariosConCambioConcurrente:
+        def select_for_update(self):
+            return self
+
+        def get(self, **kwargs):
+            Asociado.objects.filter(pk=asociado.pk).update(
+                email="nuevo@example.com"
+            )
+            return user_model.objects.get(**kwargs)
+
+    class UserModelSimulado:
+        objects = UsuariosConCambioConcurrente()
+
+    monkeypatch.setattr(
+        "usuarios.services.get_user_model",
+        lambda: UserModelSimulado,
+    )
+
+    solicitar_recuperacion_contrasena(
+        dni=asociado.dni,
+        email="ana@example.com",
+    )
+
+    assert not Comunicacion.objects.exists()
+
+
+@pytest.mark.django_db
 def test_cooldown_permite_un_correo_por_cuenta_cada_quince_minutos(asociado):
     ahora = timezone.now()
 

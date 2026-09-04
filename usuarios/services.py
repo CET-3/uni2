@@ -179,11 +179,10 @@ def _buscar_asociado_recuperable(*, dni: str, email: str):
     if not email_normalizado:
         return None
 
-    candidatos = Asociado.objects.select_related("usuario").filter(
+    candidatos = Asociado.objects.select_for_update().filter(
         email__iexact=email_normalizado,
         estado=Asociado.ESTADO_ACTIVO,
         usuario__isnull=False,
-        usuario__is_active=True,
     )
     coincidencias = []
     for asociado in candidatos:
@@ -196,7 +195,24 @@ def _buscar_asociado_recuperable(*, dni: str, email: str):
 
     if len(coincidencias) != 1:
         return None
-    return coincidencias[0]
+    return coincidencias[0], dni_normalizado, email_normalizado
+
+
+def _datos_recuperacion_siguen_vigentes(
+    *, asociado, usuario, dni_normalizado: str, email_normalizado: str
+) -> bool:
+    try:
+        dni_actual = normalizar_documento(asociado.dni)
+    except ValidationError:
+        return False
+
+    return bool(
+        asociado.estado == Asociado.ESTADO_ACTIVO
+        and asociado.usuario_id == usuario.pk
+        and usuario.is_active
+        and dni_actual == dni_normalizado
+        and asociado.email.casefold() == email_normalizado.casefold()
+    )
 
 
 @transaction.atomic
@@ -204,13 +220,22 @@ def solicitar_recuperacion_contrasena(
     *, dni: str, email: str, ahora=None
 ) -> None:
     ahora = ahora or timezone.now()
-    asociado = _buscar_asociado_recuperable(dni=dni, email=email)
-    if asociado is None:
+    coincidencia = _buscar_asociado_recuperable(dni=dni, email=email)
+    if coincidencia is None:
         return None
+    asociado, dni_normalizado, email_normalizado = coincidencia
 
     usuario = get_user_model().objects.select_for_update().get(
         pk=asociado.usuario_id
     )
+    asociado.refresh_from_db(fields=("dni", "email", "estado", "usuario"))
+    if not _datos_recuperacion_siguen_vigentes(
+        asociado=asociado,
+        usuario=usuario,
+        dni_normalizado=dni_normalizado,
+        email_normalizado=email_normalizado,
+    ):
+        return None
     desde = ahora - timedelta(
         minutes=settings.UNI2_PASSWORD_RESET_EMAIL_COOLDOWN_MINUTES
     )

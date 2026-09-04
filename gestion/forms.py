@@ -7,7 +7,7 @@ from auditoria.presentacion import etiqueta_entidad
 from auditoria.selectors import listar_entidades_auditadas
 from asociados.models import Asociado, ClasificacionAdherente, SolicitudAsociacion
 from asociados.models import Curso
-from asociados.services import create_asociado
+from asociados.services import crear_asociado_con_cuotas_iniciales
 from cuotas.models import Pago, PeriodoCuota
 
 
@@ -238,7 +238,7 @@ class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
 
     def save(self, commit=True, actor=None):
         data = self.cleaned_data
-        return create_asociado(
+        return crear_asociado_con_cuotas_iniciales(
             nombre=data["nombre"],
             apellido=data["apellido"],
             dni=data["dni"],
@@ -250,7 +250,6 @@ class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
             telefono=data["telefono"],
             direccion=data["direccion"],
             actor=actor,
-            enviar_correo_alta=True,
         )
 
 

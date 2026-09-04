@@ -18,7 +18,7 @@ Representa a una persona asociada o adherente a la mutual.
 - nombre\*
 - apellido\*
 - dni\*
-- email
+- email: correo electrónico opcional, de hasta 254 caracteres.
 - teléfono
 - dirección
 - tipo\*

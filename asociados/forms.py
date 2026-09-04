@@ -23,7 +23,7 @@ class AsociadoDatosPropiosForm(forms.Form):
         required=False,
         validators=[validar_telefono],
     )
-    email = forms.EmailField(label="Email", required=False)
+    email = forms.EmailField(label="Email", max_length=254, required=False)
     direccion = forms.CharField(
         label="Dirección",
         max_length=255,

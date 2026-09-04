@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import IntegrityError, transaction
 from django.utils import timezone
@@ -67,6 +68,12 @@ class ResultadoTransicionSolicitud:
 @dataclass(frozen=True)
 class AltaDesdeSolicitudResult:
     solicitud: SolicitudAsociacion
+    asociado: Asociado
+    cuotas_generadas: tuple
+
+
+@dataclass(frozen=True)
+class AltaManualAsociadoResult:
     asociado: Asociado
     cuotas_generadas: tuple
 
@@ -743,6 +750,51 @@ def create_asociado(
 
 
 @transaction.atomic
+def crear_asociado_con_cuotas_iniciales(
+    *,
+    nombre: str,
+    apellido: str,
+    dni: str,
+    tipo: str,
+    fecha_alta: date | str,
+    curso_actual: Curso | None = None,
+    clasificacion_adherente=None,
+    email: str = "",
+    telefono: str = "",
+    direccion: str = "",
+    actor=None,
+) -> AltaManualAsociadoResult:
+    """Completa el alta manual y sus cuotas como una única operación."""
+
+    operacion_id = uuid.uuid4()
+    asociado = create_asociado(
+        nombre=nombre,
+        apellido=apellido,
+        dni=dni,
+        tipo=tipo,
+        fecha_alta=fecha_alta,
+        curso_actual=curso_actual,
+        clasificacion_adherente=clasificacion_adherente,
+        email=email,
+        telefono=telefono,
+        direccion=direccion,
+        actor=actor,
+        operacion_id=operacion_id,
+        enviar_correo_alta=True,
+    )
+    cuotas = generar_cuotas_iniciales_para_asociado(
+        asociado=asociado,
+        fecha_referencia=asociado.fecha_alta,
+        actor=actor,
+        operacion_id=operacion_id,
+    )
+    return AltaManualAsociadoResult(
+        asociado=asociado,
+        cuotas_generadas=tuple(cuotas),
+    )
+
+
+@transaction.atomic
 def actualizar_asociado(
     *,
     asociado: Asociado,
@@ -779,15 +831,14 @@ def actualizar_asociado(
 def actualizar_datos_propios_asociado(
     *, asociado: Asociado, datos, actor
 ) -> Asociado:
-    asociado = (
-        Asociado.objects.select_for_update()
-        .select_related("usuario")
-        .get(pk=asociado.pk)
-    )
+    asociado = Asociado.objects.select_for_update().get(pk=asociado.pk)
     if asociado.usuario_id != actor.pk:
         raise PermissionDenied(
             "No podés modificar los datos de otro asociado."
         )
+    usuario = get_user_model().objects.select_for_update().get(
+        pk=asociado.usuario_id
+    )
 
     campos_modificados = [
         campo
@@ -802,7 +853,6 @@ def actualizar_datos_propios_asociado(
         origen=EventoAuditoria.ORIGEN_ASOCIADO,
     )
 
-    usuario = asociado.usuario
     valores_usuario = {
         "first_name": asociado.nombre,
         "last_name": asociado.apellido,

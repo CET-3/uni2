@@ -117,6 +117,18 @@ def test_formulario_rechaza_datos_personales_invalidos(campo, valor):
     assert campo in form.errors
 
 
+def test_formulario_rechaza_email_mas_largo_que_el_modelo():
+    email_de_255_caracteres = (
+        f"{'a' * 64}@{'b' * 63}.{'c' * 63}.{'d' * 62}"
+    )
+    form = AsociadoDatosPropiosForm(
+        data=datos_validos(email=email_de_255_caracteres)
+    )
+
+    assert not form.is_valid()
+    assert "email" in form.errors
+
+
 @pytest.mark.django_db
 def test_usuario_no_puede_modificar_otro_asociado(asociado):
     otro_usuario = get_user_model().objects.create_user(username="otro")
