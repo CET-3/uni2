@@ -512,6 +512,51 @@ def test_importar_cuotas_historicas_previsualiza_desde_planilla(client, operacio
 
 
 @pytest.mark.django_db
+def test_importar_cuota_historica_pagada_sin_forma_asume_efectivo(
+    client,
+    operacion_cuotas_historicas_a_junio,
+):
+    staff = crear_usuario_gestion("staff_cuota_sin_forma")
+    asociado = create_asociado(
+        nombre="Lena",
+        apellido="Leyes",
+        dni="52328996",
+        tipo="asociado",
+        fecha_alta="2026-03-01",
+    )
+    archivo = crear_planilla_cuotas(
+        [
+            [
+                asociado.numero_asociado,
+                "Leyes Lena",
+                "1°2°",
+                True,
+                None,
+                False,
+                None,
+                False,
+                None,
+                False,
+                None,
+            ],
+        ]
+    )
+
+    client.force_login(staff)
+    client.post(reverse("gestion:importar_cuotas_historicas"), {"action": "preview", "archivo": archivo})
+
+    preview = client.session["cuotas_historicas_preview"]
+    marzo = next(item for item in preview["importables"] if item["mes"] == 3)
+    assert marzo["pagada"] is True
+    assert marzo["metodo"] == Pago.METODO_EFECTIVO
+
+    client.post(reverse("gestion:importar_cuotas_historicas"), {"action": "confirm"})
+
+    pago = Pago.objects.get(asociado=asociado, fecha=date(2026, 3, 10))
+    assert pago.metodo == Pago.METODO_EFECTIVO
+
+
+@pytest.mark.django_db
 def test_importar_cuotas_historicas_descarga_planilla_con_cuotas_a_revisar(
     client, operacion_cuotas_historicas_a_junio
 ):
