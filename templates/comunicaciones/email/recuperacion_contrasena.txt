@@ -1,0 +1,10 @@
+Hola {{ nombre }}:
+
+Recibimos una solicitud para restablecer tu contraseña de UNI2.
+
+Abrí este enlace dentro de una hora:
+{{ recuperacion_url }}
+
+Si no hiciste esta solicitud, podés ignorar este correo.
+
+Mutual Escolar del CET 3
