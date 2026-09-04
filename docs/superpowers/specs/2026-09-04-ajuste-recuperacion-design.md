@@ -38,12 +38,28 @@ nivel de formulario. El título será `Solicitud recibida` y el texto explicará
 El cambio es solamente de presentación. Un DNI o email que no coincide
 continúa sin crear una comunicación ni enviar un correo.
 
+### Íconos en acciones principales
+
+Las acciones operativas incorporadas por los recorridos de acceso y
+autogestión llevarán un Bootstrap Icon acorde:
+
+- `Guardar contraseña`: `bi-key`.
+- `Enviar instrucciones`: `bi-envelope-arrow-up`.
+- `Solicitar un enlace nuevo`: `bi-envelope`.
+- `Guardar cambios`: `bi-check-lg`.
+
+Los enlaces de navegación `Cancelar`, `Volver` e `Ingresar a UNI2` permanecen
+sin ícono. Todos los íconos son decorativos, declaran `aria-hidden="true"` y no
+reemplazan el texto visible de la acción.
+
 ## Componentes afectados
 
 - Template del login.
 - Hoja del design system, con una clase específica y reutilizable para esta
   acción secundaria.
 - Template de confirmación de la solicitud.
+- Templates de cambio de contraseña, confirmación de contraseña y datos
+  propios que contienen las acciones principales enumeradas.
 - Especificación del caso de uso y del patrón visual.
 - Pruebas de presentación y de respuesta neutra.
 
@@ -51,8 +67,9 @@ continúa sin crear una comunicación ni enviar un correo.
 
 Las pruebas comprobarán que la acción use su clase e ícono, que el nuevo texto
 no afirme un envío y que las respuestas para datos válidos e inexistentes sigan
-siendo indistinguibles. También se ejecutará la regresión de autenticación y
-recuperación.
+siendo indistinguibles. También comprobarán los íconos decorativos de las
+acciones principales y ejecutarán la regresión de autenticación, recuperación,
+cambio de contraseña y datos propios.
 
 ## Fuera de alcance
 
