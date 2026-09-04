@@ -38,7 +38,8 @@ timestamp: 2026-07-13T00:00:00-03:00
   vacío, no estarán disponibles los correos transaccionales ni `Olvidé mi
   contraseña`. La pantalla no muestra ni acepta datos institucionales,
   credenciales, estado o cuotas. Después de guardar presenta los datos
-  actualizados y una confirmación.
+  actualizados y una confirmación. La acción principal `Guardar cambios` usa
+  el ícono decorativo `bi-check-lg`.
 - Productos y servicios.
 - Comercios adheridos.
 

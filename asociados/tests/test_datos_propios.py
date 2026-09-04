@@ -223,6 +223,10 @@ def test_pantalla_muestra_cinco_campos_y_advierte_sobre_email(
     assert contenido.count('class="form-control"') == 5
     assert "Sin email no vas a poder recibir correos ni usar Olvidé mi contraseña" in contenido
     assert "Guardar cambios" in contenido
+    assert (
+        '<i class="bi bi-check-lg" aria-hidden="true"></i> Guardar cambios'
+        in contenido
+    )
     assert "DNI" not in contenido
 
 

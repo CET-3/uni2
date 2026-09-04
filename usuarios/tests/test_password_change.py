@@ -148,3 +148,7 @@ def test_formulario_de_cambio_usa_controles_bootstrap(client):
 
     assert contenido.count('class="form-control"') == 3
     assert "Guardar contraseña" in contenido
+    assert (
+        '<i class="bi bi-key" aria-hidden="true"></i> Guardar contraseña'
+        in contenido
+    )

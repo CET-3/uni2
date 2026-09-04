@@ -207,6 +207,17 @@ def test_css_presenta_recuperacion_como_accion_secundaria():
     assert ".uni2-login-recovery-link:focus-visible" in css
 
 
+def test_formulario_recuperacion_identifica_la_accion_de_envio(client):
+    contenido = client.get(
+        reverse("usuarios:recuperar_contrasena")
+    ).content.decode()
+
+    assert (
+        '<i class="bi bi-envelope-arrow-up" aria-hidden="true"></i> '
+        "Enviar instrucciones"
+    ) in contenido
+
+
 @pytest.mark.django_db
 def test_respuesta_publica_es_igual_para_datos_validos_e_inexistentes(
     client,
@@ -247,6 +258,10 @@ def test_enlace_restablece_password_y_no_puede_reutilizarse(client, asociado):
     formulario = client.get(formulario_url)
     assert formulario.status_code == 200
     assert formulario.content.decode().count('class="form-control"') == 2
+    assert (
+        '<i class="bi bi-key" aria-hidden="true"></i> Guardar contraseña'
+        in formulario.content.decode()
+    )
 
     respuesta = client.post(
         formulario_url,
@@ -285,6 +300,10 @@ def test_enlace_alterado_no_permite_cambiar_password(client, asociado):
 
     assert respuesta.status_code == 200
     assert "Este enlace ya no está disponible" in respuesta.content.decode()
+    assert (
+        '<i class="bi bi-envelope" aria-hidden="true"></i> '
+        "Solicitar un enlace nuevo"
+    ) in respuesta.content.decode()
 
 
 @pytest.mark.django_db(transaction=True)
