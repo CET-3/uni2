@@ -52,6 +52,8 @@ origen y los campos que cambiaron.
 - `importacion`;
 - `comando`;
 - `sistema`;
+- `asociado`, para una acción de autogestión realizada por el titular
+  autenticado;
 - `sitio_publico`, para una acción realizada mediante un enlace o formulario
   público sin atribuirla a un usuario Django.
 

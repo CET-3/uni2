@@ -1,30 +1,14 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import redirect
-from django.urls import reverse
-from django.views.generic import TemplateView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import FormView, TemplateView
 
 from django.utils import timezone
 
 from cuotas.selectors import calcular_estado_credencial, calcular_estado_cuota, get_total_deuda
-from usuarios.mixins import CredentialPrivacyHeadersMixin
-from usuarios.services import user_is_asociado
+from usuarios.mixins import AsociadoRequiredMixin, CredentialPrivacyHeadersMixin
 
-
-class AsociadoRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
-    login_url = "usuarios:login"
-
-    def test_func(self):
-        return user_is_asociado(self.request.user) and hasattr(self.request.user, "asociado")
-
-    def handle_no_permission(self):
-        if self.request.user.is_authenticated and user_is_asociado(self.request.user):
-            messages.warning(
-                self.request,
-                "Tu usuario tiene rol de asociado, pero todavia no tiene un asociado vinculado.",
-            )
-            return redirect("web:home")
-        return super().handle_no_permission()
+from .forms import AsociadoDatosPropiosForm
+from .services import actualizar_datos_propios_asociado
 
 
 class AsociadoCredencialView(CredentialPrivacyHeadersMixin, AsociadoRequiredMixin, TemplateView):
@@ -65,3 +49,26 @@ class AsociadoCuotasView(AsociadoRequiredMixin, TemplateView):
         context["cuotas_total"] = len(cuotas_calculadas)
         context["cuotas_con_saldo"] = sum(1 for cuota in cuotas_calculadas if cuota.saldo > 0)
         return context
+
+
+class AsociadoDatosPropiosView(AsociadoRequiredMixin, FormView):
+    template_name = "asociados/datos_propios.html"
+    form_class = AsociadoDatosPropiosForm
+    success_url = reverse_lazy("asociados:datos_propios")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["instance"] = self.request.user.asociado
+        return kwargs
+
+    def form_valid(self, form):
+        actualizar_datos_propios_asociado(
+            asociado=self.request.user.asociado,
+            datos=form.cleaned_data,
+            actor=self.request.user,
+        )
+        messages.success(
+            self.request,
+            "Tus datos se actualizaron correctamente.",
+        )
+        return super().form_valid(form)

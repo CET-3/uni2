@@ -1288,6 +1288,26 @@ button.uni2-service-card:hover {
   outline-offset: 2px;
 }
 
+.uni2-login-recovery-link {
+  align-items: center;
+  border-radius: var(--radius-control);
+  color: var(--color-text-secondary);
+  display: inline-flex;
+  font-size: 0.9rem;
+  font-weight: 600;
+  gap: 0.4rem;
+  padding: 0.4rem 0.55rem;
+  text-decoration: none;
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard), color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.uni2-login-recovery-link:hover,
+.uni2-login-recovery-link:focus-visible {
+  background-color: var(--color-surface-muted);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
 .form-control.is-invalid,
 .form-select.is-invalid {
   border-color: var(--brand-red);

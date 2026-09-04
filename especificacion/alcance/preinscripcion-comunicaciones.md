@@ -35,8 +35,10 @@ presencial.
 - Archivos adjuntos o documentación digital.
 - Autorización de una persona adulta.
 - Creación de preferencias de comunicación.
-- Rediseño de la creación de usuarios o del correo posterior al alta.
-- Recuperación de contraseña mediante la nueva infraestructura.
+- Rediseño de la creación de usuarios o del correo posterior al alta, resuelto
+  posteriormente en la [etapa de acceso y autogestión](acceso-autogestion-asociado.md).
+- Recuperación de contraseña mediante la nueva infraestructura, resuelta
+  posteriormente en esa misma etapa.
 - Avisos de cuotas generadas, comunicados institucionales o promociones.
 - Procesamiento de correos por lote, colas automáticas o campañas.
 - Notificaciones push, permisos o suscripciones de dispositivos.

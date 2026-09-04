@@ -105,9 +105,10 @@ las reglas vigentes, genera sus cuotas iniciales, lo vincula a la solicitud y
 cambia el estado a `alta_completada`. Si una parte falla, no queda un alta
 parcial y la solicitud permanece en `datos_aprobados`.
 
-Esta etapa no registra ni comprueba un pago de asociación. Tampoco rediseña la
-creación de usuarios ni el correo posterior al alta, que deberán resolverse
-para altas con y sin preinscripción.
+Esta etapa no registra ni comprueba un pago de asociación. La creación del
+usuario y el correo posterior al alta se resuelven para las altas con y sin
+preinscripción en la
+[etapa de acceso y autogestión](../alcance/acceso-autogestion-asociado.md).
 
 ## SOLICITUD-ASOCIACION-010 — Permisos
 

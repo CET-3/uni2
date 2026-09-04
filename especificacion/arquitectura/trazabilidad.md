@@ -148,7 +148,8 @@ Los services recibirán:
 
 - `actor`: instancia de `User` cuando actuó una persona autenticada;
 - `actor_etiqueta`: copia legible del username o identificación del proceso;
-- `origen`: pantalla de gestión, admin, importación, comando o sistema.
+- `origen`: pantalla de gestión, experiencia del asociado, admin, importación,
+  comando o sistema.
 
 Para acciones humanas, `actor` es obligatorio. Para procesos automáticos puede
 ser `None`, pero `actor_etiqueta` debe explicar el proceso, por ejemplo

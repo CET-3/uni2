@@ -33,10 +33,13 @@ correspondientes a la acción.
 1. La persona se presenta en la Mutual con su solicitud en `datos_aprobados`.
 2. El personal revisa un resumen y elige `Completar alta`.
 3. El sistema vuelve a validar DNI, curso o clasificación y el estado actual.
-4. En una única transacción crea el asociado con las reglas vigentes, genera
-   sus cuotas iniciales, lo vincula y cambia la solicitud a `alta_completada`.
-5. Continúa en el detalle operativo del asociado creado.
-6. Si vuelve a la solicitud completada, puede abrir desde allí la ficha del
+4. En una única transacción crea el asociado y su usuario con las reglas
+   vigentes, genera sus cuotas iniciales, lo vincula y cambia la solicitud a
+   `alta_completada`.
+5. Después del commit programa el correo individual de alta al email de la
+   solicitud.
+6. Continúa en el detalle operativo del asociado creado.
+7. Si vuelve a la solicitud completada, puede abrir desde allí la ficha del
    asociado generado.
 
 **Errores y concurrencia:**
@@ -53,6 +56,6 @@ correspondientes a la acción.
 [Comunicaciones](../reglas/comunicaciones.md) y
 [Trazabilidad](../reglas/trazabilidad.md).
 
-**Modelos afectados:** SolicitudAsociacion, Asociado, Curso,
+**Modelos afectados:** SolicitudAsociacion, Asociado, User, Curso,
 ClasificacionAdherente, PeríodoCuota, Cuota, Comunicacion,
 EntregaComunicacion, EventoAuditoria.

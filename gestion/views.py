@@ -44,7 +44,6 @@ from cuotas.selectors import (
 )
 from cuotas.services import (
     crear_periodo_cuota,
-    generar_cuotas_iniciales_para_asociado,
     generar_cuotas_para_periodo,
     registrar_donacion,
     registrar_pago,
@@ -200,12 +199,9 @@ class GestionAsociadoNuevoView(GestionPermissionRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         form = AsociadoAltaForm(request.POST)
         if form.is_valid():
-            asociado = form.save(actor=request.user)
-            cuotas_generadas = generar_cuotas_iniciales_para_asociado(
-                asociado=asociado,
-                fecha_referencia=asociado.fecha_alta,
-                actor=request.user,
-            )
+            resultado = form.save(actor=request.user)
+            asociado = resultado.asociado
+            cuotas_generadas = resultado.cuotas_generadas
             if cuotas_generadas:
                 messages.success(
                     request,

@@ -27,7 +27,9 @@ motivo de comunicar de cada intento concreto de entrega.
 
 Una comunicación individual tendrá normalmente una entrega. Una comunicación
 por lote podrá agrupar muchas entregas y procesarlas en tandas. La primera
-etapa implementa solamente comunicaciones individuales de preinscripción.
+etapa implementa comunicaciones individuales de preinscripción; la etapa de
+acceso agrega el alta de usuario y la recuperación de contraseña sin incorporar
+procesamiento por lote.
 
 No guarda contraseñas, tokens privados ni una copia completa de los datos de
 negocio. Las plantillas se versionan en el repositorio.

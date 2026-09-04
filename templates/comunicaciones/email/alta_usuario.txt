@@ -1,0 +1,13 @@
+Hola {{ nombre }}:
+
+Tu cuenta de UNI2 ya está disponible.
+
+Usuario: {{ username }}
+Contraseña inicial: {{ password_inicial }}
+
+Ingresá desde:
+{{ login_url }}
+
+Por seguridad, te recomendamos cambiar la contraseña después de ingresar.
+
+Mutual Escolar del CET 3

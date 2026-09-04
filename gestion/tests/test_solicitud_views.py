@@ -280,7 +280,7 @@ def test_cancelar_exige_motivo_y_cierra_definitivamente(client, curso):
 
 
 @pytest.mark.django_db
-def test_completar_alta_redirige_al_asociado_y_no_envia_bienvenida(client, curso):
+def test_completar_alta_crea_usuario_y_programa_correo(client, curso):
     solicitud = crear_solicitud(
         curso,
         dni="48111111",
@@ -330,7 +330,12 @@ def test_completar_alta_redirige_al_asociado_y_no_envia_bienvenida(client, curso
         args=[solicitud.asociado_id],
     )
     assert solicitud.estado == SolicitudAsociacion.ESTADO_ALTA_COMPLETADA
-    assert not Comunicacion.objects.filter(tipo="alta_completada").exists()
+    assert solicitud.asociado.usuario_id is not None
+    assert Comunicacion.objects.filter(
+        tipo="alta_usuario",
+        origen_entidad="asociados.Asociado",
+        origen_id=str(solicitud.asociado_id),
+    ).count() == 1
 
     detalle_solicitud = client.get(
         reverse("gestion:solicitud_asociacion_detalle", args=[solicitud.pk])

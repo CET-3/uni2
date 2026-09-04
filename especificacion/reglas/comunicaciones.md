@@ -80,7 +80,8 @@ La primera etapa incluye:
 - solicitud cancelada, con el motivo.
 
 El correo posterior al alta del asociado queda fuera de este alcance porque
-debe diseñarse también para las altas sin preinscripción.
+debe diseñarse también para las altas sin preinscripción. Su diseño posterior
+se define en la [etapa de acceso y autogestión](../alcance/acceso-autogestion-asociado.md).
 
 ## COMUNICACION-009 — Evolución por lote y push
 
@@ -93,3 +94,23 @@ El canal push tendrá suscripciones y permisos por dispositivo y evitará datos
 privados en el contenido visible de una pantalla bloqueada. Estas capacidades
 se documentan como evolución y no crean modelos vacíos ni comportamiento
 simulado en la primera implementación.
+
+## COMUNICACION-010 — Correos de acceso del asociado
+
+La etapa de acceso incorpora dos comunicaciones individuales:
+
+- `alta_usuario`, al crear una cuenta desde un alta individual manual o desde
+  una preinscripción completada;
+- `recuperacion_contrasena`, al solicitar un enlace válido mediante DNI y
+  email.
+
+El alta sin email no crea una entrega. El cambio autenticado de contraseña y la
+edición de datos propios no envían correos.
+
+## COMUNICACION-011 — Exclusión explícita de procesos masivos
+
+La importación del padrón, `Crear usuarios faltantes` y cualquier importador
+masivo no originan `alta_usuario`. El disparador de correo queda desactivado
+por defecto y debe habilitarse explícitamente en los dos flujos individuales.
+Esta restricción se verifica automáticamente para evitar envíos accidentales a
+datos importados.

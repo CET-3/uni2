@@ -9,7 +9,8 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import IntegrityError, transaction
 from django.utils import timezone
 
@@ -17,6 +18,7 @@ from auditoria.models import EventoAuditoria
 from auditoria.selectors import obtener_motivo_ultima_observacion_solicitud
 from auditoria.services import construir_cambios, registrar_evento
 from cuotas.services import generar_cuotas_iniciales_para_asociado
+from usuarios.communications import programar_correo_alta_usuario
 from usuarios.services import create_user_for_asociado, ensure_default_groups
 
 from .communications import (
@@ -70,6 +72,12 @@ class AltaDesdeSolicitudResult:
     cuotas_generadas: tuple
 
 
+@dataclass(frozen=True)
+class AltaManualAsociadoResult:
+    asociado: Asociado
+    cuotas_generadas: tuple
+
+
 CAMPOS_AUDITABLES_SOLICITUD = (
     "nombre",
     "apellido",
@@ -100,6 +108,14 @@ CAMPOS_AUDITABLES_ASOCIADO = (
     "fecha_inicio_cobro",
     "fecha_baja",
     "motivo_baja",
+)
+
+CAMPOS_DATOS_PROPIOS_ASOCIADO = (
+    "nombre",
+    "apellido",
+    "telefono",
+    "email",
+    "direccion",
 )
 
 
@@ -481,6 +497,7 @@ def completar_alta_solicitud_asociacion(
         direccion=solicitud.direccion,
         actor=actor,
         operacion_id=operacion_id,
+        enviar_correo_alta=True,
     )
     cuotas = generar_cuotas_iniciales_para_asociado(
         asociado=asociado,
@@ -664,6 +681,7 @@ def create_asociado(
     actor=None,
     origen: str = EventoAuditoria.ORIGEN_GESTION,
     operacion_id=None,
+    enviar_correo_alta: bool = False,
 ):
     operacion_id = operacion_id or uuid.uuid4()
     if isinstance(fecha_alta, str):
@@ -698,12 +716,18 @@ def create_asociado(
     )
 
     ensure_default_groups()
-    create_user_for_asociado(
+    usuario = create_user_for_asociado(
         asociado=asociado,
         password=dni,
         actor=actor,
         operacion_id=operacion_id,
     )
+    if enviar_correo_alta:
+        programar_correo_alta_usuario(
+            asociado=asociado,
+            usuario=usuario,
+            actor=actor,
+        )
 
     if actor is not None:
         nuevos = _valores_auditables_asociado(asociado)
@@ -726,7 +750,59 @@ def create_asociado(
 
 
 @transaction.atomic
-def actualizar_asociado(*, asociado: Asociado, datos, campos_modificados, actor):
+def crear_asociado_con_cuotas_iniciales(
+    *,
+    nombre: str,
+    apellido: str,
+    dni: str,
+    tipo: str,
+    fecha_alta: date | str,
+    curso_actual: Curso | None = None,
+    clasificacion_adherente=None,
+    email: str = "",
+    telefono: str = "",
+    direccion: str = "",
+    actor=None,
+) -> AltaManualAsociadoResult:
+    """Completa el alta manual y sus cuotas como una única operación."""
+
+    operacion_id = uuid.uuid4()
+    asociado = create_asociado(
+        nombre=nombre,
+        apellido=apellido,
+        dni=dni,
+        tipo=tipo,
+        fecha_alta=fecha_alta,
+        curso_actual=curso_actual,
+        clasificacion_adherente=clasificacion_adherente,
+        email=email,
+        telefono=telefono,
+        direccion=direccion,
+        actor=actor,
+        operacion_id=operacion_id,
+        enviar_correo_alta=True,
+    )
+    cuotas = generar_cuotas_iniciales_para_asociado(
+        asociado=asociado,
+        fecha_referencia=asociado.fecha_alta,
+        actor=actor,
+        operacion_id=operacion_id,
+    )
+    return AltaManualAsociadoResult(
+        asociado=asociado,
+        cuotas_generadas=tuple(cuotas),
+    )
+
+
+@transaction.atomic
+def actualizar_asociado(
+    *,
+    asociado: Asociado,
+    datos,
+    campos_modificados,
+    actor,
+    origen=EventoAuditoria.ORIGEN_GESTION,
+):
     campos = [campo for campo in campos_modificados if campo in CAMPOS_AUDITABLES_ASOCIADO]
     if not campos:
         return asociado
@@ -746,8 +822,51 @@ def actualizar_asociado(*, asociado: Asociado, datos, campos_modificados, actor)
             objeto_id=asociado.pk,
             objeto_descripcion=str(asociado),
             cambios=cambios,
-            origen=EventoAuditoria.ORIGEN_GESTION,
+            origen=origen,
         )
+    return asociado
+
+
+@transaction.atomic
+def actualizar_datos_propios_asociado(
+    *, asociado: Asociado, datos, actor
+) -> Asociado:
+    asociado = Asociado.objects.select_for_update().get(pk=asociado.pk)
+    if asociado.usuario_id != actor.pk:
+        raise PermissionDenied(
+            "No podés modificar los datos de otro asociado."
+        )
+    usuario = get_user_model().objects.select_for_update().get(
+        pk=asociado.usuario_id
+    )
+
+    campos_modificados = [
+        campo
+        for campo in CAMPOS_DATOS_PROPIOS_ASOCIADO
+        if getattr(asociado, campo) != datos[campo]
+    ]
+    asociado = actualizar_asociado(
+        asociado=asociado,
+        datos=datos,
+        campos_modificados=campos_modificados,
+        actor=actor,
+        origen=EventoAuditoria.ORIGEN_ASOCIADO,
+    )
+
+    valores_usuario = {
+        "first_name": asociado.nombre,
+        "last_name": asociado.apellido,
+        "email": asociado.email,
+    }
+    campos_usuario = [
+        campo
+        for campo, valor in valores_usuario.items()
+        if getattr(usuario, campo) != valor
+    ]
+    for campo in campos_usuario:
+        setattr(usuario, campo, valores_usuario[campo])
+    if campos_usuario:
+        usuario.save(update_fields=campos_usuario)
     return asociado
 
 

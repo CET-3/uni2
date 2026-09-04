@@ -9,6 +9,16 @@ class EmailType:
 
 
 EMAIL_TYPES = {
+    "alta_usuario": EmailType(
+        label="Cuenta habilitada",
+        subject="Tu cuenta de UNI2 está disponible",
+        template_base="comunicaciones/email/alta_usuario",
+    ),
+    "recuperacion_contrasena": EmailType(
+        label="Recuperación de contraseña",
+        subject="Restablecé tu contraseña de UNI2",
+        template_base="comunicaciones/email/recuperacion_contrasena",
+    ),
     "preinscripcion_recibida": EmailType(
         label="Preinscripción recibida",
         subject="Recibimos tu preinscripción en UNI2",
