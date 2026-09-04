@@ -43,6 +43,8 @@ El menú desplegable se organiza en tres secciones visuales:
 
 ### Cuenta
 
+- **Mis datos** (solamente cuando existe un asociado vinculado).
+- **Cambiar contraseña** (para una cuenta de asociado).
 - **Cerrar sesión**.
 
 ## Sin memoria de la última experiencia

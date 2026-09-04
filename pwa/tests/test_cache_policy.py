@@ -1,5 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_encode
 from django.urls import reverse
 
 from asociados.services import create_asociado
@@ -70,6 +71,80 @@ def test_credencial_autenticada_es_privada_y_no_store(client):
     assert "X-Uni2-PWA-Cacheable" not in response.headers
     assert {"private", "no-store"} <= cache_control_directives(response)
     assert "Cookie" in response.headers["Vary"]
+
+
+@pytest.mark.django_db
+def test_cambio_password_autenticado_es_privado_y_no_store(client):
+    asociado = create_asociado(
+        nombre="Juana",
+        apellido="Segura",
+        dni="40888777",
+        tipo="asociado",
+        fecha_alta="2026-07-01",
+    )
+    client.force_login(asociado.usuario)
+
+    for view_name in (
+        "usuarios:cambiar_contrasena",
+        "usuarios:cambiar_contrasena_lista",
+    ):
+        response = client.get(reverse(view_name))
+
+        assert response.status_code == 200
+        assert "X-Uni2-PWA-Cacheable" not in response.headers
+        assert {"private", "no-store"} <= cache_control_directives(response)
+
+
+@pytest.mark.django_db
+def test_recuperacion_password_es_privada_y_no_store(client):
+    usuario = get_user_model().objects.create_user(username="recuperacion-pwa")
+    uidb64 = urlsafe_base64_encode(str(usuario.pk).encode())
+    rutas = (
+        reverse("usuarios:recuperar_contrasena"),
+        reverse(
+            "usuarios:restablecer_contrasena",
+            kwargs={"uidb64": uidb64, "token": "token-invalido"},
+        ),
+        reverse("usuarios:recuperacion_completada"),
+    )
+
+    for ruta in rutas:
+        response = client.get(ruta)
+
+        assert response.status_code == 200
+        assert "X-Uni2-PWA-Cacheable" not in response.headers
+        assert {"private", "no-store"} <= cache_control_directives(response)
+        assert response.headers["Referrer-Policy"] == "same-origin"
+
+    confirmacion_directa = client.get(
+        reverse("usuarios:recuperacion_solicitada")
+    )
+
+    assert confirmacion_directa.status_code == 302
+    assert confirmacion_directa.url == reverse("usuarios:recuperar_contrasena")
+    assert "X-Uni2-PWA-Cacheable" not in confirmacion_directa.headers
+    assert {"private", "no-store"} <= cache_control_directives(
+        confirmacion_directa
+    )
+    assert confirmacion_directa.headers["Referrer-Policy"] == "same-origin"
+
+
+@pytest.mark.django_db
+def test_datos_propios_del_asociado_son_privados_y_no_store(client):
+    asociado = create_asociado(
+        nombre="Juana",
+        apellido="Segura",
+        dni="40888777",
+        tipo="asociado",
+        fecha_alta="2026-07-01",
+    )
+    client.force_login(asociado.usuario)
+
+    response = client.get(reverse("asociados:datos_propios"))
+
+    assert response.status_code == 200
+    assert "X-Uni2-PWA-Cacheable" not in response.headers
+    assert {"private", "no-store"} <= cache_control_directives(response)
 
 
 def test_manifest_json_no_recibe_politica_de_html(client):

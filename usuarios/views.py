@@ -1,15 +1,33 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import (
+    LoginView,
+    LogoutView,
+    PasswordChangeView,
+    PasswordResetConfirmView,
+)
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import FormView, TemplateView
 
 from comercios.services import validar_credencial
 
-from .forms import Uni2AuthenticationForm
-from .mixins import CredentialPrivacyHeadersMixin
-from .services import user_is_asociado, user_is_comercio
+from .forms import (
+    RecuperarContrasenaForm,
+    Uni2AuthenticationForm,
+    Uni2PasswordChangeForm,
+    Uni2SetPasswordForm,
+)
+from .mixins import AsociadoRequiredMixin, CredentialPrivacyHeadersMixin
+from .services import (
+    solicitar_recuperacion_contrasena,
+    user_is_asociado,
+    user_is_comercio,
+)
+
+
+RECUPERACION_SOLICITADA_SESSION_KEY = "usuarios_recuperacion_solicitada"
 
 
 class Uni2LoginView(LoginView):
@@ -39,6 +57,71 @@ class Uni2LoginView(LoginView):
 
 class Uni2LogoutView(LogoutView):
     next_page = reverse_lazy("web:home")
+
+
+class Uni2PasswordChangeView(AsociadoRequiredMixin, PasswordChangeView):
+    template_name = "registration/password_change_form.html"
+    form_class = Uni2PasswordChangeForm
+    success_url = reverse_lazy("usuarios:cambiar_contrasena_lista")
+
+
+class Uni2PasswordChangeDoneView(AsociadoRequiredMixin, TemplateView):
+    template_name = "registration/password_change_done.html"
+
+
+class RecuperarContrasenaView(CredentialPrivacyHeadersMixin, FormView):
+    template_name = "registration/password_reset_form.html"
+    form_class = RecuperarContrasenaForm
+    success_url = reverse_lazy("usuarios:recuperacion_solicitada")
+
+    def form_valid(self, form):
+        cuenta_encontrada = solicitar_recuperacion_contrasena(
+            **form.cleaned_data
+        )
+        if not cuenta_encontrada:
+            self.request.session.pop(
+                RECUPERACION_SOLICITADA_SESSION_KEY,
+                None,
+            )
+            form.add_error(
+                None,
+                (
+                    "No encontramos una cuenta activa con ese DNI y email. "
+                    "Revisá los datos ingresados."
+                ),
+            )
+            return self.form_invalid(form)
+        self.request.session[RECUPERACION_SOLICITADA_SESSION_KEY] = True
+        return super().form_valid(form)
+
+
+class RecuperacionSolicitadaView(
+    CredentialPrivacyHeadersMixin, TemplateView
+):
+    template_name = "registration/password_reset_done.html"
+
+    def get(self, request, *args, **kwargs):
+        solicitud_valida = request.session.pop(
+            RECUPERACION_SOLICITADA_SESSION_KEY,
+            False,
+        )
+        if not solicitud_valida:
+            return redirect("usuarios:recuperar_contrasena")
+        return super().get(request, *args, **kwargs)
+
+
+class RestablecerContrasenaView(
+    CredentialPrivacyHeadersMixin, PasswordResetConfirmView
+):
+    template_name = "registration/password_reset_confirm.html"
+    form_class = Uni2SetPasswordForm
+    success_url = reverse_lazy("usuarios:recuperacion_completada")
+
+
+class RecuperacionCompletadaView(
+    CredentialPrivacyHeadersMixin, TemplateView
+):
+    template_name = "registration/password_reset_complete.html"
 
 
 class ResolverCredencialView(CredentialPrivacyHeadersMixin, LoginRequiredMixin, View):

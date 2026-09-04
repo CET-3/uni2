@@ -97,6 +97,17 @@ El tema se determina antes de cargar las hojas de estilo para evitar un destello
 
 El chrome incluye un enlace para saltar directamente al contenido principal. Todos los enlaces, botones, controles de formulario y elementos con navegación por teclado reciben un anillo de foco visible mediante `--color-focus-ring`, con un valor de contraste específico para cada tema.
 
+En el login, `.uni2-login-recovery-link` presenta `Olvidé mi contraseña` como
+una acción contextual secundaria: usa color de texto secundario, ícono de
+llave, no tiene subrayado permanente y responde a hover con una superficie
+suave. Conserva el anillo de foco global y no compite con el botón principal
+de ingreso.
+
+Las acciones operativas principales de cambio y recuperación de contraseña y
+de edición de datos propios anteponen al texto un Bootstrap Icon acorde. El
+ícono declara `aria-hidden="true"` porque el texto visible ya nombra la acción.
+Esta decisión no agrega íconos a `Cancelar`, `Volver` ni `Ingresar a UNI2`.
+
 Los colores institucionales no se usan directamente como texto cuando no alcanzan el contraste necesario. `--color-action-primary` y `--color-action-primary-hover` quedan reservados para fondos de acciones fuertes. Los enlaces, botones con contorno, encabezados interactivos e iconos sobre superficies usan `--color-action-on-surface`, que cambia a un tono más claro en el tema oscuro. Los textos de éxito, advertencia y error usan sus propios tokens semánticos para conservar al menos una relación de contraste de 4.5:1 sobre la superficie de cada tema.
 
 Los componentes que alternan colores de marca también definen el color de su contenido. Los números de `uni2-step-card` usan fondo azul o rojo oscuro con texto claro, y fondo amarillo o verde con texto oscuro. Los chips de horario amarillos y verdes siguen el mismo criterio. El color de marca sigue visible en bordes y fondos, pero no decide por sí solo el color del texto.

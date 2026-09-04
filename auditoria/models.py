@@ -53,6 +53,7 @@ class EventoAuditoria(models.Model):
     ORIGEN_COMANDO = "comando"
     ORIGEN_SISTEMA = "sistema"
     ORIGEN_SITIO_PUBLICO = "sitio_publico"
+    ORIGEN_ASOCIADO = "asociado"
     ORIGENES = [
         (ORIGEN_GESTION, "Gestión"),
         (ORIGEN_ADMIN, "Admin de Django"),
@@ -60,6 +61,7 @@ class EventoAuditoria(models.Model):
         (ORIGEN_COMANDO, "Comando"),
         (ORIGEN_SISTEMA, "Sistema"),
         (ORIGEN_SITIO_PUBLICO, "Sitio público"),
+        (ORIGEN_ASOCIADO, "Asociado"),
     ]
 
     fecha = models.DateTimeField(auto_now_add=True)

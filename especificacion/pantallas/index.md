@@ -2,6 +2,7 @@
 
 * [Sitio público](sitio-publico.md) — Sitio público
 * [Navegación global](navegacion.md) — Inicio inteligente, barra superior y menú de usuario
+* [Autenticación](autenticacion.md) — Ingreso, cambio y recuperación de contraseña
 * [Asociado](asociado.md) — Asociado
 * [Gestión](gestion.md) — Gestión
 * [Comercio](comercio.md) — Comercio

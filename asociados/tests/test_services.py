@@ -1,13 +1,19 @@
 from datetime import date
+from io import StringIO
 
 import pytest
+from django.contrib.auth import get_user_model
+from django.core import mail
 
+from asociados import services as asociado_services
 from asociados.models import Asociado, ClasificacionAdherente, Curso
 from asociados.services import (
     calculate_fecha_inicio_cobro,
     create_asociado,
     dar_baja_asociado,
+    import_asociados_from_csv,
 )
+from comunicaciones.models import Comunicacion
 
 
 @pytest.fixture
@@ -31,6 +37,98 @@ def test_alta_de_asociado_comienza_dos_meses_antes(curso):
         curso_actual=curso,
     )
     assert asociado.fecha_inicio_cobro == date(2026, 3, 1)
+
+
+@pytest.mark.django_db
+def test_create_asociado_no_programa_correo_por_defecto():
+    asociado = create_asociado(
+        nombre="Ana",
+        apellido="Flores",
+        dni="48123456",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 9, 4),
+        email="ana@example.com",
+    )
+
+    assert asociado.usuario_id is not None
+    assert not Comunicacion.objects.filter(tipo="alta_usuario").exists()
+
+
+@pytest.mark.django_db
+def test_create_asociado_programa_correo_con_opt_in():
+    asociado = create_asociado(
+        nombre="Ana",
+        apellido="Flores",
+        dni="48123456",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 9, 4),
+        email="ana@example.com",
+        enviar_correo_alta=True,
+    )
+
+    assert asociado.usuario_id is not None
+    assert Comunicacion.objects.filter(
+        tipo="alta_usuario",
+        origen_entidad="asociados.Asociado",
+        origen_id=str(asociado.pk),
+    ).count() == 1
+
+
+@pytest.mark.django_db
+def test_create_asociado_con_opt_in_y_sin_email_crea_usuario_sin_correo():
+    asociado = create_asociado(
+        nombre="Ana",
+        apellido="Flores",
+        dni="48123456",
+        tipo=Asociado.TIPO_ASOCIADO,
+        fecha_alta=date(2026, 9, 4),
+        enviar_correo_alta=True,
+    )
+
+    assert asociado.usuario_id is not None
+    assert not Comunicacion.objects.filter(tipo="alta_usuario").exists()
+
+
+@pytest.mark.django_db
+def test_alta_manual_revierte_asociado_usuario_y_correo_si_fallan_las_cuotas(
+    curso,
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        asociado_services,
+        "generar_cuotas_iniciales_para_asociado",
+        lambda **kwargs: (_ for _ in ()).throw(RuntimeError("falló cuotas")),
+    )
+
+    with pytest.raises(RuntimeError, match="falló cuotas"):
+        asociado_services.crear_asociado_con_cuotas_iniciales(
+            nombre="Ana",
+            apellido="Flores",
+            dni="48123456",
+            tipo=Asociado.TIPO_ASOCIADO,
+            fecha_alta=date(2026, 9, 4),
+            curso_actual=curso,
+            email="ana@example.com",
+        )
+
+    assert not Asociado.objects.filter(dni="48123456").exists()
+    assert not get_user_model().objects.filter(username="48123456").exists()
+    assert not Comunicacion.objects.filter(tipo="alta_usuario").exists()
+
+
+@pytest.mark.django_db
+def test_import_asociados_csv_con_email_no_programa_correo_de_alta():
+    archivo = StringIO(
+        "nombre,apellido,dni,tipo,fecha_alta,email,telefono\n"
+        "Ana,Flores,48123456,asociado,2026-09-04,ana@example.com,2995550192\n"
+    )
+
+    resultado = import_asociados_from_csv(archivo)
+
+    assert resultado.created == 1
+    assert not resultado.errors
+    assert not Comunicacion.objects.filter(tipo="alta_usuario").exists()
+    assert len(mail.outbox) == 0
 
 
 @pytest.mark.parametrize(

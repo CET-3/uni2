@@ -52,3 +52,11 @@ Los registros existentes no se recalculan al incorporar esta regla. Cambiar el
 tipo durante una edición tampoco modifica automáticamente
 `fecha_inicio_cobro`; cualquier corrección posterior debe ser explícita y queda
 auditada.
+
+## ALTA-ASOCIADO-008
+
+El alta manual, la creación y vinculación del usuario, la programación del
+correo individual y la generación de cuotas iniciales se coordinan en una
+única transacción. Si falla la generación de cuotas, se revierten el asociado,
+el usuario y el registro del correo. Una falla posterior del backend SMTP no
+revierte el alta ya confirmada.

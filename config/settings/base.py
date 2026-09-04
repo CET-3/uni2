@@ -101,6 +101,7 @@ else:
     }
 
 AUTH_PASSWORD_VALIDATORS = []
+PASSWORD_RESET_TIMEOUT = 60 * 60
 
 ALLOW_DEMO_DATA = False
 
@@ -155,6 +156,7 @@ UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO = ""
 UNI2_BATCH_EMAIL_MODE = "disabled"
 UNI2_WEB_PUSH_MODE = "disabled"
 UNI2_SITE_URL = os.getenv("UNI2_SITE_URL", "http://localhost:8000").rstrip("/")
+UNI2_PASSWORD_RESET_EMAIL_COOLDOWN_MINUTES = 15
 DEFAULT_FROM_EMAIL = os.getenv(
     "DEFAULT_FROM_EMAIL", "UNI2 <no-responder@example.com>"
 )

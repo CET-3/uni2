@@ -28,3 +28,10 @@ timestamp: 2026-06-22T00:00:00-03:00
     donaciones; al eliminar un curso, los asociados que lo usaban quedan sin
     curso actual. La baja lógica continúa siendo el flujo ordinario fuera de
     esta limpieza inicial.
+13. El asociado autenticado puede modificar inmediatamente sus propios nombre,
+    apellido, teléfono, email y dirección. Nombre y apellido son obligatorios;
+    los tres datos de contacto pueden quedar vacíos.
+14. La edición propia no acepta DNI, username, tipo, curso, clasificación,
+    número, estado, fechas, cuotas ni campos agregados manualmente a la
+    petición. Se registra en auditoría el usuario actor, el origen Asociado y
+    los valores anteriores y nuevos.

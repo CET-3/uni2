@@ -7,6 +7,7 @@ import pytest
 from io import BytesIO
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
+from django.core import mail
 from django.utils import timezone
 from django.urls import reverse
 from openpyxl import Workbook, load_workbook
@@ -14,6 +15,7 @@ from openpyxl import Workbook, load_workbook
 from asociados.importers import PADRON_IMPORT_SESSION_KEY
 from asociados.models import Asociado, CicloLectivo, Curso
 from asociados.services import create_asociado
+from comunicaciones.models import Comunicacion
 from cuotas.models import Cuota, Donacion, Pago, PagoCuota, PeriodoCuota
 from cuotas.services import generar_cuotas_para_periodo, registrar_pago
 from gestion.permissions import (
@@ -401,6 +403,7 @@ def test_crear_usuarios_faltantes_asociados_desde_importacion(client):
         nombre="Lena",
         apellido="Leyes",
         dni="52328996",
+        email="lena@example.com",
         tipo=Asociado.TIPO_ASOCIADO,
         fecha_alta="2026-03-01",
         fecha_inicio_cobro="2026-03-01",
@@ -416,6 +419,8 @@ def test_crear_usuarios_faltantes_asociados_desde_importacion(client):
     assert asociado.usuario.check_password("52328996")
     assert Group.objects.get(name=ASOCIADO_GROUP) in asociado.usuario.groups.all()
     assert "Usuarios de asociados creados: 1" in response.content.decode()
+    assert not Comunicacion.objects.filter(tipo="alta_usuario").exists()
+    assert len(mail.outbox) == 0
 
 
 @pytest.mark.django_db
@@ -1582,6 +1587,11 @@ def test_asociado_nuevo_crea_asociado_con_fechas_automaticas(client, monkeypatch
     assert asociado.curso_actual == curso
     assert asociado.fecha_alta == date(2026, 8, 21)
     assert asociado.fecha_inicio_cobro == date(2026, 6, 1)
+    assert Comunicacion.objects.filter(
+        tipo="alta_usuario",
+        origen_entidad="asociados.Asociado",
+        origen_id=str(asociado.pk),
+    ).count() == 1
     assert response.redirect_chain[-1][0] == reverse("gestion:asociado_detalle", args=[asociado.id])
     assert "Asociado creado correctamente" in response.content.decode()
 

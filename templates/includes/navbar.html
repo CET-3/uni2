@@ -42,6 +42,10 @@
                     {% if perms.gestion.ver_design_system %}
                         <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'web:design-system' %}">Design system</a></li>
                     {% endif %}
+                    {% if tiene_perfil_asociado %}
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'asociados:datos_propios' %}">Mis datos</a></li>
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="{% url 'usuarios:cambiar_contrasena' %}">Cambiar contraseña</a></li>
+                    {% endif %}
                     <li class="nav-item d-lg-none js-pwa-install-item" hidden>
                         <button class="nav-link uni2-mobile-nav-button js-pwa-install-trigger" type="button">
                             <i class="bi bi-download me-2" aria-hidden="true"></i>Instalar {{ pwa_short_name }}
@@ -107,6 +111,10 @@
                             <li><hr class="dropdown-divider"></li>
                             <li class="uni2-user-menu-section">
                                 <span class="uni2-user-menu-label">Cuenta</span>
+                                {% if tiene_perfil_asociado %}
+                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'asociados:datos_propios' %}"><i class="bi bi-person-lines-fill" aria-hidden="true"></i><span>Mis datos</span></a>
+                                    <a class="dropdown-item uni2-user-menu-link" href="{% url 'usuarios:cambiar_contrasena' %}"><i class="bi bi-key" aria-hidden="true"></i><span>Cambiar contraseña</span></a>
+                                {% endif %}
                                 <button class="dropdown-item uni2-user-menu-link js-pwa-install-trigger js-pwa-install-item" type="button" hidden>
                                     <i class="bi bi-download" aria-hidden="true"></i><span>Instalar {{ pwa_short_name }}</span>
                                 </button>
