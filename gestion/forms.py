@@ -250,6 +250,7 @@ class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
             telefono=data["telefono"],
             direccion=data["direccion"],
             actor=actor,
+            enviar_correo_alta=True,
         )
 
 

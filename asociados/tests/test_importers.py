@@ -2,9 +2,11 @@ import logging
 from datetime import date
 
 import pytest
+from django.core import mail
 
 from asociados.importers import PadronPreview, _normalize_row, import_padron_preview
 from asociados.models import Asociado, ClasificacionAdherente
+from comunicaciones.models import Comunicacion
 from usuarios.services import ensure_default_groups
 
 
@@ -38,6 +40,7 @@ def test_import_padron_preview_loguea_avance_y_resumen(caplog):
         revisar=[{"fila_origen": 4}],
         no_importar_count=1,
     )
+    preview.importables[0]["email"] = "lena@example.com"
 
     caplog.set_level(logging.INFO, logger="asociados.importers")
 
@@ -50,6 +53,8 @@ def test_import_padron_preview_loguea_avance_y_resumen(caplog):
         "Importacion de padron inicial finalizada: 2 creados, 0 actualizados, "
         "0 cursos creados, 2 omitidos, 0 errores."
     ) in mensajes
+    assert not Comunicacion.objects.filter(tipo="alta_usuario").exists()
+    assert len(mail.outbox) == 0
 
 
 def _raw_row(*, tipo="Adherente", curso="profe", dni="40111222"):

@@ -17,6 +17,7 @@ from auditoria.models import EventoAuditoria
 from auditoria.selectors import obtener_motivo_ultima_observacion_solicitud
 from auditoria.services import construir_cambios, registrar_evento
 from cuotas.services import generar_cuotas_iniciales_para_asociado
+from usuarios.communications import programar_correo_alta_usuario
 from usuarios.services import create_user_for_asociado, ensure_default_groups
 
 from .communications import (
@@ -481,6 +482,7 @@ def completar_alta_solicitud_asociacion(
         direccion=solicitud.direccion,
         actor=actor,
         operacion_id=operacion_id,
+        enviar_correo_alta=True,
     )
     cuotas = generar_cuotas_iniciales_para_asociado(
         asociado=asociado,
@@ -664,6 +666,7 @@ def create_asociado(
     actor=None,
     origen: str = EventoAuditoria.ORIGEN_GESTION,
     operacion_id=None,
+    enviar_correo_alta: bool = False,
 ):
     operacion_id = operacion_id or uuid.uuid4()
     if isinstance(fecha_alta, str):
@@ -698,12 +701,18 @@ def create_asociado(
     )
 
     ensure_default_groups()
-    create_user_for_asociado(
+    usuario = create_user_for_asociado(
         asociado=asociado,
         password=dni,
         actor=actor,
         operacion_id=operacion_id,
     )
+    if enviar_correo_alta:
+        programar_correo_alta_usuario(
+            asociado=asociado,
+            usuario=usuario,
+            actor=actor,
+        )
 
     if actor is not None:
         nuevos = _valores_auditables_asociado(asociado)
