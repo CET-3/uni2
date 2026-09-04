@@ -10,9 +10,11 @@ formulario. Además, la pantalla posterior usa el título `Revisá tu correo`, q
 puede interpretarse como confirmación de un envío aunque el DNI y el email no
 coincidan.
 
-La recuperación debe conservar una respuesta pública idéntica para datos
-válidos e inválidos, porque revelar la coincidencia permitiría consultar qué
-cuentas existen.
+La primera versión conservaba una respuesta pública idéntica para datos
+válidos e inválidos. Se decidió reemplazar esa protección por una respuesta
+explícita: la persona debe saber si no existe una cuenta activa con la
+combinación de DNI y email ingresada. Esta decisión acepta que terceros puedan
+probar combinaciones y confirmar la existencia de cuentas.
 
 ## Diseño aprobado
 
@@ -28,15 +30,21 @@ No se convertirá en un segundo botón principal ni competirá visualmente con
 
 ### Respuesta de la solicitud
 
-La pantalla posterior se mantendrá idéntica para cualquier solicitud válida a
-nivel de formulario. El título será `Solicitud recibida` y el texto explicará:
+Cuando no existe un asociado activo con usuario activo cuyo DNI y email
+coincidan, el sistema conserva el formulario y muestra el error general:
 
-> Por seguridad no informamos si los datos coinciden. Si corresponden a una
-> cuenta habilitada, vas a recibir un correo con los pasos para elegir una
-> contraseña nueva.
+> No encontramos una cuenta activa con ese DNI y email. Revisá los datos
+> ingresados.
 
-El cambio es solamente de presentación. Un DNI o email que no coincide
-continúa sin crear una comunicación ni enviar un correo.
+Cuando la cuenta existe, el sistema abre `Solicitud recibida` y pide revisar el
+correo. Una cuenta que ya recibió una solicitud dentro del límite de 15
+minutos se considera encontrada y llega a la misma pantalla, pero no genera un
+nuevo envío.
+
+El servicio de recuperación devuelve si encontró una cuenta habilitada; la
+vista usa ese resultado para decidir entre el error del formulario y la
+pantalla posterior. Un resultado positivo no significa que el backend SMTP
+haya completado la entrega.
 
 ### Íconos en acciones principales
 
@@ -58,20 +66,23 @@ reemplazan el texto visible de la acción.
 - Hoja del design system, con una clase específica y reutilizable para esta
   acción secundaria.
 - Template de confirmación de la solicitud.
+- Vista y servicio de recuperación, para comunicar si la cuenta fue
+  encontrada sin confundirlo con el resultado de entrega SMTP.
 - Templates de cambio de contraseña, confirmación de contraseña y datos
   propios que contienen las acciones principales enumeradas.
 - Especificación del caso de uso y del patrón visual.
-- Pruebas de presentación y de respuesta neutra.
+- Pruebas de presentación y de respuesta explícita.
 
 ## Verificación
 
-Las pruebas comprobarán que la acción use su clase e ícono, que el nuevo texto
-no afirme un envío y que las respuestas para datos válidos e inexistentes sigan
-siendo indistinguibles. También comprobarán los íconos decorativos de las
-acciones principales y ejecutarán la regresión de autenticación, recuperación,
-cambio de contraseña y datos propios.
+Las pruebas comprobarán que la acción use su clase e ícono, que una combinación
+inexistente muestre el error exacto y que una cuenta existente avance a la
+confirmación. También verificarán que el límite temporal conserve el resultado
+positivo sin crear otra comunicación, los íconos decorativos de las acciones
+principales y la regresión de autenticación, recuperación, cambio de contraseña
+y datos propios.
 
 ## Fuera de alcance
 
-No cambian la validación del formulario, la búsqueda de la cuenta, el envío de
-correo, el límite temporal ni la vigencia del enlace.
+No cambian la validación sintáctica del formulario, el envío SMTP, el límite de
+15 minutos ni la vigencia del enlace.
