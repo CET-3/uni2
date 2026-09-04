@@ -34,6 +34,9 @@
                                 <div class="text-danger small mt-1">{{ form.password.errors|join:", " }}</div>
                             {% endif %}
                         </div>
+                        <div class="text-end mb-3">
+                            <a href="{% url 'usuarios:recuperar_contrasena' %}">Olvidé mi contraseña</a>
+                        </div>
                         <button class="btn btn-primary w-100 py-2" type="submit">
                             Ingresar
                             <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>

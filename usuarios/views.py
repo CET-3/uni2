@@ -1,16 +1,30 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.contrib.auth.views import (
+    LoginView,
+    LogoutView,
+    PasswordChangeView,
+    PasswordResetConfirmView,
+)
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import FormView, TemplateView
 
 from comercios.services import validar_credencial
 
-from .forms import Uni2AuthenticationForm, Uni2PasswordChangeForm
+from .forms import (
+    RecuperarContrasenaForm,
+    Uni2AuthenticationForm,
+    Uni2PasswordChangeForm,
+    Uni2SetPasswordForm,
+)
 from .mixins import AsociadoRequiredMixin, CredentialPrivacyHeadersMixin
-from .services import user_is_asociado, user_is_comercio
+from .services import (
+    solicitar_recuperacion_contrasena,
+    user_is_asociado,
+    user_is_comercio,
+)
 
 
 class Uni2LoginView(LoginView):
@@ -50,6 +64,36 @@ class Uni2PasswordChangeView(AsociadoRequiredMixin, PasswordChangeView):
 
 class Uni2PasswordChangeDoneView(AsociadoRequiredMixin, TemplateView):
     template_name = "registration/password_change_done.html"
+
+
+class RecuperarContrasenaView(CredentialPrivacyHeadersMixin, FormView):
+    template_name = "registration/password_reset_form.html"
+    form_class = RecuperarContrasenaForm
+    success_url = reverse_lazy("usuarios:recuperacion_solicitada")
+
+    def form_valid(self, form):
+        solicitar_recuperacion_contrasena(**form.cleaned_data)
+        return super().form_valid(form)
+
+
+class RecuperacionSolicitadaView(
+    CredentialPrivacyHeadersMixin, TemplateView
+):
+    template_name = "registration/password_reset_done.html"
+
+
+class RestablecerContrasenaView(
+    CredentialPrivacyHeadersMixin, PasswordResetConfirmView
+):
+    template_name = "registration/password_reset_confirm.html"
+    form_class = Uni2SetPasswordForm
+    success_url = reverse_lazy("usuarios:recuperacion_completada")
+
+
+class RecuperacionCompletadaView(
+    CredentialPrivacyHeadersMixin, TemplateView
+):
+    template_name = "registration/password_reset_complete.html"
 
 
 class ResolverCredencialView(CredentialPrivacyHeadersMixin, LoginRequiredMixin, View):

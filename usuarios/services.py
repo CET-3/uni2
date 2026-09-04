@@ -1,16 +1,26 @@
 import uuid
 from dataclasses import dataclass, field
+from datetime import timedelta
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from django.db import IntegrityError
-from django.db import transaction
+from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError, transaction
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 from asociados.models import Asociado
+from asociados.validators import normalizar_documento
 from auditoria.models import EventoAuditoria
 from auditoria.services import construir_cambios, registrar_evento
+from comunicaciones.models import Comunicacion
 from comercios.models import Comercio
 from gestion.permissions import user_has_any_gestion_permission
+from usuarios.communications import programar_correo_recuperacion_contrasena
 from usuarios.roles import (
     ADMINISTRADOR_APP_GROUP,
     ASOCIADO_GROUP,
@@ -157,6 +167,77 @@ def get_available_experiences(user) -> list[str]:
     if user_has_gestion_access(user):
         experiences.append("gestion")
     return experiences
+
+
+def _buscar_asociado_recuperable(*, dni: str, email: str):
+    try:
+        dni_normalizado = normalizar_documento(dni)
+    except ValidationError:
+        return None
+
+    email_normalizado = (email or "").strip()
+    if not email_normalizado:
+        return None
+
+    candidatos = Asociado.objects.select_related("usuario").filter(
+        email__iexact=email_normalizado,
+        estado=Asociado.ESTADO_ACTIVO,
+        usuario__isnull=False,
+        usuario__is_active=True,
+    )
+    coincidencias = []
+    for asociado in candidatos:
+        try:
+            dni_asociado = normalizar_documento(asociado.dni)
+        except ValidationError:
+            continue
+        if dni_asociado == dni_normalizado:
+            coincidencias.append(asociado)
+
+    if len(coincidencias) != 1:
+        return None
+    return coincidencias[0]
+
+
+@transaction.atomic
+def solicitar_recuperacion_contrasena(
+    *, dni: str, email: str, ahora=None
+) -> None:
+    ahora = ahora or timezone.now()
+    asociado = _buscar_asociado_recuperable(dni=dni, email=email)
+    if asociado is None:
+        return None
+
+    usuario = get_user_model().objects.select_for_update().get(
+        pk=asociado.usuario_id
+    )
+    desde = ahora - timedelta(
+        minutes=settings.UNI2_PASSWORD_RESET_EMAIL_COOLDOWN_MINUTES
+    )
+    if Comunicacion.objects.filter(
+        tipo="recuperacion_contrasena",
+        origen_entidad=usuario._meta.label,
+        origen_id=str(usuario.pk),
+        creado_en__gte=desde,
+    ).exists():
+        return None
+
+    uidb64 = urlsafe_base64_encode(force_bytes(usuario.pk))
+    token = default_token_generator.make_token(usuario)
+    recuperacion_path = reverse(
+        "usuarios:restablecer_contrasena",
+        kwargs={"uidb64": uidb64, "token": token},
+    )
+    recuperacion_url = (
+        f"{settings.UNI2_SITE_URL.rstrip('/')}{recuperacion_path}"
+    )
+    programar_correo_recuperacion_contrasena(
+        asociado=asociado,
+        usuario=usuario,
+        recuperacion_url=recuperacion_url,
+        operacion_id=uuid.uuid4(),
+    )
+    return None
 
 
 @transaction.atomic

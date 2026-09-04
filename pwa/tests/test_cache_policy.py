@@ -1,5 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_encode
 from django.urls import reverse
 
 from asociados.services import create_asociado
@@ -92,6 +93,29 @@ def test_cambio_password_autenticado_es_privado_y_no_store(client):
         assert response.status_code == 200
         assert "X-Uni2-PWA-Cacheable" not in response.headers
         assert {"private", "no-store"} <= cache_control_directives(response)
+
+
+@pytest.mark.django_db
+def test_recuperacion_password_es_privada_y_no_store(client):
+    usuario = get_user_model().objects.create_user(username="recuperacion-pwa")
+    uidb64 = urlsafe_base64_encode(str(usuario.pk).encode())
+    rutas = (
+        reverse("usuarios:recuperar_contrasena"),
+        reverse("usuarios:recuperacion_solicitada"),
+        reverse(
+            "usuarios:restablecer_contrasena",
+            kwargs={"uidb64": uidb64, "token": "token-invalido"},
+        ),
+        reverse("usuarios:recuperacion_completada"),
+    )
+
+    for ruta in rutas:
+        response = client.get(ruta)
+
+        assert response.status_code == 200
+        assert "X-Uni2-PWA-Cacheable" not in response.headers
+        assert {"private", "no-store"} <= cache_control_directives(response)
+        assert response.headers["Referrer-Policy"] == "same-origin"
 
 
 def test_manifest_json_no_recibe_politica_de_html(client):

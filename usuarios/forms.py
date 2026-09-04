@@ -1,4 +1,12 @@
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django import forms
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordChangeForm,
+    SetPasswordForm,
+)
+from django.core.exceptions import ValidationError
+
+from asociados.validators import normalizar_documento
 
 
 class Uni2AuthenticationForm(AuthenticationForm):
@@ -30,3 +38,32 @@ class Uni2PasswordChangeForm(PasswordChangeForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
+
+
+class RecuperarContrasenaForm(forms.Form):
+    dni = forms.CharField(label="DNI o documento", max_length=30)
+    email = forms.EmailField(label="Email")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["dni"].widget.attrs.update(
+            {"class": "form-control", "autocomplete": "username"}
+        )
+        self.fields["email"].widget.attrs.update(
+            {"class": "form-control", "autocomplete": "email"}
+        )
+
+    def clean_dni(self):
+        try:
+            return normalizar_documento(self.cleaned_data["dni"])
+        except ValidationError as error:
+            raise forms.ValidationError(error.messages) from error
+
+
+class Uni2SetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update(
+                {"class": "form-control", "autocomplete": "new-password"}
+            )
