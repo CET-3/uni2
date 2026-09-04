@@ -11,7 +11,9 @@ timestamp: 2026-09-03T00:00:00-03:00
 ## Login
 
 El formulario de ingreso conserva usuario y contraseña y agrega el acceso
-`Olvidé mi contraseña`. No ofrece registro público.
+`Olvidé mi contraseña`. Ese acceso se presenta como una acción secundaria con
+texto gris oscuro, sin subrayado permanente, un ícono de llave, fondo suave en
+hover y foco de teclado visible. No ofrece registro público.
 
 ## Cambiar contraseña
 
@@ -23,7 +25,9 @@ cuando finaliza, conserva la sesión y muestra una confirmación.
 
 La solicitud pública pide DNI y email. La pantalla posterior siempre muestra
 el mismo resultado neutro y no confirma si los datos existen, coinciden, están
-limitados o pertenecen a una cuenta habilitada.
+limitados o pertenecen a una cuenta habilitada. Su título es `Solicitud
+recibida` y explica que, por seguridad, no se informa si los datos coinciden;
+solo si corresponden a una cuenta habilitada llegará el correo.
 
 El enlace del correo abre una pantalla para ingresar y confirmar una contraseña
 nueva. Un enlace inválido, vencido o utilizado informa que ya no está

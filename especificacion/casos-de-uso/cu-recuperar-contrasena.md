@@ -14,8 +14,9 @@ timestamp: 2026-09-03T00:00:00-03:00
 
 1. Desde el login elige `Olvidé mi contraseña`.
 2. Ingresa su DNI y email.
-3. El sistema responde siempre que, si los datos corresponden a una cuenta
-   habilitada, recibirá un correo.
+3. El sistema muestra siempre `Solicitud recibida` y aclara: `Por seguridad no
+   informamos si los datos coinciden. Si corresponden a una cuenta habilitada,
+   vas a recibir un correo con los pasos para elegir una contraseña nueva.`
 4. Cuando existe un asociado activo con usuario activo y ambos datos
    coinciden, registra y envía la comunicación `recuperacion_contrasena`.
 5. La persona abre el enlace temporal recibido.

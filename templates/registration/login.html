@@ -35,7 +35,10 @@
                             {% endif %}
                         </div>
                         <div class="text-end mb-3">
-                            <a href="{% url 'usuarios:recuperar_contrasena' %}">Olvidé mi contraseña</a>
+                            <a class="uni2-login-recovery-link" href="{% url 'usuarios:recuperar_contrasena' %}">
+                                <i class="bi bi-key" aria-hidden="true"></i>
+                                <span>Olvidé mi contraseña</span>
+                            </a>
                         </div>
                         <button class="btn btn-primary w-100 py-2" type="submit">
                             Ingresar

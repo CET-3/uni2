@@ -1,8 +1,10 @@
 import re
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import pytest
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.staticfiles import finders
 from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
@@ -187,7 +189,22 @@ def test_login_ofrece_recuperar_password(client):
     contenido = client.get(reverse("usuarios:login")).content.decode()
 
     assert reverse("usuarios:recuperar_contrasena") in contenido
+    assert 'class="uni2-login-recovery-link"' in contenido
+    assert 'class="bi bi-key" aria-hidden="true"' in contenido
     assert "Olvidé mi contraseña" in contenido
+
+
+def test_css_presenta_recuperacion_como_accion_secundaria():
+    css_path = finders.find("css/uni2-design-system.css")
+    assert css_path is not None
+    css = Path(css_path).read_text(encoding="utf-8")
+    inicio = css.index(".uni2-login-recovery-link {")
+    bloque = css[inicio : css.index("\n}", inicio)]
+
+    assert "color: var(--color-text-secondary);" in bloque
+    assert "text-decoration: none;" in bloque
+    assert ".uni2-login-recovery-link:hover" in css
+    assert ".uni2-login-recovery-link:focus-visible" in css
 
 
 @pytest.mark.django_db
@@ -209,9 +226,10 @@ def test_respuesta_publica_es_igual_para_datos_validos_e_inexistentes(
     assert respuesta_valida.status_code == 200
     assert respuesta_inexistente.status_code == 200
     assert respuesta_valida.content == respuesta_inexistente.content
-    assert "Si los datos corresponden a una cuenta habilitada" in (
-        respuesta_valida.content.decode()
-    )
+    contenido = respuesta_valida.content.decode()
+    assert "Solicitud recibida" in contenido
+    assert "Por seguridad no informamos si los datos coinciden" in contenido
+    assert "Revisá tu correo" not in contenido
 
 
 @pytest.mark.django_db(transaction=True)
