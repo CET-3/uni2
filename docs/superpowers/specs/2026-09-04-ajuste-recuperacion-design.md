@@ -39,7 +39,9 @@ coincidan, el sistema conserva el formulario y muestra el error general:
 Cuando la cuenta existe, el sistema abre `Solicitud recibida` y pide revisar el
 correo. Una cuenta que ya recibió una solicitud dentro del límite de 15
 minutos se considera encontrada y llega a la misma pantalla, pero no genera un
-nuevo envío.
+nuevo envío. La vista guarda en sesión una autorización de un solo uso para
+mostrar esa confirmación; abrir su URL sin una solicitud válida vuelve al
+formulario.
 
 El servicio de recuperación devuelve si encontró una cuenta habilitada; la
 vista usa ese resultado para decidir entre el error del formulario y la
@@ -77,7 +79,8 @@ reemplazan el texto visible de la acción.
 
 Las pruebas comprobarán que la acción use su clase e ícono, que una combinación
 inexistente muestre el error exacto y que una cuenta existente avance a la
-confirmación. También verificarán que el límite temporal conserve el resultado
+confirmación, mientras que el acceso directo sea rechazado. También verificarán
+que el límite temporal conserve el resultado
 positivo sin crear otra comunicación, los íconos decorativos de las acciones
 principales y la regresión de autenticación, recuperación, cambio de contraseña
 y datos propios.

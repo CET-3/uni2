@@ -29,7 +29,9 @@ el mismo formulario muestra `No encontramos una cuenta activa con ese DNI y
 email. Revisá los datos ingresados.` Cuando la cuenta existe, la pantalla
 posterior muestra `Solicitud recibida` y pide revisar el correo. Una cuenta
 dentro del límite de 15 minutos también llega a esa confirmación, aunque no se
-origine otro envío. `Enviar instrucciones` usa `bi-envelope-arrow-up`.
+origine otro envío. La confirmación sólo se muestra inmediatamente después de
+una solicitud válida; el acceso directo a su URL vuelve al formulario.
+`Enviar instrucciones` usa `bi-envelope-arrow-up`.
 
 El enlace del correo abre una pantalla para ingresar y confirmar una contraseña
 nueva. Un enlace inválido, vencido o utilizado informa que ya no está

@@ -27,6 +27,9 @@ from .services import (
 )
 
 
+RECUPERACION_SOLICITADA_SESSION_KEY = "usuarios_recuperacion_solicitada"
+
+
 class Uni2LoginView(LoginView):
     template_name = "registration/login.html"
     authentication_form = Uni2AuthenticationForm
@@ -76,6 +79,10 @@ class RecuperarContrasenaView(CredentialPrivacyHeadersMixin, FormView):
             **form.cleaned_data
         )
         if not cuenta_encontrada:
+            self.request.session.pop(
+                RECUPERACION_SOLICITADA_SESSION_KEY,
+                None,
+            )
             form.add_error(
                 None,
                 (
@@ -84,6 +91,7 @@ class RecuperarContrasenaView(CredentialPrivacyHeadersMixin, FormView):
                 ),
             )
             return self.form_invalid(form)
+        self.request.session[RECUPERACION_SOLICITADA_SESSION_KEY] = True
         return super().form_valid(form)
 
 
@@ -91,6 +99,15 @@ class RecuperacionSolicitadaView(
     CredentialPrivacyHeadersMixin, TemplateView
 ):
     template_name = "registration/password_reset_done.html"
+
+    def get(self, request, *args, **kwargs):
+        solicitud_valida = request.session.pop(
+            RECUPERACION_SOLICITADA_SESSION_KEY,
+            False,
+        )
+        if not solicitud_valida:
+            return redirect("usuarios:recuperar_contrasena")
+        return super().get(request, *args, **kwargs)
 
 
 class RestablecerContrasenaView(

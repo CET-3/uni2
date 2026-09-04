@@ -252,6 +252,13 @@ def test_dni_o_email_inexistente_muestra_error_explicito(
     assert "Solicitud recibida" not in contenido
 
 
+def test_confirmacion_no_se_puede_abrir_sin_una_solicitud_valida(client):
+    respuesta = client.get(reverse("usuarios:recuperacion_solicitada"))
+
+    assert respuesta.status_code == 302
+    assert respuesta.url == reverse("usuarios:recuperar_contrasena")
+
+
 @pytest.mark.django_db
 def test_datos_existentes_avanzan_a_la_confirmacion(client, asociado):
     respuesta = client.post(

@@ -85,5 +85,5 @@ fechas, aunque se agreguen esos valores manualmente a la petición.
 
 Las pruebas deben cubrir los dos orígenes de alta individual, asociados sin
 email, ausencia de envíos masivos, idempotencia, fallos del backend, respuestas
-neutras, límites de recuperación, tokens válidos e inválidos, cambio
+explícitas, límites de recuperación, tokens válidos e inválidos, cambio
 autenticado, lista cerrada de datos propios, sincronización y auditoría.

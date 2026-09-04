@@ -20,7 +20,9 @@ timestamp: 2026-09-03T00:00:00-03:00
 4. Cuando la cuenta existe, registra y envía la comunicación
    `recuperacion_contrasena` y muestra `Solicitud recibida`. Si ya se originó
    una comunicación dentro de la ventana de 15 minutos, muestra igualmente la
-   confirmación pero no genera otra.
+   confirmación pero no genera otra. Esa pantalla sólo se habilita para el
+   siguiente acceso después de validar la solicitud; abrir su URL directamente
+   vuelve al formulario.
 5. La persona abre el enlace temporal recibido.
 6. Ingresa y confirma una contraseña nueva.
 7. El sistema guarda la contraseña, invalida el enlace y la dirige al login.

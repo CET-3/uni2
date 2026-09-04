@@ -101,7 +101,6 @@ def test_recuperacion_password_es_privada_y_no_store(client):
     uidb64 = urlsafe_base64_encode(str(usuario.pk).encode())
     rutas = (
         reverse("usuarios:recuperar_contrasena"),
-        reverse("usuarios:recuperacion_solicitada"),
         reverse(
             "usuarios:restablecer_contrasena",
             kwargs={"uidb64": uidb64, "token": "token-invalido"},
@@ -116,6 +115,18 @@ def test_recuperacion_password_es_privada_y_no_store(client):
         assert "X-Uni2-PWA-Cacheable" not in response.headers
         assert {"private", "no-store"} <= cache_control_directives(response)
         assert response.headers["Referrer-Policy"] == "same-origin"
+
+    confirmacion_directa = client.get(
+        reverse("usuarios:recuperacion_solicitada")
+    )
+
+    assert confirmacion_directa.status_code == 302
+    assert confirmacion_directa.url == reverse("usuarios:recuperar_contrasena")
+    assert "X-Uni2-PWA-Cacheable" not in confirmacion_directa.headers
+    assert {"private", "no-store"} <= cache_control_directives(
+        confirmacion_directa
+    )
+    assert confirmacion_directa.headers["Referrer-Policy"] == "same-origin"
 
 
 @pytest.mark.django_db
