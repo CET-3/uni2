@@ -365,8 +365,8 @@
                 </div>
                 <div class="col-12 col-md-4">
                     <label class="form-label" for="prim-invalid">Inválido</label>
-                    <input class="form-control is-invalid" type="text" id="prim-invalid" value="">
-                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    <input class="form-control is-invalid" type="text" id="prim-invalid" value="" aria-invalid="true" aria-describedby="prim-invalid-errors">
+                    <div class="uni2-field-error" id="prim-invalid-errors" role="alert"><i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i><div>Este campo es requerido.</div></div>
                 </div>
             </div>
         </div>
@@ -531,6 +531,20 @@
                 {% include "components/alert.html" with variant="danger" message="Revisá los datos ingresados e intentá nuevamente." only %}
             </div>
             <p class="small text-muted mt-3 mb-0"><code>role="alert"</code> se reserva para errores urgentes. Información, confirmaciones y advertencias no bloqueantes usan <code>role="status"</code>.</p>
+
+            <p class="h6 text-muted mt-4 mb-3">Resultado de preinscripción</p>
+            <div class="uni2-preinscription-result-shell">
+                <article class="card uni2-surface-card uni2-surface-card-success uni2-preinscription-result">
+                    <div class="card-body p-3 p-md-4">
+                        <header class="uni2-preinscription-result-header">
+                            <span class="uni2-preinscription-result-icon" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+                            <div><span class="uni2-badge uni2-badge-success">En revisión</span><h3 class="uni2-titulo-componente mt-2 mb-0">Recibimos tu preinscripción</h3></div>
+                        </header>
+                        <p class="uni2-preinscription-result-message">Ahora revisaremos los datos de tu solicitud.</p>
+                        <div class="uni2-preinscription-result-notes"><div class="uni2-preinscription-result-note"><i class="bi bi-envelope-check" aria-hidden="true"></i><p>El enlace privado llegará por correo si la entrega pudo realizarse.</p></div></div>
+                    </div>
+                </article>
+            </div>
         </div>
 
         <!-- HERO -->
@@ -672,6 +686,26 @@
                         <div><dt>Estado</dt><dd>Activo</dd></div>
                     </dl>
                     <code>.uni2-data-list</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- LÍNEA DE TIEMPO -->
+        <div class="col-12 col-lg-6">
+            <p class="h6 text-muted mb-2">Línea de tiempo</p>
+            <p class="small text-muted mb-3"><code>.uni2-timeline</code> — secuencia cronológica sin numeración visible. La línea conecta puntos y el movimiento más reciente se destaca.</p>
+            <div class="card uni2-surface-card">
+                <div class="card-body">
+                    <ol class="uni2-timeline">
+                        <li class="uni2-timeline-item">
+                            <span class="uni2-timeline-marker" aria-hidden="true"></span>
+                            <div class="uni2-timeline-content"><strong>Datos aprobados</strong><div class="text-secondary small">Atención al asociado</div><time class="text-secondary small" datetime="2026-08-26T13:22:00-03:00">26/08/2026 13:22</time></div>
+                        </li>
+                        <li class="uni2-timeline-item">
+                            <span class="uni2-timeline-marker" aria-hidden="true"></span>
+                            <div class="uni2-timeline-content"><strong>Solicitud recibida</strong><div class="text-secondary small">Sitio público</div><time class="text-secondary small" datetime="2026-08-26T13:12:00-03:00">26/08/2026 13:12</time></div>
+                        </li>
+                    </ol>
                 </div>
             </div>
         </div>

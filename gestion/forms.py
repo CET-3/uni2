@@ -5,10 +5,67 @@ from django.utils import timezone
 from auditoria.models import EventoAuditoria
 from auditoria.presentacion import etiqueta_entidad
 from auditoria.selectors import listar_entidades_auditadas
-from asociados.models import Asociado, ClasificacionAdherente
+from asociados.models import Asociado, ClasificacionAdherente, SolicitudAsociacion
 from asociados.models import Curso
 from asociados.services import create_asociado
 from cuotas.models import Pago, PeriodoCuota
+
+
+class FiltroSolicitudesAsociacionForm(forms.Form):
+    ESTADO_TODAS = "todas"
+
+    q = forms.CharField(required=False, label="Buscar")
+    estado = forms.ChoiceField(
+        required=False,
+        choices=[
+            ("", "Todas las solicitudes abiertas"),
+            (ESTADO_TODAS, "Todas las solicitudes"),
+            *SolicitudAsociacion.ESTADOS,
+        ],
+    )
+    tipo = forms.ChoiceField(
+        required=False,
+        choices=[("", "Todos los tipos")] + Asociado.TIPOS,
+    )
+    fecha_desde = forms.DateField(required=False, label="Desde")
+    fecha_hasta = forms.DateField(required=False, label="Hasta")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["q"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Nombre, documento o correo"}
+        )
+        for nombre in ("estado", "tipo"):
+            self.fields[nombre].widget.attrs["class"] = "form-select"
+        for nombre in ("fecha_desde", "fecha_hasta"):
+            self.fields[nombre].widget.attrs.update(
+                {"class": "form-control", "type": "date"}
+            )
+
+
+class ObservacionSolicitudForm(forms.Form):
+    explicacion = forms.CharField(
+        label="Explicación para la persona",
+        max_length=500,
+        widget=forms.Textarea(
+            attrs={"class": "form-control", "rows": 4, "autofocus": True}
+        ),
+    )
+
+
+class CancelacionSolicitudForm(forms.Form):
+    motivo = forms.CharField(
+        label="Motivo de cancelación",
+        max_length=500,
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+    )
+
+
+class ConfirmarAltaSolicitudForm(forms.Form):
+    confirmar = forms.BooleanField(
+        widget=forms.HiddenInput,
+        initial=True,
+    )
 
 
 class FiltroAuditoriaForm(forms.Form):

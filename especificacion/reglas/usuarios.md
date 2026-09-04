@@ -51,8 +51,10 @@ controlan con permisos Django propios de cada app.
 ## USUARIO-010
 
 El grupo `Atención al asociado` representa a quienes realizan la operación
-diaria. Puede abrir gestión, consultar y editar datos ordinarios de asociados y
-cobrar cuotas. No puede dar de baja, importar, exportar, consultar deudores,
+diaria. Puede abrir gestión, consultar y editar datos ordinarios de asociados,
+gestionar solicitudes de asociación —incluida su cancelación y el reenvío de
+sus comunicaciones— y cobrar cuotas.
+No puede dar de baja asociados, importar, exportar, consultar deudores,
 administrar períodos ni ver la auditoría general. En la carga inicial, el
 usuario `atencion` también queda vinculado a un asociado de prueba para probar
 la variante multiperfil de la home.
@@ -119,7 +121,7 @@ El logo y el resultado exitoso del login enlazan a `/`. La selección no se guar
 
 | Grupo | Gestión propia | Admin técnico | Exclusiones principales |
 |---|---|---|---|
-| Atención al asociado | Consulta y edición ordinaria de asociados; cobros; últimos movimientos de la ficha | No requerido | Baja, importaciones, exportación, deudores, períodos y auditoría general |
+| Atención al asociado | Consulta y edición ordinaria de asociados; solicitudes de asociación y reenvío de sus comunicaciones; cobros; últimos movimientos de la ficha | No requerido | Baja de asociados, importaciones, exportación, deudores, períodos y auditoría general |
 | Administrador de permisos | Experiencia administrativa y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No modifica la definición de grupos, no edita superusuarios ni puede asignar `Administrador de la app` |
 | Gestión de convenios | Experiencia administrativa | Actividades comerciales y comercios | Usuarios, asociados, publicidades y auditoría general |
 | Gestión de productos y servicios | Experiencia administrativa | Categorías y productos/servicios | Publicidades, comercios, usuarios, asociados y auditoría general |

@@ -3,6 +3,8 @@ import os
 import subprocess
 import sys
 
+import pytest
+
 from config.database_identity import (
     database_fingerprint,
     database_role_fingerprint,
@@ -21,7 +23,10 @@ STAGING_DATABASE = {
 def load_staging_settings(**overrides):
     environment = os.environ.copy()
     for name in tuple(environment):
-        if name.startswith(("AWS_", "UNI2_")) or name == "GOOGLE_ANALYTICS_MEASUREMENT_ID":
+        if (
+            name.startswith(("AWS_", "EMAIL_", "UNI2_"))
+            or name in {"DEFAULT_FROM_EMAIL", "GOOGLE_ANALYTICS_MEASUREMENT_ID"}
+        ):
             environment.pop(name)
 
     environment.update(
@@ -30,6 +35,12 @@ def load_staging_settings(**overrides):
                 "postgresql://staging-user:test-password@"
                 "staging-db.example.test:5432/uni2_staging"
             ),
+            "DEFAULT_FROM_EMAIL": "",
+            "EMAIL_HOST": "",
+            "EMAIL_HOST_PASSWORD": "",
+            "EMAIL_HOST_USER": "",
+            "EMAIL_PORT": "",
+            "EMAIL_USE_TLS": "",
             "SECRET_KEY": "staging-secret-key-for-tests-123456",
             "UNI2_ENVIRONMENT": "staging",
             "UNI2_PRIVATE_DATA_EPOCH": "2026-08-02-01",
@@ -42,6 +53,7 @@ def load_staging_settings(**overrides):
                 STAGING_DATABASE
             ),
             "UNI2_STAGING_DATABASE_LABEL": "uni2-staging",
+            "UNI2_SITE_URL": "",
             **overrides,
         }
     )
@@ -57,8 +69,15 @@ print(json.dumps({
     "build_id": staging.PWA_BUILD_ID,
     "debug": staging.DEBUG,
     "email_backend": staging.EMAIL_BACKEND,
+    "email_host": getattr(staging, "EMAIL_HOST", ""),
+    "email_port": getattr(staging, "EMAIL_PORT", 0),
+    "email_redirect_to": getattr(
+        staging, "UNI2_TRANSACTIONAL_EMAIL_REDIRECT_TO", ""
+    ),
+    "email_use_tls": getattr(staging, "EMAIL_USE_TLS", False),
     "environment": staging.UNI2_DEPLOYMENT_ENVIRONMENT,
     "epoch": staging.PWA_PRIVATE_DATA_EPOCH,
+    "from_email": staging.DEFAULT_FROM_EMAIL,
     "icon_directory": staging.PWA_ICON_DIRECTORY,
     "middleware": staging.MIDDLEWARE,
     "push_mode": staging.UNI2_WEB_PUSH_MODE,
@@ -69,6 +88,7 @@ print(json.dumps({
     "storage_custom_domain": getattr(staging, "AWS_S3_CUSTOM_DOMAIN", None),
     "storage_querystring_auth": getattr(staging, "AWS_QUERYSTRING_AUTH", None),
     "storages_app_enabled": "storages" in staging.INSTALLED_APPS,
+    "site_url": staging.UNI2_SITE_URL,
     "transactional_email_mode": staging.UNI2_TRANSACTIONAL_EMAIL_MODE,
 }))
 """
@@ -93,8 +113,13 @@ def test_staging_es_seguro_y_visualmente_distinto():
         "build_id": "staging-commit",
         "debug": False,
         "email_backend": "django.core.mail.backends.dummy.EmailBackend",
+        "email_host": "",
+        "email_port": 0,
+        "email_redirect_to": "",
+        "email_use_tls": False,
         "environment": "staging",
         "epoch": "2026-08-02-01",
+        "from_email": "",
         "icon_directory": "pwa/icons/staging",
         "middleware": [
             "django.middleware.security.SecurityMiddleware",
@@ -116,6 +141,7 @@ def test_staging_es_seguro_y_visualmente_distinto():
         "storage_custom_domain": None,
         "storage_querystring_auth": True,
         "storages_app_enabled": False,
+        "site_url": "",
         "transactional_email_mode": "disabled",
     }
 
@@ -125,6 +151,92 @@ def test_staging_no_hereda_google_analytics_de_produccion():
 
     assert result.returncode == 0, result.stderr
     assert json.loads(result.stdout)["analytics_measurement_id"] == ""
+
+
+def test_staging_ignora_un_intento_de_habilitar_correo_real():
+    result = load_staging_settings(UNI2_TRANSACTIONAL_EMAIL_MODE="enabled")
+
+    assert result.returncode == 0, result.stderr
+    staging = json.loads(result.stdout)
+    assert staging["transactional_email_mode"] == "disabled"
+    assert staging["email_backend"] == "django.core.mail.backends.dummy.EmailBackend"
+
+
+def staging_email_variables(**overrides):
+    variables = {
+        "UNI2_STAGING_TRANSACTIONAL_EMAIL_MODE": "redirect",
+        "UNI2_STAGING_SITE_URL": "https://uni2-staging.example/",
+        "UNI2_STAGING_DEFAULT_FROM_EMAIL": (
+            "UNI2 App — Mutual CET 3 <uni2.app.cet3@gmail.com>"
+        ),
+        "UNI2_STAGING_EMAIL_REDIRECT_TO": "uni2.app.cet3@gmail.com",
+        "UNI2_STAGING_EMAIL_HOST": "smtp.gmail.com",
+        "UNI2_STAGING_EMAIL_PORT": "587",
+        "UNI2_STAGING_EMAIL_HOST_USER": "uni2.app.cet3@gmail.com",
+        "UNI2_STAGING_EMAIL_HOST_PASSWORD": "secret-for-tests",
+        "UNI2_STAGING_EMAIL_USE_TLS": "true",
+    }
+    variables.update(overrides)
+    return variables
+
+
+def test_staging_rechaza_habilitar_destinatarios_reales():
+    result = load_staging_settings(
+        UNI2_STAGING_TRANSACTIONAL_EMAIL_MODE="enabled"
+    )
+
+    assert result.returncode != 0
+    assert "disabled" in result.stderr
+    assert "redirect" in result.stderr
+
+
+def test_staging_configura_smtp_solo_con_redireccion_obligatoria():
+    result = load_staging_settings(**staging_email_variables())
+
+    assert result.returncode == 0, result.stderr
+    staging = json.loads(result.stdout)
+    assert staging["transactional_email_mode"] == "redirect"
+    assert staging["site_url"] == "https://uni2-staging.example"
+    assert staging["from_email"] == (
+        "UNI2 App — Mutual CET 3 <uni2.app.cet3@gmail.com>"
+    )
+    assert staging["email_backend"] == "django.core.mail.backends.smtp.EmailBackend"
+    assert staging["email_host"] == "smtp.gmail.com"
+    assert staging["email_port"] == 587
+    assert staging["email_use_tls"] is True
+    assert staging["email_redirect_to"] == "uni2.app.cet3@gmail.com"
+
+
+@pytest.mark.parametrize(
+    "missing_name",
+    (
+        "UNI2_STAGING_SITE_URL",
+        "UNI2_STAGING_DEFAULT_FROM_EMAIL",
+        "UNI2_STAGING_EMAIL_REDIRECT_TO",
+        "UNI2_STAGING_EMAIL_HOST",
+        "UNI2_STAGING_EMAIL_PORT",
+        "UNI2_STAGING_EMAIL_HOST_USER",
+        "UNI2_STAGING_EMAIL_HOST_PASSWORD",
+    ),
+)
+def test_staging_rechaza_redireccion_incompleta(missing_name):
+    result = load_staging_settings(
+        **staging_email_variables(**{missing_name: ""})
+    )
+
+    assert result.returncode != 0
+    assert missing_name in result.stderr
+
+
+def test_staging_rechaza_destinatario_de_redireccion_invalido():
+    result = load_staging_settings(
+        **staging_email_variables(
+            UNI2_STAGING_EMAIL_REDIRECT_TO="correo-invalido"
+        )
+    )
+
+    assert result.returncode != 0
+    assert "UNI2_STAGING_EMAIL_REDIRECT_TO" in result.stderr
 
 
 def test_staging_rechaza_una_base_con_huella_productiva():

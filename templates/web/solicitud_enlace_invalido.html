@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Enlace no disponible | Uni2{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mx-auto" style="max-width: 48rem;">
+        {% include "components/alert.html" with variant="warning" title="El enlace no está disponible" message="Puede haber vencido o haber sido reemplazado. Si necesitás ayuda, contactate con la Mutual." is_static=True only %}
+        <a class="btn btn-outline-primary mt-3" href="{% url 'web:home' %}#contacto">Ver datos de contacto</a>
+    </div>
+</div>
+{% endblock %}

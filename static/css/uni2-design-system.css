@@ -1288,7 +1288,102 @@ button.uni2-service-card:hover {
   outline-offset: 2px;
 }
 
-.form-control.is-invalid { border-color: var(--brand-red); }
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--brand-red);
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(255, 43, 43, 0.14);
+}
+
+.uni2-field-error {
+  align-items: flex-start;
+  background: rgba(255, 43, 43, 0.08);
+  border: 1px solid rgba(255, 43, 43, 0.2);
+  border-left: 4px solid var(--brand-red);
+  border-radius: 8px;
+  color: var(--color-danger-text);
+  display: flex;
+  font-size: 0.82rem;
+  font-weight: 650;
+  gap: 8px;
+  line-height: 1.35;
+  margin-top: 8px;
+  padding: 8px 10px;
+}
+
+.uni2-field-error > i {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.uni2-form-error-focus:focus {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 3px;
+}
+
+.uni2-preinscription-result-shell {
+  max-width: 38rem;
+}
+
+.uni2-preinscription-result-header {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+}
+
+.uni2-preinscription-result-icon {
+  align-items: center;
+  background: var(--brand-green);
+  border-radius: 999px;
+  color: #07230d;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 1.4rem;
+  height: 54px;
+  justify-content: center;
+  width: 54px;
+}
+
+.uni2-preinscription-result-message {
+  color: var(--color-text-secondary);
+  font-size: 1.05rem;
+  font-weight: 650;
+  margin: 22px 0 0;
+}
+
+.uni2-preinscription-result-notes {
+  border-top: 1px solid var(--color-border-subtle);
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+}
+
+.uni2-preinscription-result-note {
+  align-items: flex-start;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 10px;
+  color: var(--color-text-secondary);
+  display: flex;
+  gap: 10px;
+  padding: 11px 12px;
+}
+
+.uni2-preinscription-result-note > i {
+  color: var(--color-success-text);
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.uni2-preinscription-result-note p {
+  margin: 0;
+}
+
 .invalid-feedback, .text-danger {
   font-size: 0.8rem;
   color: var(--color-danger-text) !important;
@@ -2431,37 +2526,27 @@ button.uni2-service-card:hover {
 
 .uni2-audit-operation {
   background: var(--color-surface);
-  border: 0.2rem solid color-mix(in srgb, var(--brand-blue) 24%, var(--color-border));
+  border: 1px solid var(--color-border);
   border-radius: 1rem;
-  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
 .uni2-audit-operation-header {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  padding: 0.7rem 1rem;
-}
-
-.uni2-audit-operation-title {
-  align-items: center;
-  display: flex;
-  gap: 0.65rem;
-  min-width: 0;
+  gap: 0.7rem;
+  padding: 0.8rem 1rem;
 }
 
 .uni2-audit-operation-icon {
-  align-items: center;
-  background: color-mix(in srgb, var(--brand-blue) 12%, var(--color-surface));
-  border-radius: 0.55rem;
   color: var(--color-action-on-surface);
-  display: inline-flex;
-  flex: 0 0 2rem;
-  height: 2rem;
-  justify-content: center;
-  width: 2rem;
+  flex: 0 0 auto;
+  font-size: 1.15rem;
+  line-height: 1.4;
+}
+
+.uni2-audit-operation-heading {
+  min-width: 0;
 }
 
 .uni2-audit-operation-header h2,
@@ -2473,14 +2558,15 @@ button.uni2-service-card:hover {
 }
 
 .uni2-audit-operation-header p,
-.uni2-audit-operation-id {
+.uni2-audit-operation-reference {
   color: var(--color-text-secondary);
   font-size: 0.78rem;
   margin: 0;
 }
 
-.uni2-audit-operation-id {
-  flex: 0 1 24rem;
+.uni2-audit-operation-reference {
+  border-top: 1px solid var(--color-border-subtle);
+  padding: 0.55rem 1rem;
   overflow-wrap: anywhere;
   text-align: right;
 }
@@ -2493,27 +2579,16 @@ button.uni2-service-card:hover {
 .uni2-audit-event {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-left: 0.25rem solid var(--brand-blue);
   border-radius: 0.85rem;
-  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
-.uni2-audit-event-crear {
-  border-left-color: var(--brand-green);
-}
-
 .uni2-audit-event-nested {
-  border-bottom: 0.15rem solid var(--color-border);
+  border-bottom: 1px solid var(--color-border-subtle);
   border-left: 0;
   border-radius: 0;
   border-right: 0;
   border-top: 0;
-  box-shadow: inset 0.2rem 0 0 var(--brand-blue);
-}
-
-.uni2-audit-event-nested.uni2-audit-event-crear {
-  box-shadow: inset 0.2rem 0 0 var(--brand-green);
 }
 
 .uni2-audit-event-nested:last-child {
@@ -2524,26 +2599,15 @@ button.uni2-service-card:hover {
   padding: 0.85rem 1rem;
 }
 
-.uni2-audit-icon {
-  align-items: center;
-  background: color-mix(in srgb, var(--brand-blue) 14%, var(--color-surface));
-  border-radius: 50%;
-  color: var(--color-action-on-surface);
-  display: inline-flex;
-  height: 1.65rem;
-  justify-content: center;
-  flex: 0 0 1.65rem;
-  margin-top: 0.05rem;
-  width: 1.65rem;
-}
-
-.uni2-audit-icon-create {
-  background: color-mix(in srgb, var(--brand-green) 18%, var(--color-surface));
-  color: var(--color-success-text);
-}
-
 .uni2-audit-subject {
   min-width: 0;
+}
+
+.uni2-audit-subject-heading {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
 }
 
 .uni2-audit-subject h2,
@@ -2570,20 +2634,22 @@ button.uni2-service-card:hover {
   font-weight: 550 !important;
 }
 
-.uni2-audit-subject p {
+.uni2-audit-reason {
   color: var(--color-text-secondary);
   font-size: 0.82rem;
-  margin: 0;
+  margin: 0 0 0 2.25rem;
 }
 
-.uni2-audit-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem 0.8rem;
-  padding-left: 2.25rem;
+.uni2-audit-reason {
+  color: var(--color-text);
+  margin: 0.35rem 0 0;
 }
 
 .uni2-audit-reference {
+  color: var(--color-text-secondary);
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  line-height: 1.65rem;
   opacity: 0.72;
 }
 
@@ -2795,17 +2861,6 @@ button.uni2-service-card:hover {
 }
 
 @media (max-width: 991.98px) {
-  .uni2-audit-operation-header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .uni2-audit-operation-id {
-    flex: none;
-    text-align: left;
-  }
-
   .uni2-audit-change {
     align-items: start;
     gap: 0.35rem;
@@ -3827,6 +3882,18 @@ button.uni2-service-card:hover {
 }
 
 @media (max-width: 575.98px) {
+  .uni2-preinscription-form .uni2-alert {
+    gap: 12px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 14px;
+  }
+
+  .uni2-preinscription-form .uni2-alert-icon {
+    font-size: 1rem;
+    height: 38px;
+    width: 38px;
+  }
+
   .uni2-cycle-tabs:not([hidden]) {
     display: flex;
   }
@@ -4131,17 +4198,17 @@ button.uni2-service-card:hover {
 }
 
 @media (max-width: 767.98px) {
-  .uni2-asociados-results-wrap {
+  .uni2-records-table-wrap {
     overflow-x: visible;
   }
 
-  .uni2-asociados-results,
-  .uni2-asociados-results tbody {
+  .uni2-records-table,
+  .uni2-records-table tbody {
     display: block;
     width: 100%;
   }
 
-  .uni2-asociados-results thead {
+  .uni2-records-table thead {
     clip: rect(0 0 0 0);
     clip-path: inset(50%);
     height: 1px;
@@ -4151,12 +4218,12 @@ button.uni2-service-card:hover {
     width: 1px;
   }
 
-  .uni2-asociados-results tbody {
+  .uni2-records-table tbody {
     display: grid;
     gap: 0.85rem;
   }
 
-  .uni2-asociados-results .uni2-clickable-row {
+  .uni2-records-table .uni2-records-table-row {
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.85rem;
@@ -4166,7 +4233,7 @@ button.uni2-service-card:hover {
     padding: 0.9rem;
   }
 
-  .uni2-asociados-results .uni2-clickable-row > td {
+  .uni2-records-table .uni2-records-table-row > td {
     border: 0;
     display: grid;
     gap: 0.2rem;
@@ -4175,17 +4242,17 @@ button.uni2-service-card:hover {
     padding: 0.55rem;
   }
 
-  .uni2-asociados-results .uni2-clickable-row > td:not(:first-child) {
+  .uni2-records-table .uni2-records-table-row > td:not(:first-child) {
     color: var(--color-text);
     font-size: 0.96rem;
     font-weight: 650;
   }
 
-  .uni2-asociados-results .uni2-clickable-row .uni2-badge {
+  .uni2-records-table .uni2-records-table-row .uni2-badge {
     max-width: 100%;
   }
 
-  .uni2-asociados-results .uni2-clickable-row > td::before {
+  .uni2-records-table .uni2-records-table-row > td::before {
     color: color-mix(in srgb, var(--color-text-secondary) 72%, transparent);
     content: attr(data-label);
     font-size: 0.72rem;
@@ -4194,7 +4261,7 @@ button.uni2-service-card:hover {
     text-transform: uppercase;
   }
 
-  .uni2-asociados-results .uni2-clickable-row > td:first-child {
+  .uni2-records-table .uni2-records-table-row > td:first-child {
     border-bottom: 1px solid var(--color-border);
     display: block;
     grid-column: 1 / -1;
@@ -4202,16 +4269,45 @@ button.uni2-service-card:hover {
     padding-bottom: 0.85rem;
   }
 
-  .uni2-asociados-results .uni2-clickable-row > td:first-child::before {
+  .uni2-records-table .uni2-records-table-row > td:first-child::before {
     content: none;
   }
 
-  .uni2-asociados-results .uni2-clickable-row > .uni2-asociados-credential-cell {
+  .uni2-records-table .uni2-records-table-row > .uni2-asociados-credential-cell {
     grid-column: 1 / -1;
   }
 
   .uni2-asociados-results .uni2-asociados-credential-cell .uni2-badge {
     white-space: nowrap;
+  }
+
+  .uni2-cuotas-table .uni2-cuota-record > td:first-child {
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    grid-column: 1;
+    margin: 0 0 0.25rem;
+    padding-bottom: 0.85rem;
+  }
+
+  .uni2-cuotas-table .uni2-cuota-record > td:last-child {
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: flex-end;
+    margin-bottom: 0.25rem;
+    padding-bottom: 0.85rem;
+  }
+
+  .uni2-cuotas-table .uni2-cuota-record > td:first-child::before,
+  .uni2-cuotas-table .uni2-cuota-record > td:last-child::before {
+    content: none;
+  }
+
+  .uni2-cuotas-table .uni2-cuota-record > .text-end {
+    text-align: left !important;
   }
 }
 
@@ -4222,6 +4318,51 @@ button.uni2-service-card:hover {
   flex-wrap: wrap;
   font-size: 0.9rem;
   gap: 0.5rem;
+}
+
+.uni2-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 0.35rem;
+}
+
+.uni2-timeline-item {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  min-height: 4.5rem;
+  position: relative;
+}
+
+.uni2-timeline-item:not(:last-child)::before {
+  background: color-mix(in srgb, var(--bs-primary) 35%, var(--color-border));
+  content: "";
+  left: 0.44rem;
+  position: absolute;
+  top: 1rem;
+  bottom: 0;
+  width: 2px;
+}
+
+.uni2-timeline-marker {
+  background: var(--color-surface);
+  border: 3px solid var(--bs-primary);
+  border-radius: 50%;
+  height: 0.9rem;
+  margin-top: 0.2rem;
+  position: relative;
+  width: 0.9rem;
+  z-index: 1;
+}
+
+.uni2-timeline-item:first-child .uni2-timeline-marker {
+  background: var(--bs-primary);
+  box-shadow: 0 0 0 4px rgba(var(--bs-primary-rgb), 0.12);
+}
+
+.uni2-timeline-content {
+  min-width: 0;
+  padding-bottom: 1.1rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

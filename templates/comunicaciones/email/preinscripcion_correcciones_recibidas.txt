@@ -1,0 +1,8 @@
+Hola {{ nombre }}:
+
+Recibimos las correcciones de tu preinscripción. La solicitud volvió a revisión.
+
+Tu nuevo enlace privado de seguimiento es:
+{{ seguimiento_url }}
+
+Mutual Escolar del CET 3

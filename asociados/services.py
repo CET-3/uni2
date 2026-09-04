@@ -1,17 +1,88 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import hmac
+import secrets
 import uuid
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 
-from django.db import transaction
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError, transaction
+from django.utils import timezone
 
 from auditoria.models import EventoAuditoria
+from auditoria.selectors import obtener_motivo_ultima_observacion_solicitud
 from auditoria.services import construir_cambios, registrar_evento
+from cuotas.services import generar_cuotas_iniciales_para_asociado
 from usuarios.services import create_user_for_asociado, ensure_default_groups
 
-from .models import Asociado, ClasificacionAdherente, Curso
+from .communications import (
+    programar_correo_datos_aprobados,
+    programar_correo_correcciones_recibidas,
+    programar_correo_solicitud_cancelada,
+    programar_correo_solicitud_observada,
+    programar_correo_solicitud_recibida,
+)
+from .models import (
+    Asociado,
+    ClasificacionAdherente,
+    Curso,
+    LimiteSolicitudPublica,
+    SolicitudAsociacion,
+)
+from .validators import normalizar_documento
+
+
+class SolicitudAsociacionDuplicada(Exception):
+    pass
+
+
+class LimiteSolicitudExcedido(Exception):
+    pass
+
+
+class EnlaceSolicitudInvalido(Exception):
+    pass
+
+
+class CorreccionSolicitudNoPermitida(Exception):
+    pass
+
+
+class TransicionSolicitudInvalida(Exception):
+    pass
+
+
+@dataclass(frozen=True)
+class ResultadoTransicionSolicitud:
+    solicitud: SolicitudAsociacion
+    evento: EventoAuditoria
+    token_seguimiento: str = ""
+
+
+@dataclass(frozen=True)
+class AltaDesdeSolicitudResult:
+    solicitud: SolicitudAsociacion
+    asociado: Asociado
+    cuotas_generadas: tuple
+
+
+CAMPOS_AUDITABLES_SOLICITUD = (
+    "nombre",
+    "apellido",
+    "dni",
+    "email",
+    "telefono",
+    "direccion",
+    "es_estudiante_cet3",
+    "tipo",
+    "curso_actual",
+    "clasificacion_adherente",
+    "estado",
+)
 
 
 CAMPOS_AUDITABLES_ASOCIADO = (
@@ -30,6 +101,534 @@ CAMPOS_AUDITABLES_ASOCIADO = (
     "fecha_baja",
     "motivo_baja",
 )
+
+
+def _hash_token(token: str) -> str:
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+def rotar_token_seguimiento(solicitud, ahora=None) -> str:
+    ahora = ahora or timezone.now()
+    token = secrets.token_urlsafe(32)
+    solicitud.token_seguimiento_hash = _hash_token(token)
+    solicitud.token_seguimiento_vence_en = ahora + timedelta(
+        days=settings.UNI2_SOLICITUD_TOKEN_TTL_DAYS
+    )
+    if solicitud.pk:
+        solicitud.save(
+            update_fields=("token_seguimiento_hash", "token_seguimiento_vence_en")
+        )
+    return token
+
+
+@transaction.atomic
+def consumir_limite_publico(
+    *,
+    accion,
+    clave_cruda,
+    max_intentos,
+    ventana,
+    ahora=None,
+):
+    ahora = ahora or timezone.now()
+    segundos_ventana = int(ventana.total_seconds())
+    if segundos_ventana <= 0:
+        raise ValueError("La ventana del límite debe ser positiva.")
+    segundos_transcurridos = int(ahora.timestamp()) % segundos_ventana
+    ventana_inicio = ahora - timedelta(
+        seconds=segundos_transcurridos,
+        microseconds=ahora.microsecond,
+    )
+    clave_hash = hmac.new(
+        settings.SECRET_KEY.encode(),
+        (clave_cruda or "sin-direccion").encode(),
+        hashlib.sha256,
+    ).hexdigest()
+    LimiteSolicitudPublica.objects.filter(
+        accion=accion,
+        ventana_inicio__lt=ventana_inicio,
+    ).delete()
+    contador, _ = LimiteSolicitudPublica.objects.select_for_update().get_or_create(
+        accion=accion,
+        clave_hash=clave_hash,
+        ventana_inicio=ventana_inicio,
+    )
+    if contador.intentos >= max_intentos:
+        raise LimiteSolicitudExcedido()
+    contador.intentos += 1
+    contador.save(update_fields=("intentos",))
+    return contador
+
+
+def _existe_asociado_con_documento_normalizado(dni_normalizado: str) -> bool:
+    for dni in Asociado.objects.values_list("dni", flat=True).iterator():
+        try:
+            if normalizar_documento(dni) == dni_normalizado:
+                return True
+        except ValidationError:
+            continue
+    return False
+
+
+def crear_solicitud_asociacion(*, datos: dict, actor_ip: str, ahora=None):
+    ahora = ahora or timezone.now()
+    consumir_limite_publico(
+        accion="crear_solicitud",
+        clave_cruda=actor_ip,
+        max_intentos=settings.UNI2_SOLICITUD_CREACION_MAX_INTENTOS,
+        ventana=timedelta(minutes=settings.UNI2_SOLICITUD_CREACION_VENTANA_MINUTOS),
+        ahora=ahora,
+    )
+    return _crear_solicitud_asociacion_transaccional(datos=datos, ahora=ahora)
+
+
+@transaction.atomic
+def _crear_solicitud_asociacion_transaccional(*, datos: dict, ahora):
+
+    dni_normalizado = normalizar_documento(datos.get("dni", ""))
+    solicitud_abierta = SolicitudAsociacion.objects.filter(
+        dni_normalizado=dni_normalizado
+    ).exclude(estado=SolicitudAsociacion.ESTADO_CANCELADA)
+    if solicitud_abierta.exists() or _existe_asociado_con_documento_normalizado(
+        dni_normalizado
+    ):
+        raise SolicitudAsociacionDuplicada()
+
+    token = secrets.token_urlsafe(32)
+    solicitud = SolicitudAsociacion(
+        **datos,
+        token_seguimiento_hash=_hash_token(token),
+        token_seguimiento_vence_en=ahora
+        + timedelta(days=settings.UNI2_SOLICITUD_TOKEN_TTL_DAYS),
+    )
+    solicitud.full_clean()
+    try:
+        with transaction.atomic():
+            solicitud.save()
+    except IntegrityError as error:
+        # Otra petición puede haber registrado el mismo documento entre la
+        # consulta anterior y este INSERT. La restricción de la base es la
+        # última defensa y se traduce al mismo resultado funcional.
+        raise SolicitudAsociacionDuplicada() from error
+
+    nuevos = {
+        campo: getattr(solicitud, campo) for campo in CAMPOS_AUDITABLES_SOLICITUD
+    }
+    registrar_evento(
+        actor=None,
+        actor_etiqueta="Solicitante desde el sitio público",
+        accion=EventoAuditoria.ACCION_CREAR,
+        entidad=solicitud._meta.label,
+        objeto_id=solicitud.pk,
+        objeto_descripcion=str(solicitud),
+        cambios=construir_cambios(
+            anteriores={campo: None for campo in CAMPOS_AUDITABLES_SOLICITUD},
+            nuevos=nuevos,
+            campos=CAMPOS_AUDITABLES_SOLICITUD,
+        ),
+        origen=EventoAuditoria.ORIGEN_SITIO_PUBLICO,
+    )
+    programar_correo_solicitud_recibida(solicitud=solicitud, token=token)
+    return solicitud
+
+
+def _registrar_transicion_solicitud(
+    *,
+    solicitud,
+    estado_anterior,
+    actor,
+    motivo="",
+    operacion_id=None,
+):
+    return registrar_evento(
+        actor=actor,
+        accion=EventoAuditoria.ACCION_CAMBIAR_ESTADO,
+        entidad=solicitud._meta.label,
+        objeto_id=solicitud.pk,
+        objeto_descripcion=str(solicitud),
+        cambios={
+            "estado": {
+                "anterior": estado_anterior,
+                "nuevo": solicitud.estado,
+            }
+        },
+        motivo=motivo,
+        origen=EventoAuditoria.ORIGEN_GESTION,
+        operacion_id=operacion_id,
+    )
+
+
+@transaction.atomic
+def observar_solicitud_asociacion(
+    *,
+    solicitud_id: int,
+    explicacion: str,
+    actor,
+    ahora=None,
+):
+    explicacion = (explicacion or "").strip()
+    if not explicacion:
+        raise ValueError("La observación requiere una explicación.")
+    ahora = ahora or timezone.now()
+    solicitud = SolicitudAsociacion.objects.select_for_update().get(pk=solicitud_id)
+    if solicitud.estado not in {
+        SolicitudAsociacion.ESTADO_RECIBIDA,
+        SolicitudAsociacion.ESTADO_DATOS_APROBADOS,
+    }:
+        raise TransicionSolicitudInvalida()
+
+    estado_anterior = solicitud.estado
+    token = secrets.token_urlsafe(32)
+    solicitud.estado = SolicitudAsociacion.ESTADO_OBSERVADA
+    solicitud.revisado_en = ahora
+    solicitud.modificado_por = actor
+    solicitud.token_seguimiento_hash = _hash_token(token)
+    solicitud.token_seguimiento_vence_en = ahora + timedelta(
+        days=settings.UNI2_SOLICITUD_TOKEN_TTL_DAYS
+    )
+    solicitud.save(
+        update_fields=(
+            "estado",
+            "revisado_en",
+            "modificado_en",
+            "modificado_por",
+            "token_seguimiento_hash",
+            "token_seguimiento_vence_en",
+        )
+    )
+    evento = _registrar_transicion_solicitud(
+        solicitud=solicitud,
+        estado_anterior=estado_anterior,
+        actor=actor,
+        motivo=explicacion,
+    )
+    programar_correo_solicitud_observada(
+        solicitud=solicitud,
+        token=token,
+        explicacion=explicacion,
+        operacion_id=evento.operacion_id,
+        actor=actor,
+    )
+    return ResultadoTransicionSolicitud(
+        solicitud=solicitud,
+        evento=evento,
+        token_seguimiento=token,
+    )
+
+
+@transaction.atomic
+def aprobar_datos_solicitud_asociacion(*, solicitud_id: int, actor, ahora=None):
+    ahora = ahora or timezone.now()
+    solicitud = SolicitudAsociacion.objects.select_for_update().get(pk=solicitud_id)
+    if solicitud.estado != SolicitudAsociacion.ESTADO_RECIBIDA:
+        raise TransicionSolicitudInvalida()
+
+    estado_anterior = solicitud.estado
+    solicitud.estado = SolicitudAsociacion.ESTADO_DATOS_APROBADOS
+    solicitud.revisado_en = ahora
+    solicitud.modificado_por = actor
+    solicitud.full_clean()
+    solicitud.save(
+        update_fields=("estado", "revisado_en", "modificado_en", "modificado_por")
+    )
+    evento = _registrar_transicion_solicitud(
+        solicitud=solicitud,
+        estado_anterior=estado_anterior,
+        actor=actor,
+    )
+    programar_correo_datos_aprobados(
+        solicitud=solicitud,
+        operacion_id=evento.operacion_id,
+        actor=actor,
+    )
+    return ResultadoTransicionSolicitud(solicitud=solicitud, evento=evento)
+
+
+@transaction.atomic
+def cancelar_solicitud_asociacion(
+    *,
+    solicitud_id: int,
+    motivo: str,
+    actor,
+    ahora=None,
+):
+    motivo = (motivo or "").strip()
+    if not motivo:
+        raise ValueError("La cancelación requiere un motivo.")
+    ahora = ahora or timezone.now()
+    solicitud = SolicitudAsociacion.objects.select_for_update().get(pk=solicitud_id)
+    if solicitud.estado not in {
+        SolicitudAsociacion.ESTADO_RECIBIDA,
+        SolicitudAsociacion.ESTADO_OBSERVADA,
+        SolicitudAsociacion.ESTADO_DATOS_APROBADOS,
+    }:
+        raise TransicionSolicitudInvalida()
+
+    estado_anterior = solicitud.estado
+    solicitud.estado = SolicitudAsociacion.ESTADO_CANCELADA
+    solicitud.finalizado_en = ahora
+    solicitud.modificado_por = actor
+    solicitud.save(
+        update_fields=("estado", "finalizado_en", "modificado_en", "modificado_por")
+    )
+    evento = _registrar_transicion_solicitud(
+        solicitud=solicitud,
+        estado_anterior=estado_anterior,
+        actor=actor,
+        motivo=motivo,
+    )
+    programar_correo_solicitud_cancelada(
+        solicitud=solicitud,
+        motivo=motivo,
+        operacion_id=evento.operacion_id,
+        actor=actor,
+    )
+    return ResultadoTransicionSolicitud(solicitud=solicitud, evento=evento)
+
+
+@transaction.atomic
+def reenviar_comunicacion_solicitud(*, solicitud_id: int, actor, ahora=None):
+    ahora = ahora or timezone.now()
+    solicitud = SolicitudAsociacion.objects.select_for_update().get(pk=solicitud_id)
+    operacion_id = uuid.uuid4()
+    if solicitud.estado in {
+        SolicitudAsociacion.ESTADO_RECIBIDA,
+        SolicitudAsociacion.ESTADO_OBSERVADA,
+    }:
+        token = secrets.token_urlsafe(32)
+        solicitud.token_seguimiento_hash = _hash_token(token)
+        solicitud.token_seguimiento_vence_en = ahora + timedelta(
+            days=settings.UNI2_SOLICITUD_TOKEN_TTL_DAYS
+        )
+        solicitud.modificado_por = actor
+        solicitud.save(
+            update_fields=(
+                "token_seguimiento_hash",
+                "token_seguimiento_vence_en",
+                "modificado_en",
+                "modificado_por",
+            )
+        )
+        if solicitud.estado == SolicitudAsociacion.ESTADO_RECIBIDA:
+            return programar_correo_solicitud_recibida(
+                solicitud=solicitud,
+                token=token,
+                clave_sufijo=f"reenvio:{operacion_id}",
+                actor=actor,
+            )
+        explicacion = obtener_motivo_ultima_observacion_solicitud(solicitud.pk)
+        return programar_correo_solicitud_observada(
+            solicitud=solicitud,
+            token=token,
+            explicacion=explicacion,
+            operacion_id=f"reenvio:{operacion_id}",
+            actor=actor,
+        )
+    if solicitud.estado == SolicitudAsociacion.ESTADO_DATOS_APROBADOS:
+        return programar_correo_datos_aprobados(
+            solicitud=solicitud,
+            operacion_id=f"reenvio:{operacion_id}",
+            actor=actor,
+        )
+    if solicitud.estado == SolicitudAsociacion.ESTADO_CANCELADA:
+        motivo = (
+            EventoAuditoria.objects.filter(
+                entidad=solicitud._meta.label,
+                objeto_id=str(solicitud.pk),
+                cambios__estado__nuevo=SolicitudAsociacion.ESTADO_CANCELADA,
+            )
+            .exclude(motivo="")
+            .order_by("-fecha", "-id")
+            .values_list("motivo", flat=True)
+            .first()
+            or "La solicitud fue cerrada por la Mutual."
+        )
+        return programar_correo_solicitud_cancelada(
+            solicitud=solicitud,
+            motivo=motivo,
+            operacion_id=f"reenvio:{operacion_id}",
+            actor=actor,
+        )
+    raise TransicionSolicitudInvalida()
+
+
+@transaction.atomic
+def completar_alta_solicitud_asociacion(
+    *,
+    solicitud_id: int,
+    actor,
+    ahora=None,
+):
+    ahora = ahora or timezone.now()
+    solicitud = SolicitudAsociacion.objects.select_for_update().get(pk=solicitud_id)
+    if solicitud.estado != SolicitudAsociacion.ESTADO_DATOS_APROBADOS:
+        raise TransicionSolicitudInvalida()
+    solicitud.full_clean()
+    if _existe_asociado_con_documento_normalizado(solicitud.dni_normalizado):
+        raise SolicitudAsociacionDuplicada()
+
+    operacion_id = uuid.uuid4()
+    asociado = create_asociado(
+        nombre=solicitud.nombre,
+        apellido=solicitud.apellido,
+        dni=solicitud.dni_normalizado,
+        tipo=solicitud.tipo,
+        fecha_alta=timezone.localdate(ahora),
+        curso_actual=solicitud.curso_actual,
+        clasificacion_adherente=solicitud.clasificacion_adherente,
+        email=solicitud.email,
+        telefono=solicitud.telefono,
+        direccion=solicitud.direccion,
+        actor=actor,
+        operacion_id=operacion_id,
+    )
+    cuotas = generar_cuotas_iniciales_para_asociado(
+        asociado=asociado,
+        fecha_referencia=timezone.localdate(ahora),
+        actor=actor,
+        operacion_id=operacion_id,
+    )
+    estado_anterior = solicitud.estado
+    solicitud.asociado = asociado
+    solicitud.estado = SolicitudAsociacion.ESTADO_ALTA_COMPLETADA
+    solicitud.finalizado_en = ahora
+    solicitud.modificado_por = actor
+    solicitud.save(
+        update_fields=(
+            "asociado",
+            "estado",
+            "finalizado_en",
+            "modificado_en",
+            "modificado_por",
+        )
+    )
+    _registrar_transicion_solicitud(
+        solicitud=solicitud,
+        estado_anterior=estado_anterior,
+        actor=actor,
+        operacion_id=operacion_id,
+    )
+    return AltaDesdeSolicitudResult(
+        solicitud=solicitud,
+        asociado=asociado,
+        cuotas_generadas=tuple(cuotas),
+    )
+
+
+def corregir_solicitud_asociacion(
+    *,
+    solicitud_id: int,
+    datos: dict,
+    token: str,
+    actor_ip: str,
+    ahora=None,
+):
+    ahora = ahora or timezone.now()
+    solicitud = SolicitudAsociacion.objects.get(pk=solicitud_id)
+    _validar_acceso_correccion(solicitud=solicitud, token=token, ahora=ahora)
+
+    consumir_limite_publico(
+        accion="corregir_solicitud",
+        clave_cruda=str(solicitud.pk),
+        max_intentos=settings.UNI2_SOLICITUD_CORRECCION_MAX_INTENTOS,
+        ventana=timedelta(
+            minutes=settings.UNI2_SOLICITUD_CORRECCION_VENTANA_MINUTOS
+        ),
+        ahora=ahora,
+    )
+    return _corregir_solicitud_asociacion_transaccional(
+        solicitud_id=solicitud_id,
+        datos=datos,
+        token=token,
+        ahora=ahora,
+    )
+
+
+def _validar_acceso_correccion(*, solicitud, token, ahora):
+    if not hmac.compare_digest(solicitud.token_seguimiento_hash, _hash_token(token)):
+        raise EnlaceSolicitudInvalido()
+    if solicitud.token_seguimiento_vence_en <= ahora:
+        raise EnlaceSolicitudInvalido()
+    if solicitud.estado != SolicitudAsociacion.ESTADO_OBSERVADA:
+        raise CorreccionSolicitudNoPermitida()
+
+
+@transaction.atomic
+def _corregir_solicitud_asociacion_transaccional(
+    *,
+    solicitud_id: int,
+    datos: dict,
+    token: str,
+    ahora,
+):
+    solicitud = SolicitudAsociacion.objects.select_for_update().get(pk=solicitud_id)
+    # Se vuelve a validar después del bloqueo porque otra petición pudo usar el
+    # enlace mientras se consumía el límite fuera de esta transacción.
+    _validar_acceso_correccion(solicitud=solicitud, token=token, ahora=ahora)
+
+    dni_normalizado = normalizar_documento(datos.get("dni", ""))
+    otra_solicitud = (
+        SolicitudAsociacion.objects.filter(dni_normalizado=dni_normalizado)
+        .exclude(pk=solicitud.pk)
+        .exclude(estado=SolicitudAsociacion.ESTADO_CANCELADA)
+    )
+    if otra_solicitud.exists() or _existe_asociado_con_documento_normalizado(
+        dni_normalizado
+    ):
+        raise SolicitudAsociacionDuplicada()
+
+    anteriores = {
+        campo: getattr(solicitud, campo) for campo in CAMPOS_AUDITABLES_SOLICITUD
+    }
+    for campo in (
+        "nombre",
+        "apellido",
+        "dni",
+        "email",
+        "telefono",
+        "direccion",
+        "es_estudiante_cet3",
+        "curso_actual",
+        "clasificacion_adherente",
+    ):
+        setattr(solicitud, campo, datos[campo])
+    solicitud.estado = SolicitudAsociacion.ESTADO_RECIBIDA
+    solicitud.modificado_por = None
+    nuevo_token = secrets.token_urlsafe(32)
+    solicitud.token_seguimiento_hash = _hash_token(nuevo_token)
+    solicitud.token_seguimiento_vence_en = ahora + timedelta(
+        days=settings.UNI2_SOLICITUD_TOKEN_TTL_DAYS
+    )
+    solicitud.full_clean()
+    try:
+        with transaction.atomic():
+            solicitud.save()
+    except IntegrityError as error:
+        raise SolicitudAsociacionDuplicada() from error
+
+    nuevos = {
+        campo: getattr(solicitud, campo) for campo in CAMPOS_AUDITABLES_SOLICITUD
+    }
+    evento = registrar_evento(
+        actor=None,
+        actor_etiqueta="Solicitante mediante enlace privado",
+        accion=EventoAuditoria.ACCION_MODIFICAR,
+        entidad=solicitud._meta.label,
+        objeto_id=solicitud.pk,
+        objeto_descripcion=str(solicitud),
+        cambios=construir_cambios(
+            anteriores=anteriores,
+            nuevos=nuevos,
+            campos=CAMPOS_AUDITABLES_SOLICITUD,
+        ),
+        origen=EventoAuditoria.ORIGEN_SITIO_PUBLICO,
+    )
+    programar_correo_correcciones_recibidas(
+        solicitud=solicitud,
+        token=nuevo_token,
+        operacion_id=evento.operacion_id,
+    )
+    return solicitud
 
 
 def _valores_auditables_asociado(asociado):
@@ -64,8 +663,9 @@ def create_asociado(
     direccion: str = "",
     actor=None,
     origen: str = EventoAuditoria.ORIGEN_GESTION,
+    operacion_id=None,
 ):
-    operacion_id = uuid.uuid4()
+    operacion_id = operacion_id or uuid.uuid4()
     if isinstance(fecha_alta, str):
         fecha_alta = date.fromisoformat(fecha_alta)
     if isinstance(fecha_inicio_cobro, str):

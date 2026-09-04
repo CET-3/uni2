@@ -7,7 +7,6 @@
     <section
         id="uni2-credential"
         class="uni2-credential"
-        aria-labelledby="uni2-credential-title"
         data-credential-nombre="{{ asociado.nombre }}"
         data-credential-apellido="{{ asociado.apellido }}"
         data-credential-numero="{{ asociado.numero_asociado }}"
@@ -18,12 +17,6 @@
         data-credential-token="{{ asociado.token_credencial }}"
         data-credential-url="{{ credencial_url }}"
     >
-        <header class="uni2-credential-page-heading">
-            <span class="uni2-section-kicker">Credencial digital</span>
-            <h1 id="uni2-credential-title" class="uni2-titulo-seccion">Mi credencial</h1>
-            <p>Presentala en los comercios para acceder a tus beneficios.</p>
-        </header>
-
         <div class="uni2-credential-layout">
             {% include "components/credential_card.html" with asociado=asociado estado_credencial=estado_credencial dato_institucional_etiqueta=dato_institucional_etiqueta dato_institucional_valor=dato_institucional_valor credencial_url=credencial_url only %}
         </div>

@@ -29,8 +29,8 @@ origen y los campos que cambiaron.
   operación.
 - cambios\*: objeto JSON con valores anteriores y nuevos. Usa `{}` cuando la
   acción no necesita un detalle por campo.
-- motivo: explicación obligatoria para bajas, anulaciones y eliminaciones
-  físicas excepcionales.
+- motivo: explicación de hasta 500 caracteres, obligatoria para bajas,
+  anulaciones y eliminaciones físicas excepcionales.
 - origen\*: interfaz o proceso que produjo el evento.
 - operacion_id\*: UUID que permite agrupar todos los eventos de una misma
   operación.
@@ -51,7 +51,9 @@ origen y los campos que cambiaron.
 - `admin`;
 - `importacion`;
 - `comando`;
-- `sistema`.
+- `sistema`;
+- `sitio_publico`, para una acción realizada mediante un enlace o formulario
+  público sin atribuirla a un usuario Django.
 
 **Ejemplo de cambios:**
 

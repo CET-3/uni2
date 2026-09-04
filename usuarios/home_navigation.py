@@ -7,6 +7,7 @@ from gestion.permissions import (
     GESTION_IMPORTAR_ASOCIADOS,
     GESTION_IMPORTAR_CUOTAS_HISTORICAS,
     GESTION_CONSULTAR_ASOCIADOS,
+    GESTION_CONSULTAR_SOLICITUDES_ASOCIACION,
     GESTION_VER_AUDITORIA,
     GESTION_VER_DESIGN_SYSTEM,
     GESTION_VER_ESPECIFICACION,
@@ -58,6 +59,12 @@ def _acciones_selector(experiencias):
 
 def _acciones_gestion(user):
     definiciones = (
+        (
+            GESTION_CONSULTAR_SOLICITUDES_ASOCIACION,
+            "Solicitudes de asociación",
+            "gestion:solicitudes_asociacion",
+            "Revisar preinscripciones y completar altas presenciales.",
+        ),
         (
             GESTION_CONSULTAR_ASOCIADOS,
             "Atención al asociado",

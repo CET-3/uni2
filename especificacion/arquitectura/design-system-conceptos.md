@@ -254,6 +254,13 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-cta` | Botón principal amarillo |
 | `uni2-cta-secondary` | Botón secundario azul |
 
+### Formularios
+
+| Clase | Uso |
+|---|---|
+| `uni2-field-error` | Mensaje compacto de validación junto al control; combina franja semántica, ícono y texto sin viñetas |
+| `uni2-preinscription-result` | Card pública de confirmación con estado, mensaje, notas y acción responsive |
+
 ### Badges y etiquetas
 
 | Clase | Uso |
@@ -445,6 +452,11 @@ Una service card con destino usa un único enlace en la raíz: toda la superfici
 | `uni2-avatar` | Imagen o iniciales que identifican a una persona |
 | `uni2-avatar-{blue,green,yellow,red}` | Variantes cromáticas del avatar |
 | `uni2-data-list` | Lista de pares etiqueta/valor para una ficha |
+| `uni2-records-table` | Tabla que reorganiza sus registros como cards de dos columnas en mobile |
+| `uni2-records-table-row` | Fila responsive informativa; puede combinarse con `uni2-clickable-row` cuando existe detalle |
+| `uni2-timeline` | Secuencia cronológica vertical sin numeración visible |
+| `uni2-timeline-item` | Evento conectado dentro de una línea de tiempo |
+| `uni2-timeline-marker` | Punto del evento; el primero representa el movimiento más reciente |
 | `uni2-page-header-actions` | Grupo de acciones del header de página |
 | `uni2-pill-row` | Fila de pills |
 | `uni2-schedule-card` | Card de horario/turno |
@@ -519,7 +531,7 @@ Step card / Info box (.uni2-step-card, .uni2-info-box)
 
 Navbar (.uni2-navbar y partes)
 Cards Bootstrap-custom
-Botones y formularios
+Botones y formularios (`uni2-field-error` para errores asociados a controles)
 Footer (.uni2-footer y partes)
 Theme toggle
 Dashboard y gestión (.uni2-dashboard-page, .uni2-dashboard-pill, .uni2-metric-card, .uni2-surface-card)

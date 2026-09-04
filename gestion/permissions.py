@@ -10,6 +10,11 @@ GESTION_VER_ESPECIFICACION = "gestion.ver_especificacion"
 GESTION_VER_DESIGN_SYSTEM = "gestion.ver_design_system"
 GESTION_VER_AUDITORIA = "gestion.ver_auditoria"
 GESTION_VER_MOVIMIENTOS_ASOCIADO = "gestion.ver_movimientos_asociado"
+GESTION_CONSULTAR_SOLICITUDES_ASOCIACION = "gestion.consultar_solicitudes_asociacion"
+GESTION_REVISAR_SOLICITUDES_ASOCIACION = "gestion.revisar_solicitudes_asociacion"
+GESTION_COMPLETAR_SOLICITUDES_ASOCIACION = "gestion.completar_solicitudes_asociacion"
+GESTION_CANCELAR_SOLICITUDES_ASOCIACION = "gestion.cancelar_solicitudes_asociacion"
+GESTION_REENVIAR_COMUNICACIONES = "gestion.reenviar_comunicaciones"
 
 
 GESTION_PERMISSION_LABELS = [
@@ -25,6 +30,11 @@ GESTION_PERMISSION_LABELS = [
     (GESTION_VER_DESIGN_SYSTEM, "Puede ver el design system del proyecto"),
     (GESTION_VER_AUDITORIA, "Puede ver la auditoría de gestión"),
     (GESTION_VER_MOVIMIENTOS_ASOCIADO, "Puede ver los movimientos de la ficha del asociado"),
+    (GESTION_CONSULTAR_SOLICITUDES_ASOCIACION, "Puede consultar solicitudes de asociación"),
+    (GESTION_REVISAR_SOLICITUDES_ASOCIACION, "Puede revisar solicitudes de asociación"),
+    (GESTION_COMPLETAR_SOLICITUDES_ASOCIACION, "Puede completar solicitudes de asociación"),
+    (GESTION_CANCELAR_SOLICITUDES_ASOCIACION, "Puede cancelar solicitudes de asociación"),
+    (GESTION_REENVIAR_COMUNICACIONES, "Puede reenviar comunicaciones"),
 ]
 
 GESTION_PERMISSIONS = tuple(permission for permission, label in GESTION_PERMISSION_LABELS)

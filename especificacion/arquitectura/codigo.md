@@ -20,6 +20,9 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
 - `cuotas`: modelos y servicios de cuotas, deuda y pagos.
 - `web`: home y páginas públicas del sitio.
 - `contenidos`: productos, servicios y publicidades publicados por la web; en MVP se administran desde el admin técnico de Django.
+- `comunicaciones`: registro y entrega de mensajes por correo; prepara una
+  frontera común para lotes y push futuros sin trasladar reglas desde los
+  dominios que originan cada aviso.
 - `especificacion`: visualizador interno de la especificación para desarrolladores staff. Ver [Visualizador de especificación](visualizador.md).
 
 ### Criterio de separación

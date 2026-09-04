@@ -1,0 +1,10 @@
+{% if field.errors %}
+    <div class="uni2-field-error" id="{{ field.auto_id }}-errors" role="alert">
+        <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+        <div>
+            {% for error in field.errors %}
+                <span{% if not forloop.last %} class="d-block mb-1"{% endif %}>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
