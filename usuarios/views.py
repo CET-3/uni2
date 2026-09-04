@@ -1,14 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import TemplateView
 
 from comercios.services import validar_credencial
 
-from .forms import Uni2AuthenticationForm
-from .mixins import CredentialPrivacyHeadersMixin
+from .forms import Uni2AuthenticationForm, Uni2PasswordChangeForm
+from .mixins import AsociadoRequiredMixin, CredentialPrivacyHeadersMixin
 from .services import user_is_asociado, user_is_comercio
 
 
@@ -39,6 +40,16 @@ class Uni2LoginView(LoginView):
 
 class Uni2LogoutView(LogoutView):
     next_page = reverse_lazy("web:home")
+
+
+class Uni2PasswordChangeView(AsociadoRequiredMixin, PasswordChangeView):
+    template_name = "registration/password_change_form.html"
+    form_class = Uni2PasswordChangeForm
+    success_url = reverse_lazy("usuarios:cambiar_contrasena_lista")
+
+
+class Uni2PasswordChangeDoneView(AsociadoRequiredMixin, TemplateView):
+    template_name = "registration/password_change_done.html"
 
 
 class ResolverCredencialView(CredentialPrivacyHeadersMixin, LoginRequiredMixin, View):

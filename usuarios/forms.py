@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 
 
 class Uni2AuthenticationForm(AuthenticationForm):
@@ -21,3 +21,12 @@ class Uni2AuthenticationForm(AuthenticationForm):
                 "placeholder": "Ingresá tu contraseña",
             }
         )
+
+
+class Uni2PasswordChangeForm(PasswordChangeForm):
+    """Aplica los controles visuales de Uni2 al cambio de contraseña."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
