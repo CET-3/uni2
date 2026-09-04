@@ -118,6 +118,24 @@ def test_recuperacion_password_es_privada_y_no_store(client):
         assert response.headers["Referrer-Policy"] == "same-origin"
 
 
+@pytest.mark.django_db
+def test_datos_propios_del_asociado_son_privados_y_no_store(client):
+    asociado = create_asociado(
+        nombre="Juana",
+        apellido="Segura",
+        dni="40888777",
+        tipo="asociado",
+        fecha_alta="2026-07-01",
+    )
+    client.force_login(asociado.usuario)
+
+    response = client.get(reverse("asociados:datos_propios"))
+
+    assert response.status_code == 200
+    assert "X-Uni2-PWA-Cacheable" not in response.headers
+    assert {"private", "no-store"} <= cache_control_directives(response)
+
+
 def test_manifest_json_no_recibe_politica_de_html(client):
     response = client.get(reverse("pwa:manifest"))
 

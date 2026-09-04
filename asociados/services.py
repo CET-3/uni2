@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import IntegrityError, transaction
 from django.utils import timezone
 
@@ -101,6 +101,14 @@ CAMPOS_AUDITABLES_ASOCIADO = (
     "fecha_inicio_cobro",
     "fecha_baja",
     "motivo_baja",
+)
+
+CAMPOS_DATOS_PROPIOS_ASOCIADO = (
+    "nombre",
+    "apellido",
+    "telefono",
+    "email",
+    "direccion",
 )
 
 
@@ -735,7 +743,14 @@ def create_asociado(
 
 
 @transaction.atomic
-def actualizar_asociado(*, asociado: Asociado, datos, campos_modificados, actor):
+def actualizar_asociado(
+    *,
+    asociado: Asociado,
+    datos,
+    campos_modificados,
+    actor,
+    origen=EventoAuditoria.ORIGEN_GESTION,
+):
     campos = [campo for campo in campos_modificados if campo in CAMPOS_AUDITABLES_ASOCIADO]
     if not campos:
         return asociado
@@ -755,8 +770,53 @@ def actualizar_asociado(*, asociado: Asociado, datos, campos_modificados, actor)
             objeto_id=asociado.pk,
             objeto_descripcion=str(asociado),
             cambios=cambios,
-            origen=EventoAuditoria.ORIGEN_GESTION,
+            origen=origen,
         )
+    return asociado
+
+
+@transaction.atomic
+def actualizar_datos_propios_asociado(
+    *, asociado: Asociado, datos, actor
+) -> Asociado:
+    asociado = (
+        Asociado.objects.select_for_update()
+        .select_related("usuario")
+        .get(pk=asociado.pk)
+    )
+    if asociado.usuario_id != actor.pk:
+        raise PermissionDenied(
+            "No podés modificar los datos de otro asociado."
+        )
+
+    campos_modificados = [
+        campo
+        for campo in CAMPOS_DATOS_PROPIOS_ASOCIADO
+        if getattr(asociado, campo) != datos[campo]
+    ]
+    asociado = actualizar_asociado(
+        asociado=asociado,
+        datos=datos,
+        campos_modificados=campos_modificados,
+        actor=actor,
+        origen=EventoAuditoria.ORIGEN_ASOCIADO,
+    )
+
+    usuario = asociado.usuario
+    valores_usuario = {
+        "first_name": asociado.nombre,
+        "last_name": asociado.apellido,
+        "email": asociado.email,
+    }
+    campos_usuario = [
+        campo
+        for campo, valor in valores_usuario.items()
+        if getattr(usuario, campo) != valor
+    ]
+    for campo in campos_usuario:
+        setattr(usuario, campo, valores_usuario[campo])
+    if campos_usuario:
+        usuario.save(update_fields=campos_usuario)
     return asociado
 
 

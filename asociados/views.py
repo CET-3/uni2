@@ -1,10 +1,14 @@
-from django.urls import reverse
-from django.views.generic import TemplateView
+from django.contrib import messages
+from django.urls import reverse, reverse_lazy
+from django.views.generic import FormView, TemplateView
 
 from django.utils import timezone
 
 from cuotas.selectors import calcular_estado_credencial, calcular_estado_cuota, get_total_deuda
 from usuarios.mixins import AsociadoRequiredMixin, CredentialPrivacyHeadersMixin
+
+from .forms import AsociadoDatosPropiosForm
+from .services import actualizar_datos_propios_asociado
 
 
 class AsociadoCredencialView(CredentialPrivacyHeadersMixin, AsociadoRequiredMixin, TemplateView):
@@ -45,3 +49,26 @@ class AsociadoCuotasView(AsociadoRequiredMixin, TemplateView):
         context["cuotas_total"] = len(cuotas_calculadas)
         context["cuotas_con_saldo"] = sum(1 for cuota in cuotas_calculadas if cuota.saldo > 0)
         return context
+
+
+class AsociadoDatosPropiosView(AsociadoRequiredMixin, FormView):
+    template_name = "asociados/datos_propios.html"
+    form_class = AsociadoDatosPropiosForm
+    success_url = reverse_lazy("asociados:datos_propios")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["instance"] = self.request.user.asociado
+        return kwargs
+
+    def form_valid(self, form):
+        actualizar_datos_propios_asociado(
+            asociado=self.request.user.asociado,
+            datos=form.cleaned_data,
+            actor=self.request.user,
+        )
+        messages.success(
+            self.request,
+            "Tus datos se actualizaron correctamente.",
+        )
+        return super().form_valid(form)
