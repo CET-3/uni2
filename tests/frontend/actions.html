@@ -148,5 +148,6 @@
     assert(narrow.firstChild.getBoundingClientRect().width <= 181, 'El botón debe seguir siendo responsive: ' + narrow.firstChild.getBoundingClientRect().width + ' ' + narrow.firstChild.style.cssText + ' ' + getComputedStyle(narrow.firstChild).width + ' parent=' + narrow.getBoundingClientRect().width + '/' + getComputedStyle(narrow).width);
     document.getElementById('results').textContent = 'PASS';
   } catch (error) { document.getElementById('results').textContent = 'FAIL: ' + error.stack; }
+  await fetch('/test-result', {method: 'POST', body: document.getElementById('results').textContent});
 })();
 </script></body></html>

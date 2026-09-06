@@ -125,6 +125,9 @@ submitter, validación, cancelación, restauración, espera asíncrona, formular
 real de preinscripción, offline y ancho responsive con Bootstrap. La variante
 angosta renderiza el formulario a 390 px; los eventos se generan por código,
 por lo que no reemplaza la comprobación en un teléfono físico.
+La página de prueba informa su resultado al servidor local y éste cierra el
+navegador; no depende de la finalización de `--dump-dom` ni del reloj virtual.
+Ante timeout se conservan el log de Chromium y el número de POST recibidos.
 
 Ejecutar `DB_ENGINE=sqlite .venv/bin/pytest tests/frontend -q`. Sin Chromium,
 estas pruebas se omiten explícitamente. La suite de servicios y vistas verifica
