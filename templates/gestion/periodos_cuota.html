@@ -82,7 +82,7 @@
                             {{ periodo_form.activo }}
                             <label class="form-check-label" for="{{ periodo_form.activo.id_for_label }}">Activo</label>
                         </div>
-                        <button class="btn btn-primary w-100" type="submit">
+                        <button class="btn btn-primary w-100" type="submit" data-loading-text="Guardando…">
                             <i class="bi bi-calendar-plus" aria-hidden="true"></i> Crear período
                         </button>
                     </form>
@@ -142,7 +142,7 @@
                                                 <input type="hidden" name="action" value="generar_cuotas">
                                                 <input type="hidden" name="periodo_id" value="{{ periodo.id }}">
                                                 <span class="uni2-badge uni2-badge-info">{{ periodo.cuotas.count }} cuotas</span>
-                                                <button class="btn btn-primary" type="submit" aria-label="Generar cuotas para {{ periodo }}">
+                                                <button class="btn btn-primary" type="submit" data-loading-text="Generando…" aria-label="Generar cuotas para {{ periodo }}">
                                                     <i class="bi bi-lightning-charge" aria-hidden="true"></i> Generar cuotas
                                                 </button>
                                             </form>

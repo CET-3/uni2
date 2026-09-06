@@ -176,6 +176,28 @@ de protección durante cada smoke test usando `VERCEL_STAGING_TOKEN`.
 
 ### Migraciones y rollback
 
+Para operar desde este workspace se usa el archivo local `.env.staging`,
+ignorado por Git y previamente configurado para el ambiente. No se utiliza
+el vínculo `.vercel` del repositorio, que puede apuntar a Producción:
+
+```bash
+uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py migrate --plan
+uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py migrate --noinput
+```
+
+Revisar el plan antes de aplicar. El perfil exige `UNI2_ENVIRONMENT=staging` y
+valida las huellas de base y rol; no hay que forzar esa variable para sortear
+una configuración incorrecta. Si el archivo no está disponible o no supera
+esas comprobaciones, primero debe restablecerse la configuración administrativa.
+
+Vercel CLI 53.3.2 entregó variables vacías con `env run` y `env pull` durante
+la operación del 6 de septiembre de 2026, aun confirmando el proyecto staging.
+No asumir que una descarga exitosa contiene valores utilizables. Para investigar
+la CLI se utiliza un directorio separado, vinculado expresamente a `uni2-staging`
+con `vercel link --project uni2-staging --scope <equipo>`, sin el `.env` del
+repositorio. El [registro de esa ejecución](../../docs/informes/2026-09-06-registro-deploy-staging.md)
+distingue los errores comprobados de las causas pendientes.
+
 Las migraciones siguen siendo una operación explícita. Se revisan y aplican a
 la base staging desconectada antes de ejecutar el endurecimiento. El marcador
 se escribe al final, cuando esquema, sesiones, usuarios y tokens ya quedaron

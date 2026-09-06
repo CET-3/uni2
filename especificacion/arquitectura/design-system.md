@@ -14,6 +14,11 @@ La página requiere login y el permiso `gestion.ver_design_system`. El enlace ap
 
 ## Qué muestra
 
+Los botones de operaciones siguen el [patrón común de acciones](acciones-formularios.md):
+texto de procesamiento configurable, spinner discreto, bloqueo temporal,
+ancho adaptable y restauración accesible. Las confirmaciones de formularios
+tradicionales conservan los mensajes Django de la página destino.
+
 La vista reúne los patrones visuales que el equipo usa para construir pantallas en Django con Bootstrap: tokens, tipografía, componentes, bloques de home, secciones de servicios, beneficios, operaciones y una guía de partición para templates.
 
 ## Relación con la especificación

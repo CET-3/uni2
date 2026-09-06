@@ -83,3 +83,6 @@ jobs:
           usuarios/tests/test_management_commands.py
           -k preparar_copia_staging
           -q
+
+      - name: Probar idempotencia y cobros concurrentes en PostgreSQL
+        run: uv run --frozen pytest cuotas/tests/test_idempotencia.py -q

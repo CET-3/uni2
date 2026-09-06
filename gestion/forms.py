@@ -1,3 +1,5 @@
+import uuid
+
 from django import forms
 from django.db.models import Q
 from django.utils import timezone
@@ -118,6 +120,13 @@ class FiltroAuditoriaForm(forms.Form):
 
 
 class CobroCuotaForm(forms.Form):
+    clave_operacion = forms.UUIDField(
+        initial=uuid.uuid4, widget=forms.HiddenInput,
+        error_messages={
+            "required": "Recargá la página antes de registrar el cobro.",
+            "invalid": "Recargá la página antes de registrar el cobro.",
+        },
+    )
     asociado_id = forms.IntegerField(widget=forms.HiddenInput)
     cuotas_ids = forms.MultipleChoiceField(required=False, widget=forms.CheckboxSelectMultiple)
     fecha = forms.DateField(initial=timezone.localdate)

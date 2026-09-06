@@ -4404,3 +4404,23 @@ button.uni2-service-card:hover {
     transform: none;
   }
 }
+/* Feedback común de acciones: Bootstrap conserva :active y el foco visible. */
+.btn {
+    touch-action: manipulation;
+    transition: color 120ms ease, background-color 120ms ease,
+                border-color 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+[data-submitting="true"] .btn:disabled,
+.btn[data-submitting="true"] {
+    cursor: progress;
+}
+.uni2-action-spinner {
+    width: 0.9em;
+    height: 0.9em;
+    border-width: 0.12em;
+    vertical-align: -0.1em;
+}
+@media (prefers-reduced-motion: reduce) {
+    .btn { transition: none !important; }
+    .uni2-action-spinner { animation: none; }
+}

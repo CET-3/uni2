@@ -8,6 +8,21 @@ timestamp: 2026-08-26T00:00:00-03:00
 
 # Solicitudes de asociación
 
+## Reintentos del formulario público
+
+Cada nueva preinscripción pública lleva una `clave_operacion` UUID oculta y
+obligatoria, persistida con unicidad en la base. Si llega otra vez la misma
+clave, documento normalizado y correo, se confirma la recepción de la solicitud
+original: no se crea otra solicitud, no se rota el token privado y no se emite
+otro correo ni otro evento de creación. Reutilizar la clave no modifica los
+datos ya recibidos. Cambiar documento o correo con una clave usada se rechaza.
+
+Un formulario nuevo con otra clave mantiene la validación habitual de documento
+ya asociado o con solicitud no cancelada. No se convierte cualquier conflicto
+de DNI en éxito. Los límites públicos por IP continúan contando intentos.
+La restricción de unicidad protege también los envíos concurrentes; la clave
+no reemplaza la validación de datos ni la protección CSRF.
+
 ## SOLICITUD-ASOCIACION-001 — Separación del padrón
 
 Una solicitud no es un asociado. Antes de `alta_completada` no recibe número,
