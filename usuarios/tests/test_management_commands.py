@@ -31,6 +31,7 @@ from usuarios.roles import (
     GESTION_PUBLICIDADES_GROUP,
 )
 from usuarios.services import ASOCIADO_GROUP, COMERCIO_GROUP
+from usuarios.management.commands import preflight_staging_deploy
 
 SERVICIOS_VERCEL = {
     "Fotocopias",
@@ -69,6 +70,79 @@ def set_staging_qa_credentials(monkeypatch):
     }
     for name, value in credentials.items():
         monkeypatch.setenv(name, value)
+
+
+def _staging_preflight_settings():
+    return {
+        "DJANGO_SETTINGS_MODULE": "config.settings.staging",
+        "UNI2_ENVIRONMENT": "staging",
+        "UNI2_DEPLOYMENT_ENVIRONMENT": "staging",
+        "DATABASES": {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": "postgres",
+                "HOST": "staging.example",
+                "PORT": "5432",
+                "USER": "staging",
+            }
+        },
+    }
+
+
+def _set_staging_preflight_environment(monkeypatch):
+    monkeypatch.setenv("DJANGO_SETTINGS_MODULE", "config.settings.staging")
+    monkeypatch.setenv("UNI2_ENVIRONMENT", "staging")
+    for name in preflight_staging_deploy.REQUIRED_ENVIRONMENT[2:]:
+        monkeypatch.setenv(name, "a" * 64 if "FINGERPRINT" in name else "configured")
+
+
+@override_settings(**_staging_preflight_settings())
+def test_preflight_staging_aprueba_plan_de_migraciones_exacto(monkeypatch):
+    _set_staging_preflight_environment(monkeypatch)
+    monkeypatch.setattr(
+        preflight_staging_deploy,
+        "pending_migrations",
+        lambda: ["asociados.0011_solicitudasociacion_clave_operacion"],
+    )
+    output = StringIO()
+
+    call_command(
+        "preflight_staging_deploy",
+        expected_migration=[
+            "asociados.0011_solicitudasociacion_clave_operacion"
+        ],
+        stdout=output,
+    )
+
+    assert "Preflight staging aprobado" in output.getvalue()
+    assert "Migraciones pendientes: 1" in output.getvalue()
+
+
+@override_settings(**_staging_preflight_settings())
+def test_preflight_staging_rechaza_plan_distinto(monkeypatch):
+    _set_staging_preflight_environment(monkeypatch)
+    monkeypatch.setattr(
+        preflight_staging_deploy,
+        "pending_migrations",
+        lambda: ["cuotas.0006_pago_clave_operacion"],
+    )
+
+    with pytest.raises(CommandError, match="plan de migraciones no coincide"):
+        call_command(
+            "preflight_staging_deploy",
+            expected_migration=[
+                "asociados.0011_solicitudasociacion_clave_operacion"
+            ],
+        )
+
+
+@override_settings(**_staging_preflight_settings())
+def test_preflight_staging_rechaza_entorno_que_no_es_staging(monkeypatch):
+    _set_staging_preflight_environment(monkeypatch)
+    monkeypatch.setenv("UNI2_ENVIRONMENT", "production")
+
+    with pytest.raises(CommandError, match="UNI2_ENVIRONMENT=staging"):
+        call_command("preflight_staging_deploy")
 
 
 def test_huella_base_no_expone_la_contrasena_configurada():

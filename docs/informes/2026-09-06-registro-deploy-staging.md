@@ -106,3 +106,15 @@ uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.sta
 Resultado: únicamente `asociados.0011_solicitudasociacion_clave_operacion` y
 `cuotas.0006_pago_clave_operacion`, ambas agregan un UUID nullable y único.
 La salida se guardó en `/tmp/uni2-staging-actions-plan-local.log`.
+
+### 8. Preflight reutilizable para no repetir los diagnósticos
+
+- Mejora incorporada: `python manage.py preflight_staging_deploy` valida el
+  perfil `config.settings.staging`, `UNI2_ENVIRONMENT`, variables obligatorias,
+  PostgreSQL y el plan de migraciones sin escribir en la base.
+- Si se agregan argumentos `--expected-migration`, el comando compara el plan
+  exacto y falla antes de `migrate` cuando aparece, falta o cambia una
+  migración.
+- La operación queda documentada en `especificacion/arquitectura/staging.md`.
+  El procedimiento futuro empieza por este preflight y conserva el motivo de
+  cualquier rechazo en la salida del comando.
