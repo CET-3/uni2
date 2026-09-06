@@ -1,6 +1,8 @@
 // Renderizado del QR y copia consentida de la credencial en IndexedDB.
 (function () {
   'use strict';
+  if (window.__uni2CredentialInitialized) return;
+  window.__uni2CredentialInitialized = true;
 
   const configuredRetentionDays = Number.parseInt(
     document.body.dataset.pwaCredentialTtlDays || '7',
@@ -150,31 +152,29 @@
     }
 
     saveConfirmButton.addEventListener('click', async function () {
-      saveConfirmButton.disabled = true;
       try {
-        const saved = await storage.saveActiveCredential(snapshot());
-        showSaved(saved, false);
-        const modalElement = document.getElementById('uni2-credential-consent');
-        if (modalElement && window.bootstrap) {
-          window.bootstrap.Modal.getOrCreateInstance(modalElement).hide();
-        }
+        await window.Uni2Actions.run(saveConfirmButton, async function () {
+          const saved = await storage.saveActiveCredential(snapshot());
+          showSaved(saved, false);
+          const modalElement = document.getElementById('uni2-credential-consent');
+          if (modalElement && window.bootstrap) {
+            window.bootstrap.Modal.getOrCreateInstance(modalElement).hide();
+          }
+        });
       } catch (error) {
         if (status) status.textContent = 'No pudimos guardar la credencial en este dispositivo.';
-      } finally {
-        saveConfirmButton.disabled = false;
       }
     });
 
     deleteButton.addEventListener('click', async function () {
-      deleteButton.disabled = true;
       try {
-        await storage.deleteActiveCredential();
-        showNotSaved('La credencial se eliminó de este dispositivo.');
-        saveButton.focus();
+        await window.Uni2Actions.run(deleteButton, async function () {
+          await storage.deleteActiveCredential();
+          showNotSaved('La credencial se eliminó de este dispositivo.');
+          saveButton.focus();
+        });
       } catch (error) {
         if (status) status.textContent = 'No pudimos eliminar la credencial de este dispositivo.';
-      } finally {
-        deleteButton.disabled = false;
       }
     });
   }
@@ -260,12 +260,17 @@
     const deleteButton = document.getElementById('uni2-offline-credential-delete');
     if (deleteButton) {
       deleteButton.addEventListener('click', async function () {
-        deleteButton.disabled = true;
         try {
-          await storage.deleteActiveCredential();
-          showEmptyOfflineCredential();
+          await window.Uni2Actions.run(deleteButton, async function () {
+            await storage.deleteActiveCredential();
+            showEmptyOfflineCredential();
+          });
         } catch (error) {
-          deleteButton.disabled = false;
+          const status = document.getElementById('uni2-offline-credential-error');
+          if (status) {
+            status.hidden = false;
+            status.textContent = 'No pudimos eliminar la credencial de este dispositivo.';
+          }
         }
       });
     }

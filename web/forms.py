@@ -1,3 +1,5 @@
+import uuid
+
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS
 
@@ -100,3 +102,13 @@ class SolicitudAsociacionForm(forms.Form):
                     "Elegí una categoría.",
                 )
         return cleaned_data
+
+
+class PreinscripcionForm(SolicitudAsociacionForm):
+    clave_operacion = forms.UUIDField(
+        initial=uuid.uuid4, widget=forms.HiddenInput,
+        error_messages={
+            "required": "Recargá la página antes de enviar la preinscripción.",
+            "invalid": "Recargá la página antes de enviar la preinscripción.",
+        },
+    )

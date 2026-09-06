@@ -1,4 +1,5 @@
 import re
+import uuid
 
 import pytest
 from django.test import override_settings
@@ -8,6 +9,7 @@ from asociados.models import Asociado, ClasificacionAdherente, Curso, SolicitudA
 from asociados.selectors import obtener_solicitud_por_token
 from asociados.services import rotar_token_seguimiento
 from auditoria.models import EventoAuditoria
+from comunicaciones.models import Comunicacion, EntregaComunicacion
 from web.forms import SolicitudAsociacionForm
 
 
@@ -23,6 +25,7 @@ def curso():
 
 def datos_formulario(**overrides):
     datos = {
+        "clave_operacion": str(uuid.uuid4()),
         "nombre": "Ana",
         "apellido": "Flores",
         "dni": "48.123.456",
@@ -35,6 +38,34 @@ def datos_formulario(**overrides):
     }
     datos.update(overrides)
     return datos
+
+
+@pytest.mark.django_db
+def test_reintento_misma_preinscripcion_confirma_sin_duplicar(client, curso):
+    datos = datos_formulario(curso_actual=str(curso.pk))
+    primera = client.post(reverse("web:preinscripcion"), datos)
+    eventos = EventoAuditoria.objects.count()
+    comunicaciones = Comunicacion.objects.count()
+    entregas = EntregaComunicacion.objects.count()
+    segunda = client.post(reverse("web:preinscripcion"), datos)
+    assert primera.status_code == segunda.status_code == 302
+    assert primera.url == segunda.url == reverse("web:preinscripcion_recibida")
+    assert SolicitudAsociacion.objects.count() == 1
+    assert EventoAuditoria.objects.count() == eventos
+    assert Comunicacion.objects.count() == comunicaciones == 1
+    assert EntregaComunicacion.objects.count() == entregas == 1
+    distinta = client.post(reverse("web:preinscripcion"), {**datos, "clave_operacion": str(uuid.uuid4())})
+    assert distinta.status_code == 200
+    assert "otra solicitud" in distinta.content.decode()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("clave", ["", "no-es-un-uuid"])
+def test_preinscripcion_exige_clave_valida(client, curso, clave):
+    response = client.post(reverse("web:preinscripcion"), datos_formulario(curso_actual=curso.pk, clave_operacion=clave))
+    assert response.status_code == 200
+    assert "Recargá la página" in response.content.decode()
+    assert not SolicitudAsociacion.objects.exists()
 
 
 def solicitud_con_token(curso, *, estado=SolicitudAsociacion.ESTADO_RECIBIDA):

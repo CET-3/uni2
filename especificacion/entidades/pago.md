@@ -20,6 +20,9 @@ Representa un ingreso de dinero.
 - método\*
 - observaciones
 - registrado_por
+- clave_operacion: UUID único que identifica el envío de cobro y evita duplicados.
+  Obligatorio en el formulario de gestión; generado por el servicio para llamadas
+  internas sin clave. NULL permitido para pagos históricos. No editable en el admin.
 
 **Métodos:** efectivo, billetera_virtual.
 

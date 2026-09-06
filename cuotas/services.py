@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from decimal import Decimal
 
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.utils import timezone
 
 from asociados.models import Asociado
@@ -221,11 +221,19 @@ def generar_cuotas_iniciales_para_asociado(
 
 
 @transaction.atomic
-def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por=None, observaciones="", cuotas_ids=None):
+def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por=None, observaciones="", cuotas_ids=None, clave_operacion=None):
+    # Serializa cobros del mismo asociado antes de leer la deuda, también si
+    # provienen de pestañas diferentes. La transacción sola no bloquea lecturas.
+    asociado = Asociado.objects.select_for_update().get(pk=asociado.pk)
+    clave_operacion = clave_operacion or uuid.uuid4()
+    if Pago.objects.filter(clave_operacion=clave_operacion).exists():
+        raise ValueError("Esta operación ya fue registrada. Revisá los pagos del asociado.")
     operacion_id = uuid.uuid4()
     origen = EventoAuditoria.ORIGEN_GESTION if registrado_por else EventoAuditoria.ORIGEN_SISTEMA
     actor_etiqueta = "Sistema: registro de pago"
     importe = Decimal(str(importe))
+    if not importe.is_finite() or importe <= 0:
+        raise ValueError("El importe debe ser mayor que cero.")
     cuotas = _get_cuotas_para_cobro(asociado, cuotas_ids, fecha)
     deuda_total = sum((cuota.get_saldo_pendiente(fecha) for cuota in cuotas), start=Decimal("0"))
     es_donacion_sin_deuda = not cuotas and cuotas_ids == []
@@ -238,14 +246,21 @@ def registrar_pago(*, asociado: Asociado, fecha, importe, metodo, registrado_por
     importe_cuotas = deuda_total
     importe_donacion = importe_recibido - importe_cuotas
 
-    pago = Pago.objects.create(
-        asociado=asociado,
-        fecha=fecha,
-        importe=importe_recibido,
-        metodo=metodo,
-        registrado_por=registrado_por,
-        observaciones=observaciones,
-    )
+    try:
+        with transaction.atomic():
+            pago = Pago.objects.create(
+                clave_operacion=clave_operacion,
+                asociado=asociado,
+                fecha=fecha,
+                importe=importe_recibido,
+                metodo=metodo,
+                registrado_por=registrado_por,
+                observaciones=observaciones,
+            )
+    except IntegrityError:
+        if Pago.objects.filter(clave_operacion=clave_operacion).exists():
+            raise ValueError("Esta operación ya fue registrada. Revisá los pagos del asociado.") from None
+        raise
     _registrar_creacion(
         obj=pago,
         fields=AUDIT_FIELDS_PAGO,
@@ -323,9 +338,11 @@ def registrar_donacion(
     metodo,
     registrado_por=None,
     observaciones="",
+    clave_operacion=None,
 ):
     """Registra una donación cuando el asociado no tiene cuotas pendientes."""
 
+    asociado = Asociado.objects.select_for_update().get(pk=asociado.pk)
     if get_cuotas_deudoras(asociado, fecha).exists():
         raise ValueError("El asociado tiene cuotas pendientes; primero debe registrar su cobro.")
     return registrar_pago(
@@ -336,4 +353,5 @@ def registrar_donacion(
         registrado_por=registrado_por,
         observaciones=observaciones,
         cuotas_ids=[],
+        clave_operacion=clave_operacion,
     )

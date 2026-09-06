@@ -154,6 +154,10 @@ class Pago(models.Model):
         (METODO_BILLETERA, "Billetera virtual"),
     ]
 
+    clave_operacion = models.UUIDField(
+        "clave de operación", unique=True, null=True, blank=True, editable=False,
+        help_text="Identifica un envío de cobro para impedir que un reintento cree otro ingreso. Los pagos históricos pueden no tener clave.",
+    )
     asociado = models.ForeignKey(Asociado, on_delete=models.CASCADE, related_name="pagos")
     fecha = models.DateField()
     importe = models.DecimalField(max_digits=10, decimal_places=2)

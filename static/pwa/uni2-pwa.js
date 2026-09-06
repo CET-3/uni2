@@ -1,6 +1,8 @@
 // Registro de la PWA y experiencia global de instalación, conexión y actualización.
 (function () {
   'use strict';
+  if (window.__uni2PwaInitialized) return;
+  window.__uni2PwaInitialized = true;
 
   let installPrompt = null;
   let waitingWorker = null;
@@ -318,29 +320,21 @@
       ? storage.reconcileAuthenticatedOwner(ownerSource)
       : Promise.resolve(null);
 
-    // El listener de logout se instala antes de esperar IndexedDB: cerrar la
-    // sesión debe intentar limpiar la copia incluso si la apertura de la base
-    // tarda o falla.
+    // El módulo de acciones bloquea el submit y espera esta limpieza antes de
+    // reanudar el único envío nativo. No se registra otro handler de submit.
     document.querySelectorAll('form[data-pwa-logout]').forEach(function (form) {
       form.addEventListener(
-        'submit',
-        async function (event) {
-          event.preventDefault();
-          const submitter = event.submitter;
-          if (submitter) submitter.disabled = true;
-
-          try {
-            await Promise.race([
-              storage.deleteActiveCredential(),
+        'uni2:before-submit',
+        function (event) {
+          event.detail.waitUntil(
+            Promise.race([
+              Promise.resolve().then(() => storage.deleteActiveCredential()),
               new Promise(function (resolve) {
                 window.setTimeout(resolve, 1200);
               }),
-            ]);
-          } finally {
-            HTMLFormElement.prototype.submit.call(form);
-          }
-        },
-        true
+            ]).catch(() => {}) // Cerrar sesión también si IndexedDB falla.
+          );
+        }
       );
     });
 

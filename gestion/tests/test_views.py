@@ -1,4 +1,5 @@
 import re
+import uuid
 from datetime import date
 from decimal import Decimal
 from urllib.parse import parse_qs, urlsplit
@@ -689,6 +690,7 @@ def test_cobros_gestion_usa_consulta_de_asociados_y_registra_pago(client):
     response_cobro = client.post(
         reverse("gestion:cobros"),
         {
+            "clave_operacion": str(uuid.uuid4()),
             "asociado_id": asociado.id,
             "cuotas_ids": [str(cuota.id)],
             "fecha": timezone.localdate().isoformat(),
@@ -836,6 +838,7 @@ def test_cobros_gestion_permite_pago_mayor_y_genera_donacion(client):
     response = client.post(
         reverse("gestion:cobros"),
         {
+            "clave_operacion": str(uuid.uuid4()),
             "asociado_id": asociado.id,
             "cuotas_ids": [str(cuota.id)],
             "fecha": timezone.localdate().isoformat(),
@@ -869,6 +872,7 @@ def test_asociado_sin_deuda_puede_registrar_donacion_desde_su_detalle(client):
     response = client.post(
         reverse("gestion:cobros"),
         {
+            "clave_operacion": str(uuid.uuid4()),
             "asociado_id": asociado.id,
             "fecha": timezone.localdate().isoformat(),
             "importe": "2500.00",
@@ -922,6 +926,7 @@ def test_cobros_gestion_permite_cobrar_solo_cuotas_mas_viejas_seleccionadas(clie
     response = client.post(
         reverse("gestion:cobros"),
         {
+            "clave_operacion": str(uuid.uuid4()),
             "asociado_id": asociado.id,
             "cuotas_ids": [str(cuota_marzo.id)],
             "fecha": "2026-04-05",
@@ -969,6 +974,7 @@ def test_cobros_gestion_rechaza_saltar_cuota_mas_vieja(client):
     response = client.post(
         reverse("gestion:cobros"),
         {
+            "clave_operacion": str(uuid.uuid4()),
             "asociado_id": asociado.id,
             "cuotas_ids": [str(cuota_abril.id)],
             "fecha": "2026-04-05",
@@ -2000,3 +2006,38 @@ def test_asociado_detalle_oculta_boton_crear_usuario_cuando_ya_tiene_usuario(cli
 
     assert response.status_code == 200
     assert "Crear usuario" not in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_reintento_donacion_desde_formulario_no_crea_otro_pago(client):
+    staff = crear_usuario_gestion("staff_reintento")
+    asociado = create_asociado(
+        nombre="Ana", apellido="Prueba", dni="43210004", tipo="asociado", fecha_alta="2026-09-01"
+    )
+    client.force_login(staff)
+    formulario = client.get(reverse("gestion:cobros"), {"asociado": asociado.pk})
+    clave = formulario.context["cobro_form"]["clave_operacion"].value()
+    datos = {
+        "asociado_id": asociado.pk, "clave_operacion": str(clave),
+        "fecha": "2026-09-05", "importe": "100", "metodo": "efectivo",
+    }
+    assert client.post(reverse("gestion:cobros"), datos).status_code == 302
+    response = client.post(reverse("gestion:cobros"), datos)
+    assert response.status_code == 200
+    assert "ya fue registrada" in response.content.decode()
+    assert Pago.objects.count() == Donacion.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_cobro_sin_clave_no_registra_un_ingreso(client):
+    staff = crear_usuario_gestion("staff_sin_clave")
+    asociado = create_asociado(
+        nombre="Ana", apellido="Prueba", dni="43210005", tipo="asociado", fecha_alta="2026-09-01"
+    )
+    client.force_login(staff)
+    response = client.post(reverse("gestion:cobros"), {
+        "asociado_id": asociado.pk, "fecha": "2026-09-05", "importe": "100", "metodo": "efectivo",
+    })
+    assert response.status_code == 200
+    assert "Recargá la página" in response.content.decode()
+    assert not Pago.objects.exists()

@@ -21,7 +21,7 @@
             <a class="btn btn-primary" href="{% url 'gestion:asociado_detalle' solicitud.asociado_id %}"><i class="bi bi-person-vcard" aria-hidden="true"></i> Ver asociado</a>
         {% endif %}
         {% if solicitud.estado == "recibida" and perms.gestion.revisar_solicitudes_asociacion %}
-            <form class="d-grid" method="post" action="{% url 'gestion:solicitud_asociacion_aprobar' solicitud.pk %}">{% csrf_token %}<button class="btn btn-primary" type="submit"><i class="bi bi-check-circle" aria-hidden="true"></i> Aprobar datos</button></form>
+            <form class="d-grid" method="post" action="{% url 'gestion:solicitud_asociacion_aprobar' solicitud.pk %}">{% csrf_token %}<button class="btn btn-primary" type="submit" data-loading-text="Aprobando…"><i class="bi bi-check-circle" aria-hidden="true"></i> Aprobar datos</button></form>
             <a class="btn btn-outline-primary" href="{% url 'gestion:solicitud_asociacion_observar' solicitud.pk %}"><i class="bi bi-eye" aria-hidden="true"></i> Observar</a>
         {% elif solicitud.estado == "datos_aprobados" %}
             {% if perms.gestion.completar_solicitudes_asociacion %}<a class="btn btn-primary" href="{% url 'gestion:solicitud_asociacion_completar' solicitud.pk %}"><i class="bi bi-person-check" aria-hidden="true"></i> Completar alta</a>{% endif %}
@@ -63,7 +63,7 @@
                     {% empty %}<p class="text-secondary mb-0">Todavía no hay entregas registradas.</p>{% endfor %}
                 </div>
                 {% if solicitud.estado != "alta_completada" and perms.gestion.reenviar_comunicaciones %}
-                    <form class="d-grid d-sm-block mt-3" method="post" action="{% url 'gestion:solicitud_asociacion_reenviar' solicitud.pk %}">{% csrf_token %}<button class="btn btn-outline-secondary" type="submit"><i class="bi bi-envelope-arrow-up" aria-hidden="true"></i> Reenviar correo del estado actual</button></form>
+                    <form class="d-grid d-sm-block mt-3" method="post" action="{% url 'gestion:solicitud_asociacion_reenviar' solicitud.pk %}">{% csrf_token %}<button class="btn btn-outline-secondary" type="submit" data-loading-text="Enviando…"><i class="bi bi-envelope-arrow-up" aria-hidden="true"></i> Reenviar correo del estado actual</button></form>
                 {% endif %}
             </div></section>
             <section class="card uni2-surface-card"><div class="card-body">

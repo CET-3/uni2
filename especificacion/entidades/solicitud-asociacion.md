@@ -16,6 +16,10 @@ completa el alta.
 **Campos:**
 
 - id\*: identificador interno.
+- clave_operacion: UUID único del envío público. El formulario nuevo lo exige y
+  conserva al corregir errores; permite reconocer un reintento sin crear otra
+  solicitud. NULL para solicitudes históricas o llamadas internas sin clave.
+  No editable en el admin.
 - nombre\*: nombre declarado por la persona.
 - apellido\*: apellido declarado por la persona.
 - dni\*: DNI o documento, conservado en un único campo.
