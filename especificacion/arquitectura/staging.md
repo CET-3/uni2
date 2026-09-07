@@ -181,9 +181,27 @@ ignorado por Git y previamente configurado para el ambiente. No se utiliza
 el vínculo `.vercel` del repositorio, que puede apuntar a Producción:
 
 ```bash
+uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py preflight_staging_deploy
 uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py migrate --plan
 uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py migrate --noinput
 ```
+
+`preflight_staging_deploy` es una comprobación de solo lectura. Verifica que
+se hayan cargado las variables de staging, que Django use PostgreSQL y que el
+perfil sea `config.settings.staging`; también muestra las migraciones
+pendientes. Para hacer que el comando bloquee cualquier diferencia respecto
+del plan revisado, se declara cada migración esperada:
+
+```bash
+uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py preflight_staging_deploy \
+  --expected-migration asociados.0011_solicitudasociacion_clave_operacion \
+  --expected-migration cuotas.0006_pago_clave_operacion
+```
+
+Si el preflight falla, no se ejecuta `migrate`: primero se corrige el archivo
+`.env.staging`, el vínculo de la herramienta o el plan revisado. El comando no
+modifica la base y deja impreso el motivo concreto para que el siguiente
+deploy empiece con el mismo diagnóstico.
 
 Revisar el plan antes de aplicar. El perfil exige `UNI2_ENVIRONMENT=staging` y
 valida las huellas de base y rol; no hay que forzar esa variable para sortear
