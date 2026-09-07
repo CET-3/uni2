@@ -27,6 +27,8 @@ staging   -> PR a main    -> deploy en Producción
   aprobar readiness con credenciales. Manifest, iconos, service worker y
   pantalla offline deben responder sin la cabecera HTTP Basic que el worker no
   puede garantizar.
+- Readiness informa las migraciones pendientes en `pending_migrations`; si hay
+  alguna, responde 503 con `reason: migrations_pending`.
 - Solamente después de esos controles se promueve el deployment.
 - El dominio estable vuelve a probar readiness y el SHA promovido.
 - Producción conserva su integración Git actual y sólo despliega `main`.
