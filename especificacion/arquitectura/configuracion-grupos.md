@@ -8,16 +8,17 @@ timestamp: 2026-08-10T00:00:00-03:00
 
 # Configuración de grupos
 
-La fuente vigente es `usuarios/roles.py`: allí están los nombres y permisos
-naturales (`app_label.codename`) de todos los grupos administrados por Uni2.
-No se decide el acceso comparando nombres de grupos en las vistas.
+Los grupos y sus permisos pueden ser definidos por cada mutual desde el admin.
+Uni2 no necesita conocer ni versionar los nombres de esos grupos. Los permisos
+se expresan con sus claves naturales (`app_label.codename`) y las vistas o el
+admin consultan las capacidades efectivas del usuario, no el nombre de su
+grupo.
 
 `usuarios/group_configuration.py` compara y aplica esa definición. Al aplicar:
 
 - crea los grupos faltantes;
 - reemplaza los permisos de cada grupo por el conjunto exacto versionado;
-- alinea `is_staff` con `usuarios.acceder_admin_tecnico`, incluido cualquier
-  grupo futuro que reciba esa capacidad;
+- conserva la sincronización histórica de `is_staff` para compatibilidad;
 - conserva `is_staff` en superusuarios;
 - no agrega ni elimina integrantes de los grupos.
 
@@ -42,3 +43,11 @@ retirar el grupo que no corresponda a cada persona.
 `carga_inicial` reutiliza el mismo servicio; no mantiene una segunda matriz.
 Los cambios futuros deben modificar la definición, agregar una migración de
 datos, actualizar pruebas y actualizar la especificación en el mismo trabajo.
+
+## Acceso al admin técnico
+
+Una cuenta activa puede entrar al admin técnico si es superusuario o si tiene
+al menos un permiso efectivo (`view`, `add`, `change` o `delete`) sobre un
+modelo registrado en el admin. `is_staff` no es la fuente funcional de esta
+autorización. Dentro del admin, cada `ModelAdmin` continúa aplicando sus
+propias restricciones.

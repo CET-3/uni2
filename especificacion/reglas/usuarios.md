@@ -48,11 +48,11 @@ Si un usuario tiene más de una experiencia disponible, luego del login ve en la
 
 ## USUARIO-009
 
-`is_staff` es un requisito interno del admin de Django, pero no alcanza para
-mostrar su acceso en la interfaz ni define qué tareas operativas puede usar una
-persona en `gestion`. El enlace `Admin técnico` requiere la capacidad explícita
-`usuarios.acceder_admin_tecnico`. Las pantallas y accesos del backoffice se
-controlan con permisos Django propios de cada app.
+El acceso al admin técnico requiere una cuenta activa con al menos un permiso
+efectivo sobre un modelo registrado, o una cuenta superusuario. `is_staff` no
+define este acceso ni qué tareas operativas puede usar una persona en
+`gestion`. Las pantallas y acciones se controlan con permisos Django propios de
+cada app.
 
 ## USUARIO-010
 
@@ -136,27 +136,17 @@ El logo y el resultado exitoso del login enlazan a `/`. La selección no se guar
 | Equipo del proyecto | Especificación y design system | No requerido | Admin técnico, datos operativos y auditoría |
 | Administrador de la app | Todos los accesos por `is_superuser` | Administración técnica completa con las restricciones de integridad del sistema | No es un rol operativo delegable |
 
-## USUARIO-020 — `is_staff`, grupos y superusuario
+## USUARIO-020 — Permisos y acceso al admin
 
-Los permisos de un grupo y `is_staff` cumplen funciones diferentes. Los grupos
-determinan qué puede hacer la persona; `is_staff=True` permite entrar al admin
-de Django. Al guardar un usuario, Uni2 sincroniza automáticamente `is_staff`
-según el permiso `usuarios.acceder_admin_tecnico`. Al retirar la última
-asignación de esa capacidad, retira `is_staff`, salvo que la cuenta sea
-superusuario.
+Los grupos y permisos pueden ser definidos por cada mutual. Una cuenta activa
+entra al admin si posee al menos un permiso efectivo (`view`, `add`, `change` o
+`delete`) sobre un modelo registrado, o si es superusuario. Cada `ModelAdmin`
+mantiene sus propias restricciones de acciones. `is_staff` puede conservarse
+como dato técnico histórico, pero no es la fuente funcional de autorización.
 
-La lógica no contiene nombres de grupos. Los grupos iniciales Administrador de
-permisos, Gestión de convenios, Gestión de productos y servicios, Gestión de
-publicidades y Administrador de la mutual reciben la capacidad en la migración inicial. Un grupo futuro puede
-habilitar el admin recibiendo el mismo permiso, sin cambiar código Python.
-
-La sincronización vive en `usuarios.services.sincronizar_acceso_admin()` y se
-ejecuta desde el admin después de guardar la relación de grupos. No usa signals.
-La migración inicial corrige también usuarios que ya pertenecían a los roles
-iniciales alcanzados.
-
-La home y el menú muestran `Admin técnico` por la misma capacidad explícita,
-no por `is_staff`. Esto evita anunciar el admin a cuentas antiguas o ajustadas
+La autorización se evalúa directamente contra los permisos efectivos de los
+`ModelAdmin` registrados. La home y el menú muestran `Admin técnico` con la
+misma regla, no por `is_staff`. Esto evita anunciar el admin a cuentas antiguas o ajustadas
 manualmente que conservan la bandera técnica sin permisos de administración.
 
 `Administrador de la app` es una etiqueta organizativa para cuentas con
@@ -189,9 +179,9 @@ de permisos revisa cada responsabilidad y retira el grupo sobrante.
 ## USUARIO-023 — Acceso deducido a la administración
 
 La experiencia `Administración` no tiene un permiso propio de dashboard. Se
-ofrece cuando la persona posee al menos un permiso operativo real de `gestion`
-o la capacidad `usuarios.acceder_admin_tecnico`. Cada pantalla mantiene su
-control específico y entrar a la experiencia no autoriza otras operaciones.
+ofrece cuando la persona posee al menos un permiso operativo real de `gestion`.
+Cada pantalla mantiene su control específico y entrar al admin no autoriza
+otras operaciones.
 
 ## USUARIO-024 — Borrado excepcional de la carga inicial
 

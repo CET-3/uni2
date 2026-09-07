@@ -1,4 +1,6 @@
-from .roles import ACCESO_ADMIN_TECNICO
+from django.contrib import admin
+
+from .admin_access import user_can_access_admin
 from .services import get_available_experiences, user_has_gestion_access, user_is_asociado, user_is_comercio
 
 
@@ -15,7 +17,7 @@ def navigation_roles(request):
         "es_comercio": es_comercio,
         "tiene_gestion": user_has_gestion_access(user),
         "tiene_admin_tecnico": bool(
-            user.is_authenticated and user.has_perm(ACCESO_ADMIN_TECNICO)
+            user_can_access_admin(user, admin.site)
         ),
         "tiene_perfil_asociado": tiene_perfil_asociado,
         "tiene_perfil_comercio": tiene_perfil_comercio,

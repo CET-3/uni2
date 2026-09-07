@@ -57,7 +57,7 @@ def test_programar_email_envia_html_y_texto_solo_una_vez():
     assert entrega_1.intentos == 1
     assert len(mail.outbox) == 1
     assert mail.outbox[0].body
-    assert mail.outbox[0].alternatives[0].mimetype == "text/html"
+    assert mail.outbox[0].alternatives[0][1] == "text/html"
 
 
 @pytest.mark.django_db(transaction=True)

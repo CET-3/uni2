@@ -28,7 +28,7 @@ estas capacidades o del acceso al admin técnico.
 **Campos relevantes:** username, email, password, first_name, last_name, is_active, is_staff, last_login, date_joined.
 
 **Admin técnico:** el listado de usuarios muestra una columna de grupos para
-facilitar la revisión de roles sin abrir cada usuario. El permiso
-`usuarios.acceder_admin_tecnico` sincroniza automáticamente `is_staff=True`, sin
-depender del nombre del grupo. Al retirar la última asignación de esa capacidad,
-Uni2 desactiva `is_staff`, salvo para superusuarios.
+facilitar la revisión de roles sin abrir cada usuario. Una cuenta activa puede
+entrar si tiene algún permiso efectivo sobre un modelo registrado, o si es
+superusuario. `is_staff` queda como dato técnico de compatibilidad y no define
+por sí solo el acceso.
