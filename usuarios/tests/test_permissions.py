@@ -1,5 +1,5 @@
 import pytest
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 
 from gestion.permissions import (
     GESTION_CANCELAR_SOLICITUDES_ASOCIACION,
@@ -14,7 +14,6 @@ from gestion.permissions import (
     GESTION_VER_MOVIMIENTOS_ASOCIADO,
 )
 from usuarios.roles import (
-    ACCESO_ADMIN_TECNICO,
     ADMINISTRADOR_APP_GROUP,
     ADMINISTRADOR_MUTUAL_GROUP,
     ADMINISTRADOR_PERMISOS_GROUP,
@@ -32,6 +31,15 @@ def _tiene_permiso(grupo, permiso_natural):
     return grupo.permissions.filter(
         content_type__app_label=app_label,
         codename=codename,
+    ).exists()
+
+
+@pytest.mark.django_db
+def test_no_queda_permiso_tecnico_de_acceso_al_admin():
+    assert not Permission.objects.filter(
+        content_type__app_label="usuarios",
+        content_type__model="permisousuario",
+        codename="acceder_admin_tecnico",
     ).exists()
 
 
@@ -76,7 +84,6 @@ def test_grupos_de_dominio_reciben_solo_su_admin_tecnico():
     publicidades = Group.objects.get(name=GESTION_PUBLICIDADES_GROUP)
 
     assert _tiene_permiso(convenios, "comercios.change_comercio")
-    assert _tiene_permiso(convenios, ACCESO_ADMIN_TECNICO)
     assert not _tiene_permiso(convenios, "contenidos.change_publicidad")
     assert _tiene_permiso(productos, "contenidos.change_productoservicio")
     assert not _tiene_permiso(productos, "contenidos.change_publicidad")
@@ -92,7 +99,6 @@ def test_administrador_permisos_gestiona_cuentas_sin_editar_grupos():
     grupo = Group.objects.get(name=ADMINISTRADOR_PERMISOS_GROUP)
 
     assert _tiene_permiso(grupo, "auth.change_user")
-    assert _tiene_permiso(grupo, ACCESO_ADMIN_TECNICO)
     assert _tiene_permiso(grupo, "auth.view_group")
     assert not _tiene_permiso(grupo, "auth.change_group")
     assert _tiene_permiso(grupo, GESTION_VER_AUDITORIA)
@@ -119,7 +125,6 @@ def test_equipo_proyecto_solo_recibe_herramientas_de_documentacion():
 
     assert _tiene_permiso(grupo, "gestion.ver_especificacion")
     assert _tiene_permiso(grupo, "gestion.ver_design_system")
-    assert not _tiene_permiso(grupo, ACCESO_ADMIN_TECNICO)
     assert not _tiene_permiso(grupo, GESTION_VER_AUDITORIA)
     assert not _tiene_permiso(grupo, "asociados.view_asociado")
 

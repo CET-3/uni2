@@ -5,6 +5,7 @@ import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.sessions.models import Session
 from django.core.management import call_command
 from django.core.management.base import CommandError
@@ -24,7 +25,6 @@ from gestion.permissions import (
 )
 from usuarios.models import EstadoDatosStaging
 from usuarios.roles import (
-    ACCESO_ADMIN_TECNICO,
     ADMINISTRADOR_APP_GROUP,
     ATENCION_ASOCIADO_GROUP,
     EQUIPO_PROYECTO_GROUP,
@@ -252,25 +252,43 @@ def test_sincronizar_grupos_informa_aplica_y_es_idempotente():
 
 
 @pytest.mark.django_db
-def test_sincronizar_grupos_alinea_is_staff_por_capacidad_sin_hardcodear_grupos():
-    custom_group = Group.objects.create(name="Responsabilidad futura")
-    admin_app, admin_codename = ACCESO_ADMIN_TECNICO.split(".", 1)
-    custom_group.permissions.add(
-        Permission.objects.get(
-            content_type__app_label=admin_app, codename=admin_codename
-        )
+def test_limpiar_permisos_huerfanos_informa_sin_borrar_por_defecto():
+    content_type = ContentType.objects.create(
+        app_label="legado", model="modelo_eliminado"
     )
-    user_model = get_user_model()
-    enabled = user_model.objects.create_user(username="futuro", is_staff=False)
-    enabled.groups.add(custom_group)
-    stale = user_model.objects.create_user(username="sin-capacidad", is_staff=True)
+    permiso = Permission.objects.create(
+        content_type=content_type,
+        codename="view_modeloeliminado",
+        name="Can view modelo eliminado",
+    )
+    grupo = Group.objects.create(name="Marketing legado")
+    grupo.permissions.add(permiso)
+    usuario = get_user_model().objects.create_user(username="legado")
+    usuario.user_permissions.add(permiso)
 
-    call_command("sincronizar_grupos", apply=True)
+    output = StringIO()
+    call_command("limpiar_permisos_huerfanos", stdout=output)
 
-    enabled.refresh_from_db()
-    stale.refresh_from_db()
-    assert enabled.is_staff
-    assert not stale.is_staff
+    assert "legado.modelo_eliminado" in output.getvalue()
+    assert Permission.objects.filter(pk=permiso.pk).exists()
+    assert ContentType.objects.filter(pk=content_type.pk).exists()
+
+
+@pytest.mark.django_db
+def test_limpiar_permisos_huerfanos_apply_borra_permisos_y_content_type():
+    content_type = ContentType.objects.create(
+        app_label="legado", model="modelo_eliminado"
+    )
+    permiso = Permission.objects.create(
+        content_type=content_type,
+        codename="view_modeloeliminado",
+        name="Can view modelo eliminado",
+    )
+
+    call_command("limpiar_permisos_huerfanos", apply=True)
+
+    assert not Permission.objects.filter(pk=permiso.pk).exists()
+    assert not ContentType.objects.filter(pk=content_type.pk).exists()
 
 
 @pytest.mark.django_db

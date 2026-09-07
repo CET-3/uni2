@@ -54,3 +54,13 @@ de datos y exige `DATABASE_URL`.
 Los comandos de instalación y puesta en marcha se mantienen en el
 [README del proyecto](../../README.md). Para quienes recién empiezan, hay una
 [guía de inicio para Windows con Python, uv y Django](../guia-windows-python-django.md).
+
+### Limpieza de permisos huérfanos
+
+Las migraciones pueden dejar `ContentType` y `Permission` asociados a modelos
+que ya no existen. El comando `limpiar_permisos_huerfanos` informa esos casos
+por defecto, falla con `--check` si encuentra residuos y solo elimina los
+`ContentType` y permisos de modelos inexistentes cuando se ejecuta con
+`--apply`. No elimina permisos de modelos vigentes aunque no estén registrados
+en el admin, y los permisos custom históricos sobre modelos vigentes requieren
+revisión funcional antes de retirarse.

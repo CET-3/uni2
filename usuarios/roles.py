@@ -15,7 +15,6 @@ ADMINISTRADOR_MUTUAL_GROUP = "Administrador de la mutual"
 ADMINISTRADOR_APP_GROUP = "Administrador de la app"
 ASOCIADO_GROUP = "Asociados"
 COMERCIO_GROUP = "Comercios"
-ACCESO_ADMIN_TECNICO = "usuarios.acceder_admin_tecnico"
 
 GRUPOS_OPERATIVOS = (
     ATENCION_ASOCIADO_GROUP,
@@ -43,7 +42,6 @@ PERMISOS_POR_GRUPO = {
         "gestion.reenviar_comunicaciones",
     ),
     ADMINISTRADOR_PERMISOS_GROUP: (
-        ACCESO_ADMIN_TECNICO,
         "gestion.ver_auditoria",
         "auth.view_user",
         "auth.add_user",
@@ -52,7 +50,6 @@ PERMISOS_POR_GRUPO = {
         "auditoria.view_eventoauditoria",
     ),
     GESTION_CONVENIOS_GROUP: (
-        ACCESO_ADMIN_TECNICO,
         "comercios.view_actividadcomercial",
         "comercios.add_actividadcomercial",
         "comercios.change_actividadcomercial",
@@ -61,7 +58,6 @@ PERMISOS_POR_GRUPO = {
         "comercios.change_comercio",
     ),
     GESTION_PRODUCTOS_SERVICIOS_GROUP: (
-        ACCESO_ADMIN_TECNICO,
         "contenidos.view_categoriaproductoservicio",
         "contenidos.add_categoriaproductoservicio",
         "contenidos.change_categoriaproductoservicio",
@@ -70,7 +66,6 @@ PERMISOS_POR_GRUPO = {
         "contenidos.change_productoservicio",
     ),
     GESTION_PUBLICIDADES_GROUP: (
-        ACCESO_ADMIN_TECNICO,
         "contenidos.view_productoservicio",
         "contenidos.view_publicidad",
         "contenidos.add_publicidad",
@@ -82,7 +77,6 @@ PERMISOS_POR_GRUPO = {
         "gestion.ver_design_system",
     ),
     ADMINISTRADOR_MUTUAL_GROUP: (
-        ACCESO_ADMIN_TECNICO,
         "gestion.consultar_asociados",
         "gestion.editar_asociados",
         "gestion.exportar_asociados",

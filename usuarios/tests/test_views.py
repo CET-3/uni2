@@ -13,7 +13,7 @@ from gestion.permissions import (
     GESTION_VER_ESPECIFICACION,
 )
 from usuarios.home_navigation import build_home_navigation
-from usuarios.roles import ACCESO_ADMIN_TECNICO, EQUIPO_PROYECTO_GROUP
+from usuarios.roles import EQUIPO_PROYECTO_GROUP
 from usuarios.services import COMERCIO_GROUP
 
 
@@ -454,11 +454,11 @@ def test_navbar_agrupa_herramientas_internas_para_capacidad_admin(client):
             content_type__app_label=app_label,
             codename=codename,
         )
-        for app_label, codename in (
-            GESTION_VER_ESPECIFICACION.split(".", 1),
-            GESTION_VER_DESIGN_SYSTEM.split(".", 1),
-            ACCESO_ADMIN_TECNICO.split(".", 1),
-        )
+            for app_label, codename in (
+                GESTION_VER_ESPECIFICACION.split(".", 1),
+                GESTION_VER_DESIGN_SYSTEM.split(".", 1),
+                ("contenidos", "view_publicidad"),
+            )
     ]
     user.user_permissions.add(*permisos)
 
@@ -489,6 +489,21 @@ def test_is_staff_sin_capacidad_no_muestra_admin_tecnico(client):
     assert response.status_code == 200
     assertNotContains(response, "Admin técnico")
     assertNotContains(response, reverse("admin:index"))
+
+
+@pytest.mark.django_db
+def test_usuario_con_permiso_de_modelo_puede_abrir_admin_sin_is_staff(client):
+    user = get_user_model().objects.create_user(username="marketing")
+    permiso = Permission.objects.get(
+        content_type__app_label="contenidos", codename="view_publicidad"
+    )
+    user.user_permissions.add(permiso)
+    client.force_login(user)
+
+    response = client.get(reverse("admin:index"))
+
+    assert response.status_code == 200
+    assert "Publicidades" in response.content.decode()
 
 
 @pytest.mark.django_db
