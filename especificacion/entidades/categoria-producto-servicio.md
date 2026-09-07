@@ -16,7 +16,7 @@ Agrupa productos y servicios publicados por la mutual en el sitio público.
 - id*: identificador interno de la categoría.
 - nombre*: nombre visible de la categoría.
 - descripción: texto público que explica la categoría.
-- etiqueta_icono: etiqueta textual para representar un ícono en la interfaz.
+- etiqueta_icono: nombre del ícono de Bootstrap Icons que se representa en la interfaz. En el admin se muestran ejemplos y un enlace a la galería oficial para elegirlo.
 - texto_cta: texto libre de llamado a la acción. Puede incluir emails o URLs que la vista convierte en enlaces.
 - imagen_informativa: imagen compartida por los productos de la categoría, por ejemplo una tabla de talles.
 - título_imagen_informativa: título público que explica el contenido de la imagen informativa.

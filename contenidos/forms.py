@@ -1,8 +1,25 @@
 from django import forms
+from django.utils.html import format_html
 
 from asociados.models import Curso
 
-from .models import ProductoServicio
+from .models import CategoriaProductoServicio, ProductoServicio
+
+
+class CategoriaProductoServicioAdminForm(forms.ModelForm):
+    class Meta:
+        model = CategoriaProductoServicio
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["etiqueta_icono"].help_text = format_html(
+            "Nombre de un ícono de Bootstrap Icons, por ejemplo "
+            "<code>printer</code> o <code>tag</code>. "
+            '<a href="{}" target="_blank" rel="noopener">'
+            "Consultar la galería de íconos</a>.",
+            "https://icons.getbootstrap.com/",
+        )
 
 
 class ProductoServicioAdminForm(forms.ModelForm):

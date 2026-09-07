@@ -3,7 +3,7 @@ from django.contrib import admin
 from auditoria.admin_mixins import AuditoriaAdminMixin
 from config.formatting import formatear_moneda
 
-from .forms import ProductoServicioAdminForm
+from .forms import CategoriaProductoServicioAdminForm, ProductoServicioAdminForm
 from .models import CategoriaProductoServicio, ProductoServicio, Publicidad
 
 
@@ -27,6 +27,7 @@ class ProductoServicioInline(admin.TabularInline):
 
 @admin.register(CategoriaProductoServicio)
 class CategoriaProductoServicioAdmin(AuditoriaAdminMixin, admin.ModelAdmin):
+    form = CategoriaProductoServicioAdminForm
     audit_fields = (
         "nombre",
         "descripcion",

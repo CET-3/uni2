@@ -4,7 +4,7 @@ import pytest
 
 from asociados.models import Curso
 from contenidos.admin import ProductoServicioAdmin, ProductoServicioInline
-from contenidos.forms import ProductoServicioAdminForm
+from contenidos.forms import CategoriaProductoServicioAdminForm, ProductoServicioAdminForm
 from contenidos.models import CategoriaProductoServicio, ProductoServicio
 
 
@@ -120,6 +120,16 @@ def test_admin_e_inline_usan_formulario_de_destinatarios():
     assert ProductoServicioAdmin.form is ProductoServicioAdminForm
     assert ProductoServicioInline.form is ProductoServicioAdminForm
     assert "foto" in ProductoServicioInline.fields
+
+
+def test_formulario_categoria_explica_la_etiqueta_de_icono_y_enlaza_bootstrap_icons():
+    form = CategoriaProductoServicioAdminForm()
+
+    ayuda = str(form.fields["etiqueta_icono"].help_text)
+
+    assert "Nombre de un ícono de Bootstrap Icons" in ayuda
+    assert "https://icons.getbootstrap.com/" in ayuda
+    assert '<a href="https://icons.getbootstrap.com/"' in ayuda
 
 
 def test_admin_audita_los_nuevos_campos():

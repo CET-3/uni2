@@ -22,7 +22,7 @@ class CategoriaProductoServicio(models.Model):
         "etiqueta de ícono",
         max_length=50,
         blank=True,
-        help_text="Etiqueta textual para elegir o representar un ícono, por ejemplo printer.",
+        help_text="Nombre de un ícono de Bootstrap Icons, por ejemplo printer.",
     )
     texto_cta = models.TextField(
         "texto para call to action",
