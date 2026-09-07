@@ -27,7 +27,6 @@ from usuarios.roles import (
     ATENCION_ASOCIADO_GROUP,
     COMERCIO_GROUP,
     DEFAULT_GROUPS,
-    ACCESO_ADMIN_TECNICO,
 )
 
 
@@ -118,21 +117,6 @@ def ensure_default_groups():
         Group.objects.get_or_create(name=group_name)
 
 
-def sincronizar_acceso_admin(user):
-    """Alinea ``is_staff`` con la capacidad explícita de acceso al admin."""
-
-    # La instancia puede conservar caches de permisos anteriores al guardado de
-    # la relación M2M. Se invalidan para evaluar la asignación recién persistida.
-    for cache_name in ("_perm_cache", "_group_perm_cache", "_user_perm_cache"):
-        if hasattr(user, cache_name):
-            delattr(user, cache_name)
-    requiere_admin = user.is_superuser or user.has_perm(ACCESO_ADMIN_TECNICO)
-    if user.is_staff != requiere_admin:
-        user.is_staff = requiere_admin
-        user.save(update_fields=["is_staff"])
-    return user
-
-
 def user_has_group(user, group_name: str) -> bool:
     return user.is_authenticated and user.groups.filter(name=group_name).exists()
 
@@ -150,7 +134,6 @@ def user_has_gestion_access(user) -> bool:
         user.is_authenticated
         and (
             user_has_any_gestion_permission(user)
-            or user.has_perm(ACCESO_ADMIN_TECNICO)
         )
     )
 

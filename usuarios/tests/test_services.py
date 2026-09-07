@@ -14,55 +14,7 @@ from usuarios.services import (
     create_user_for_comercio,
     ensure_default_groups,
     get_available_experiences,
-    sincronizar_acceso_admin,
 )
-from usuarios.roles import (
-    ACCESO_ADMIN_TECNICO,
-    ATENCION_ASOCIADO_GROUP,
-    GESTION_CONVENIOS_GROUP,
-)
-
-
-@pytest.mark.django_db
-def test_grupo_convenios_activa_y_desactiva_acceso_admin():
-    usuario = get_user_model().objects.create_user(username="convenios")
-    grupo = Group.objects.get(name=GESTION_CONVENIOS_GROUP)
-
-    usuario.groups.add(grupo)
-    sincronizar_acceso_admin(usuario)
-    assert usuario.is_staff
-    assert "gestion" in get_available_experiences(usuario)
-
-    usuario.groups.remove(grupo)
-    sincronizar_acceso_admin(usuario)
-    assert not usuario.is_staff
-
-
-@pytest.mark.django_db
-def test_atencion_al_asociado_no_activa_acceso_admin():
-    usuario = get_user_model().objects.create_user(username="atencion_sin_admin")
-    usuario.groups.add(Group.objects.get(name=ATENCION_ASOCIADO_GROUP))
-
-    sincronizar_acceso_admin(usuario)
-
-    assert not usuario.is_staff
-
-
-@pytest.mark.django_db
-def test_grupo_nuevo_activa_admin_por_capacidad_y_no_por_nombre():
-    usuario = get_user_model().objects.create_user(username="rol_futuro")
-    grupo = Group.objects.create(name="Rol creado en el futuro")
-    app_label, codename = ACCESO_ADMIN_TECNICO.split(".", 1)
-    permiso = grupo.permissions.model.objects.get(
-        content_type__app_label=app_label,
-        codename=codename,
-    )
-    grupo.permissions.add(permiso)
-    usuario.groups.add(grupo)
-
-    sincronizar_acceso_admin(usuario)
-
-    assert usuario.is_staff
 
 
 @pytest.mark.django_db

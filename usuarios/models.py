@@ -53,16 +53,3 @@ class EstadoDatosStaging(models.Model):
 
     def __str__(self):
         return f"Staging listo: {self.refresh_id}"
-
-
-class PermisoUsuario(models.Model):
-    """Contenedor técnico de capacidades generales de usuarios."""
-
-    class Meta:
-        managed = False
-        default_permissions = ()
-        permissions = [
-            ("acceder_admin_tecnico", "Puede acceder al admin técnico"),
-        ]
-        verbose_name = "Permiso de usuario"
-        verbose_name_plural = "Permisos de usuario"

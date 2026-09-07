@@ -36,8 +36,8 @@ El menú desplegable se organiza en tres secciones visuales:
 
 ### Herramientas
 
-- Admin técnico de Django (solo con `usuarios.acceder_admin_tecnico`; la bandera
-  técnica `is_staff` por sí sola no muestra el enlace).
+- Admin técnico de Django (solo cuando la cuenta activa tiene algún permiso
+  efectivo sobre un modelo registrado, o es superusuario).
 - Especificación (solo si `gestion.ver_especificacion`).
 - Design system (solo si `gestion.ver_design_system`).
 

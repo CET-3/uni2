@@ -162,7 +162,8 @@ def test_readiness_informa_build_epoch_y_migraciones_sin_datos_personales():
     assert response.status_code == 200
     assert response.content == (
         b'{"build_id": "commit-staging", "data_epoch": "2026-08-02-01", '
-        b'"environment": "staging", "migrations_current": true, "ready": true}'
+        b'"environment": "staging", "migrations_current": true, '
+        b'"pending_migrations": [], "ready": true}'
     )
 
 
@@ -171,7 +172,10 @@ def test_readiness_informa_build_epoch_y_migraciones_sin_datos_personales():
     PWA_BUILD_ID="commit-staging",
 )
 def test_readiness_rechaza_un_esquema_con_migraciones_pendientes(monkeypatch):
-    monkeypatch.setattr("config.views._migrations_are_current", lambda: False)
+    monkeypatch.setattr(
+        "config.views._pending_migration_names",
+        lambda: ["contenidos.0008_alter_categoriaproductoservicio_etiqueta_icono"],
+    )
     request = RequestFactory().get("/__staging__/readiness/")
     request.uni2_staging_data_state = EstadoDatosStaging(
         refresh_id="2026-08-02-01",
@@ -184,3 +188,7 @@ def test_readiness_rechaza_un_esquema_con_migraciones_pendientes(monkeypatch):
     payload = json.loads(response.content)
     assert payload["migrations_current"] is False
     assert payload["ready"] is False
+    assert payload["pending_migrations"] == [
+        "contenidos.0008_alter_categoriaproductoservicio_etiqueta_icono"
+    ]
+    assert payload["reason"] == "migrations_pending"

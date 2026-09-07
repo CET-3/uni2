@@ -126,7 +126,9 @@ En staging y después del deploy productivo se comprueba:
 - el acceso anónimo queda detenido antes de las vistas de staging;
 - todas las respuestas staging llevan `X-Robots-Tag` restrictivo;
 - readiness confirma la conexión, el marcador de endurecimiento, el epoch y el
-  SHA exacto desplegado;
+  SHA exacto desplegado. También devuelve `pending_migrations`: si no está
+  vacío responde 503 e informa `reason: migrations_pending`, para que el
+  diagnóstico indique la migración concreta que falta;
 - `/manifest.webmanifest` responde 200 como
   `application/manifest+json`;
 - todos los iconos del manifest responden 200 y tienen el tamaño declarado;
@@ -134,6 +136,8 @@ En staging y después del deploy productivo se comprueba:
 - `/service-worker.js` responde 200 como JavaScript, con
   `Service-Worker-Allowed: /` y política de no caché;
 - el worker controla el scope `/` y usa el ID del commit desplegado;
+- si readiness responde 503, el smoke test conserva y muestra su JSON para
+  distinguir migraciones pendientes de otros errores de disponibilidad;
 - `/sin-conexion/` abre sin datos de usuario;
 - una respuesta pública anónima lleva
   `X-Uni2-PWA-Cacheable: public` y `Vary: Cookie`;

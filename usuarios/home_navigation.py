@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from django.contrib import admin
 from django.urls import reverse
 
 from gestion.permissions import (
@@ -13,7 +14,7 @@ from gestion.permissions import (
     GESTION_VER_ESPECIFICACION,
 )
 
-from .roles import ACCESO_ADMIN_TECNICO
+from .admin_access import user_can_access_admin
 from .services import get_available_experiences
 
 
@@ -113,7 +114,7 @@ def _acciones_gestion(user):
         for permission, label, url_name, description in definiciones
         if user.has_perm(permission)
     ]
-    if user.has_perm(ACCESO_ADMIN_TECNICO):
+    if user_can_access_admin(user, admin.site):
         acciones.append(
             HomeAction(
                 label="Admin técnico",

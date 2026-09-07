@@ -4,10 +4,12 @@ from django.contrib.auth.admin import GroupAdmin
 from django.contrib.auth.models import Group, User
 
 from auditoria.admin_mixins import AuditoriaAdminMixin
+from .admin_access import Uni2AdminSite
 from .roles import ADMINISTRADOR_APP_GROUP
-from .services import sincronizar_acceso_admin
 from .models import Notificacion
 
+
+admin.site.__class__ = Uni2AdminSite
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -33,9 +35,6 @@ class Uni2UserAdmin(AuditoriaAdminMixin, UserAdmin):
     def mostrar_grupos(self, obj):
         grupos = obj.groups.order_by("name").values_list("name", flat=True)
         return ", ".join(grupos) or "-"
-
-    def preparar_objeto_para_auditoria(self, request, obj):
-        sincronizar_acceso_admin(obj)
 
     def get_fieldsets(self, request, obj=None):
         if request.user.is_superuser or obj is None:

@@ -47,12 +47,6 @@ class Command(BaseCommand):
                 "Permisos inexistentes: "
                 + ", ".join(sorted(set(result.missing_permissions)))
             )
-        if result.staff_enabled or result.staff_disabled:
-            self.stdout.write(
-                f"Usuarios a habilitar/deshabilitar en admin: "
-                f"{result.staff_enabled}/{result.staff_disabled}"
-            )
-
         if options["apply"]:
             self.stdout.write(
                 self.style.SUCCESS("La matriz de grupos fue sincronizada.")
