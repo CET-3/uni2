@@ -47,6 +47,9 @@ def test_deploy_apunta_al_proyecto_staging_y_promueve_despues_del_smoke():
     assert "/__staging__/readiness/" in workflow
     assert 'test "$anonymous_status" = "401"' in workflow
     assert 'data["build_id"] == os.environ["PWA_BUILD_ID"]' in workflow
+    assert 'data["pending_migrations"] == []' in workflow
+    assert "readiness_status" in workflow
+    assert "readiness.json" in workflow
     assert 'assert f"{width}x{height}" == sys.argv[1]' in workflow
     assert "STAGING_BASE_URL: ${{ vars.STAGING_BASE_URL }}" in workflow
     pwa_public_block = workflow.split('vercel_request "/manifest.webmanifest"', 1)[1].split(

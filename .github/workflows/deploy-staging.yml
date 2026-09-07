@@ -88,10 +88,27 @@ jobs:
           )"
           test "$anonymous_status" = "401"
 
-          vercel_request "/__staging__/readiness/" \
-            --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
-            --output /tmp/readiness.json
-          python -c 'import json, os; data=json.load(open("/tmp/readiness.json")); assert data["ready"] is True; assert data["build_id"] == os.environ["PWA_BUILD_ID"]'
+          set +e
+          readiness_status="$(
+            vercel --scope="$VERCEL_ORG_ID" curl "/__staging__/readiness/" \
+              --deployment "$DEPLOYMENT_URL" \
+              -- \
+              --silent \
+              --show-error \
+              --retry 5 \
+              --retry-all-errors \
+              --user "$STAGING_ACCESS_USERNAME:$STAGING_ACCESS_PASSWORD" \
+              --output /tmp/readiness.json \
+              --write-out "%{http_code}"
+          )"
+          readiness_exit=$?
+          set -e
+          if test "$readiness_exit" -ne 0 || test "$readiness_status" != "200"; then
+            echo "Readiness de staging rechazó el deployment (HTTP $readiness_status):"
+            cat /tmp/readiness.json
+            exit 1
+          fi
+          python -c 'import json, os; data=json.load(open("/tmp/readiness.json")); assert data["ready"] is True; assert data["build_id"] == os.environ["PWA_BUILD_ID"]; assert data["pending_migrations"] == []'
           vercel_request "/manifest.webmanifest" \
             --dump-header /tmp/manifest.headers \
             --output /tmp/manifest.json
