@@ -68,6 +68,23 @@ def test_producto_rechaza_producto_sin_precio(categoria):
     assert error.value.message_dict["precio_asociados"] == ["Debe indicar un precio para asociados."]
 
 
+def test_productos_pueden_repetir_nombre_en_una_categoria(categoria):
+    primero = crear_producto(categoria)
+    primero.save()
+    segundo = crear_producto(categoria)
+
+    segundo.full_clean()
+    segundo.save()
+
+    assert ProductoServicio.objects.filter(categoria=categoria, nombre=primero.nombre).count() == 2
+
+
+def test_descripcion_de_producto_es_opcional(categoria):
+    producto = crear_producto(categoria, descripcion="")
+
+    producto.full_clean()
+
+
 @pytest.mark.parametrize("campo", ["precio_asociados", "precio_no_asociados"])
 def test_producto_rechaza_importes_cero(categoria, campo):
     producto = crear_producto(categoria, **{campo: 0})
