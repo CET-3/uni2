@@ -44,3 +44,4 @@ class AsociadoDatosPropiosForm(forms.Form):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
+        self.fields["nombre"].widget.attrs["autofocus"] = True
