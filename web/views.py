@@ -34,7 +34,7 @@ from cuotas.selectors import get_periodo_cuota_para_publicar
 from gestion.permissions import GESTION_VER_DESIGN_SYSTEM, user_has_gestion_permission
 from usuarios.home_navigation import build_home_navigation
 
-from .forms import SolicitudAsociacionForm
+from .forms import PreinscripcionForm, SolicitudAsociacionForm
 from .request_utils import obtener_ip_cliente
 
 
@@ -47,7 +47,7 @@ class SolicitudPrivadaResponseMixin:
 
 class PreinscripcionView(SolicitudPrivadaResponseMixin, FormView):
     template_name = "web/preinscripcion.html"
-    form_class = SolicitudAsociacionForm
+    form_class = PreinscripcionForm
     success_url = reverse_lazy("web:preinscripcion_recibida")
 
     def form_valid(self, form):

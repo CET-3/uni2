@@ -44,6 +44,7 @@ def _precache_urls():
         static("css/uni2-design-system.css"),
         static("js/uni2-theme.js"),
         static("js/uni2-carousel.js"),
+        static("js/uni2-actions.js"),
         static("vendor/bootstrap/5.3.3/css/bootstrap.min.css"),
         static("vendor/bootstrap/5.3.3/js/bootstrap.bundle.min.js"),
         static("vendor/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"),

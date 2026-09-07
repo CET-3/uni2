@@ -34,6 +34,7 @@ class ValidarCredencialForm(forms.Form):
                 "class": "form-control",
                 "autocomplete": "off",
                 "placeholder": "Ej. 40123456 o código UUID",
+                "autofocus": True,
             }
         ),
     )

@@ -45,7 +45,7 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-                <button class="btn btn-primary mt-4" type="submit"><i class="bi bi-send" aria-hidden="true"></i> Enviar correcciones</button>
+                <button class="btn btn-primary mt-4" type="submit" data-loading-text="Enviando…"><i class="bi bi-send" aria-hidden="true"></i> Enviar correcciones</button>
             </div>
         </form>
     {% elif solicitud.estado == "recibida" %}

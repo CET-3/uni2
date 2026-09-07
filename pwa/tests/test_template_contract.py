@@ -36,6 +36,8 @@ def test_base_integra_manifest_worker_y_componentes_pwa(client):
     assert "/static/pwa/icons/apple-touch-icon-180.png" in content
     assert "/static/pwa/uni2-private-storage.js" in content
     assert "/static/pwa/uni2-pwa.js" in content
+    assert content.count('src="/static/js/uni2-actions.js"') == 1
+    assert content.index('src="/static/js/uni2-actions.js"') < content.index('src="/static/pwa/uni2-pwa.js"')
     assert "/static/js/uni2-section-navigation.js" in content
     assert 'id="uni2-connectivity-status"' in content
     assert 'id="uni2-install-promotion"' in content

@@ -69,3 +69,10 @@ En las tablas públicas, el encabezado de nombres se deduce de `es_servicio`:
 `Producto o servicio` cuando conviven ambos tipos. Las columnas monetarias se
 alinean a la derecha. Un grupo compuesto íntegramente por servicios sin precio
 no muestra una columna vacía de precio o disponibilidad.
+
+## PRODUCTO-SERVICIO-010
+
+El nombre de un producto o servicio es el texto que se muestra en el catálogo,
+pero no es único. Se permiten varios ítems con el mismo nombre, también dentro
+de una misma categoría. La descripción es opcional y, cuando no se informa, la
+presentación pública omite ese texto sin impedir guardar el ítem.

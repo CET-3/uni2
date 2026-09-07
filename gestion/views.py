@@ -646,6 +646,7 @@ class GestionCobrosView(GestionPermissionRequiredMixin, TemplateView):
             asociado = get_object_or_404(Asociado, id=form.cleaned_data["asociado_id"])
             try:
                 datos_cobro = {
+                    "clave_operacion": form.cleaned_data["clave_operacion"],
                     "asociado": asociado,
                     "fecha": form.cleaned_data["fecha"],
                     "importe": form.cleaned_data["importe"],

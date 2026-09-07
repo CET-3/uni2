@@ -1,3 +1,5 @@
+import uuid
+
 from django import forms
 from django.db.models import Q
 from django.utils import timezone
@@ -33,7 +35,7 @@ class FiltroSolicitudesAsociacionForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["q"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Nombre, documento o correo"}
+            {"class": "form-control", "placeholder": "Nombre, documento o correo", "autofocus": True}
         )
         for nombre in ("estado", "tipo"):
             self.fields[nombre].widget.attrs["class"] = "form-select"
@@ -57,7 +59,7 @@ class CancelacionSolicitudForm(forms.Form):
     motivo = forms.CharField(
         label="Motivo de cancelación",
         max_length=500,
-        widget=forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 4, "autofocus": True}),
     )
 
 
@@ -92,6 +94,7 @@ class FiltroAuditoriaForm(forms.Form):
             {
                 "class": "form-control form-control-sm",
                 "placeholder": "Nombre, apellido o usuario",
+                "autofocus": True,
             }
         )
         self.fields["objeto"].widget.attrs.update(
@@ -118,6 +121,13 @@ class FiltroAuditoriaForm(forms.Form):
 
 
 class CobroCuotaForm(forms.Form):
+    clave_operacion = forms.UUIDField(
+        initial=uuid.uuid4, widget=forms.HiddenInput,
+        error_messages={
+            "required": "Recargá la página antes de registrar el cobro.",
+            "invalid": "Recargá la página antes de registrar el cobro.",
+        },
+    )
     asociado_id = forms.IntegerField(widget=forms.HiddenInput)
     cuotas_ids = forms.MultipleChoiceField(required=False, widget=forms.CheckboxSelectMultiple)
     fecha = forms.DateField(initial=timezone.localdate)
@@ -130,7 +140,7 @@ class CobroCuotaForm(forms.Form):
         cuotas_queryset = list(cuotas_queryset or [])
         self.fields["cuotas_ids"].choices = [(str(cuota.id), str(cuota.id)) for cuota in cuotas_queryset]
         self.fields["cuotas_ids"].required = bool(cuotas_queryset)
-        self.fields["fecha"].widget.attrs.update({"class": "form-control", "type": "date"})
+        self.fields["fecha"].widget.attrs.update({"class": "form-control", "type": "date", "autofocus": True})
         self.fields["importe"].widget.attrs.update({"class": "form-control", "step": "0.01"})
         self.fields["metodo"].widget.attrs.update({"class": "form-select"})
         self.fields["observaciones"].widget.attrs.update({"class": "form-control"})
@@ -154,6 +164,7 @@ class PeriodoCuotaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field_name in ["mes", "importe", "importe_recargo_mes", "importe_recargo_mes_siguiente", "fecha_vencimiento"]:
             self.fields[field_name].widget.attrs.update({"class": "form-control"})
+        self.fields["mes"].widget.attrs["autofocus"] = True
         self.fields["fecha_vencimiento"].widget.attrs.update({"type": "date"})
         self.fields["ciclo_lectivo"].widget.attrs.update({"class": "form-select"})
         self.fields["activo"].widget.attrs.update({"class": "form-check-input"})
@@ -210,6 +221,7 @@ class AsociadoGestionForm(AsociadoTipoFormMixin, forms.ModelForm):
                 field.widget.attrs.update({"class": "form-control"})
             if field_name in {"fecha_alta", "fecha_inicio_cobro"}:
                 field.widget.attrs.update({"type": "date"})
+        self.fields["nombre"].widget.attrs["autofocus"] = True
 
 
 class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
@@ -235,6 +247,7 @@ class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
                 field.widget.attrs.update({"class": "form-select"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
+        self.fields["nombre"].widget.attrs["autofocus"] = True
 
     def save(self, commit=True, actor=None):
         data = self.cleaned_data
@@ -261,7 +274,7 @@ class ImportarPadronAsociadosForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["archivo"].widget.attrs.update({"class": "form-control", "accept": ".xlsx"})
+        self.fields["archivo"].widget.attrs.update({"class": "form-control", "accept": ".xlsx", "autofocus": True})
 
     def clean_archivo(self):
         archivo = self.cleaned_data["archivo"]
@@ -278,7 +291,7 @@ class ImportarCuotasHistoricasForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["archivo"].widget.attrs.update({"class": "form-control", "accept": ".xlsx"})
+        self.fields["archivo"].widget.attrs.update({"class": "form-control", "accept": ".xlsx", "autofocus": True})
 
     def clean_archivo(self):
         archivo = self.cleaned_data["archivo"]
@@ -324,7 +337,7 @@ class FiltroAsociadosForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["q"].widget.attrs.update({"class": "form-control", "placeholder": "DNI, número, apellido o nombre"})
+        self.fields["q"].widget.attrs.update({"class": "form-control", "placeholder": "DNI, número, apellido o nombre", "autofocus": True})
         self.fields["estado"].widget.attrs.update({"class": "form-select"})
         self.fields["tipo"].widget.attrs.update({"class": "form-select"})
         self.fields["curso_actual"].widget.attrs.update({"class": "form-select"})

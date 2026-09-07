@@ -1,5 +1,7 @@
 # Arquitectura
 
+* [Botones y envíos de formularios](acciones-formularios.md) - Feedback reutilizable, accesibilidad y protección frente a reintentos.
+
 * [Arquitectura actual del código](codigo.md) - Apps, separación de responsabilidades y entradas de navegación.
 * [Base de datos por entorno](base-de-datos.md) - SQLite para alumnos, PostgreSQL para desarrollo avanzado y producción.
 * [Despliegue en Vercel](despliegue.md) - Seguridad, ramas desplegables y operación de migraciones.

@@ -200,6 +200,9 @@ def crear_solicitud_asociacion(*, datos: dict, actor_ip: str, ahora=None):
 
 @transaction.atomic
 def _crear_solicitud_asociacion_transaccional(*, datos: dict, ahora):
+    reintento = _obtener_reintento_preinscripcion(datos)
+    if reintento is not None:
+        return reintento
 
     dni_normalizado = normalizar_documento(datos.get("dni", ""))
     solicitud_abierta = SolicitudAsociacion.objects.filter(
@@ -208,6 +211,9 @@ def _crear_solicitud_asociacion_transaccional(*, datos: dict, ahora):
     if solicitud_abierta.exists() or _existe_asociado_con_documento_normalizado(
         dni_normalizado
     ):
+        reintento = _obtener_reintento_preinscripcion(datos)
+        if reintento is not None:
+            return reintento
         raise SolicitudAsociacionDuplicada()
 
     token = secrets.token_urlsafe(32)
@@ -217,11 +223,16 @@ def _crear_solicitud_asociacion_transaccional(*, datos: dict, ahora):
         token_seguimiento_vence_en=ahora
         + timedelta(days=settings.UNI2_SOLICITUD_TOKEN_TTL_DAYS),
     )
-    solicitud.full_clean()
     try:
+        solicitud.full_clean()
         with transaction.atomic():
             solicitud.save()
-    except IntegrityError as error:
+    except (IntegrityError, ValidationError) as error:
+        reintento = _obtener_reintento_preinscripcion(datos)
+        if reintento is not None:
+            return reintento
+        if isinstance(error, ValidationError) and not solicitud_abierta.exists():
+            raise
         # Otra petición puede haber registrado el mismo documento entre la
         # consulta anterior y este INSERT. La restricción de la base es la
         # última defensa y se traduce al mismo resultado funcional.
@@ -245,6 +256,19 @@ def _crear_solicitud_asociacion_transaccional(*, datos: dict, ahora):
         origen=EventoAuditoria.ORIGEN_SITIO_PUBLICO,
     )
     programar_correo_solicitud_recibida(solicitud=solicitud, token=token)
+    return solicitud
+
+
+def _obtener_reintento_preinscripcion(datos):
+    clave = datos.get("clave_operacion")
+    if not clave:
+        return None
+    solicitud = SolicitudAsociacion.objects.filter(clave_operacion=clave).first()
+    if solicitud is not None and (
+        solicitud.dni_normalizado != normalizar_documento(datos.get("dni", ""))
+        or solicitud.email.casefold() != datos.get("email", "").casefold()
+    ):
+        raise SolicitudAsociacionDuplicada()
     return solicitud
 
 

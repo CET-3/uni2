@@ -1,0 +1,153 @@
+<!doctype html><html lang="es"><meta charset="utf-8">
+<link rel="stylesheet" href="/static/vendor/bootstrap/5.3.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/uni2-design-system.css">
+<script src="/static/js/uni2-actions.js"></script>
+<!-- Cargar dos veces no debe registrar dos listeners. -->
+<script src="/static/js/uni2-actions.js"></script>
+<body><iframe name="resultado" hidden></iframe><pre id="results">RUNNING</pre>
+<script>
+(async function () {
+  const assert = (value, message) => { if (!value) throw new Error(message); };
+  const pause = () => new Promise(resolve => setTimeout(resolve, 50));
+  const makeForm = () => {
+    const form = document.createElement('form');
+    form.method = 'post'; form.action = '/submit'; form.target = 'resultado';
+    form.innerHTML = '<input name="dato" value="hola"><button name="accion" value="guardar" data-loading-text="Guardando…">Guardar</button><button disabled>Otro</button>';
+    document.body.append(form);
+    return form;
+  };
+  try {
+    const form = makeForm(), button = form.querySelector('button');
+    form.requestSubmit(button);
+    assert(button.disabled && form.dataset.submitting === 'true', 'Debe bloquear inmediatamente');
+    assert(button.textContent.includes('Guardando…'), 'Falta texto de procesamiento');
+    assert(form.getAttribute('aria-busy') === 'true', 'Falta aria-busy');
+    window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted: false}));
+    assert(button.disabled, 'La carga inicial no debe desbloquear un envío comenzado antes de cargar las imágenes');
+    form.requestSubmit(button);
+    for (let tries = 0; tries < 50; tries++) {
+      const requests = await (await fetch('/requests')).json();
+      if (requests.length) break;
+      await pause();
+    }
+    await pause();
+    const requests = await (await fetch('/requests')).json();
+    assert(requests.length === 1, 'Un doble submit debe enviar una sola request');
+    assert(requests[0].includes('accion=guardar'), 'Debe conservar name/value del submitter');
+    window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted: true}));
+    assert(!button.disabled && button.textContent === 'Guardar', 'Atrás debe restaurar el botón');
+    assert(form.querySelectorAll('button')[1].disabled, 'No habilitar controles deshabilitados originalmente');
+    assert(!form.querySelector('input[type=hidden]'), 'Eliminar copia del submitter');
+
+    const cancelled = makeForm();
+    cancelled.addEventListener('submit', event => event.preventDefault());
+    cancelled.requestSubmit();
+    await pause();
+    assert(!cancelled.dataset.submitting, 'Un submit cancelado no debe quedar bloqueado');
+
+    const invalid = makeForm();
+    invalid.querySelector('input').required = true;
+    invalid.querySelector('input').value = '';
+    invalid.requestSubmit();
+    assert(!invalid.dataset.submitting, 'La validación nativa debe seguir funcionando');
+
+    const action = document.createElement('button'); action.textContent = 'Guardar'; document.body.append(action);
+    let calls = 0, finish;
+    const pending = window.Uni2Actions.run(action, async () => { calls++; await new Promise(resolve => { finish = resolve; }); });
+    await window.Uni2Actions.run(action, async () => { calls++; });
+    assert(calls === 1 && action.disabled, 'La acción asíncrona debe ejecutarse una sola vez');
+    if (new URLSearchParams(location.search).has('mobile')) {
+      assert(matchMedia('(prefers-reduced-motion: reduce)').matches, 'Debe emular reducir movimiento');
+      assert(getComputedStyle(action.querySelector('.uni2-action-spinner')).animationName === 'none', 'Reducir movimiento también sin clase btn');
+    }
+    finish(); await pending;
+    assert(action.textContent.includes('Guardado') && action.disabled, 'Mostrar éxito confirmado');
+    window.Uni2Actions.reset(action);
+    try { await window.Uni2Actions.run(action, async () => { throw new Error('red'); }); } catch (_) {}
+    assert(!action.disabled && action.textContent === 'Guardar', 'Restaurar al fallar');
+    assert(!action.hasAttribute('aria-busy'), 'Restaurar accesibilidad al fallar');
+    let finishOld;
+    const old = window.Uni2Actions.run(action, () => new Promise(resolve => { finishOld = resolve; }));
+    window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted: true}));
+    finishOld(); await old;
+    assert(action.textContent === 'Guardar' && !action.disabled, 'No pintar un resultado de una operación restaurada');
+
+    const deferred = makeForm(), deferredButton = deferred.querySelector('button');
+    let cleanups = 0, cleaned;
+    deferred.addEventListener('uni2:before-submit', event => {
+      cleanups++;
+      event.detail.waitUntil(new Promise(resolve => { cleaned = resolve; }));
+    });
+    deferred.requestSubmit(deferredButton);
+    deferred.requestSubmit(deferredButton);
+    assert(cleanups === 1 && deferredButton.disabled, 'Logout debe limpiar una sola vez');
+    cleaned();
+    await pause();
+    for (let tries = 0; tries < 50; tries++) {
+      if ((await (await fetch('/requests')).json()).length === 2) break;
+      await pause();
+    }
+    assert((await (await fetch('/requests')).json()).length === 2, 'Logout debe reanudar un único submit');
+
+    const abandoned = makeForm();
+    let releaseAbandoned;
+    abandoned.addEventListener('uni2:before-submit', event => {
+      event.detail.waitUntil(new Promise(resolve => { releaseAbandoned = resolve; }));
+    });
+    abandoned.requestSubmit();
+    window.Uni2Actions.reset(abandoned);
+    releaseAbandoned(); await pause();
+    assert((await (await fetch('/requests')).json()).length === 2, 'Un callback restaurado no debe enviar un POST tardío');
+
+    const changed = makeForm();
+    let releaseChanged;
+    changed.addEventListener('uni2:before-submit', event => {
+      event.detail.waitUntil(new Promise(resolve => { releaseChanged = resolve; }));
+    });
+    changed.requestSubmit();
+    changed.querySelector('input').required = true;
+    changed.querySelector('input').value = '';
+    releaseChanged(); await pause();
+    assert(!changed.dataset.submitting && !changed.querySelector('button').disabled, 'Validación posterior a espera debe restaurar');
+
+    const frame = document.createElement('iframe');
+    frame.style.width = new URLSearchParams(location.search).has('mobile') ? '390px' : '1100px';
+    const loaded = new Promise(resolve => frame.addEventListener('load', resolve, {once: true}));
+    frame.src = '/preinscripcion'; document.body.append(frame); await loaded;
+    const publicForm = frame.contentDocument.querySelector('[data-solicitud-asociacion-form]');
+    const send = publicForm.querySelector('button[type=submit]');
+    publicForm.target = 'resultado';
+    const originalWidth = send.getBoundingClientRect().width;
+    send.click(); publicForm.requestSubmit(send);
+    assert(send.disabled && send.textContent.includes('Enviando…'), 'Preinscripción real debe dar feedback y bloquear');
+    assert(Math.abs(send.getBoundingClientRect().width - originalWidth) < 2, 'El botón no debe cambiar de ancho: ' + originalWidth + ' → ' + send.getBoundingClientRect().width);
+    for (let tries = 0; tries < 50; tries++) {
+      if ((await (await fetch('/requests')).json()).length === 3) break;
+      await pause();
+    }
+    const finalRequests = await (await fetch('/requests')).json();
+    assert(finalRequests.length === 3, 'Preinscripción real debe emitir un único POST');
+    assert(new URLSearchParams(finalRequests[2]).get('clave_operacion'), 'La request debe conservar la clave de preinscripción');
+
+    frame.contentWindow.dispatchEvent(new PageTransitionEvent('pageshow', {persisted: true}));
+    Object.defineProperty(frame.contentWindow.navigator, 'onLine', {value: false, configurable: true});
+    publicForm.requestSubmit(send);
+    await pause();
+    assert(!send.disabled && !publicForm.dataset.submitting, 'Offline debe restaurar el formulario');
+    assert((await (await fetch('/requests')).json()).length === 3, 'Offline no debe enviar solicitudes');
+
+    const narrow = document.createElement('div'); narrow.style.width = '240px';
+    // El contenedor de prueba cambia instantáneamente; se mantienen los estilos
+    // del botón real. Evita depender del reloj de animaciones del modo headless.
+    narrow.style.setProperty('transition', 'none', 'important');
+    narrow.innerHTML = '<button type="submit" class="btn btn-primary w-100" data-loading-text="Ingresando…">Ingresar</button>';
+    document.body.append(narrow);
+    document.dispatchEvent(new Event('shown.bs.modal'));
+    assert(narrow.firstChild.getBoundingClientRect().width <= 241, 'w-100 no debe desbordar su tarjeta');
+    narrow.style.width = '180px';
+    assert(narrow.firstChild.getBoundingClientRect().width <= 181, 'El botón debe seguir siendo responsive: ' + narrow.firstChild.getBoundingClientRect().width + ' ' + narrow.firstChild.style.cssText + ' ' + getComputedStyle(narrow.firstChild).width + ' parent=' + narrow.getBoundingClientRect().width + '/' + getComputedStyle(narrow).width);
+    document.getElementById('results').textContent = 'PASS';
+  } catch (error) { document.getElementById('results').textContent = 'FAIL: ' + error.stack; }
+  await fetch('/test-result', {method: 'POST', body: document.getElementById('results').textContent});
+})();
+</script></body></html>

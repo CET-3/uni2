@@ -176,6 +176,46 @@ de protección durante cada smoke test usando `VERCEL_STAGING_TOKEN`.
 
 ### Migraciones y rollback
 
+Para operar desde este workspace se usa el archivo local `.env.staging`,
+ignorado por Git y previamente configurado para el ambiente. No se utiliza
+el vínculo `.vercel` del repositorio, que puede apuntar a Producción:
+
+```bash
+uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py preflight_staging_deploy
+uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py migrate --plan
+uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py migrate --noinput
+```
+
+`preflight_staging_deploy` es una comprobación de solo lectura. Verifica que
+se hayan cargado las variables de staging, que Django use PostgreSQL y que el
+perfil sea `config.settings.staging`; también muestra las migraciones
+pendientes. Para hacer que el comando bloquee cualquier diferencia respecto
+del plan revisado, se declara cada migración esperada:
+
+```bash
+uv run --env-file .env.staging -- env DJANGO_SETTINGS_MODULE=config.settings.staging python manage.py preflight_staging_deploy \
+  --expected-migration asociados.0011_solicitudasociacion_clave_operacion \
+  --expected-migration cuotas.0006_pago_clave_operacion
+```
+
+Si el preflight falla, no se ejecuta `migrate`: primero se corrige el archivo
+`.env.staging`, el vínculo de la herramienta o el plan revisado. El comando no
+modifica la base y deja impreso el motivo concreto para que el siguiente
+deploy empiece con el mismo diagnóstico.
+
+Revisar el plan antes de aplicar. El perfil exige `UNI2_ENVIRONMENT=staging` y
+valida las huellas de base y rol; no hay que forzar esa variable para sortear
+una configuración incorrecta. Si el archivo no está disponible o no supera
+esas comprobaciones, primero debe restablecerse la configuración administrativa.
+
+Vercel CLI 53.3.2 entregó variables vacías con `env run` y `env pull` durante
+la operación del 6 de septiembre de 2026, aun confirmando el proyecto staging.
+No asumir que una descarga exitosa contiene valores utilizables. Para investigar
+la CLI se utiliza un directorio separado, vinculado expresamente a `uni2-staging`
+con `vercel link --project uni2-staging --scope <equipo>`, sin el `.env` del
+repositorio. El [registro de esa ejecución](../../docs/informes/2026-09-06-registro-deploy-staging.md)
+distingue los errores comprobados de las causas pendientes.
+
 Las migraciones siguen siendo una operación explícita. Se revisan y aplican a
 la base staging desconectada antes de ejecutar el endurecimiento. El marcador
 se escribe al final, cuando esquema, sesiones, usuarios y tokens ya quedaron

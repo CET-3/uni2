@@ -28,7 +28,7 @@
                 {% endfor %}
             </div>
             <div class="col-lg-3">
-                <button class="btn btn-primary w-100" type="submit">Analizar planilla</button>
+                <button class="btn btn-primary w-100" type="submit" data-loading-text="Analizando…">Analizar planilla</button>
             </div>
         </form>
     </div>
@@ -171,7 +171,7 @@
                 <h2 class="h5 mb-1">Confirmar importación</h2>
                 <p class="text-secondary mb-0">Solo se importan las cuotas sin observaciones. Las cuotas a revisar quedan afuera.</p>
             </div>
-            <button class="btn btn-success btn-lg" type="submit" {% if preview.summary.cuotas_a_crear == 0 %}disabled{% endif %}>Importar cuotas</button>
+            <button class="btn btn-success btn-lg" type="submit" data-loading-text="Importando…" {% if preview.summary.cuotas_a_crear == 0 %}disabled{% endif %}>Importar cuotas</button>
         </div>
     </form>
 {% endif %}

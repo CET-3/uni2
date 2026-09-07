@@ -92,6 +92,7 @@ class ProductoServicio(models.Model):
     )
     descripcion = models.TextField(
         "descripción",
+        blank=True,
         help_text="Texto público que explica qué incluye.",
     )
     foto = models.ImageField(
@@ -149,9 +150,6 @@ class ProductoServicio(models.Model):
         verbose_name = "Producto o servicio"
         verbose_name_plural = "Productos y servicios"
         ordering = ["categoria__orden", "orden", "nombre"]
-        constraints = [
-            models.UniqueConstraint(fields=["categoria", "nombre"], name="uniq_producto_servicio_por_categoria")
-        ]
         indexes = [models.Index(fields=["activo", "orden"])]
 
     def __str__(self):

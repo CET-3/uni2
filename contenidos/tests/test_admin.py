@@ -83,6 +83,15 @@ def test_formulario_rechaza_curso_sin_ciclo(categoria):
     assert form.errors["curso_destinatario"] == ["No puede indicar un curso sin seleccionar el ciclo."]
 
 
+def test_formulario_acepta_producto_sin_descripcion(categoria):
+    crear_curso()
+    form = ProductoServicioAdminForm(
+        data=datos_formulario(categoria, descripcion=""),
+    )
+
+    assert form.is_valid(), form.errors
+
+
 def test_formulario_conserva_combinacion_actual_inactiva(categoria):
     curso = crear_curso()
     producto = ProductoServicio.objects.create(

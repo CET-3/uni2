@@ -23,7 +23,9 @@
             {{ producto_servicio.get_ciclo_destinatario_display }}{% if producto_servicio.curso_destinatario %} · {{ producto_servicio.curso_destinatario }}{% endif %}
           </p>
         {% endif %}
-        <p>{{ producto_servicio.descripcion }}</p>
+        {% if producto_servicio.descripcion %}
+          <p>{{ producto_servicio.descripcion }}</p>
+        {% endif %}
         {% if producto_servicio.foto %}
           <img class="uni2-product-photo" src="{{ producto_servicio.foto.url }}" alt="Foto de {{ producto_servicio.nombre }}">
         {% endif %}

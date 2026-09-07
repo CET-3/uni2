@@ -15,6 +15,7 @@ class ProductoServicioAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["categoria"].widget.attrs["autofocus"] = True
 
         combinaciones_activas = list(
             Curso.objects.filter(activo=True)

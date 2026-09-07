@@ -14,7 +14,7 @@ timestamp: 2026-08-10T00:00:00-03:00
 2. Crea o selecciona una categoría.
 3. Crea o modifica una categoría con descripción, imagen informativa titulada,
    contacto, orden y estado de publicación.
-4. Crea o modifica un producto o servicio con descripción, foto, destinatario
+4. Crea o modifica un producto o servicio con descripción opcional, foto, destinatario
    escolar opcional, precios, orden y estado de publicación.
 5. Si indica curso, selecciona también el ciclo. El admin ofrece los ciclos y
    años existentes en cursos activos sin repetir comisión ni turno.

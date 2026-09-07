@@ -218,6 +218,10 @@ class Asociado(models.Model):
 
 
 class SolicitudAsociacion(models.Model):
+    clave_operacion = models.UUIDField(
+        "clave de operación", unique=True, null=True, blank=True, editable=False,
+        help_text="Identifica el envío original para confirmar un reintento sin duplicar la solicitud ni su correo. Las solicitudes históricas pueden no tener clave.",
+    )
     ESTADO_RECIBIDA = "recibida"
     ESTADO_OBSERVADA = "observada"
     ESTADO_DATOS_APROBADOS = "datos_aprobados"
