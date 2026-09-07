@@ -118,3 +118,14 @@ La salida se guardó en `/tmp/uni2-staging-actions-plan-local.log`.
 - La operación queda documentada en `especificacion/arquitectura/staging.md`.
   El procedimiento futuro empieza por este preflight y conserva el motivo de
   cualquier rechazo en la salida del comando.
+
+### 9. Intento incorrecto de push directo a `staging`
+
+- Comando: `git push origin staging` desde el commit del preflight.
+- Resultado: GitHub rechazó la actualización porque la rama protegida exige un
+  pull request y dos checks obligatorios. `staging` no se modificó.
+- Error de procedimiento: no verifiqué la protección de la rama antes de
+  publicar el commit.
+- Corrección: se creó `chore/preflight-staging-deploy`, se publicó allí y se
+  abrió el [PR #54](https://github.com/CET-3/uni2/pull/54). El circuito futuro
+  debe crear la rama y el PR antes de cualquier push destinado a staging.
