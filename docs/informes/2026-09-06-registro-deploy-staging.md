@@ -129,3 +129,33 @@ La salida se guardó en `/tmp/uni2-staging-actions-plan-local.log`.
 - Corrección: se creó `chore/preflight-staging-deploy`, se publicó allí y se
   abrió el [PR #54](https://github.com/CET-3/uni2/pull/54). El circuito futuro
   debe crear la rama y el PR antes de cualquier push destinado a staging.
+
+### 10. Deploy productivo sin aplicar primero las migraciones
+
+- El PR de productos llegó a `main` y Producción respondió correctamente, pero
+  la base productiva conservaba la restricción única por nombre. Por eso crear
+  un segundo producto con el mismo nombre falló aunque el código ya estuviera
+  publicado.
+- Primer error repetido: intenté consultar la base con `vercel env run`; la
+  CLI descargó variables vacías y Django quedó sin `DATABASE_URL`.
+- Segundo error repetido: `.env.production` sólo contiene `DATABASE_URL`; al
+  cargar `config.settings.production` también hay que declarar una
+  `SECRET_KEY` de proceso y desactivar el correo para una migración.
+- Comando operativo correcto, sin imprimir secretos:
+
+  ```bash
+  uv run --env-file .env.production -- env \
+    SECRET_KEY=preflight-only-secret \
+    UNI2_TRANSACTIONAL_EMAIL_MODE=disabled \
+    DJANGO_SETTINGS_MODULE=config.settings.production \
+    python manage.py migrate --plan
+  ```
+
+- El plan productivo tenía cuatro migraciones pendientes: claves de operación
+  de solicitudes y pagos, una modificación de auditoría y `contenidos.0007`.
+  Se aplicaron con el mismo entorno mediante `migrate --noinput`; la migración
+  de productos terminó correctamente y quitó la restricción que causaba el
+  error.
+- Regla para próximos deploys: aplicar y verificar el plan de migraciones en
+  Producción antes de probar altas o repetir nombres. Vercel sólo publica el
+  código; no ejecuta migraciones.

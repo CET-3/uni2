@@ -184,6 +184,30 @@ primero se revisa y aplica la migración compatible sobre la base staging y
 después se permite el deploy. El workflow no conoce `DATABASE_URL` y no ejecuta
 migraciones durante el build.
 
+El procedimiento productivo es determinista y no usa `vercel env run` para
+obtener credenciales: esa operación puede devolver variables vacías. Antes de
+fusionar un PR con cambios de esquema, se ejecutan exactamente estos pasos
+desde un workspace que tenga `.env.production` con `DATABASE_URL`:
+
+```bash
+uv run --env-file .env.production -- env \
+  SECRET_KEY=preflight-only-secret \
+  UNI2_TRANSACTIONAL_EMAIL_MODE=disabled \
+  DJANGO_SETTINGS_MODULE=config.settings.production \
+  python manage.py migrate --plan
+
+uv run --env-file .env.production -- env \
+  SECRET_KEY=preflight-only-secret \
+  UNI2_TRANSACTIONAL_EMAIL_MODE=disabled \
+  DJANGO_SETTINGS_MODULE=config.settings.production \
+  python manage.py migrate --noinput
+```
+
+El plan se revisa y la migración se aplica antes de fusionar `staging` en
+`main`. Si cualquiera de los dos comandos falla, no se fusiona ni se prueba el
+deploy. Vercel sólo publica el código; nunca se toma como ejecutor de
+migraciones.
+
 Los comandos concretos se mantienen en el [README](../../README.md).
 
 ### Rollback de la PWA
