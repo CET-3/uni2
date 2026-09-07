@@ -262,22 +262,23 @@ El inventario de variables y secretos está en
 
 El arranque de la aplicación en Vercel no ejecuta migraciones ni comandos de
 carga. Cuando un PR incluye migraciones, después de aprobarlo y antes de
-fusionarlo se revisa el plan usando las variables de Production guardadas en
-Vercel:
+fusionarlo se ejecuta el preflight desde un workspace con `.env.production`
+que contenga `DATABASE_URL`:
 
 ```bash
-vercel env run --environment production -- \
-  env DJANGO_SETTINGS_MODULE=config.settings.production \
-  uv run python manage.py migrate --plan
+scripts/preflight-production-deploy.sh
 ```
 
-Si el plan es correcto y existe un respaldo adecuado para un cambio riesgoso:
+Si el plan es correcto y existe un respaldo adecuado para un cambio riesgoso,
+se aplican las migraciones y se vuelve a verificar el plan:
 
 ```bash
-vercel env run --environment production -- \
-  env DJANGO_SETTINGS_MODULE=config.settings.production \
-  uv run python manage.py migrate
+scripts/preflight-production-deploy.sh --apply
 ```
+
+El modo predeterminado sólo lee el plan. `--apply` es el único modo que
+modifica la base. Vercel sólo publica el código y no se usa para ejecutar
+migraciones.
 
 Las migraciones deben ser compatibles con la versión que continúa atendiendo
 tráfico hasta que se fusione el PR. Los cambios destructivos se dividen en más

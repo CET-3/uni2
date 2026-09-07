@@ -35,6 +35,12 @@ jobs:
       - name: Instalar dependencias
         run: uv sync --locked --dev
 
+      - name: Verificar sincronización de modelos y migraciones
+        env:
+          SECRET_KEY: ci-only-secret
+          UNI2_TRANSACTIONAL_EMAIL_MODE: disabled
+        run: uv run --frozen python manage.py makemigrations --check --dry-run
+
       - name: Ejecutar la suite
         run: uv run --frozen pytest -q
 

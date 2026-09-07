@@ -170,7 +170,8 @@ Un PR con cambios de esquema debe incluir su migración y mantener
 compatibilidad temporal con la versión productiva anterior.
 
 1. Revisar y aprobar el código y la migración.
-2. Consultar `migrate --plan` usando las variables Production de Vercel.
+2. Ejecutar `scripts/preflight-production-deploy.sh` desde un workspace con
+   `.env.production` y revisar el plan.
 3. Confirmar un respaldo cuando el cambio tenga riesgo sobre datos.
 4. Aplicar la migración antes de fusionar el PR.
 5. Fusionar en `main` para iniciar el deploy automático.
@@ -190,17 +191,8 @@ fusionar un PR con cambios de esquema, se ejecutan exactamente estos pasos
 desde un workspace que tenga `.env.production` con `DATABASE_URL`:
 
 ```bash
-uv run --env-file .env.production -- env \
-  SECRET_KEY=preflight-only-secret \
-  UNI2_TRANSACTIONAL_EMAIL_MODE=disabled \
-  DJANGO_SETTINGS_MODULE=config.settings.production \
-  python manage.py migrate --plan
-
-uv run --env-file .env.production -- env \
-  SECRET_KEY=preflight-only-secret \
-  UNI2_TRANSACTIONAL_EMAIL_MODE=disabled \
-  DJANGO_SETTINGS_MODULE=config.settings.production \
-  python manage.py migrate --noinput
+scripts/preflight-production-deploy.sh
+scripts/preflight-production-deploy.sh --apply
 ```
 
 El plan se revisa y la migración se aplica antes de fusionar `staging` en
