@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 import pytest
+from django.forms import modelform_factory
 
 from asociados.models import Curso
 from contenidos.admin import ProductoServicioAdmin, ProductoServicioInline
@@ -124,3 +125,13 @@ def test_admin_e_inline_usan_formulario_de_destinatarios():
 
 def test_admin_audita_los_nuevos_campos():
     assert {"foto", "ciclo_destinatario", "curso_destinatario"}.issubset(ProductoServicioAdmin.audit_fields)
+
+
+def test_formulario_admin_no_falla_si_el_inline_excluye_categoria(db):
+    formulario_inline = modelform_factory(
+        ProductoServicio,
+        form=ProductoServicioAdminForm,
+        fields=("nombre",),
+    )
+
+    formulario_inline()
