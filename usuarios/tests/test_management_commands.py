@@ -292,6 +292,29 @@ def test_limpiar_permisos_huerfanos_apply_borra_permisos_y_content_type():
 
 
 @pytest.mark.django_db
+def test_limpiar_permisos_huerfanos_check_falla_y_preserva_custom_historico():
+    content_type = ContentType.objects.get(
+        app_label="contenidos", model="publicidad"
+    )
+    permiso = Permission.objects.create(
+        content_type=content_type,
+        codename="permiso_historico",
+        name="Permiso histórico",
+    )
+    output = StringIO()
+
+    with pytest.raises(CommandError, match="permisos huérfanos"):
+        call_command("limpiar_permisos_huerfanos", check=True, stdout=output)
+
+    assert "no se elimina automáticamente" in output.getvalue()
+    call_command("limpiar_permisos_huerfanos", apply=True)
+    assert Permission.objects.filter(pk=permiso.pk).exists()
+    output = StringIO()
+    call_command("limpiar_permisos_huerfanos", stdout=output)
+    assert "permiso_historico" in output.getvalue()
+
+
+@pytest.mark.django_db
 def test_carga_inicial_crea_servicios_vercel():
     call_command("carga_inicial")
     nombres = set(CategoriaProductoServicio.objects.values_list("nombre", flat=True))
