@@ -38,7 +38,9 @@
                   <h3>{{ item.nombre }}</h3>
                   <span class="uni2-badge">{{ item.es_servicio|yesno:"Servicio,Producto" }}</span>
                 </div>
-                <p>{{ item.descripcion }}</p>
+                {% if item.descripcion %}
+                  <p>{{ item.descripcion }}</p>
+                {% endif %}
                 <dl class="row mb-0 small">
                   <dt class="col-6">Asociados</dt>
                   <dd class="col-6 text-end">{{ item.precio_asociados|moneda }}</dd>

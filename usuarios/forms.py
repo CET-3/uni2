@@ -38,6 +38,7 @@ class Uni2PasswordChangeForm(PasswordChangeForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
+        self.fields["old_password"].widget.attrs["autofocus"] = True
 
 
 class RecuperarContrasenaForm(forms.Form):
@@ -52,6 +53,7 @@ class RecuperarContrasenaForm(forms.Form):
         self.fields["email"].widget.attrs.update(
             {"class": "form-control", "autocomplete": "email"}
         )
+        self.fields["dni"].widget.attrs["autofocus"] = True
 
     def clean_dni(self):
         try:
@@ -67,3 +69,4 @@ class Uni2SetPasswordForm(SetPasswordForm):
             field.widget.attrs.update(
                 {"class": "form-control", "autocomplete": "new-password"}
             )
+        self.fields["new_password1"].widget.attrs["autofocus"] = True

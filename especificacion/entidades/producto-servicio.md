@@ -16,7 +16,7 @@ Representa un producto o servicio publicado por la mutual en el sitio público.
 - id*: identificador interno del producto o servicio.
 - categoría*: categoría pública a la que pertenece.
 - nombre*: nombre visible.
-- descripción*: texto público que explica qué incluye.
+- descripción: texto público opcional que explica qué incluye.
 - foto: fotografía propia para la fila del catálogo y la ficha individual.
 - es_servicio*: indica si el ítem es un servicio. Si no se marca, se interpreta como producto.
 - ciclo_destinatario: ciclo escolar al que se dirige, tomado de los valores de `Curso.division`.
@@ -26,8 +26,9 @@ Representa un producto o servicio publicado por la mutual en el sitio público.
 - activo*: indica si el producto o servicio se publica en el sitio.
 - orden*: posición usada para ordenar productos y servicios dentro de su categoría.
 
-**Restricciones de datos:** no puede repetirse el mismo nombre dentro de una
-misma categoría. Puede indicarse ciclo sin curso, pero no curso sin ciclo. Los
+**Restricciones de datos:** pueden existir varios productos o servicios con el
+mismo nombre, incluso dentro de una misma categoría. Puede indicarse ciclo sin
+curso, pero no curso sin ciclo. Los
 importes informados deben ser mayores que cero. Un producto requiere precio
 para asociados; un servicio puede tener ambos precios vacíos. Nunca puede
 informarse precio para no asociados sin precio para asociados.
