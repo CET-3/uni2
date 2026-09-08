@@ -116,6 +116,9 @@ uv run pytest
 # Verificación explícita con SQLite
 DB_ENGINE=sqlite uv run pytest
 
+# Pruebas manuales de integración con Chromium (desktop y mobile)
+DB_ENGINE=sqlite uv run pytest -m browser -q
+
 # Contratos Django de la PWA
 DB_ENGINE=sqlite uv run pytest pwa/tests config/tests/test_pwa_config.py -q
 
@@ -129,10 +132,12 @@ DATABASE_URL=sqlite:///:memory: \
 uv run python manage.py collectstatic --noinput
 ```
 
-Cada PR y cada actualización de `main` ejecutan la suite con SQLite y los
-controles de endurecimiento sobre un PostgreSQL efímero. Un push a `staging`
-reutiliza esos mismos checks antes de desplegar. Los jobs se llaman
-`pytest (SQLite)` y `Endurecimiento staging (PostgreSQL)`.
+Cada PR y cada actualización de `main` ejecutan la suite con SQLite, excepto
+las pruebas marcadas `browser`, y los controles de endurecimiento sobre un
+PostgreSQL efímero. Las pruebas `browser` requieren Chromium y un servidor
+local, por lo que se ejecutan manualmente con el comando indicado arriba. Un
+push a `staging` reutiliza esos mismos checks antes de desplegar. Los jobs se
+llaman `pytest (SQLite)` y `Endurecimiento staging (PostgreSQL)`.
 
 ## Colaboración
 
