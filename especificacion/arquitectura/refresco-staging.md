@@ -48,6 +48,17 @@ pg_restore \
 No se usan `--clean` ni `--create`: el destino debe ser una base nueva. Así,
 una equivocación no borra una base existente.
 
+Si se decide reemplazar una base staging existente, debe autorizarse como una
+operación destructiva separada. Primero se verifica la huella del destino y se
+confirma que no sea Producción; luego se elimina y recrea únicamente el
+esquema `public` dentro de una transacción y se restaura allí el dump de
+Producción. La operación requiere un cliente `pg_dump` de la misma versión
+mayor que el servidor y `ON_ERROR_STOP`; no se debe continuar si el dump falla.
+Después se ejecuta `preparar_copia_staging`, que elimina las sesiones copiadas
+y conserva los usuarios, contraseñas, grupos, permisos, relaciones y tokens.
+Los esquemas administrados por Supabase (`auth`, `storage`, `realtime`,
+`vault`) no se eliminan ni se restauran.
+
 Si el proveedor obliga a generar un archivo, se usa un volumen efímero cifrado
 y se lo destruye al terminar. Nunca se guarda en `/tmp` sin verificar cifrado,
 ni dentro del repositorio.
