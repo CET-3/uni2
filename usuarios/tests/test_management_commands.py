@@ -347,7 +347,7 @@ def test_carga_inicial_crea_comercios_vercel():
     UNI2_STAGING_DATABASE_LABEL="uni2-staging",
     PWA_PRIVATE_DATA_EPOCH="2026-08-02-01",
 )
-def test_preparar_copia_staging_invalida_accesos_y_crea_usuarios_qa(monkeypatch):
+def test_preparar_copia_staging_conserva_usuarios_y_elimina_sesiones(monkeypatch):
     asociado = Asociado.objects.create(
         nombre="Ana",
         apellido="Producción",
@@ -361,48 +361,70 @@ def test_preparar_copia_staging_invalida_accesos_y_crea_usuarios_qa(monkeypatch)
         username="admin-produccion",
         password="clave-productiva",
     )
+    grupo = Group.objects.create(name="grupo-personalizado")
+    old_user.groups.add(grupo)
+    permiso = Permission.objects.get(
+        content_type__app_label="gestion",
+        codename=GESTION_COBRAR_CUOTAS.split(".", 1)[1],
+    )
+    old_user.user_permissions.add(permiso)
     asociado.usuario = old_user
     asociado.save(update_fields=["usuario"])
+    actividad = ActividadComercial.objects.create(nombre="Librería")
+    Comercio.objects.create(
+        nombre="Comercio de Ana",
+        actividad_comercial=actividad,
+        usuario=old_user,
+    )
+    old_password_hash = old_user.password
+    old_is_active = old_user.is_active
+    old_is_staff = old_user.is_staff
+    old_is_superuser = old_user.is_superuser
+    old_groups = list(old_user.groups.values_list("name", flat=True))
+    old_permissions = list(old_user.user_permissions.values_list("pk", flat=True))
     Session.objects.create(
         session_key="sesion-productiva",
         session_data="dato",
         expire_date=timezone.now() + timedelta(days=1),
     )
-    set_staging_qa_credentials(monkeypatch)
+    for name in (
+        "UNI2_STAGING_QA_ADMIN_USERNAME",
+        "UNI2_STAGING_QA_ADMIN_PASSWORD",
+        "UNI2_STAGING_QA_ASOCIADO_A_USERNAME",
+        "UNI2_STAGING_QA_ASOCIADO_A_PASSWORD",
+        "UNI2_STAGING_QA_ASOCIADO_B_USERNAME",
+        "UNI2_STAGING_QA_ASOCIADO_B_PASSWORD",
+        "UNI2_STAGING_QA_COMERCIO_USERNAME",
+        "UNI2_STAGING_QA_COMERCIO_PASSWORD",
+    ):
+        monkeypatch.delenv(name, raising=False)
 
+    output = StringIO()
     call_command(
         "preparar_copia_staging",
         refresh_id="2026-08-02-01",
         confirm_target="uni2-staging",
+        stdout=output,
     )
 
     old_user.refresh_from_db()
     asociado.refresh_from_db()
-    qa_admin = get_user_model().objects.get(username="qa-admin")
-    qa_asociado_a = get_user_model().objects.get(username="qa-asociado-a")
-    qa_asociado_b = get_user_model().objects.get(username="qa-asociado-b")
-    qa_comercio = get_user_model().objects.get(username="qa-comercio")
+    comercio = Comercio.objects.get(nombre="Comercio de Ana")
+    assert get_user_model().objects.count() == 1
+    assert old_user.password == old_password_hash
+    assert old_user.is_active == old_is_active
+    assert old_user.is_staff == old_is_staff
+    assert old_user.is_superuser == old_is_superuser
+    assert list(old_user.groups.values_list("name", flat=True)) == old_groups
+    assert list(old_user.user_permissions.values_list("pk", flat=True)) == old_permissions
+    assert asociado.usuario_id == old_user.pk
+    assert comercio.usuario_id == old_user.pk
     assert not Session.objects.exists()
-    assert not old_user.is_active
-    assert not old_user.is_staff
-    assert not old_user.is_superuser
-    assert not old_user.has_usable_password()
-    assert asociado.token_credencial != old_token
-    assert asociado.usuario == old_user
-    assert qa_admin.is_active and qa_admin.is_staff and qa_admin.is_superuser
-    assert qa_admin.check_password("clave-qa-admin-segura")
-    assert qa_asociado_a.asociado.dni == "QA-STAGING-A"
-    assert qa_asociado_b.asociado.dni == "QA-STAGING-B"
-    assert qa_asociado_a.check_password("clave-qa-asociado-a-segura")
-    assert qa_asociado_b.check_password("clave-qa-asociado-b-segura")
-    assert qa_asociado_a.groups.filter(name=ASOCIADO_GROUP).exists()
-    assert qa_asociado_b.groups.filter(name=ASOCIADO_GROUP).exists()
-    assert qa_comercio.comercio.nombre == "Comercio QA Staging"
-    assert qa_comercio.comercio.estado == Comercio.ESTADO_FIRMADO
-    assert qa_comercio.check_password("clave-qa-comercio-segura")
-    assert qa_comercio.groups.filter(name=COMERCIO_GROUP).exists()
-    assert get_user_model().objects.filter(is_active=True).count() == 4
+    assert asociado.token_credencial == old_token
     assert EstadoDatosStaging.objects.get().refresh_id == "2026-08-02-01"
+    assert "1 sesiones eliminadas" in output.getvalue()
+    assert "1 usuarios conservados" in output.getvalue()
+    assert "QA" not in output.getvalue()
 
 
 @pytest.mark.django_db
@@ -413,13 +435,16 @@ def test_preparar_copia_staging_invalida_accesos_y_crea_usuarios_qa(monkeypatch)
     PWA_PRIVATE_DATA_EPOCH="2026-08-02-01",
 )
 def test_preparar_copia_staging_aborta_antes_de_tocar_un_destino_no_confirmado(
-    monkeypatch,
 ):
     user = get_user_model().objects.create_user(
         username="usuario-productivo",
         password="sigue-intacto",
     )
-    set_staging_qa_credentials(monkeypatch)
+    Session.objects.create(
+        session_key="sesion-no-confirmada",
+        session_data="dato",
+        expire_date=timezone.now() + timedelta(days=1),
+    )
 
     with pytest.raises(CommandError, match="confirmación no coincide"):
         call_command(
@@ -431,6 +456,8 @@ def test_preparar_copia_staging_aborta_antes_de_tocar_un_destino_no_confirmado(
     user.refresh_from_db()
     assert user.is_active
     assert user.check_password("sigue-intacto")
+    assert Session.objects.filter(session_key="sesion-no-confirmada").exists()
+    assert not EstadoDatosStaging.objects.exists()
 
 
 @pytest.mark.django_db(transaction=True)
@@ -440,7 +467,7 @@ def test_preparar_copia_staging_aborta_antes_de_tocar_un_destino_no_confirmado(
     UNI2_STAGING_DATABASE_LABEL="uni2-staging",
     PWA_PRIVATE_DATA_EPOCH="2026-08-02-01",
 )
-def test_preparar_copia_staging_revierte_todo_si_falla_despues_de_invalidar(
+def test_preparar_copia_staging_revierte_sesiones_si_falla_el_marcador(
     monkeypatch,
 ):
     asociado = Asociado.objects.create(
@@ -451,7 +478,6 @@ def test_preparar_copia_staging_revierte_todo_si_falla_despues_de_invalidar(
         fecha_alta="2026-01-01",
         fecha_inicio_cobro="2026-01-01",
     )
-    old_token = asociado.token_credencial
     user = get_user_model().objects.create_user(
         username="usuario-productivo",
         password="sigue-intacto",
@@ -461,14 +487,14 @@ def test_preparar_copia_staging_revierte_todo_si_falla_despues_de_invalidar(
         session_data="dato",
         expire_date=timezone.now() + timedelta(days=1),
     )
-    set_staging_qa_credentials(monkeypatch)
 
-    def fail_after_creating_qa_users(**kwargs):
-        raise RuntimeError("fallo inducido después de invalidar")
+    def fail_writing_staging_marker(**kwargs):
+        raise RuntimeError("fallo inducido al escribir el marcador")
 
     monkeypatch.setattr(
-        "usuarios.staging._create_qa_comercio",
-        fail_after_creating_qa_users,
+        EstadoDatosStaging.objects,
+        "update_or_create",
+        fail_writing_staging_marker,
     )
 
     with pytest.raises(CommandError, match="transacción fue revertida"):
@@ -479,13 +505,10 @@ def test_preparar_copia_staging_revierte_todo_si_falla_despues_de_invalidar(
         )
 
     user.refresh_from_db()
-    asociado.refresh_from_db()
     assert user.is_active
     assert user.check_password("sigue-intacto")
-    assert asociado.token_credencial == old_token
     assert Session.objects.filter(session_key="sesion-productiva").exists()
     assert not EstadoDatosStaging.objects.exists()
-    assert not get_user_model().objects.filter(username__startswith="qa-").exists()
 
 
 @pytest.mark.django_db
@@ -496,12 +519,60 @@ def test_preparar_copia_staging_revierte_todo_si_falla_despues_de_invalidar(
     PWA_PRIVATE_DATA_EPOCH="2026-08-02-01",
 )
 def test_rotar_contraseñas_qa_staging_actualiza_solo_las_cuentas_qa(monkeypatch):
-    set_staging_qa_credentials(monkeypatch)
-    call_command(
-        "preparar_copia_staging",
-        refresh_id="2026-08-02-01",
-        confirm_target="uni2-staging",
+    user_model = get_user_model()
+    qa_admin = user_model.objects.create_superuser(
+        username="qa-admin",
+        password="clave-admin-anterior",
     )
+    asociado_group, _ = Group.objects.get_or_create(name=ASOCIADO_GROUP)
+    comercio_group, _ = Group.objects.get_or_create(name=COMERCIO_GROUP)
+    qa_asociado_a_user = user_model.objects.create_user(
+        username="qa-asociado-a",
+        password="clave-asociado-a-anterior",
+    )
+    qa_asociado_a_user.groups.add(asociado_group)
+    Asociado.objects.create(
+        usuario=qa_asociado_a_user,
+        nombre="Asociado",
+        apellido="QA A",
+        dni="QA-STAGING-A",
+        tipo=Asociado.TIPO_ASOCIADO,
+        estado=Asociado.ESTADO_ACTIVO,
+        fecha_alta="2026-01-01",
+        fecha_inicio_cobro="2026-01-01",
+    )
+    qa_asociado_b_user = user_model.objects.create_user(
+        username="qa-asociado-b",
+        password="clave-asociado-b-anterior",
+    )
+    qa_asociado_b_user.groups.add(asociado_group)
+    Asociado.objects.create(
+        usuario=qa_asociado_b_user,
+        nombre="Asociado",
+        apellido="QA B",
+        dni="QA-STAGING-B",
+        tipo=Asociado.TIPO_ASOCIADO,
+        estado=Asociado.ESTADO_ACTIVO,
+        fecha_alta="2026-01-01",
+        fecha_inicio_cobro="2026-01-01",
+    )
+    actividad = ActividadComercial.objects.create(nombre="Pruebas internas")
+    qa_comercio = user_model.objects.create_user(
+        username="qa-comercio",
+        password="clave-comercio-anterior",
+    )
+    qa_comercio.groups.add(comercio_group)
+    Comercio.objects.create(
+        actividad_comercial=actividad,
+        usuario=qa_comercio,
+        nombre="Comercio QA Staging",
+        estado=Comercio.ESTADO_FIRMADO,
+    )
+    usuario_fuera_de_qa = user_model.objects.create_user(
+        username="usuario-fuera-de-qa",
+        password="clave-fuera-de-qa-anterior",
+    )
+    set_staging_qa_credentials(monkeypatch)
 
     nuevas = {
         "UNI2_STAGING_QA_ADMIN_PASSWORD": "una-clave-admin-mas-amigable",
@@ -514,7 +585,6 @@ def test_rotar_contraseñas_qa_staging_actualiza_solo_las_cuentas_qa(monkeypatch
 
     call_command("rotar_passwords_qa_staging")
 
-    user_model = get_user_model()
     assert user_model.objects.get(username="qa-admin").check_password(
         nuevas["UNI2_STAGING_QA_ADMIN_PASSWORD"]
     )
@@ -527,3 +597,4 @@ def test_rotar_contraseñas_qa_staging_actualiza_solo_las_cuentas_qa(monkeypatch
     assert user_model.objects.get(username="qa-comercio").check_password(
         nuevas["UNI2_STAGING_QA_COMERCIO_PASSWORD"]
     )
+    assert usuario_fuera_de_qa.check_password("clave-fuera-de-qa-anterior")

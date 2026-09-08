@@ -28,6 +28,7 @@ def datos_base(**overrides):
         "curso_actual": "",
         "clasificacion_adherente": "",
         "fecha_alta": "2026-08-01",
+        "fecha_inicio_cobro": "2026-08-01",
     }
     data.update(overrides)
     return data
@@ -85,11 +86,27 @@ def test_alta_no_ofrece_sin_clasificar():
 
 
 @pytest.mark.django_db
-def test_alta_operativa_no_expone_fechas_administrativas():
+def test_alta_operativa_muestra_fecha_inicio_cobro_con_fecha_actual(monkeypatch):
+    monkeypatch.setattr("gestion.forms.timezone.localdate", lambda: date(2026, 9, 8))
     form = AsociadoAltaForm()
 
     assert "fecha_alta" not in form.fields
-    assert "fecha_inicio_cobro" not in form.fields
+    assert "fecha_inicio_cobro" in form.fields
+    assert form.initial["fecha_inicio_cobro"] == date(2026, 9, 8)
+
+
+@pytest.mark.django_db
+def test_alta_acepta_fecha_inicio_cobro_personalizada():
+    clasificacion = ClasificacionAdherente.objects.get(nombre="Familiar")
+    form = AsociadoAltaForm(
+        data=datos_base(
+            fecha_inicio_cobro="2026-01-01",
+            clasificacion_adherente=clasificacion.pk,
+        )
+    )
+
+    assert form.is_valid(), form.errors
+    assert form.cleaned_data["fecha_inicio_cobro"] == date(2026, 1, 1)
 
 
 @pytest.mark.django_db

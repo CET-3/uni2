@@ -107,12 +107,14 @@ Las pruebas físicas se realizan en un entorno staging separado con:
 - bucket o prefijo de media propio;
 - hosts y orígenes CSRF propios;
 - barrera HTTP delante de Django y login propio de Uni2;
-- ninguna credencial, sesión, contraseña ni token reutilizable de Production.
+- la base queda protegida por la barrera HTTP y aislada de Production; las
+  credenciales y tokens copiados siguen siendo reutilizables en staging por
+  decisión explícita del refresco fiel.
 
-La copia mantiene datos personales, por lo que staging se protege y opera con
-la misma sensibilidad que Producción. El
-[refresco de datos](refresco-staging.md) borra sesiones, invalida usuarios
-copiados, retira privilegios y regenera los tokens antes de conectar la base.
+La copia mantiene datos personales y credenciales productivas, por lo que
+staging se protege y opera con la misma sensibilidad que Producción. El
+[refresco de datos](refresco-staging.md) borra sesiones, conserva usuarios,
+privilegios y tokens, y escribe el marcador antes de conectar la base.
 
 Una URL estable es necesaria para instalar la versión A, desplegar la B sobre
 el mismo origen y probar el ciclo real de actualización. La protección de

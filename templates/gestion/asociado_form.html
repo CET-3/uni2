@@ -78,6 +78,12 @@
                             {{ form.direccion }}
                             {{ form.direccion.errors }}
                         </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="{{ form.fecha_inicio_cobro.id_for_label }}">Fecha de inicio de cobro</label>
+                            {{ form.fecha_inicio_cobro }}
+                            <div class="form-text">Si elegís una fecha anterior, se crearán las cuotas faltantes desde ese mes. Una fecha reciente mantiene la regla automática del tipo.</div>
+                            {{ form.fecha_inicio_cobro.errors }}
+                        </div>
                     </div>
 
                     <div class="d-flex flex-column flex-sm-row gap-2 mt-4">

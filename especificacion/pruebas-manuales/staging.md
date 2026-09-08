@@ -22,13 +22,16 @@ timestamp: 2026-09-03T00:00:00-03:00
   secreto distintos.
 - [ ] Readiness responde `503` antes de terminar el endurecimiento.
 - [ ] No existe ninguna sesión copiada.
-- [ ] Todos los usuarios productivos están inactivos.
-- [ ] Sus contraseñas son inutilizables.
-- [ ] Ninguno conserva `staff` o `superuser`.
-- [ ] Todos los tokens de credencial cambiaron.
-- [ ] Sólo cuatro cuentas QA están activas: admin, dos asociados ficticios y
-  comercio ficticio.
-- [ ] Ninguna cuenta QA está vinculada a una persona o comercio productivo.
+- [ ] La cantidad de usuarios, asociados y comercios coincide con Producción.
+- [ ] Los hashes de contraseña, estado, grupos, permisos, `staff` y
+  `superuser` coinciden con Producción.
+- [ ] Las relaciones de usuarios con asociados y comercios coinciden con
+  Producción.
+- [ ] Los tokens de credencial coinciden con Producción.
+- [ ] Se confirma en una prueba controlada que una cuenta copiada conserva su
+  autenticación en staging.
+- [ ] El acceso HTTP, el aislamiento de base y el `noindex` están activos
+  antes de probar las credenciales copiadas.
 - [ ] El marcador persistente coincide con `UNI2_PRIVATE_DATA_EPOCH`.
 - [ ] El bucket productivo no está configurado en staging.
 - [ ] El bucket staging es privado, exclusivo y usa credenciales limitadas a

@@ -688,6 +688,18 @@ def calculate_fecha_inicio_cobro(fecha_alta: date, tipo: str) -> date:
     return date(anio, mes_desde_cero + 1, 1)
 
 
+def calcular_fecha_inicio_cobro_efectiva(
+    *,
+    fecha_alta: date,
+    tipo: str,
+    fecha_solicitada: date | None = None,
+) -> date:
+    fecha_automatica = calculate_fecha_inicio_cobro(fecha_alta, tipo)
+    if fecha_solicitada is None:
+        return fecha_automatica
+    return min(fecha_automatica, fecha_solicitada)
+
+
 @transaction.atomic
 def create_asociado(
     *,
@@ -781,6 +793,7 @@ def crear_asociado_con_cuotas_iniciales(
     dni: str,
     tipo: str,
     fecha_alta: date | str,
+    fecha_inicio_cobro: date | str | None = None,
     curso_actual: Curso | None = None,
     clasificacion_adherente=None,
     email: str = "",
@@ -791,12 +804,22 @@ def crear_asociado_con_cuotas_iniciales(
     """Completa el alta manual y sus cuotas como una única operación."""
 
     operacion_id = uuid.uuid4()
+    if isinstance(fecha_alta, str):
+        fecha_alta = date.fromisoformat(fecha_alta)
+    if isinstance(fecha_inicio_cobro, str):
+        fecha_inicio_cobro = date.fromisoformat(fecha_inicio_cobro)
+    fecha_inicio_efectiva = calcular_fecha_inicio_cobro_efectiva(
+        fecha_alta=fecha_alta,
+        tipo=tipo,
+        fecha_solicitada=fecha_inicio_cobro,
+    )
     asociado = create_asociado(
         nombre=nombre,
         apellido=apellido,
         dni=dni,
         tipo=tipo,
         fecha_alta=fecha_alta,
+        fecha_inicio_cobro=fecha_inicio_efectiva,
         curso_actual=curso_actual,
         clasificacion_adherente=clasificacion_adherente,
         email=email,

@@ -24,25 +24,23 @@ timestamp: 2026-08-02T00:00:00-03:00
    privilegios y sin dejar un dump sin cifrar.
 3. Revisa y aplica las migraciones compatibles sobre la base desconectada.
 4. Ejecuta `preparar_copia_staging` confirmando el destino.
-5. El sistema elimina sesiones, invalida usuarios copiados y regenera tokens.
-6. El sistema crea un admin, dos asociados ficticios y un comercio ficticio,
-   cada uno con una cuenta QA y un secreto exclusivo.
-7. Como último paso transaccional, el sistema escribe el marcador del refresh.
-8. La responsable verifica conteos, readiness, seguridad, login QA y PWA.
-9. Conecta el proyecto staging a la nueva base.
-10. Revoca credenciales temporales y elimina cualquier artefacto de copia.
+5. El sistema elimina las sesiones copiadas y conserva sin cambios los
+   usuarios, contraseñas, grupos, permisos, privilegios, perfiles y tokens.
+6. Como último paso transaccional, el sistema escribe el marcador del refresh.
+7. La responsable verifica conteos, igualdad de usuarios, readiness, seguridad,
+   login controlado y PWA.
+8. Conecta el proyecto staging a la nueva base.
+9. Revoca credenciales temporales y elimina cualquier artefacto de copia.
 
 ### Resultado
 
-Staging conserva datos representativos de Producción, pero ninguna sesión,
-contraseña, privilegio ni token productivo permite autenticarse o validar una
-credencial allí.
+Staging conserva una copia fiel de las cuentas de Producción, incluidas sus
+contraseñas, privilegios y tokens. Por eso las credenciales productivas también
+son válidas en staging: el acceso permanece protegido por la barrera HTTP, la
+base está aislada y los canales de correo y push están deshabilitados.
 
 ## Rotación posterior de credenciales QA
 
-Si sólo se necesitan contraseñas más fáciles de usar para las pruebas, la
-responsable actualiza las cuatro variables `UNI2_STAGING_QA_*_PASSWORD` y
-ejecuta `rotar_passwords_qa_staging`. El comando conserva los usernames QA,
-verifica que sigan asociados a los cuatro perfiles ficticios y cambia sólo sus
-contraseñas. No vuelve a copiar datos, no regenera tokens ni invalida cuentas
-productivas.
+La rotación de contraseñas QA es un flujo separado para un staging que ya tenga
+cuentas QA ficticias. No forma parte de este refresco fiel y no debe ejecutarse
+para reemplazar ni modificar las cuentas copiadas de Producción.

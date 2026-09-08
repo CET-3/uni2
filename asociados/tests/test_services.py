@@ -9,6 +9,7 @@ from asociados import services as asociado_services
 from asociados.models import Asociado, ClasificacionAdherente, Curso
 from asociados.services import (
     calculate_fecha_inicio_cobro,
+    calcular_fecha_inicio_cobro_efectiva,
     create_asociado,
     dar_baja_asociado,
     import_asociados_from_csv,
@@ -148,6 +149,26 @@ def test_import_asociados_csv_con_email_no_programa_correo_de_alta():
 )
 def test_calcula_fecha_inicio_cobro_segun_tipo(fecha_alta, tipo, fecha_esperada):
     assert calculate_fecha_inicio_cobro(fecha_alta, tipo) == fecha_esperada
+
+
+@pytest.mark.parametrize(
+    ("fecha_alta", "tipo", "fecha_solicitada", "fecha_esperada"),
+    [
+        (date(2026, 9, 8), Asociado.TIPO_ASOCIADO, date(2026, 9, 1), date(2026, 7, 1)),
+        (date(2026, 9, 8), Asociado.TIPO_ASOCIADO, date(2026, 7, 1), date(2026, 7, 1)),
+        (date(2026, 9, 8), Asociado.TIPO_ASOCIADO, date(2026, 1, 1), date(2026, 1, 1)),
+        (date(2026, 9, 8), Asociado.TIPO_ADHERENTE, date(2026, 9, 1), date(2026, 9, 1)),
+        (date(2026, 9, 8), Asociado.TIPO_ADHERENTE, date(2026, 1, 1), date(2026, 1, 1)),
+    ],
+)
+def test_calcula_fecha_inicio_cobro_efectiva(
+    fecha_alta, tipo, fecha_solicitada, fecha_esperada
+):
+    assert calcular_fecha_inicio_cobro_efectiva(
+        fecha_alta=fecha_alta,
+        tipo=tipo,
+        fecha_solicitada=fecha_solicitada,
+    ) == fecha_esperada
 
 
 @pytest.mark.django_db
