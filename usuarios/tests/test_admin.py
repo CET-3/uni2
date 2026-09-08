@@ -72,6 +72,37 @@ def test_administrador_permisos_no_puede_asignar_grupo_admin_app():
 
 
 @pytest.mark.django_db
+def test_usuario_con_add_group_puede_crear_grupo():
+    operador = get_user_model().objects.create_user(
+        username="creador-grupos", password="secreto123"
+    )
+    operador.user_permissions.add(
+        Permission.objects.get(content_type__app_label="auth", codename="add_group")
+    )
+    request = RequestFactory().get("/admin/auth/group/add/")
+    request.user = operador
+    group_admin = admin.site._registry[Group]
+
+    assert group_admin.has_add_permission(request)
+
+
+@pytest.mark.django_db
+def test_usuario_con_delete_group_puede_borrar_grupo():
+    operador = get_user_model().objects.create_user(
+        username="borrador-grupos", password="secreto123"
+    )
+    operador.user_permissions.add(
+        Permission.objects.get(content_type__app_label="auth", codename="delete_group")
+    )
+    grupo = Group.objects.create(name="Grupo para borrar")
+    request = RequestFactory().get(f"/admin/auth/group/{grupo.pk}/delete/")
+    request.user = operador
+    group_admin = admin.site._registry[Group]
+
+    assert group_admin.has_delete_permission(request, grupo)
+
+
+@pytest.mark.django_db
 def test_usuario_con_change_group_puede_editar_grupo_personalizado():
     operador = get_user_model().objects.create_user(username="rrhh", password="secreto123")
     operador.user_permissions.add(
@@ -90,7 +121,7 @@ def test_usuario_con_change_group_puede_editar_grupo_personalizado():
     "nombre_grupo",
     [ADMINISTRADOR_APP_GROUP, ASOCIADO_GROUP, COMERCIO_GROUP],
 )
-def test_usuario_con_change_group_no_edita_grupos_tecnicos(nombre_grupo):
+def test_usuario_con_change_group_puede_editar_cualquier_grupo(nombre_grupo):
     operador = get_user_model().objects.create_user(
         username=f"rrhh-{nombre_grupo}", password="secreto123"
     )
@@ -102,7 +133,7 @@ def test_usuario_con_change_group_no_edita_grupos_tecnicos(nombre_grupo):
     request.user = operador
     group_admin = admin.site._registry[Group]
 
-    assert not group_admin.has_change_permission(request, grupo)
+    assert group_admin.has_change_permission(request, grupo)
 
 
 @pytest.mark.django_db
