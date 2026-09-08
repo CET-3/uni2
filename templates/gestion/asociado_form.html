@@ -63,12 +63,6 @@
                             {{ form.clasificacion_adherente }}
                             {{ form.clasificacion_adherente.errors }}
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label" for="{{ form.fecha_inicio_cobro.id_for_label }}">Fecha de inicio de cobro</label>
-                            {{ form.fecha_inicio_cobro }}
-                            <div class="form-text">Si elegís una fecha anterior, se crearán las cuotas faltantes desde ese mes. Una fecha reciente mantiene la regla automática del tipo.</div>
-                            {{ form.fecha_inicio_cobro.errors }}
-                        </div>
                         <div class="col-md-6">
                             <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
                             {{ form.email }}
@@ -83,6 +77,12 @@
                             <label class="form-label" for="{{ form.direccion.id_for_label }}">Dirección</label>
                             {{ form.direccion }}
                             {{ form.direccion.errors }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="{{ form.fecha_inicio_cobro.id_for_label }}">Fecha de inicio de cobro</label>
+                            {{ form.fecha_inicio_cobro }}
+                            <div class="form-text">Si elegís una fecha anterior, se crearán las cuotas faltantes desde ese mes. Una fecha reciente mantiene la regla automática del tipo.</div>
+                            {{ form.fecha_inicio_cobro.errors }}
                         </div>
                     </div>
 

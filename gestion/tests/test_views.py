@@ -1538,6 +1538,7 @@ def test_asociado_nuevo_usa_formulario_y_alerta_compartidos(client):
 
     assert "uni2-surface-card" in formulario
     assert "uni2-ops-" not in formulario
+    assert formulario.index('for="id_direccion"') < formulario.index('for="id_fecha_inicio_cobro"')
     assert "uni2-alert-danger" in invalido
     assert "uni2-form-error-summary" not in invalido
 
