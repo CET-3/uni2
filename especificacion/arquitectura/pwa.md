@@ -60,9 +60,10 @@ Los service workers funcionan en HTTPS y, como excepción de desarrollo, en
 Las pruebas físicas se realizan en un staging HTTPS separado, con base,
 storage, secreto y accesos propios. La base puede ser una copia puntual de
 Producción únicamente después del
-[endurecimiento de staging](refresco-staging.md): no conserva sesiones,
-contraseñas, privilegios ni tokens productivos. Los previews nunca reciben
-recursos remotos.
+[endurecimiento de staging](refresco-staging.md): no conserva sesiones, pero
+conserva contraseñas, privilegios y tokens productivos por decisión explícita.
+La barrera HTTP y el aislamiento de base deben estar activos antes de probar
+las credenciales copiadas. Los previews nunca reciben recursos remotos.
 
 ## Política de respuestas
 

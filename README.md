@@ -247,13 +247,13 @@ uv run python manage.py preparar_copia_staging \
 ```
 
 Antes del comando se aplican las migraciones compatibles a la base staging
-todavía desconectada. El comando elimina sesiones, invalida usuarios
-productivos, retira privilegios, regenera tokens de credencial y crea cuatro
-accesos exclusivos: un admin, dos asociados ficticios y un comercio ficticio.
-Esos perfiles permiten recorrer la matriz PWA sin vincular cuentas QA a
-personas reales. El marcador de readiness se escribe como último paso
-transaccional. Las contraseñas QA llegan por variables temporales y nunca por
-argumentos o archivos versionados.
+todavía desconectada. El comando elimina sesiones y conserva usuarios,
+contraseñas, permisos, privilegios, relaciones y tokens sin cambios. El
+marcador de readiness se escribe como último paso transaccional. Como las
+credenciales productivas siguen siendo válidas, la barrera HTTP y el
+aislamiento de la base deben verificarse antes de habilitar el acceso. El
+refresco fiel no crea cuentas QA ni recibe contraseñas por variables o
+argumentos.
 
 La configuración completa y el circuito de promoción están en
 [Entorno de staging](especificacion/arquitectura/staging.md).

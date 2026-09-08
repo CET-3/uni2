@@ -11,7 +11,7 @@ REFRESH_ID_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{5,63}$")
 
 
 class Command(BaseCommand):
-    help = "Invalida credenciales productivas en una copia aislada para staging."
+    help = "Conserva usuarios y elimina sesiones copiadas para habilitar staging."
 
     def add_arguments(self, parser):
         parser.add_argument("--refresh-id", required=True)

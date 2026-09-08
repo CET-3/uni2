@@ -132,12 +132,13 @@ Cuando staging parte de una copia de Production, el comando
 
 - elimina sesiones;
 - conserva usuarios, contraseñas, permisos, privilegios, perfiles y tokens;
-- deshabilita correo y push;
 - escribe el marcador final de staging.
 
 Hasta que el proceso termina correctamente, staging no se considera listo y
 puede responder `503`. Las credenciales copiadas siguen siendo válidas en
 staging, por lo que la barrera HTTP y el aislamiento de la base son obligatorios.
+La configuración del entorno mantiene deshabilitados el correo transaccional,
+el correo por lote y push durante el refresco.
 
 El endurecimiento reduce riesgos, pero staging sigue conteniendo datos y
 credenciales sensibles si se creó desde Production. Por eso se hacen pruebas

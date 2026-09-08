@@ -47,9 +47,11 @@ de datos y exige `DATABASE_URL`.
   datos se administran por los flujos previstos; nunca carga usuarios con
   contraseñas de demostración.
 - Staging puede recibir una copia puntual de Producción, pero sólo sobre una
-  base independiente. Antes de conectarla se eliminan sesiones, se invalidan
-  accesos productivos y se regeneran tokens según el
-  [procedimiento de refresco](refresco-staging.md).
+  base independiente. Antes de conectarla se eliminan sesiones y se conservan
+  sin cambios usuarios, credenciales, privilegios y tokens según el
+  [procedimiento de refresco](refresco-staging.md). La barrera HTTP y el
+  aislamiento de la base son obligatorios porque las credenciales copiadas
+  siguen siendo válidas en staging.
 
 Los comandos de instalación y puesta en marcha se mantienen en el
 [README del proyecto](../../README.md). Para quienes recién empiezan, hay una

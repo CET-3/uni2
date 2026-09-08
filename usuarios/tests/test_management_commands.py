@@ -435,13 +435,16 @@ def test_preparar_copia_staging_conserva_usuarios_y_elimina_sesiones(monkeypatch
     PWA_PRIVATE_DATA_EPOCH="2026-08-02-01",
 )
 def test_preparar_copia_staging_aborta_antes_de_tocar_un_destino_no_confirmado(
-    monkeypatch,
 ):
     user = get_user_model().objects.create_user(
         username="usuario-productivo",
         password="sigue-intacto",
     )
-    set_staging_qa_credentials(monkeypatch)
+    Session.objects.create(
+        session_key="sesion-no-confirmada",
+        session_data="dato",
+        expire_date=timezone.now() + timedelta(days=1),
+    )
 
     with pytest.raises(CommandError, match="confirmación no coincide"):
         call_command(
@@ -453,6 +456,8 @@ def test_preparar_copia_staging_aborta_antes_de_tocar_un_destino_no_confirmado(
     user.refresh_from_db()
     assert user.is_active
     assert user.check_password("sigue-intacto")
+    assert Session.objects.filter(session_key="sesion-no-confirmada").exists()
+    assert not EstadoDatosStaging.objects.exists()
 
 
 @pytest.mark.django_db(transaction=True)
