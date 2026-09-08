@@ -147,28 +147,22 @@ uv run python manage.py preparar_copia_staging \
   --confirm-target uni2-staging
 ```
 
-Las contraseñas QA llegan mediante variables temporales:
-
-- `UNI2_STAGING_QA_ADMIN_USERNAME`
-- `UNI2_STAGING_QA_ADMIN_PASSWORD`
-- `UNI2_STAGING_QA_ASOCIADO_A_USERNAME`
-- `UNI2_STAGING_QA_ASOCIADO_A_PASSWORD`
-- `UNI2_STAGING_QA_ASOCIADO_B_USERNAME`
-- `UNI2_STAGING_QA_ASOCIADO_B_PASSWORD`
-- `UNI2_STAGING_QA_COMERCIO_USERNAME`
-- `UNI2_STAGING_QA_COMERCIO_PASSWORD`
-
-No se pasan contraseñas como argumentos. El comando ejecuta todos los cambios
-en una transacción y revierte ante cualquier error. Como último cambio de esa
-misma transacción escribe `EstadoDatosStaging`; hasta entonces, el middleware y
+El comando no recibe contraseñas ni variables QA: conserva las cuentas,
+contraseñas, grupos, permisos, privilegios, perfiles y tokens de Producción.
+Sólo elimina las sesiones copiadas. Ejecuta todos los cambios en una
+transacción y revierte ante cualquier error. Como último cambio de esa misma
+transacción escribe `EstadoDatosStaging`; hasta entonces, el middleware y
 readiness responden `503`.
+
+Conservar las credenciales productivas es una decisión explícita: las mismas
+contraseñas y tokens pueden autenticarse o validar credenciales en staging.
+Antes de habilitarlo se confirma el aislamiento de base, la barrera HTTP,
+`noindex` y la desactivación de correo transaccional, correo por lote y push.
 
 ### Rotación de contraseñas QA
 
-Cuando la copia ya está endurecida y las cuatro cuentas QA existen, no se debe
-volver a ejecutar `preparar_copia_staging`: ese comando crea cuentas nuevas y
-rechaza usernames que ya existen. Para cambiar solamente sus contraseñas se
-usa:
+Para un staging separado que ya tenga las cuatro cuentas QA ficticias, y fuera
+del refresco fiel, se puede cambiar solamente sus contraseñas con:
 
 ```bash
 DJANGO_SETTINGS_MODULE=config.settings.staging \
@@ -181,15 +175,14 @@ las contraseñas dentro de una transacción. Las contraseñas deben ser distinta
 tener al menos 8 caracteres y no coincidir con sus usernames. Si una
 validación falla, no se modifica ninguna cuenta.
 
-Luego se verifica:
+Luego, para el refresco fiel, se verifica:
 
 - cero sesiones copiadas;
-- ningún usuario productivo activo;
-- contraseñas productivas inutilizables;
-- cero privilegios productivos `staff` o `superuser`;
-- tokens de credencial regenerados y únicos;
-- sólo cuatro cuentas QA habilitadas;
-- dos asociados y un comercio QA contienen datos ficticios inequívocos;
+- igual cantidad de usuarios y perfiles que en Producción;
+- hashes de contraseña, estado, grupos, permisos, `staff` y `superuser`
+  iguales a Producción;
+- relaciones de usuarios con asociados y comercios conservadas;
+- tokens de credencial iguales a Producción;
 - marcador `EstadoDatosStaging` igual al refresh ID;
 - conteos agregados razonables;
 - manifest `UNI2 STG`;
@@ -272,8 +265,8 @@ Después de habilitar la base nueva:
 4. destruir cualquier artefacto temporal cifrado, si el proveedor obligó a
    crearlo;
 5. revocar la credencial productiva de sólo lectura;
-6. retirar `UNI2_PRODUCTION_COPY_DATABASE_URL` y las contraseñas temporales de
-   creación de usuarios QA;
+6. retirar `UNI2_PRODUCTION_COPY_DATABASE_URL` y cualquier variable temporal
+   usada durante la operación;
 7. registrar fecha, responsable, refresh ID, conteos y resultado, nunca datos.
 
 Una exposición de staging se trata como un incidente sobre datos productivos.

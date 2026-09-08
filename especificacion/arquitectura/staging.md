@@ -58,24 +58,18 @@ el mismo nivel de sensibilidad que Producción.
 Antes de habilitarla:
 
 - se borran todas las sesiones;
-- se desactivan los usuarios copiados;
-- sus contraseñas se reemplazan por valores inutilizables;
-- se quitan privilegios `staff` y `superuser`;
-- se regeneran todos los tokens de credencial;
-- se crean un admin QA, dos asociados ficticios y un comercio ficticio con
-  cuentas exclusivas;
+- se conservan usuarios, contraseñas, grupos, permisos, privilegios, perfiles
+  y tokens exactamente como fueron copiados;
 - se cambia el epoch de datos privados de la PWA;
 - se escribe como último paso transaccional un marcador persistente con ese
   epoch;
 - se mantienen bloqueados correo transaccional, correo por lote y push.
 
-Las pruebas con la copia real se limitan a las cuentas QA y a los casos
-acordados. No se descargan listados, no se hacen capturas con datos personales
-y no se usan datos de staging como material de clase o demostración. Las
-pruebas que necesiten compartir evidencia se repiten con datos ficticios
-locales. La privacidad entre usuarios y la validación de credenciales se
-prueban con las entidades sintéticas creadas por el endurecimiento, no
-vinculando cuentas a asociados o comercios productivos.
+Con esta decisión, las credenciales productivas también son válidas en staging.
+Las pruebas con la copia real deben ser controladas, no se descargan listados,
+no se hacen capturas con datos personales y no se usan datos de staging como
+material de clase o demostración. Las pruebas que necesiten compartir
+evidencia se repiten con datos ficticios locales.
 
 El bucket productivo no se comparte. Una copia de base puede conservar nombres
 de archivos, pero por defecto staging muestra esos archivos como no

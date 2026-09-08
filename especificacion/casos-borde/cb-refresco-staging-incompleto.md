@@ -16,9 +16,12 @@ Falla la restauración, el endurecimiento, una migración o una verificación.
 
 - La base nueva permanece desconectada del proyecto Vercel.
 - El dominio estable continúa usando la última base staging aprobada.
-- El comando de endurecimiento revierte su transacción completa.
+- El comando de endurecimiento revierte su transacción completa, incluida la
+  eliminación de sesiones.
 - El marcador no existe o no coincide, y cualquier intento de servir esa base
   responde `503`.
+- Los usuarios, contraseñas, permisos, privilegios, perfiles y tokens no se
+  modifican aunque falle el endurecimiento.
 - Se descarta el destino fallido o se investiga sin habilitarlo.
 - Cualquier artefacto cifrado y las credenciales temporales se destruyen o
   revocan al terminar.
