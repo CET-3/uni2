@@ -5,15 +5,8 @@ from django.contrib.auth.models import Group, User
 
 from auditoria.admin_mixins import AuditoriaAdminMixin
 from .admin_access import Uni2AdminSite
-from .roles import ADMINISTRADOR_APP_GROUP, ASOCIADO_GROUP, COMERCIO_GROUP
+from .roles import ADMINISTRADOR_APP_GROUP
 from .models import Notificacion
-
-
-GRUPOS_TECNICOS_PROTEGIDOS = {
-    ADMINISTRADOR_APP_GROUP,
-    ASOCIADO_GROUP,
-    COMERCIO_GROUP,
-}
 
 
 admin.site.__class__ = Uni2AdminSite
@@ -72,19 +65,9 @@ class Uni2UserAdmin(AuditoriaAdminMixin, UserAdmin):
 class Uni2GroupAdmin(AuditoriaAdminMixin, GroupAdmin):
     audit_fields = ("name", "permissions")
 
-    def has_change_permission(self, request, obj=None):
-        permitido = super().has_change_permission(request, obj)
-        if not permitido or request.user.is_superuser or obj is None:
-            return permitido
-        return obj.name not in GRUPOS_TECNICOS_PROTEGIDOS
-
-    def has_add_permission(self, request):
-        if not request.user.is_superuser:
-            return False
-        return super().has_add_permission(request)
-
     def has_delete_permission(self, request, obj=None):
-        return False
+        # Los grupos se administran con los permisos estándar de Django.
+        return GroupAdmin.has_delete_permission(self, request, obj)
 
 
 @admin.register(Notificacion)

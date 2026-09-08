@@ -1,25 +1,25 @@
-# Edición de grupos personalizados — Plan de implementación
+# Edición de grupos — Plan de implementación
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Hacer efectivo `auth.change_group` para editar grupos personalizados sin habilitar la edición delegada de los tres grupos técnicos de Uni2.
+**Goal:** Hacer efectivos `auth.add_group`, `auth.change_group` y `auth.delete_group` para administrar grupos sin restricciones adicionales.
 
-**Architecture:** Se conservará `GroupAdmin` como interfaz y el sistema estándar de permisos de Django como autorización principal. `Uni2GroupAdmin.has_change_permission` agregará solamente una protección por nombre para `Administrador de la app`, `Asociados` y `Comercios` cuando la persona no sea superusuaria.
+**Architecture:** Se conservará `GroupAdmin` como interfaz y el sistema estándar de permisos de Django como única autorización para crear, editar y borrar. `Uni2GroupAdmin` heredará el alta y la edición; para el borrado delegará directamente en `GroupAdmin` para evitar solo el bloqueo general de `AuditoriaAdminMixin`, que se conserva para auditar los cambios.
 
 **Tech Stack:** Python 3.12, Django, pytest, pytest-django.
 
 ## Global Constraints
 
-- Los grupos personalizados son administrados por la mutual.
-- `auth.change_group` habilita la edición de grupos personalizados.
-- `Administrador de la app`, `Asociados` y `Comercios` solo pueden ser editados por un superusuario.
-- No se modifica el alta ni el borrado de grupos.
+- Una cuenta con el permiso efectivo `auth.add_group` puede crear grupos.
+- Una cuenta con el permiso efectivo `auth.change_group` puede editar cualquier grupo.
+- Una cuenta con el permiso efectivo `auth.delete_group` puede borrar grupos.
+- No hay grupos protegidos ni excepciones basadas en nombres.
 - La decisión funcional debe quedar escrita en `especificacion/reglas/usuarios.md`.
-- No se incluyen refactorizaciones ni cambios a la matriz histórica de grupos.
+- No se incluyen refactorizaciones ajenas a esta autorización.
 
 ---
 
-### Task 1: Respetar `auth.change_group` en grupos personalizados
+### Task 1: Delegar la administración de grupos en los permisos estándar
 
 **Files:**
 - Modify: `usuarios/tests/test_admin.py`
@@ -27,27 +27,41 @@
 - Modify: `especificacion/reglas/usuarios.md`
 
 **Interfaces:**
-- Consumes: `django.contrib.auth.admin.GroupAdmin.has_change_permission(request, obj=None) -> bool` y las constantes `ADMINISTRADOR_APP_GROUP`, `ASOCIADO_GROUP`, `COMERCIO_GROUP` de `usuarios.roles`.
-- Produces: `Uni2GroupAdmin.has_change_permission(request, obj=None) -> bool`, que conserva la autorización estándar de Django y rechaza únicamente los grupos técnicos para usuarios no superusuarios.
+- Consumes: `GroupAdmin.has_add_permission(request) -> bool`, `GroupAdmin.has_change_permission(request, obj=None) -> bool` y `GroupAdmin.has_delete_permission(request, obj=None) -> bool`.
+- Produces: `Uni2GroupAdmin`, que usa sin excepciones las autorizaciones de alta, edición y borrado de `GroupAdmin`.
 
-- [ ] **Step 1: Escribir las pruebas que expresan el permiso delegado y la protección técnica**
+- [ ] **Step 1: Escribir la prueba que reproduce el bloqueo incorrecto**
 
-Agregar a `usuarios/tests/test_admin.py` imports para `Permission`, `Group` y las constantes de los tres grupos técnicos. Incorporar pruebas equivalentes a:
+Agregar pruebas que exijan el alta con `auth.add_group` y el borrado con `auth.delete_group`. Reemplazar la prueba que esperaba bloquear los grupos de Uni2 por una prueba parametrizada que exija su edición:
 
 ```python
 @pytest.mark.django_db
-def test_usuario_con_change_group_puede_editar_grupo_personalizado():
-    operador = get_user_model().objects.create_user(username="rrhh", password="secreto123")
-    operador.user_permissions.add(
-        Permission.objects.get(content_type__app_label="auth", codename="change_group")
+def test_usuario_con_add_group_puede_crear_grupo():
+    operador = get_user_model().objects.create_user(
+        username="creador-grupos", password="secreto123"
     )
-    grupo = Group.objects.create(name="Recursos Humanos y Coordinación")
-    request = RequestFactory().get(f"/admin/auth/group/{grupo.pk}/change/")
+    operador.user_permissions.add(
+        Permission.objects.get(content_type__app_label="auth", codename="add_group")
+    )
+    request = RequestFactory().get("/admin/auth/group/add/")
     request.user = operador
 
-    group_admin = admin.site._registry[Group]
+    assert admin.site._registry[Group].has_add_permission(request)
 
-    assert group_admin.has_change_permission(request, grupo)
+
+@pytest.mark.django_db
+def test_usuario_con_delete_group_puede_borrar_grupo():
+    operador = get_user_model().objects.create_user(
+        username="borrador-grupos", password="secreto123"
+    )
+    operador.user_permissions.add(
+        Permission.objects.get(content_type__app_label="auth", codename="delete_group")
+    )
+    grupo = Group.objects.create(name="Grupo para borrar")
+    request = RequestFactory().get(f"/admin/auth/group/{grupo.pk}/delete/")
+    request.user = operador
+
+    assert admin.site._registry[Group].has_delete_permission(request, grupo)
 
 
 @pytest.mark.django_db
@@ -55,65 +69,46 @@ def test_usuario_con_change_group_puede_editar_grupo_personalizado():
     "nombre_grupo",
     [ADMINISTRADOR_APP_GROUP, ASOCIADO_GROUP, COMERCIO_GROUP],
 )
-def test_usuario_con_change_group_no_edita_grupos_tecnicos(nombre_grupo):
-    operador = get_user_model().objects.create_user(username=f"rrhh-{nombre_grupo}")
+def test_usuario_con_change_group_puede_editar_cualquier_grupo(nombre_grupo):
+    operador = get_user_model().objects.create_user(
+        username=f"operador-{nombre_grupo}", password="secreto123"
+    )
     operador.user_permissions.add(
         Permission.objects.get(content_type__app_label="auth", codename="change_group")
     )
     grupo = Group.objects.get(name=nombre_grupo)
     request = RequestFactory().get(f"/admin/auth/group/{grupo.pk}/change/")
     request.user = operador
-
     group_admin = admin.site._registry[Group]
 
-    assert not group_admin.has_change_permission(request, grupo)
+    assert group_admin.has_change_permission(request, grupo)
 ```
 
-Agregar además una aserción que compruebe que un usuario sin `auth.change_group` no edita un grupo personalizado y que un superusuario sí puede editar los tres grupos técnicos.
+Esta prueba falla si reaparece una lista de grupos protegidos o cualquier rechazo adicional al permiso estándar.
 
-- [ ] **Step 2: Ejecutar las pruebas y comprobar el fallo actual**
+- [ ] **Step 2: Ejecutar la prueba y comprobar el fallo actual**
 
 Run:
 
 ```bash
-DB_ENGINE=sqlite uv run pytest usuarios/tests/test_admin.py -q
+DB_ENGINE=sqlite uv run pytest usuarios/tests/test_admin.py::test_usuario_con_add_group_puede_crear_grupo usuarios/tests/test_admin.py::test_usuario_con_delete_group_puede_borrar_grupo usuarios/tests/test_admin.py::test_usuario_con_change_group_puede_editar_cualquier_grupo -q
 ```
 
-Expected: falla la prueba del grupo personalizado porque `Uni2GroupAdmin` devuelve `False` para todo usuario no superusuario; las protecciones técnicas existentes permanecen verdes.
+Expected: cinco fallos; uno porque el alta se reserva al superusuario, uno porque el borrado está deshabilitado y tres porque la implementación vigente bloquea esos nombres aunque los permisos están asignados.
 
-- [ ] **Step 3: Implementar la autorización mínima en el admin**
+- [ ] **Step 3: Eliminar la restricción adicional**
 
-En `usuarios/admin.py`, importar las tres constantes técnicas y reemplazar el bloqueo general por:
+En `usuarios/admin.py`:
 
-```python
-GRUPOS_TECNICOS_PROTEGIDOS = {
-    ADMINISTRADOR_APP_GROUP,
-    ASOCIADO_GROUP,
-    COMERCIO_GROUP,
-}
-
-
-@admin.register(Group)
-class Uni2GroupAdmin(AuditoriaAdminMixin, GroupAdmin):
-    audit_fields = ("name", "permissions")
-
-    def has_change_permission(self, request, obj=None):
-        permitido = super().has_change_permission(request, obj)
-        if not permitido or request.user.is_superuser or obj is None:
-            return permitido
-        return obj.name not in GRUPOS_TECNICOS_PROTEGIDOS
-```
-
-Mantener sin cambios `has_add_permission` y `has_delete_permission`.
+- quitar los imports `ASOCIADO_GROUP` y `COMERCIO_GROUP`, que dejan de usarse;
+- eliminar `GRUPOS_TECNICOS_PROTEGIDOS`;
+- eliminar `Uni2GroupAdmin.has_add_permission` para heredar directamente el comportamiento de `GroupAdmin`;
+- eliminar `Uni2GroupAdmin.has_change_permission` para heredar directamente el comportamiento de `GroupAdmin`;
+- reemplazar el bloqueo de `Uni2GroupAdmin.has_delete_permission` por una delegación directa a `GroupAdmin.has_delete_permission`, evitando solamente el bloqueo general de `AuditoriaAdminMixin`.
 
 - [ ] **Step 4: Actualizar la especificación funcional**
 
-En `especificacion/reglas/usuarios.md`, actualizar la descripción de administración de permisos para indicar explícitamente:
-
-- la mutual define y edita sus grupos personalizados;
-- una cuenta con `auth.change_group` puede editarlos;
-- los grupos `Administrador de la app`, `Asociados` y `Comercios` requieren superusuario;
-- el alta y el borrado no cambian en este trabajo.
+En `especificacion/reglas/usuarios.md`, dejar explícito que `auth.add_group`, `auth.change_group` y `auth.delete_group` permiten crear, editar y borrar grupos respectivamente, sin excepciones adicionales.
 
 - [ ] **Step 5: Ejecutar las pruebas focalizadas**
 
@@ -125,20 +120,20 @@ DB_ENGINE=sqlite uv run pytest usuarios/tests/test_admin.py usuarios/tests/test_
 
 Expected: todas las pruebas pasan.
 
-- [ ] **Step 6: Verificar formato, diff y alcance**
+- [ ] **Step 6: Verificar la suite completa y el alcance**
 
 Run:
 
 ```bash
+DB_ENGINE=sqlite uv run pytest -q
 git diff --check
-git diff -- usuarios/admin.py usuarios/tests/test_admin.py especificacion/reglas/usuarios.md
 ```
 
-Expected: sin errores de whitespace; el diff solo contiene la autorización de edición, sus pruebas y la documentación funcional.
+Expected: suite verde y sin errores de whitespace.
 
 - [ ] **Step 7: Crear el commit de implementación**
 
 ```bash
 git add usuarios/admin.py usuarios/tests/test_admin.py especificacion/reglas/usuarios.md
-git commit -m "Permite editar grupos personalizados"
+git commit -m "Respeta permiso de edición de grupos"
 ```

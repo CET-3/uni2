@@ -131,21 +131,19 @@ Cuando staging parte de una copia de Production, el comando
 `preparar_copia_staging`:
 
 - elimina sesiones;
-- desactiva usuarios productivos;
-- inutiliza sus contraseñas;
-- quita permisos de staff y superuser;
-- regenera tokens de credencial;
-- crea cuentas QA ficticias;
-- deshabilita correo y push;
+- conserva usuarios, contraseñas, permisos, privilegios, perfiles y tokens;
 - escribe el marcador final de staging.
 
 Hasta que el proceso termina correctamente, staging no se considera listo y
-puede responder `503`.
+puede responder `503`. Las credenciales copiadas siguen siendo válidas en
+staging, por lo que la barrera HTTP y el aislamiento de la base son obligatorios.
+La configuración del entorno mantiene deshabilitados el correo transaccional,
+el correo por lote y push durante el refresco.
 
-El endurecimiento reduce riesgos, pero staging sigue conteniendo datos
-sensibles si se creó desde Production. Por eso se prueba sólo con cuentas QA,
-no se descargan listados y no se reutilizan datos reales como material de
-demostración.
+El endurecimiento reduce riesgos, pero staging sigue conteniendo datos y
+credenciales sensibles si se creó desde Production. Por eso se hacen pruebas
+controladas, no se descargan listados y no se reutilizan datos reales como
+material de demostración.
 
 ## Huella o fingerprint
 
