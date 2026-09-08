@@ -399,10 +399,12 @@ def test_preparar_copia_staging_conserva_usuarios_y_elimina_sesiones(monkeypatch
     ):
         monkeypatch.delenv(name, raising=False)
 
+    output = StringIO()
     call_command(
         "preparar_copia_staging",
         refresh_id="2026-08-02-01",
         confirm_target="uni2-staging",
+        stdout=output,
     )
 
     old_user.refresh_from_db()
@@ -420,6 +422,9 @@ def test_preparar_copia_staging_conserva_usuarios_y_elimina_sesiones(monkeypatch
     assert not Session.objects.exists()
     assert asociado.token_credencial == old_token
     assert EstadoDatosStaging.objects.get().refresh_id == "2026-08-02-01"
+    assert "1 sesiones eliminadas" in output.getvalue()
+    assert "1 usuarios conservados" in output.getvalue()
+    assert "QA" not in output.getvalue()
 
 
 @pytest.mark.django_db

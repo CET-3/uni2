@@ -19,6 +19,7 @@ administra desde una pantalla ni desde el admin de Django.
 | `listo_desde`* | fecha y hora | Momento en que terminó la transacción de endurecimiento. |
 
 El comando `preparar_copia_staging` actualiza este registro como último paso de
-la misma transacción que elimina sesiones, invalida usuarios y regenera tokens.
+la misma transacción que elimina sesiones y conserva sin cambios los usuarios,
+sus credenciales, relaciones y tokens.
 El middleware de staging no sirve la aplicación si el registro falta o si su
 `refresh_id` no coincide con el epoch publicado.
