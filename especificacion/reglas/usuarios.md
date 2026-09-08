@@ -128,7 +128,7 @@ El logo y el resultado exitoso del login enlazan a `/`. La selección no se guar
 | Grupo | Gestión propia | Admin técnico | Exclusiones principales |
 |---|---|---|---|
 | Atención al asociado | Consulta y edición ordinaria de asociados; solicitudes de asociación y reenvío de sus comunicaciones; cobros; últimos movimientos de la ficha | No requerido | Baja de asociados, importaciones, exportación, deudores, períodos y auditoría general |
-| Administrador de permisos | Experiencia administrativa y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No modifica la definición de grupos, no edita superusuarios ni puede asignar `Administrador de la app` |
+| Administrador de permisos | Experiencia administrativa y auditoría | Alta, consulta y edición de usuarios; consulta de grupos | No edita superusuarios ni puede asignar `Administrador de la app` |
 | Gestión de convenios | Experiencia administrativa | Actividades comerciales y comercios | Usuarios, asociados, publicidades y auditoría general |
 | Gestión de productos y servicios | Experiencia administrativa | Categorías y productos/servicios | Publicidades, comercios, usuarios, asociados y auditoría general |
 | Gestión de publicidades | Experiencia administrativa | Publicidades; consulta productos y comercios para vincular | Modificación de productos o comercios, usuarios, asociados y auditoría general |
@@ -143,6 +143,12 @@ entra al admin si posee al menos un permiso efectivo (`view`, `add`, `change` o
 `delete`) sobre un modelo registrado, o si es superusuario. Cada `ModelAdmin`
 mantiene sus propias restricciones de acciones. `is_staff` puede conservarse
 como dato técnico histórico, pero no es la fuente funcional de autorización.
+
+Una cuenta con el permiso efectivo `auth.change_group` puede editar los grupos
+personalizados definidos por la mutual. Los grupos técnicos `Administrador de
+la app`, `Asociados` y `Comercios` solo pueden ser modificados por un
+superusuario. Esta autorización no cambia las reglas de alta ni de borrado de
+grupos.
 
 La autorización se evalúa directamente contra los permisos efectivos de los
 `ModelAdmin` registrados. La home y el menú muestran `Admin técnico` con la
