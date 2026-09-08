@@ -65,18 +65,9 @@ class Uni2UserAdmin(AuditoriaAdminMixin, UserAdmin):
 class Uni2GroupAdmin(AuditoriaAdminMixin, GroupAdmin):
     audit_fields = ("name", "permissions")
 
-    def has_change_permission(self, request, obj=None):
-        if not request.user.is_superuser:
-            return False
-        return super().has_change_permission(request, obj)
-
-    def has_add_permission(self, request):
-        if not request.user.is_superuser:
-            return False
-        return super().has_add_permission(request)
-
     def has_delete_permission(self, request, obj=None):
-        return False
+        # Los grupos se administran con los permisos estándar de Django.
+        return GroupAdmin.has_delete_permission(self, request, obj)
 
 
 @admin.register(Notificacion)
