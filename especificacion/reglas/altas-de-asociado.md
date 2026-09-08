@@ -24,7 +24,9 @@ de `fecha_alta`. La regla no depende del día del mes en que ocurre el alta.
 La fecha de alta y la fecha de inicio de cobro son datos independientes. El
 sistema usa `fecha_inicio_cobro` como límite inferior único para generar
 cuotas. Una fecha explícita proveniente de una importación o corrección
-administrativa tiene prioridad sobre el cálculo automático.
+administrativa tiene prioridad sobre el cálculo automático. En el alta manual,
+la fecha ingresada se compara con la fecha automática y solo puede ampliar el
+inicio hacia un período anterior.
 
 ## ALTA-ASOCIADO-004
 
@@ -32,6 +34,10 @@ Al realizar un alta manual, el sistema genera cuotas para los períodos activos
 existentes desde `fecha_inicio_cobro` hasta el mes de alta. También incorpora
 los períodos futuros activos cuya generación masiva ya se ejecutó, identificados
 por `PeriodoCuota.generado_el`.
+
+La fecha efectiva y la cantidad de cuotas generadas se informan a la persona
+que realizó el alta. Si no hay períodos aplicables, el sistema informa que no
+se generaron cuotas.
 
 ## ALTA-ASOCIADO-005
 
@@ -42,9 +48,12 @@ todavía no generado tampoco se incorpora al alta.
 ## ALTA-ASOCIADO-006
 
 En el alta manual cotidiana, la fecha de alta es la fecha local del sistema y
-no se puede editar. La fecha de inicio de cobro tampoco se solicita: se calcula
-automáticamente con las reglas `ALTA-ASOCIADO-001` y `ALTA-ASOCIADO-002`. Ambas
-fechas continúan editables en la edición administrativa y en el admin técnico.
+no se puede editar. La fecha de inicio de cobro se muestra con la fecha local
+actual como valor inicial. Si la fecha ingresada es igual o posterior a la
+fecha automática calculada con `ALTA-ASOCIADO-001` o `ALTA-ASOCIADO-002`, se usa
+la fecha automática; si es anterior, se usa la fecha ingresada para recuperar
+cuotas faltantes. Ambas fechas continúan editables en la edición administrativa
+y en el admin técnico.
 
 ## ALTA-ASOCIADO-007
 

@@ -11,10 +11,14 @@ timestamp: 2026-06-22T00:00:00-03:00
 **Situación:** el alta ocurre cerca del cierre del período mensual.
 
 **Respuesta esperada:** el día del alta no cambia el cálculo. Un `Asociado`
-comienza dos meses antes y un `Adherente` comienza en el mes actual. Si la
-administración ya ejecutó la generación de un período futuro, el alta también
-recibe esa cuota; si el período sólo fue creado, no la recibe. El administrador
-puede ajustar `fecha_inicio_cobro` de manera explícita.
+comienza dos meses antes y un `Adherente` comienza en el mes actual. En el alta
+manual se propone la fecha actual como inicio de cobro, pero la fecha efectiva
+es la más antigua entre esa fecha y el cálculo automático. Por ejemplo, para un
+alta de `Asociado` el `08/09/2026`, indicar `01/09/2026` conserva como fecha
+efectiva `01/07/2026`; indicar `01/01/2026` permite recuperar cuotas desde
+enero si esos períodos existen y están activos. Si la administración ya
+ejecutó la generación de un período futuro, el alta también recibe esa cuota;
+si el período sólo fue creado, no la recibe.
 
 **Caso de uso relacionado:** [CU-crear-asociado](../casos-de-uso/cu-crear-asociado.md).
 

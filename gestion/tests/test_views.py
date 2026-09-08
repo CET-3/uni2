@@ -1582,7 +1582,7 @@ def test_asociado_nuevo_crea_asociado_con_fechas_automaticas(client, monkeypatch
             "tipo": "asociado",
             "curso_actual": curso.id,
             "fecha_alta": "2026-05-20",
-            "fecha_inicio_cobro": "2026-05-01",
+            "fecha_inicio_cobro": "2026-09-01",
         },
         follow=True,
     )
@@ -1599,7 +1599,9 @@ def test_asociado_nuevo_crea_asociado_con_fechas_automaticas(client, monkeypatch
         origen_id=str(asociado.pk),
     ).count() == 1
     assert response.redirect_chain[-1][0] == reverse("gestion:asociado_detalle", args=[asociado.id])
-    assert "Asociado creado correctamente" in response.content.decode()
+    content = response.content.decode()
+    assert "Asociado creado correctamente" in content
+    assert "Fecha de inicio de cobro: 01/06/2026" in content
 
 
 @pytest.mark.django_db
@@ -1651,6 +1653,7 @@ def test_asociado_nuevo_genera_cuotas_iniciales_y_redirige_al_detalle_aunque_pue
             "direccion": "San Martin 100",
             "tipo": "asociado",
             "curso_actual": curso.id,
+            "fecha_inicio_cobro": "2026-06-05",
         },
         follow=True,
     )
@@ -1661,7 +1664,50 @@ def test_asociado_nuevo_genera_cuotas_iniciales_y_redirige_al_detalle_aunque_pue
     assert list(asociado.cuotas.order_by("periodo__mes").values_list("periodo__mes", flat=True)) == [4, 5, 6]
     content = response.content.decode()
     assert "Se generaron 3 cuotas iniciales" in content
+    assert "desde 01/04/2026" in content
     assert "Cobrar" in content
+
+
+@pytest.mark.django_db
+def test_asociado_nuevo_puede_recuperar_cuotas_desde_enero(client, monkeypatch):
+    monkeypatch.setattr("gestion.forms.timezone.localdate", lambda: date(2026, 9, 8))
+    staff = crear_usuario_gestion(
+        "staff_alta_padron",
+        permisos=[GESTION_CONSULTAR_ASOCIADOS, GESTION_EDITAR_ASOCIADOS],
+    )
+    curso = Curso.objects.create(anio="1ro", curso="1ra", division=Curso.DIVISION_CB, turno=Curso.TURNO_TM)
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    for mes in range(1, 10):
+        PeriodoCuota.objects.create(
+            mes=mes,
+            ciclo_lectivo=ciclo,
+            importe="3000.00",
+            importe_recargo_mes="500.00",
+            importe_recargo_mes_siguiente="500.00",
+            fecha_vencimiento=date(2026, mes, 10),
+        )
+
+    client.force_login(staff)
+    response = client.post(
+        reverse("gestion:asociado_nuevo"),
+        {
+            "nombre": "Mara",
+            "apellido": "Lopez",
+            "dni": "44111224",
+            "tipo": "asociado",
+            "curso_actual": curso.id,
+            "fecha_inicio_cobro": "2026-01-01",
+        },
+        follow=True,
+    )
+
+    asociado = Asociado.objects.get(dni="44111224")
+    assert response.status_code == 200
+    assert asociado.fecha_inicio_cobro == date(2026, 1, 1)
+    assert list(asociado.cuotas.order_by("periodo__mes").values_list("periodo__mes", flat=True)) == list(range(1, 10))
+    content = response.content.decode()
+    assert "Se generaron 9 cuotas iniciales" in content
+    assert "desde 01/01/2026" in content
 
 
 @pytest.mark.django_db
@@ -1705,6 +1751,7 @@ def test_asociado_nuevo_incluye_proximo_periodo_ya_generado(client, monkeypatch)
             "direccion": "",
             "tipo": Asociado.TIPO_ASOCIADO,
             "curso_actual": curso.id,
+            "fecha_inicio_cobro": "2026-06-30",
         },
         follow=True,
     )

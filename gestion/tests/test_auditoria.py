@@ -166,9 +166,10 @@ def test_alta_y_edicion_desde_gestion_generan_eventos(client, monkeypatch):
             "email": "mara@example.com",
             "telefono": "111",
             "direccion": "Calle 1",
-            "tipo": Asociado.TIPO_ASOCIADO,
-            "curso_actual": curso.pk,
-        },
+                "tipo": Asociado.TIPO_ASOCIADO,
+                "curso_actual": curso.pk,
+                "fecha_inicio_cobro": "2026-08-09",
+            },
     )
     asociado = Asociado.objects.get(dni="44111229")
     evento_alta = EventoAuditoria.objects.get(

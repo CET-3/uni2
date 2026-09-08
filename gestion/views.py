@@ -205,10 +205,19 @@ class GestionAsociadoNuevoView(GestionPermissionRequiredMixin, TemplateView):
             if cuotas_generadas:
                 messages.success(
                     request,
-                    f"Asociado creado correctamente. Se generaron {len(cuotas_generadas)} cuotas iniciales.",
+                    (
+                        f"Asociado creado correctamente. Se generaron {len(cuotas_generadas)} "
+                        f"cuotas iniciales desde {asociado.fecha_inicio_cobro:%d/%m/%Y}."
+                    ),
                 )
             else:
-                messages.success(request, "Asociado creado correctamente. No se generaron cuotas iniciales.")
+                messages.success(
+                    request,
+                    (
+                        "Asociado creado correctamente. No se generaron cuotas iniciales. "
+                        f"Fecha de inicio de cobro: {asociado.fecha_inicio_cobro:%d/%m/%Y}."
+                    ),
+                )
             return redirect("gestion:asociado_detalle", asociado_id=asociado.id)
         request._asociado_form = form
         context = self.get_context_data(**kwargs)
