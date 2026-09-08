@@ -42,7 +42,7 @@ jobs:
         run: uv run --frozen python manage.py makemigrations --check --dry-run
 
       - name: Ejecutar la suite
-        run: uv run --frozen pytest -q
+        run: uv run --frozen pytest -q -m "not browser"
 
   staging-postgresql:
     name: Endurecimiento staging (PostgreSQL)

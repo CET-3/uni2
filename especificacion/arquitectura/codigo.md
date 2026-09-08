@@ -34,6 +34,14 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
 - La carpeta `templates/web/` agrupa el sitio público.
 - El admin de Django queda como soporte técnico y no como navegación principal del backoffice.
 
+### Pruebas de navegador
+
+Las pruebas de integración que requieren Chromium real y un servidor HTTP
+local se marcan con `pytest.mark.browser`. La suite automática de cada PR las
+excluye para mantener acotado el tiempo del CI; se ejecutan manualmente con
+`DB_ENGINE=sqlite uv run pytest -m browser -q`. La cobertura de reglas de
+negocio y vistas continúa en las pruebas Django habituales.
+
 ### Archivos locales y datos operativos
 
 El repositorio versiona el código, las migraciones, las pruebas, la especificación OKF y solamente datos de ejemplo sintéticos. Los padrones reales, las planillas de importación, los resultados de análisis, las bases de datos locales y los archivos media no se versionan. Deben guardarse en las rutas locales ignoradas por Git, como `data/`, `analisis_padron/` y `media/`.

@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.mark.parametrize("mobile", [False, True], ids=["desktop", "mobile"])
+@pytest.mark.browser
 @pytest.mark.django_db
 def test_acciones_en_navegador(tmp_path, mobile, client):
     chromium = shutil.which("chromium") or shutil.which("chromium-browser")

@@ -237,6 +237,7 @@ class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
             "tipo",
             "curso_actual",
             "clasificacion_adherente",
+            "fecha_inicio_cobro",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -247,6 +248,10 @@ class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
                 field.widget.attrs.update({"class": "form-select"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
+            if field_name == "fecha_inicio_cobro":
+                field.widget.attrs.update({"type": "date"})
+        if not self.is_bound:
+            self.initial["fecha_inicio_cobro"] = timezone.localdate()
         self.fields["nombre"].widget.attrs["autofocus"] = True
 
     def save(self, commit=True, actor=None):
@@ -257,6 +262,7 @@ class AsociadoAltaForm(AsociadoTipoFormMixin, forms.ModelForm):
             dni=data["dni"],
             tipo=data["tipo"],
             fecha_alta=timezone.localdate(),
+            fecha_inicio_cobro=data["fecha_inicio_cobro"],
             curso_actual=data["curso_actual"],
             clasificacion_adherente=data["clasificacion_adherente"],
             email=data["email"],
