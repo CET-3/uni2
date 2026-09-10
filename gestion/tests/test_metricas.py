@@ -196,3 +196,80 @@ def test_solicitudes_cohorte_y_estado_actual():
     agosto = metricas_solicitudes(Periodo(date(2026, 8, 1), date(2026, 8, 31)))
     assert (agosto["total"], agosto["conversion"]) == (1, 100)
     assert metricas_solicitudes(Periodo(date(2026, 9, 1), HOY))["total"] == 0
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("dia,activas", [(10, 5), (11, 4)])
+def test_credenciales_coinciden_con_validacion_y_excluyen_bajas(dia, activas):
+    from cuotas.selectors import calcular_estado_credencial
+    from gestion.selectors_metricas import metricas_credenciales
+
+    sin_cuotas = persona("sin")
+    cuota(persona("bonificada"), 8, importe=0)
+    cuota(persona("pagada"), 8, pagado=100)
+    cuota(persona("anterior", tipo="adherente"), 8, pagado=50)
+    cuota(persona("actual"), 9)
+    cuota(persona("futura", tipo="adherente"), 10)
+    persona("baja", baja=date(2026, 8, 1))
+    hoy = date(2026, 9, dia)
+    datos = metricas_credenciales(hoy=hoy)
+    assert datos["total"] == 6
+    assert datos["activas"] == activas
+    assert datos["inactivas"] == 6 - activas
+    assert datos["activas"] == sum(calcular_estado_credencial(p, hoy).activa for p in Asociado.objects.all())
+    adherentes = metricas_credenciales("adherente", hoy=hoy)
+    assert (adherentes["total"], adherentes["activas"], adherentes["porcentaje"]) == (2, 1, 50)
+    assert datos["por_tipo"][1]["inactivas"] == 1
+    assert sin_cuotas.estado == "activo"
+
+
+@pytest.mark.django_db
+def test_credenciales_vacias_y_card_sin_comparacion_historica():
+    from gestion.selectors_metricas import metricas_credenciales
+    from gestion.services_metricas import construir_metricas
+    assert metricas_credenciales(hoy=HOY)["porcentaje"] is None
+    persona("actual", alta=date(2026, 9, 1))
+    datos = construir_metricas(Periodo(date(2026, 8, 1), date(2026, 8, 31)), hoy=HOY)
+    assert len(datos["cards"]) == 4
+    assert datos["cards"][0]["titulo"] == "Padrón activo"
+    assert datos["cards"][1]["valor"] == "1"
+    assert datos["cards"][1]["cambio"] is None
+    assert datos["proporciones"][0]["progreso"] == 100
+    assert datos["proporciones"][1]["progreso"] is None
+
+
+@pytest.mark.django_db
+def test_proporciones_separan_personas_y_montos():
+    from gestion.services_metricas import construir_metricas
+    a = persona("1")
+    pagar(cuota(a, 9), HOY, 100)
+    cuota(persona("2"), 9, importe=300)
+    datos = construir_metricas(Periodo(date(2026, 9, 1), HOY), hoy=HOY)
+    personas, montos = datos["proporciones"]
+    assert personas["progreso"] == 50
+    assert personas["relacion"] == "1 de 2 personas de alta"
+    assert montos["progreso"] == 25
+    assert montos["relacion"] == "$ 100,00 cobrados de $ 400,00 generados"
+
+
+@pytest.mark.django_db
+def test_detalle_credenciales_deuda_exige_permisos_y_respeta_tipo(client, monkeypatch):
+    from django.contrib.auth.models import User, Permission
+    from django.urls import reverse
+    monkeypatch.setattr(timezone, "localdate", lambda: HOY)
+    user = User.objects.create_user("credenciales")
+    user.user_permissions.add(*Permission.objects.filter(content_type__app_label="gestion", codename__in=["ver_metricas", "consultar_asociados"]))
+    client.force_login(user)
+    params = {"categoria": "credenciales", "estado": "inactivas", "tipo": "adherente"}
+    url = reverse("gestion:metricas_detalle")
+    assert client.get(url, params).status_code == 403
+    user.user_permissions.add(Permission.objects.get(content_type__app_label="gestion", codename="ver_deudores"))
+    a = persona("adherente", tipo="adherente")
+    cuota(a, 8)
+    cuota(persona("asociado"), 8)
+    cuota(persona("baja", tipo="adherente", baja=date(2026, 8, 1)), 8)
+    response = client.get(url, params)
+    assert response.status_code == 200
+    assert list(response.context["page_obj"]) == [a]
+    assert "no-store" in response["Cache-Control"]
+    assert client.get(url, {**params, "estado": "inventado"}).status_code == 404

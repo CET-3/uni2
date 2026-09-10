@@ -2,6 +2,15 @@
 
 Usar datos ficticios locales. No crear cobros de ejemplo en Producción.
 
+Credenciales y proporciones: comprobar cuatro cards con acentos azul, verde,
+amarillo y rojo; debajo, dos porcentajes con barra sin enlaces al pie. En 390px
+todos van a ancho completo. La credencial del mes impago sigue activa el día
+10 y pasa a inactiva el 11; cuotas anteriores bloquean antes. Bajas no suman al
+denominador. Revisar personas sin cuotas, bonificadas, deuda anterior y futuras.
+El porcentaje actual no cambia al elegir un período histórico, pero sí con el
+tipo de padrón. Sin padrón/cuotas mostrar raya y no barra indeterminada.
+El detalle nominal de inactivas requiere consultar_asociados y ver_deudores.
+
 1. Aplicar migraciones. Administrador de la mutual ve Métricas; Atención al
    asociado no recibe ese permiso automáticamente. Comprobar acceso directo.
 2. Alternar Hoy, Esta semana, Este mes, Mes anterior, Este año, Últimos 12 meses

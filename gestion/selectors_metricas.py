@@ -3,13 +3,14 @@
 from datetime import timedelta
 from decimal import Decimal
 
-from django.db.models import Case, Count, DecimalField, F, IntegerField, OuterRef, Q, Subquery, Sum, Value, When
+from django.db.models import Count, DecimalField, Exists, F, OuterRef, Q, Subquery, Sum, Value
 from django.db.models.functions import Coalesce, Greatest, Least, Round, TruncDay, TruncMonth
 from django.utils import timezone
 
 from asociados.models import Asociado, SolicitudAsociacion
 from comercios.models import Comercio
 from cuotas.models import Cuota, Pago, PagoCuota
+from cuotas.selectors import cuotas_con_saldo, cuotas_que_inactivan_credencial
 from .periodos import segmentos_periodo
 from .selectors_atencion import PAGO_HISTORICO, resumir_pagos
 
@@ -116,13 +117,34 @@ def cuotas_vencidas_metricas(tipo="todos", hoy=None):
     cuotas = Cuota.objects.filter(periodo__fecha_vencimiento__lt=hoy)
     if tipo != "todos":
         cuotas = cuotas.filter(asociado__tipo=tipo)
-    # Mismas reglas de Cuota.get_recargo_aplicable; el saldo nunca es negativo.
-    cuotas = cuotas.annotate(recargo=Case(
-        When(importe_pagado__gte=F("importe"), then=Value(Decimal(0))),
-        When(periodo__ciclo_lectivo__anio=hoy.year, periodo__mes=hoy.month, then=F("importe_recargo_mes")),
-        default=F("importe_recargo_mes") + F("importe_recargo_mes_siguiente"), output_field=DecimalField(),
-    )).annotate(saldo=Greatest(F("importe") + F("recargo") - F("importe_pagado"), Value(Decimal(0))))
-    return cuotas.filter(saldo__gt=0)
+    return cuotas_con_saldo(cuotas, hoy).filter(saldo__gt=0)
+
+
+def personas_con_estado_credencial(tipo="todos", hoy=None):
+    hoy = hoy or timezone.localdate()
+    deuda = cuotas_que_inactivan_credencial(hoy).filter(asociado_id=OuterRef("pk"))
+    return personas_metricas(tipo).filter(estado=Asociado.ESTADO_ACTIVO).annotate(credencial_inactiva=Exists(deuda))
+
+
+def metricas_credenciales(tipo="todos", hoy=None):
+    personas = personas_con_estado_credencial(tipo, hoy)
+    # Una sola consulta: agregados por tipo y clasificación, nunca por persona.
+    filas = list(personas.order_by().values("tipo", "clasificacion_adherente__nombre").annotate(
+        total=Count("pk"), inactivas=Count("pk", filter=Q(credencial_inactiva=True))))
+
+    def resumen(filas):
+        total = sum(f["total"] for f in filas)
+        inactivas = sum(f["inactivas"] for f in filas)
+        return {"total": total, "activas": total - inactivas, "inactivas": inactivas,
+            "porcentaje": porcentaje(total - inactivas, total)}
+
+    datos = resumen(filas)
+    datos["por_tipo"] = [{"nombre": nombre, **resumen([f for f in filas if f["tipo"] == valor])}
+        for valor, nombre in (("asociado", "Asociados"), ("adherente", "Adherentes")) if tipo in ("todos", valor)]
+    datos["clasificaciones"] = [{"nombre": f["clasificacion_adherente__nombre"] or "Sin clasificar", **resumen([f])}
+        for f in filas if f["tipo"] == "adherente"]
+    datos["clasificaciones"].sort(key=lambda f: f["nombre"])
+    return datos
 
 
 def metricas_deuda(tipo="todos", hoy=None):

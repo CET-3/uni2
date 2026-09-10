@@ -13,7 +13,7 @@ from django.views.generic import TemplateView
 
 from .forms_metricas import FiltroMetricasForm
 from .permissions import GESTION_VER_METRICAS
-from .selectors_metricas import personas_metricas, cuotas_vencidas_metricas, solicitudes_del_periodo
+from .selectors_metricas import personas_metricas, personas_con_estado_credencial, cuotas_vencidas_metricas, solicitudes_del_periodo
 from .services_metricas import construir_metricas
 from .views import GestionPermissionRequiredMixin
 
@@ -48,6 +48,8 @@ class GestionMetricasView(MetricasBaseView):
             return reverse("gestion:metricas_detalle") + "?" + urlencode(params)
 
         puede_personas = self.request.user.has_perm("gestion.consultar_asociados")
+        context["credenciales_activas_url"] = enlace("credenciales", estado="activas") if puede_personas else None
+        context["credenciales_inactivas_url"] = enlace("credenciales", estado="inactivas") if puede_personas and self.request.user.has_perm("gestion.ver_deudores") else None
         for fila in datos["padron"]["serie"]:
             for categoria in ("altas", "bajas"):
                 fila[f"url_{categoria}"] = enlace(categoria, periodo="personalizado", desde=fila["desde"], hasta=fila["hasta"]) if puede_personas else None
@@ -71,10 +73,11 @@ class GestionMetricasDetalleView(MetricasBaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         categoria = self.request.GET.get("categoria")
-        if categoria not in ("altas", "bajas", "deuda", "solicitudes", "clasificacion"):
+        if categoria not in ("altas", "bajas", "deuda", "solicitudes", "clasificacion", "credenciales"):
             raise Http404
         permiso = "gestion.consultar_solicitudes_asociacion" if categoria == "solicitudes" else "gestion.consultar_asociados"
-        if not self.request.user.has_perm(permiso) or (categoria == "deuda" and not self.request.user.has_perm("gestion.ver_deudores")):
+        consulta_deuda = categoria == "deuda" or (categoria == "credenciales" and self.request.GET.get("estado") == "inactivas")
+        if not self.request.user.has_perm(permiso) or (consulta_deuda and not self.request.user.has_perm("gestion.ver_deudores")):
             raise PermissionDenied
         context["categoria"] = categoria
         if not context["form"].is_valid():
@@ -108,6 +111,12 @@ class GestionMetricasDetalleView(MetricasBaseView):
                 por_persona = por_persona.filter(numero__gte=3) if grupo == "3" else por_persona.filter(numero=int(grupo))
                 objetos = personas.filter(pk__in=Subquery(por_persona.values("asociado_id")))
                 titulo = f"Personas con {grupo}{'+' if grupo == '3' else ''} cuotas vencidas · hoy"
+        elif categoria == "credenciales":
+            estado = self.request.GET.get("estado")
+            if estado not in ("activas", "inactivas"):
+                raise Http404
+            objetos = personas_con_estado_credencial(filtros["tipo"]).filter(credencial_inactiva=estado == "inactivas")
+            titulo = "Credenciales " + ("activas" if estado == "activas" else "inactivas por deuda") + " · personas de alta hoy"
         elif categoria == "solicitudes":
             from asociados.models import SolicitudAsociacion
             estado = self.request.GET.get("estado")

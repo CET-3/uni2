@@ -13,12 +13,16 @@
     <p class="small text-secondary">{{ periodo.desde|date:"d/m/Y" }} – {{ periodo.hasta|date:"d/m/Y" }} · Cuotas por mes completo; movimientos por fecha.{% if comparacion %} Comparación: {{ comparacion.desde|date:"d/m/Y" }} – {{ comparacion.hasta|date:"d/m/Y" }}.{% endif %}</p>
     {% if datos.padron.inconsistentes %}<div class="mb-3">{% include "components/alert.html" with variant="warning" title="No se puede confirmar el padrón histórico" message="Hay estados y fechas de alta o baja incompatibles. No mostramos activos al cierre hasta revisar esos datos. Las fechas sobrescritas por importaciones no pueden reconstruirse automáticamente." is_static=True only %}</div>{% endif %}
     {% if datos.cuotas.inconsistentes %}<div class="mb-3">{% include "components/alert.html" with variant="warning" title="Revisar las aplicaciones de pagos" message="Hay cuotas cuyo importe pagado no coincide con las aplicaciones registradas. La cobranza se calcula desde las aplicaciones; revisar las diferencias antes de interpretar el cumplimiento." is_static=True only %}</div>{% endif %}
-    <section class="row g-3 mb-3" aria-label="Resumen del período">
-    {% for card in datos.cards %}<div class="col-12 col-sm-6 col-xl-3"><article class="card uni2-metric-card uni2-metric-card-overview uni2-metric-card-brand-{{ card.color }} h-100"><div class="card-body">
-        <div class="uni2-metric-heading"><h2 class="uni2-metric-label" title="{{ card.ayuda }}">{{ card.titulo }}</h2><i class="bi bi-{{ card.icono }}" aria-hidden="true"></i></div>
-        <div class="uni2-metric-value">{{ card.valor }}</div><p class="small text-secondary">{{ card.ayuda }}</p>
-        {% if card.cambio %}<p class="small mb-0 {{ card.cambio.clase }}">{{ card.cambio.flecha }} {{ card.cambio.texto }}{% if card.cambio.porcentaje != None %} ({{ card.cambio.porcentaje|floatformat:1 }} %){% endif %}<span class="d-block">vs. comparación</span></p>{% endif %}
-    </div></article></div>{% endfor %}
+    <section class="uni2-metrics-overview mb-3" aria-label="Resumen: padrón, credenciales y cuotas">
+        <div class="uni2-metrics-pair" role="group" aria-label="Personas">
+            {% for card in datos.cards|slice:":2" %}{% include "gestion/includes/metrica_card.html" %}{% endfor %}
+        </div>
+        <div class="uni2-metrics-pair" role="group" aria-label="Cuotas">
+            {% for card in datos.cards|slice:"2:4" %}{% include "gestion/includes/metrica_card.html" %}{% endfor %}
+        </div>
+    </section>
+    <section class="row g-3 mb-3" aria-label="Proporciones de credenciales y cobranza">
+        {% for metrica in datos.proporciones %}<div class="col-12 col-md-6">{% include "components/metric_proportion.html" with metrica=metrica only %}</div>{% endfor %}
     </section>
     <div class="d-flex flex-wrap gap-3 small mb-4">
         {% if altas_url %}<a href="{{ altas_url }}" class="uni2-summary-link">{{ datos.padron.altas }} altas <i class="bi bi-arrow-right" aria-hidden="true"></i></a>{% else %}<span>{{ datos.padron.altas }} altas</span>{% endif %}
@@ -41,6 +45,7 @@
         <div class="col-12 col-lg-6"><article class="card uni2-surface-card h-100"><div class="card-body"><h2 class="uni2-titulo-componente">Evolución del padrón</h2><p class="small text-secondary">Activos al cierre de cada {% if datos.padron.diario %}día{% else %}mes{% endif %} del rango.</p><div class="btn-group mb-3" role="group" aria-label="Serie del padrón"><button class="btn btn-outline-primary active" id="mostrar-activos" type="button" aria-pressed="true">Activos</button><button class="btn btn-outline-primary" id="mostrar-movimientos" type="button" aria-pressed="false">Altas y bajas</button></div><div class="uni2-chart-frame"><canvas id="grafico-padron" role="img" aria-label="Evolución del padrón. Datos disponibles en la tabla inferior."></canvas></div></div></article></div>
         <div class="col-12 col-lg-6"><article class="card uni2-surface-card h-100"><div class="card-body"><h2 class="uni2-titulo-componente">Generado y cobrado</h2><p class="small text-secondary">Cuotas por mes · capital cobrado hasta hoy. Los meses anteriores tuvieron más tiempo para cobrarse.</p><div class="uni2-chart-frame"><canvas id="grafico-cuotas" role="img" aria-label="Cuotas generadas y cobradas. Datos disponibles en la tabla inferior."></canvas></div></div></article></div>
     </section>
+    {% include "gestion/includes/metricas_credenciales.html" %}
     <h2 class="uni2-titulo-componente">Situaciones a atender · hoy</h2>
     <section class="card uni2-surface-card mb-4"><div class="card-body"><p><strong>{{ datos.deuda.total|moneda }}</strong> de deuda vencida actual · {{ datos.deuda.personas }} personas · {{ datos.deuda.cuotas }} cuotas · Incluye {{ datos.deuda.recargos|moneda }} de recargos.</p><div class="row g-2">{% for grupo in datos.deuda.grupos %}<div class="col-sm-4">{% if grupo.url %}<a class="uni2-summary-link" href="{{ grupo.url }}">{% else %}<div>{% endif %}<span>{{ grupo.etiqueta }}<strong class="d-block">{{ grupo.personas }} personas · {{ grupo.total|moneda }}</strong></span>{% if grupo.url %}<i class="bi bi-arrow-right" aria-hidden="true"></i></a>{% else %}</div>{% endif %}</div>{% endfor %}</div><p class="small text-secondary mb-0 mt-2">Deuda vencida de todos los meses hasta hoy. Respeta el filtro de padrón, no el período seleccionado.</p></div></section>
     <details id="solicitudes" class="uni2-metrics-detail mb-3"><summary>Solicitudes de asociación · resultado actual</summary><div class="p-3"><p>{% if datos.solicitudes.conversion != None %}{{ datos.solicitudes.conversion|floatformat:1 }} % terminaron en alta.{% else %}Sin solicitudes en el período.{% endif %} Las solicitudes recientes tuvieron menos tiempo para completarse.</p>{% for fila in datos.solicitudes.estados %}{% if fila.url %}<a class="uni2-summary-link" href="{{ fila.url }}"><span>{{ fila.nombre }}</span><strong>{{ fila.cantidad }} <i class="bi bi-chevron-right" aria-hidden="true"></i></strong></a>{% else %}<p>{{ fila.nombre }}: {{ fila.cantidad }}</p>{% endif %}{% endfor %}</div></details>

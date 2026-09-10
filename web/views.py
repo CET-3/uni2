@@ -299,6 +299,12 @@ class DesignSystemView(VerDesignSystemRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["periodo_cuota_publicado"] = get_periodo_cuota_para_publicar()
+        context["proporciones_ejemplo"] = [
+            {"titulo": "Credenciales activas", "valor": "25,0 %", "progreso": 25,
+             "relacion": "114 de 456 personas de alta", "referencia": "Hoy · datos de ejemplo", "color": "green"},
+            {"titulo": "Cumplimiento por monto", "valor": "75,0 %", "progreso": 75,
+             "relacion": "$ 750,00 cobrados de $ 1.000,00 generados", "referencia": "Cuotas del período · datos de ejemplo", "color": "blue"},
+        ]
         return context
 
 

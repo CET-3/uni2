@@ -1,8 +1,9 @@
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 
-from django.db.models import Prefetch, Q
+from django.db.models import Case, DecimalField, F, Prefetch, Q, Value, When
+from django.db.models.functions import Greatest
 from django.utils import timezone
 
 from asociados.models import Asociado
@@ -48,15 +49,13 @@ def calcular_estado_credencial(asociado: Asociado, fecha_referencia: date | None
             motivo="baja",
         )
 
-    periodo_actual = (fecha_referencia.year, fecha_referencia.month)
+    limite = limite_periodo_credencial(fecha_referencia)
     cuotas = getattr(asociado, "cuotas_para_estado_credencial", None)
     if cuotas is None:
         cuotas = asociado.cuotas.select_related("periodo", "periodo__ciclo_lectivo")
     for cuota in cuotas:
         periodo_cuota = (cuota.periodo.ciclo_lectivo.anio, cuota.periodo.mes)
-        if periodo_cuota > periodo_actual:
-            continue
-        if periodo_cuota == periodo_actual and fecha_referencia.day <= 10:
+        if periodo_cuota > limite:
             continue
         if cuota.get_saldo_pendiente(fecha_referencia) > 0:
             return EstadoCredencial(
@@ -72,6 +71,31 @@ def calcular_estado_credencial(asociado: Asociado, fecha_referencia: date | None
         estado_display="Activa",
         motivo=None,
     )
+
+
+def limite_periodo_credencial(fecha):
+    """Hasta el día 10 inclusive sólo las cuotas de meses anteriores bloquean."""
+    cierre = fecha if fecha.day > 10 else fecha.replace(day=1) - timedelta(days=1)
+    return cierre.year, cierre.month
+
+
+def cuotas_con_saldo(cuotas, fecha):
+    """Equivalente SQL de get_recargo_aplicable/get_saldo_pendiente.
+
+    Compartido por deuda y credenciales; cada consumidor selecciona los períodos
+    que corresponden a su regla de exigibilidad.
+    """
+    return cuotas.annotate(recargo=Case(
+        When(Q(importe_pagado__gte=F("importe")) | Q(periodo__fecha_vencimiento__gte=fecha), then=Value(Decimal(0))),
+        When(periodo__ciclo_lectivo__anio=fecha.year, periodo__mes=fecha.month, then=F("importe_recargo_mes")),
+        default=F("importe_recargo_mes") + F("importe_recargo_mes_siguiente"), output_field=DecimalField(),
+    )).annotate(saldo=Greatest(F("importe") + F("recargo") - F("importe_pagado"), Value(Decimal(0))))
+
+
+def cuotas_que_inactivan_credencial(fecha):
+    anio, mes = limite_periodo_credencial(fecha)
+    cuotas = Cuota.objects.filter(Q(periodo__ciclo_lectivo__anio__lt=anio) | Q(periodo__ciclo_lectivo__anio=anio, periodo__mes__lte=mes))
+    return cuotas_con_saldo(cuotas, fecha).filter(saldo__gt=0)
 
 
 def precargar_cuotas_para_estado_credencial(asociados):
