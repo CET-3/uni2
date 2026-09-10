@@ -1,5 +1,10 @@
 from django.urls import path
 
+from .views_atencion import (
+    GestionAtencionDiariaView, GestionAtencionPagoView,
+    GestionAtencionAltasView, GestionAtencionCargasView,
+)
+
 from .views import (
     GestionAsociadoDetalleView,
     GestionAsociadoEditarView,
@@ -32,6 +37,10 @@ from .views_solicitudes import (
 app_name = "gestion"
 
 urlpatterns = [
+    path("gestion/atencion-diaria/", GestionAtencionDiariaView.as_view(), name="atencion_diaria"),
+    path("gestion/atencion-diaria/pagos/<int:pago_id>/", GestionAtencionPagoView.as_view(), name="atencion_pago"),
+    path("gestion/atencion-diaria/altas/", GestionAtencionAltasView.as_view(), name="atencion_altas"),
+    path("gestion/atencion-diaria/cargas/", GestionAtencionCargasView.as_view(), name="atencion_cargas"),
     path(
         "gestion/solicitudes-asociacion/",
         GestionSolicitudesAsociacionView.as_view(),

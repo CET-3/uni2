@@ -14,6 +14,12 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
 
 - `usuarios`: login, logout, helpers de roles y navegación.
 - `gestion`: cobros, deudores, asociados, auditoría y períodos de cuota; sus accesos se presentan desde la home común.
+- Atención diaria agrega `gestion/periodos.py` para resolver intervalos locales,
+  `gestion/forms_atencion.py` para validar filtros, `gestion/selectors_atencion.py`
+  para consultas y agregados SQL y `gestion/views_atencion.py` para HTTP,
+  autorización y paginación. No mueve reglas de cobro ni modifica los modelos
+  financieros. Los includes `atencion_*` componen tablas/filtros con los
+  componentes compartidos; no agregan una hoja de estilos ni gráficos.
 - `auditoria`: historial inmutable, serialización segura y soporte común para services y admin.
 - `asociados`: experiencia del asociado autenticado y su dominio.
 - `comercios`: validación y panel del comercio adherido.

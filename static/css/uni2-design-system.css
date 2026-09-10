@@ -2308,16 +2308,54 @@ button.uni2-service-card:hover {
 }
 
 .uni2-metric-card-info,
+.uni2-metric-card-brand-blue,
 .uni2-surface-card-info { --uni2-component-accent: var(--brand-blue); }
 
 .uni2-metric-card-success,
+.uni2-metric-card-brand-green,
 .uni2-surface-card-success { --uni2-component-accent: var(--brand-green); }
 
 .uni2-metric-card-warning,
+.uni2-metric-card-brand-yellow,
 .uni2-surface-card-warning { --uni2-component-accent: var(--brand-yellow); }
 
 .uni2-metric-card-danger,
 .uni2-surface-card-danger { --uni2-component-accent: var(--brand-red); }
+
+/* Navegación compacta dentro de resúmenes; el color no indica un estado. */
+.uni2-summary-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.65rem 0.5rem;
+  border-radius: var(--radius-control);
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.uni2-summary-link:hover,
+.uni2-summary-link:focus-visible {
+  color: var(--color-text);
+  background: var(--color-surface-muted);
+  text-decoration: none;
+}
+
+.uni2-summary-link:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.uni2-summary-link-count {
+  min-width: 2rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-control);
+  background: var(--color-surface-muted);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
 
 .uni2-metric-card .uni2-metric-label {
   color: var(--color-text-secondary);
@@ -2332,6 +2370,38 @@ button.uni2-service-card:hover {
   font-size: 1.7rem;
   font-weight: 700;
   line-height: 1.05;
+}
+
+/* Resumen monetario: jerarquía e iconos de la maqueta de Atención diaria. */
+.uni2-metric-card-overview {
+  border: 1px solid var(--color-border-subtle);
+  border-top: 4px solid var(--uni2-component-accent, var(--brand-blue));
+  border-radius: var(--radius-card);
+}
+
+.uni2-metric-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.uni2-metric-heading .bi { color: var(--color-action-on-surface); }
+
+.uni2-metric-card-overview .uni2-metric-label {
+  margin-bottom: 0;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.uni2-metric-card-overview .uni2-metric-value {
+  font-size: clamp(1.7rem, 2.7vw, 2.125rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 0.85rem;
 }
 
 

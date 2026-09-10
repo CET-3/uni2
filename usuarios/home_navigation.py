@@ -10,6 +10,7 @@ from gestion.permissions import (
     GESTION_CONSULTAR_ASOCIADOS,
     GESTION_CONSULTAR_SOLICITUDES_ASOCIACION,
     GESTION_VER_AUDITORIA,
+    GESTION_VER_ATENCION_DIARIA,
     GESTION_VER_DESIGN_SYSTEM,
     GESTION_VER_ESPECIFICACION,
 )
@@ -71,6 +72,12 @@ def _acciones_gestion(user):
             "Atención al asociado",
             "gestion:asociados",
             "Buscar asociados, revisar sus datos y operar sobre su cuenta.",
+        ),
+        (
+            GESTION_VER_ATENCION_DIARIA,
+            "Atención diaria",
+            "gestion:atencion_diaria",
+            "Controlar cobros, altas y solicitudes pendientes.",
         ),
         (
             GESTION_ADMINISTRAR_PERIODOS_CUOTA,

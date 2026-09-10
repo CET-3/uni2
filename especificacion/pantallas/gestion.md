@@ -87,6 +87,44 @@ Las pantallas `Atención al asociado`, `Solicitudes de asociación`, `Nuevo asoc
 - el alta y la edición muestran curso o clasificación según el tipo seleccionado, deshabilitan el campo que no corresponde y exigen el visible. La edición reutiliza el hero compacto para mantener visible la identidad y el estado actual de la credencial. Presenta un único formulario, dividido mediante `fieldset` en `Identidad`, `Contacto` y `Datos administrativos`; evita textos auxiliares repetidos y no ofrece campos de baja, porque esa operación no forma parte de la edición cotidiana.
 - los formularios de alta, edición, períodos y cobro usan `components/alert.html` como resumen general y muestran cada error junto al campo correspondiente.
 
+## Tableros de administración
+
+Se acordaron dos pantallas complementarias de `gestion`. Atención diaria está
+implementada; Métricas continúa en diseño. Las maquetas usan datos ficticios y
+no constituyen una segunda aplicación ni reemplazan las pantallas operativas
+actuales.
+
+- **[Atención diaria](atencion-diaria.md):** control de ingresos por fecha efectiva del pago, con
+  `Hoy`, `Ayer`, `Esta semana` (lunes a hoy) y rango de fechas; filtro por pagos
+  propios o de todo el equipo según permisos. Destaca total cobrado, efectivo,
+  billetera virtual, composición en cuotas/recargos y donaciones, lista de pagos,
+  altas del período y solicitudes pendientes actuales. Distingue fecha de pago
+  de fecha de carga mediante el registro de auditoría cuando esté disponible.
+  No representa una caja con apertura, egresos o arqueo. No incluye buscador de
+  asociados ni botón general de buscar/registrar cobro: la atención individual
+  conserva su pantalla y su recorrido existentes.
+- **Métricas:** análisis de evolución del padrón, cuotas, cumplimiento y deuda.
+  El diseño mantiene cuatro indicadores principales y dos gráficos, con detalle
+  adicional desplegable. Arriba incluye franjas compactas para `Quiénes somos`
+  (asociados/adherentes, cantidades y proporciones actuales) y `Solicitudes de
+  asociación` (recibidas en el período y su estado actual: altas completadas,
+  pendientes y canceladas, con porcentaje de conversión). El detalle de
+  adherentes usa las clasificaciones configuradas en Uni2. Los estados actuales
+  de solicitudes no se presentan como una foto histórica; las solicitudes más
+  recientes tuvieron menos tiempo para completarse.
+
+Los colores de las variaciones conservan flechas y texto, y expresan el sentido
+favorable o desfavorable del indicador. La maqueta valida distribución y
+comportamiento; **la implementación debe reutilizar el design system de Uni2**,
+incluidos layout, componentes, tokens, formato de moneda, temas y accesibilidad.
+No se debe copiar el CSS independiente de los prototipos. Los patrones nuevos
+deben definirse en el catálogo antes de usarse en estas pantallas. Ver los
+[requisitos de implementación visual](../arquitectura/design-system.md#maquetas-de-métricas-y-atención-diaria).
+
+La validación de datos históricos y las reglas detalladas de períodos, deuda y
+comparación forman parte de la implementación; los números ficticios de las
+maquetas no validan la integridad de los datos reales.
+
 ## Auditoría de gestión
 
 - La consulta general usa un único título y no repite un breadcrumb de un solo

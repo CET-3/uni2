@@ -15,6 +15,8 @@ La relación entre ambos debe deducirse por el objetivo y el actor de cada caso.
 
 ### Cobros y donaciones
 
+* [CU-consultar-atencion-diaria](cu-consultar-atencion-diaria.md) - Revisar ingresos y pendientes del día.
+
 * [CU-registrar-pago-cuota](cu-registrar-pago-cuota.md) - Cobrar una o más cuotas.
 * [CU-registrar-donacion](cu-registrar-donacion.md) - Registrar una donación directa o un excedente.
 
