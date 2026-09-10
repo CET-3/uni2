@@ -5,6 +5,7 @@
 * [Autenticación](autenticacion.md) — Ingreso, cambio y recuperación de contraseña
 * [Asociado](asociado.md) — Asociado
 * [Gestión](gestion.md) — Gestión
+* [Atención diaria](atencion-diaria.md) — Control de cobros, altas y solicitudes pendientes
 * [Comercio](comercio.md) — Comercio
 * [Progressive Web App](pwa.md) — Instalación, conexión, actualización y credencial offline
 * [Auditoría de gestión](auditoria.md) — Historial de operaciones de solo lectura

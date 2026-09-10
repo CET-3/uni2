@@ -27,6 +27,48 @@ La especificación OKF describe alcance, reglas, casos de uso, pantallas y arqui
 
 Cuando una pantalla nueva o un rediseño necesita un patrón visual que todavía no existe, primero se define o documenta en el design system. Después se aplica en la pantalla concreta.
 
+## Maquetas de Métricas y Atención diaria
+
+Las maquetas exploratorias de estos dos tableros sirven para validar jerarquía,
+distribución, contenido e interacciones con datos ficticios. Durante esa etapa
+pueden usar HTML y CSS simplificados sin reproducir todos los componentes del
+design system. Aprobar una maqueta no aprueba su CSS como implementación
+productiva ni reemplaza esta especificación.
+
+La implementación de ambos tableros debe:
+
+- extender `templates/base.html` y reutilizar la navegación, el footer y el
+  comportamiento de temas existentes, sin copiar la cabecera de la maqueta;
+- usar Templates Django y Bootstrap 5 para grillas, formularios, controles,
+  tablas, desplegables y espaciado, con los breakpoints del proyecto;
+- reutilizar `uni2-metric-card`, `uni2-surface-card`, títulos `uni2-titulo-*`,
+  tablas responsive y los partials existentes según corresponda; evitar cards
+  anidadas y reservar los badges para estados;
+- consumir los tokens compartidos de color, tipografía, bordes, radios,
+  sombras, foco y movimiento de `static/css/uni2-design-system.css`; no copiar
+  colores literales, clases genéricas ni una hoja visual paralela del prototipo;
+- expresar variaciones favorables con `--color-success-text`, desfavorables
+  con `--color-danger-text` y variaciones nulas con texto secundario. La
+  dirección se interpreta por indicador: una reducción de deuda o de bajas es
+  favorable. Mantener flechas y texto para no depender exclusivamente del color;
+- usar Chart.js solamente para visualizar datasets calculados en Django,
+  enviados mediante `json_script`; adaptar sus colores al tema y ofrecer los
+  valores también en tablas accesibles;
+- mantener el formato monetario compartido, con símbolo y dos decimales, aunque
+  la maqueta muestre importes simplificados;
+- verificar legibilidad, contraste, teclado y foco en temas claro y oscuro,
+  respetar movimiento reducido y evitar desbordes horizontales en móvil/PWA.
+
+Si las franjas de composición —por ejemplo, `Quiénes somos` y el resumen de
+solicitudes— o los indicadores de variación necesitan un patrón que todavía no
+existe, definirlo y documentarlo en el catálogo antes de usarlo en los tableros.
+El patrón debe tener nombre visual reutilizable y usar los mismos templates y
+clases productivas `uni2-*` en el catálogo y en las pantallas.
+
+La maqueta no justifica cambiar la navegación operativa ni duplicar pantallas:
+los enlaces a personas, pagos y solicitudes deben reutilizar sus recorridos y
+permisos existentes. Ver [tableros de gestión](../pantallas/gestion.md#tableros-de-administración).
+
 ## Nombres de componentes
 
 Los componentes sugeridos en el design system se nombran por patrón visual o responsabilidad de interfaz, no por entidad de negocio. Esto permite reutilizarlos en pantallas públicas, backoffice y experiencias autenticadas sin arrastrar nombres del ejemplo original.
@@ -46,6 +88,12 @@ La página interna `/design-system/` usa los componentes estándar de Bootstrap 
 Las secciones completas y los agrupadores se presentan como bandas o bloques sin card. Una card se usa solamente cuando representa una unidad individual con límite propio: un elemento repetido, un formulario, una métrica o un ejemplo aislado. No se anidan cards; si un bloque agrupa varias unidades que ya tienen borde o superficie propios, el agrupador queda sin borde.
 
 Las métricas `uni2-metric-card` resumen un dato operativo real y conservan el detalle que permite interpretarlo en listas o tablas. Los modificadores `info`, `success`, `warning` y `danger` expresan su función semántica, no una decoración arbitraria. Los mismos acentos pueden aplicarse a `uni2-surface-card` para delimitar una unidad temática sin anidar cards.
+
+Las variantes categóricas de métricas `uni2-metric-card-brand-blue`, `uni2-metric-card-brand-green` y `uni2-metric-card-brand-yellow` reutilizan la paleta institucional sin comunicar estados. Atención diaria las asigna a total, efectivo y billetera respectivamente. No deben confundirse con éxito o advertencia ni reemplazar las etiquetas de cada indicador.
+
+`uni2-metric-card-overview` presenta resúmenes monetarios con borde superior de 4 px, contorno sutil, títulos sin transformación a mayúsculas e importe destacado de tamaño adaptable. `uni2-metric-heading` alinea título e icono decorativo Bootstrap a la derecha. Reutiliza tokens de marca, superficies y acciones, sin alterar la presentación de las métricas semánticas existentes.
+
+`uni2-summary-link` es una fila de navegación compacta para resúmenes: texto neutro sin subrayado, flecha explícita, superficie de hover y foco visible, con altura mínima de 44 px. Puede incluir `uni2-summary-link-count` para un contador neutro. Solicitudes pendientes y Ver nuevas altas usan este componente; conserva enlaces HTML y navegación por teclado.
 
 La variante `uni2-surface-card-brand` identifica una unidad institucional mediante una franja fina azul, verde, amarilla y roja sobre una superficie neutra. La franja es decorativa y no comunica un estado; por eso no reemplaza los modificadores semánticos `info`, `success`, `warning` o `danger`.
 

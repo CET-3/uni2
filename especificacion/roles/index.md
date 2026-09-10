@@ -19,12 +19,12 @@ tener más de un rol.
 
 ## Operación de la mutual
 
-- **Atención al asociado:** consulta y actualiza asociados, registra cobros y revisa sus movimientos recientes.
+- **Atención al asociado:** consulta y actualiza asociados, registra cobros y revisa sus movimientos recientes. En Atención diaria controla sus propios cobros y accede a altas y solicitudes según sus permisos de consulta.
 - **Gestión de convenios:** administra las actividades comerciales, los comercios adheridos y sus convenios.
 - **Gestión de productos y servicios:** administra las categorías, los productos y los servicios publicados por la mutual.
 - **Gestión de publicidades:** administra las publicidades y consulta productos o comercios para vincularlas.
 - **Administrador de permisos:** crea y actualiza usuarios y les asigna los grupos existentes.
-- **Administrador de la mutual:** supervisa la operación regular, los reportes y la auditoría de la mutual.
+- **Administrador de la mutual:** supervisa la operación regular, los reportes y la auditoría de la mutual. En Atención diaria puede alternar sus cobros con los de todo el equipo.
 
 ## Proyecto y soporte técnico
 

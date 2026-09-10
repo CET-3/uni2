@@ -187,6 +187,13 @@ ofrece cuando la persona posee al menos un permiso operativo real de `gestion`.
 Cada pantalla mantiene su control específico y entrar al admin no autoriza
 otras operaciones.
 
+El tablero operativo Atención diaria requiere `gestion.ver_atencion_diaria`.
+Este permiso se asigna a Atención al asociado y Administrador de la mutual. El
+segundo grupo recibe además `gestion.ver_cobros_equipo` para consultar pagos de
+otros operadores o sin operador. La bandera `is_staff` no concede esos accesos.
+Las consultas de altas/fichas y solicitudes conservan sus permisos específicos.
+Ver [alcance de Atención diaria](atencion-diaria.md#atencion-003--alcance-por-permisos).
+
 ## USUARIO-024 — Borrado excepcional de la carga inicial
 
 El Administrador de la app, identificado por `is_superuser=True`, puede borrar

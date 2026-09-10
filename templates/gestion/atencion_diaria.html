@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load formatos %}
+{% block title %}Atención diaria | Uni2{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <header class="uni2-compact-hero mb-4">
+        <div class="uni2-compact-hero-copy"><h1 class="uni2-compact-hero-title mb-0">Atención diaria</h1></div>
+        <div class="uni2-compact-hero-accent" aria-hidden="true"></div>
+    </header>
+    {% include "includes/atencion_filtros.html" %}
+    {% if resumen %}
+        <p class="small text-secondary mb-3">{{ periodo.desde|date:"d/m/Y" }} – {{ periodo.hasta|date:"d/m/Y" }} · Según la fecha del pago · {% if equipo %}Todo el equipo{% else %}Mis cobros{% endif %}</p>
+        <section class="row g-3 mb-3" aria-label="Ingresos del período">
+            <div class="col-12 col-md-4"><article class="card uni2-metric-card uni2-metric-card-overview uni2-metric-card-brand-blue h-100"><div class="card-body">
+                <div class="uni2-metric-heading"><h2 class="uni2-metric-label">{{ titulo_total }}</h2><i class="bi bi-arrow-down-left" aria-hidden="true"></i></div>
+                <div class="uni2-metric-value">{{ resumen.total|moneda }}</div>
+                <p class="small text-secondary mb-0">{{ resumen.cantidad }} pago{{ resumen.cantidad|pluralize }} registrado{{ resumen.cantidad|pluralize }}</p>
+            </div></article></div>
+            <div class="col-12 col-sm-6 col-md-4"><article class="card uni2-metric-card uni2-metric-card-overview uni2-metric-card-brand-green h-100"><div class="card-body">
+                <div class="uni2-metric-heading"><h2 class="uni2-metric-label">Efectivo</h2><i class="bi bi-currency-dollar" aria-hidden="true"></i></div>
+                <div class="uni2-metric-value">{{ resumen.efectivo|moneda }}</div>
+                <p class="small text-secondary mb-0">{{ resumen.cantidad_efectivo }} pago{{ resumen.cantidad_efectivo|pluralize }}</p>
+            </div></article></div>
+            <div class="col-12 col-sm-6 col-md-4"><article class="card uni2-metric-card uni2-metric-card-overview uni2-metric-card-brand-yellow h-100"><div class="card-body">
+                <div class="uni2-metric-heading"><h2 class="uni2-metric-label">Billetera virtual</h2><i class="bi bi-wallet2" aria-hidden="true"></i></div>
+                <div class="uni2-metric-value">{{ resumen.billetera|moneda }}</div>
+                <p class="small text-secondary mb-0">{{ resumen.cantidad_billetera }} pago{{ resumen.cantidad_billetera|pluralize }}</p>
+            </div></article></div>
+        </section>
+        <div class="d-flex flex-column flex-sm-row flex-wrap gap-2 gap-sm-4 p-3 rounded bg-body-tertiary mb-4 small">
+            <span>Cuotas y recargos <strong>{{ resumen.cuotas_recargos|moneda }}</strong></span>
+            <span>Donaciones <strong>{{ resumen.donaciones|moneda }}</strong></span>
+            <span class="text-secondary">Incluidos en el total recibido.</span>
+        </div>
+        {% if resumen.inconsistentes %}
+            <div class="mb-3">{% include "components/alert.html" with variant="warning" title="Hay pagos que requieren revisión" message="El importe de algunos pagos no coincide con sus aplicaciones a cuotas y donaciones. El total recibido conserva el importe registrado; no se asigna la diferencia a cuotas." is_static=True only %}</div>
+        {% endif %}
+        {% if resumen.fechas_convencionales %}
+            <div class="mb-3">{% include "components/alert.html" with variant="warning" title="Pagos históricos importados" message="El período contiene pagos importados con fechas convencionales. Esas fechas no garantizan el día efectivo en que se recibió el dinero." is_static=True only %}</div>
+        {% endif %}
+        <div class="row g-4">
+            <div class="{% if solicitudes or altas %}col-xl-8{% else %}col-12{% endif %}">
+                <section class="card uni2-surface-card uni2-surface-card-info" aria-labelledby="pagos-title"><div class="card-body">
+                    <h2 id="pagos-title" class="uni2-titulo-componente">Pagos del período</h2>
+                    <p class="small text-secondary">Cuotas actuales, atrasadas y donaciones. Abrí una persona para revisar su pago.</p>
+                    {% include "includes/atencion_pagos.html" %}
+                </div></section>
+            </div>
+            {% if solicitudes or altas %}<aside class="col-xl-4 d-flex flex-column gap-4">
+                {% if solicitudes %}
+                <section class="card uni2-surface-card uni2-surface-card-warning" aria-labelledby="solicitudes-title"><div class="card-body">
+                    <h2 id="solicitudes-title" class="uni2-titulo-componente">Solicitudes pendientes</h2>
+                    <p class="small text-secondary">Actuales, de todo el equipo, sin filtro de fecha.</p>
+                    <ul class="list-group list-group-flush">
+                        {% for item in solicitudes %}
+                        <li class="list-group-item px-0 py-1">
+                            <a class="uni2-summary-link" href="{% url 'gestion:solicitudes_asociacion' %}?estado={{ item.estado }}">
+                                <span>{{ item.label }}</span>
+                                <span class="d-flex align-items-center gap-2"><strong class="uni2-summary-link-count">{{ item.cantidad }}</strong><i class="bi bi-chevron-right" aria-hidden="true"></i></span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div></section>
+                {% endif %}
+                {% if altas %}
+                <section class="card uni2-surface-card uni2-surface-card-info" aria-labelledby="altas-title"><div class="card-body">
+                    <h2 id="altas-title" class="uni2-titulo-componente">Altas del período</h2>
+                    <p class="mb-2"><strong class="fs-2">{{ altas.total }}</strong> persona{{ altas.total|pluralize }} incorporada{{ altas.total|pluralize }}</p>
+                    <p class="small text-secondary">{{ altas.asociados }} asociado{{ altas.asociados|pluralize }} · {{ altas.adherentes }} adherente{{ altas.adherentes|pluralize }} · Todo el equipo</p>
+                    <a class="uni2-summary-link" href="{% url 'gestion:atencion_altas' %}?{{ querystring }}">Ver nuevas altas <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                </div></section>
+                {% endif %}
+            </aside>{% endif %}
+        </div>
+        {% if otra_fecha %}
+            {% url 'gestion:atencion_cargas' as cargas_url %}
+            {% with enlace=cargas_url|add:'?'|add:querystring %}
+            <div class="mt-4">{% include "components/alert.html" with variant="warning" title="Pagos cargados con otra fecha" message="Hay pagos cargados durante el rango elegido cuya fecha de pago es distinta del día de carga. Se cuentan en la fecha indicada en el pago." action_url=enlace action_label="Revisar registros" is_static=True only %}</div>
+            {% endwith %}
+        {% endif %}
+        <p class="small text-secondary mt-4 mb-0">El efectivo cobrado es un ingreso registrado, no un arqueo ni el saldo físico de caja. La fecha de carga solo se conoce cuando existe una creación auditada. Los datos de esta pantalla requieren conexión.</p>
+    {% endif %}
+</div>
+{% endblock %}

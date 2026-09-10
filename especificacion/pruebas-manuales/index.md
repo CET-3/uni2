@@ -2,6 +2,8 @@
 
 Guías simples para verificar funcionalidades del MVP desde la interfaz.
 
+* [Atención diaria](atencion-diaria.md) - Cobros por fecha, operadores, detalle, pendientes y acceso autorizado.
+
 * [Comercios públicos](comercios-publicos.md) - Verificación del listado público de comercios adheridos.
 * [Acceso y autogestión del asociado](acceso-autogestion-asociado.md) - Alta de cuenta, contraseñas y datos personales propios.
 * [Preinscripción de asociados](preinscripcion-asociacion.md) - Formulario público, revisión, correcciones y alta presencial.
