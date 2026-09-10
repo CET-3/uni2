@@ -10,3 +10,4 @@ Guías simples para verificar funcionalidades del MVP desde la interfaz.
 * [Progressive Web App](pwa.md) - Instalación, offline, privacidad, actualización y rollback.
 * [Staging y refresco de datos](staging.md) - Seguridad del clon, PWA y promoción.
 * [Roles y procesos](roles-y-procesos.md) - Perfiles, accesos permitidos y denegaciones para capacitación.
+* [Métricas](metricas.md) - Verificación de indicadores, filtros y recorridos.

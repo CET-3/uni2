@@ -1364,3 +1364,12 @@ def test_actividad_comercial_detalle_404_sin_comercios_o_inexistente(client):
 
     response = client.get(reverse("web:actividad_comercial_detalle", args=[999]))
     assert response.status_code == 404
+def test_service_card_puede_omitir_accion_redundante_sin_perder_el_enlace():
+    from django.template.loader import render_to_string
+    html = render_to_string("components/service_card.html", {
+        "url": "/gestion/metricas/", "titulo": "Métricas", "descripcion": "Analizar la mutual",
+        "ocultar_texto_enlace": True,
+    })
+    assert 'href="/gestion/metricas/"' in html
+    assert "Métricas" in html
+    assert 'class="link"' not in html

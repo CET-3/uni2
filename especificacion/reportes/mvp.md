@@ -17,7 +17,8 @@ Como ampliación acordada, se están diseñando los tableros
 [Atención diaria y Métricas](../pantallas/gestion.md#tableros-de-administración).
 Atención diaria está implementada y sus
 [reglas](../reglas/atencion-diaria.md) definen fórmulas, permisos y limitaciones.
-Métricas continúa en diseño con datos ficticios. Ambas pantallas deben respetar
+[Métricas](../pantallas/metricas.md) incorpora evolución, composición, cobranza
+por cuotas y deuda vigente con datos de la aplicación. Ambas pantallas respetan
 el design system y documentar las fórmulas y limitaciones antes de mostrar
 indicadores reales.
 

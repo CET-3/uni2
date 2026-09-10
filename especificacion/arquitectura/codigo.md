@@ -21,6 +21,12 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
   financieros. Los includes `atencion_*` componen tablas/filtros con los
   componentes compartidos; no agregan una hoja de estilos ni gráficos.
 - `auditoria`: historial inmutable, serialización segura y soporte común para services y admin.
+- Métricas reutiliza `gestion/periodos.py`; `forms_metricas.py` valida los
+  filtros, `selectors_metricas.py` agrega padrón, cuotas, ingresos y deuda en
+  SQL, y `services_metricas.py` compone indicadores y comparaciones. Las vistas
+  en `views_metricas.py` coordinan permisos, contexto y detalles paginados.
+  Chart.js se sirve localmente y recibe datasets seguros mediante `json_script`;
+  no calcula reglas financieras en el navegador. Ver [Métricas](../reglas/metricas.md).
 - `asociados`: experiencia del asociado autenticado y su dominio.
 - `comercios`: validación y panel del comercio adherido.
 - `cuotas`: modelos y servicios de cuotas, deuda y pagos.
@@ -47,6 +53,11 @@ local se marcan con `pytest.mark.browser`. La suite automática de cada PR las
 excluye para mantener acotado el tiempo del CI; se ejecutan manualmente con
 `DB_ENGINE=sqlite uv run pytest -m browser -q`. La cobertura de reglas de
 negocio y vistas continúa en las pruebas Django habituales.
+La suite habitual se ejecuta con `-m 'not browser'`. En las pruebas de
+Atención diaria y Métricas, el servidor de prueba serializa las requests cuando
+usa SQLite en memoria: sus hilos comparten una conexión y las precargas PWA
+concurrentes provocaban errores intermitentes del driver. La adaptación vive
+solamente en la fixture del test; no modifica los servidores desplegados.
 
 ### Archivos locales y datos operativos
 

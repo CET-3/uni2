@@ -93,6 +93,14 @@ Las variantes categóricas de métricas `uni2-metric-card-brand-blue`, `uni2-met
 
 `uni2-metric-card-overview` presenta resúmenes monetarios con borde superior de 4 px, contorno sutil, títulos sin transformación a mayúsculas e importe destacado de tamaño adaptable. `uni2-metric-heading` alinea título e icono decorativo Bootstrap a la derecha. Reutiliza tokens de marca, superficies y acciones, sin alterar la presentación de las métricas semánticas existentes.
 
+Métricas usa `uni2-metrics-page` para que cuatro indicadores entren sin partir
+los importes. `uni2-chart-frame` reserva 280 px de alto adaptable al ancho;
+`uni2-metrics-detail` presenta detalles nativos con foco visible y contenido
+accesible sin JavaScript. Chart.js 4.5.1 se sirve localmente con licencia y
+mapa de fuentes; los colores se obtienen de tokens y se actualizan con el tema.
+Los gráficos tienen tablas equivalentes y formatos argentinos. El footer
+compartido permite salto de línea también en tablet para evitar desbordes.
+
 `uni2-summary-link` es una fila de navegación compacta para resúmenes: texto neutro sin subrayado, flecha explícita, superficie de hover y foco visible, con altura mínima de 44 px. Puede incluir `uni2-summary-link-count` para un contador neutro. Solicitudes pendientes y Ver nuevas altas usan este componente; conserva enlaces HTML y navegación por teclado.
 
 La variante `uni2-surface-card-brand` identifica una unidad institucional mediante una franja fina azul, verde, amarilla y roja sobre una superficie neutra. La franja es decorativa y no comunica un estado; por eso no reemplaza los modificadores semánticos `info`, `success`, `warning` o `danger`.
@@ -106,6 +114,10 @@ Una tabla de resultados puede transformarse visualmente en registros apilados po
 Las clases `uni2-cobro-*` y `uni2-period-*` no forman una familia visual general: quedan limitadas a la estructura propia de selección/resumen del cobro y a la presentación/generación de períodos. Encabezados, colores, estados, métricas, superficies y acciones de esos flujos siguen usando los componentes compartidos.
 
 Una `uni2-service-card` navegable usa un enlace como elemento raíz, de modo que toda la card tenga una única semántica y una única zona interactiva. La etiqueta visual `.link` dentro de esa raíz es un `span`. Una card informativa o con botones propios agrega `uni2-service-card-static`; no recibe hover de navegación y sus acciones conservan su semántica independiente.
+
+El componente admite `ocultar_texto_enlace=True` para omitir esa etiqueta visual
+sin perder el enlace raíz. Las cards de acciones de la home lo usan: no muestran
+un `Ir` redundante. Las demás cards conservan su etiqueta por defecto.
 
 Cuando el catálogo muestra un componente que también existe en producción, debe usar la misma clase productiva `uni2-*` que usa la pantalla real. El catálogo no define clases `ds-*`: su mobiliario documental se resuelve con componentes y utilidades de Bootstrap.
 
@@ -232,5 +244,10 @@ La sección de tokens de `/design-system/` muestra el inventario público comple
 El espaciado y las grillas responsive usan las escalas de Bootstrap. Uni2 no define una segunda escala de espaciado ni otros nombres para los mismos breakpoints.
 
 ## Alcance de esta decisión
+
+Los accesos de la home usan `uni2-home-actions` para ajustar las service cards
+al contenido, sin la altura mínima de las cards de servicios. Conservan los
+colores, iconos y espaciado interno del componente, pero no reservan un pie
+vacío al omitir el enlace redundante `Ir`, tanto en escritorio como en móvil.
 
 Esta página es una referencia de trabajo, no una pantalla operativa del MVP. Su objetivo es ordenar decisiones visuales y hacerlas compartidas para que el proyecto siga siendo entendible para estudiantes que se suman después.

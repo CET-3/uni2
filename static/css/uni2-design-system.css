@@ -640,6 +640,11 @@ button.uni2-service-card:hover {
 
 .uni2-service-card-static { cursor: default; }
 
+/* Los accesos de la home no reservan espacio para una acción al pie. */
+.uni2-home-actions .uni2-service-card {
+  min-height: auto;
+}
+
 .uni2-service-card .link {
   color: var(--card-action);
   font-weight: 900;
@@ -1489,8 +1494,8 @@ button.uni2-service-card:hover {
   color: var(--color-text-muted);
   font-size: 0.94rem;
   margin: 0;
-  max-width: none;
-  white-space: nowrap;
+  max-width: 100%;
+  white-space: normal;
 }
 
 @media (max-width: 767.98px) {
@@ -2388,6 +2393,19 @@ button.uni2-service-card:hover {
 }
 
 .uni2-metric-heading .bi { color: var(--color-action-on-surface); }
+
+.uni2-chart-frame { position: relative; height: 280px; min-width: 0; }
+.uni2-metrics-page .uni2-metric-card-overview .uni2-metric-value {
+  white-space: nowrap;
+  font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+}
+.uni2-metrics-detail {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+.uni2-metrics-detail > summary { padding: 1rem; font-weight: 600; cursor: pointer; }
+.uni2-metrics-detail > summary:focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 2px; }
 
 .uni2-metric-card-overview .uni2-metric-label {
   margin-bottom: 0;
