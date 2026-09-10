@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load formatos %}
+{% block title %}Detalle del pago | Uni2{% endblock %}
+{% block content %}
+<div class="container py-5">
+    {% include "components/breadcrumbs.html" with root_url=tablero_url root_label="Atención diaria" current_label="Detalle del pago" only %}
+    <header class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div><h1 class="uni2-titulo-componente">Detalle del pago #{{ pago.pk }}</h1><p class="text-secondary mb-0">{{ pago.asociado }} · {{ pago.asociado.get_tipo_display }}</p></div>
+        {% if perms.gestion.consultar_asociados %}<a class="btn btn-outline-primary" href="{% url 'gestion:asociado_detalle' pago.asociado_id %}"><i class="bi bi-person" aria-hidden="true"></i> Ver ficha</a>{% endif %}
+    </header>
+    <section class="card uni2-surface-card uni2-surface-card-info mb-4"><div class="card-body">
+        <dl class="uni2-data-list mb-0">
+            <div><dt>Fecha del pago</dt><dd>{{ pago.fecha|date:"d/m/Y" }}</dd></div>
+            <div><dt>Cargado el</dt><dd>{% if pago.registrado_en %}{{ pago.registrado_en|date:"d/m/Y H:i" }}{% else %}Sin fecha de carga auditada{% endif %}</dd></div>
+            <div><dt>Registró</dt><dd>{% if pago.registrado_por %}{{ pago.registrado_por.get_full_name|default:pago.registrado_por.username }}{% else %}Sin operador registrado{% endif %}</dd></div>
+            <div><dt>Medio de pago</dt><dd>{{ pago.get_metodo_display }}</dd></div>
+            <div><dt>Total recibido</dt><dd><strong>{{ pago.importe|moneda }}</strong></dd></div>
+        </dl>
+    </div></section>
+    <section class="card uni2-surface-card uni2-surface-card-info"><div class="card-body">
+        <h2 class="uni2-titulo-componente">Aplicación del pago</h2>
+        <div class="table-responsive"><table class="table table-soft"><thead><tr><th>Concepto</th><th class="text-end">Importe</th></tr></thead><tbody>
+            {% for aplicacion in aplicaciones %}<tr><td>Cuota {{ aplicacion.cuota.periodo }} · incluye recargos cobrados</td><td class="text-end">{{ aplicacion.importe|moneda }}</td></tr>{% endfor %}
+            {% for donacion in donaciones %}<tr><td>Donación</td><td class="text-end">{{ donacion.importe|moneda }}</td></tr>{% endfor %}
+            {% if not aplicaciones and not donaciones %}<tr><td colspan="2">Sin aplicaciones registradas.</td></tr>{% endif %}
+        </tbody></table></div>
+        {% if pago.observaciones %}<p class="small text-secondary mb-0">{{ pago.observaciones }}</p>{% endif %}
+    </div></section>
+    {% if diferencia %}<div class="mt-4">{% include "components/alert.html" with variant="warning" title="La aplicación del pago requiere revisión" message="El total recibido no coincide con la suma de cuotas y donaciones. No se ha asignado la diferencia automáticamente." is_static=True only %}</div>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Pagos cargados con otra fecha | Uni2{% endblock %}
+{% block content %}
+<div class="container py-5">
+    {% include "components/breadcrumbs.html" with root_url=tablero_url root_label="Atención diaria" current_label="Pagos cargados con otra fecha" only %}
+    <h1 class="uni2-titulo-componente mb-3">Pagos cargados con otra fecha</h1>
+    <p class="text-secondary mb-4">Creaciones auditadas entre {{ periodo.desde|date:"d/m/Y" }} y {{ periodo.hasta|date:"d/m/Y" }}. Se muestran solo los pagos donde el día local de carga difiere de su fecha de pago.</p>
+    {% if form.errors %}{% include "components/alert.html" with variant="danger" title="Filtros inválidos" message="Revisá el período y los permisos desde Atención diaria." only %}
+    {% else %}<section class="card uni2-surface-card uni2-surface-card-info"><div class="card-body">{% include "includes/atencion_pagos.html" %}</div></section>{% endif %}
+</div>
+{% endblock %}

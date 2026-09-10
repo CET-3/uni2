@@ -31,6 +31,7 @@ DEFAULT_GROUPS = GRUPOS_OPERATIVOS + (ASOCIADO_GROUP, COMERCIO_GROUP)
 
 PERMISOS_POR_GRUPO = {
     ATENCION_ASOCIADO_GROUP: (
+        "gestion.ver_atencion_diaria",
         "gestion.consultar_asociados",
         "gestion.editar_asociados",
         "gestion.cobrar_cuotas",
@@ -77,6 +78,8 @@ PERMISOS_POR_GRUPO = {
         "gestion.ver_design_system",
     ),
     ADMINISTRADOR_MUTUAL_GROUP: (
+        "gestion.ver_atencion_diaria",
+        "gestion.ver_cobros_equipo",
         "gestion.consultar_asociados",
         "gestion.editar_asociados",
         "gestion.exportar_asociados",

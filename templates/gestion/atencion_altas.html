@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Altas del período | Uni2{% endblock %}
+{% block content %}
+<div class="container py-5">
+    {% include "components/breadcrumbs.html" with root_url=tablero_url root_label="Atención diaria" current_label="Altas del período" only %}
+    <h1 class="uni2-titulo-componente mb-3">Altas del período</h1>
+    <p class="text-secondary mb-4">{{ periodo.desde|date:"d/m/Y" }} – {{ periodo.hasta|date:"d/m/Y" }} · Todo el equipo, independientemente del operador que registró los cobros.</p>
+    {% if form.errors %}{% include "components/alert.html" with variant="danger" title="Filtros inválidos" message="Revisá el período desde Atención diaria." only %}
+    {% else %}
+    <section class="card uni2-surface-card uni2-surface-card-info"><div class="card-body">
+        <div class="table-responsive uni2-records-table-wrap"><table class="table table-soft align-middle uni2-records-table">
+            <thead><tr><th>Persona</th><th>Tipo</th><th>Curso / clasificación</th><th>Fecha de alta</th></tr></thead>
+            <tbody>{% for asociado in page_obj %}<tr class="uni2-records-table-row uni2-clickable-row">
+                <td data-label="Persona"><a class="uni2-row-link" href="{% url 'gestion:asociado_detalle' asociado.pk %}"><strong>{{ asociado }}</strong></a></td>
+                <td data-label="Tipo">{{ asociado.get_tipo_display }}</td>
+                <td data-label="Curso / clasificación">{% if asociado.curso_actual %}{{ asociado.curso_actual }}{% else %}{{ asociado.clasificacion_adherente|default:'-' }}{% endif %}</td>
+                <td data-label="Fecha de alta">{{ asociado.fecha_alta|date:"d/m/Y" }}</td>
+            </tr>{% empty %}<tr><td colspan="4">No hay altas en este período.</td></tr>{% endfor %}</tbody>
+        </table></div>
+        {% include "includes/atencion_paginacion.html" %}
+    </div></section>
+    {% endif %}
+</div>
+{% endblock %}

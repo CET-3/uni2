@@ -1,0 +1,26 @@
+{% load formatos %}
+<div class="table-responsive uni2-records-table-wrap">
+    <table class="table table-soft align-middle mb-0 uni2-records-table">
+        <thead><tr><th>Persona</th><th>Fecha del pago</th><th>Medio</th><th>Importe</th><th>Registró</th>{% if mostrar_carga %}<th>Cargado el</th>{% endif %}</tr></thead>
+        <tbody>
+            {% for pago in page_obj %}
+                <tr class="uni2-records-table-row uni2-clickable-row">
+                    <td data-label="Persona">
+                        <a class="uni2-row-link d-inline-flex align-items-center gap-2" href="{% url 'gestion:atencion_pago' pago.pk %}?{{ retorno_pago }}">
+                            <span class="uni2-avatar uni2-avatar-blue" aria-hidden="true">{{ pago.asociado.nombre|first }}{{ pago.asociado.apellido|first }}</span>
+                            <span><strong>{{ pago.asociado }}</strong><small class="d-block text-secondary">{{ pago.asociado.get_tipo_display }}</small></span>
+                        </a>
+                    </td>
+                    <td data-label="Fecha del pago">{{ pago.fecha|date:"d/m/Y" }}</td>
+                    <td data-label="Medio">{{ pago.get_metodo_display }}</td>
+                    <td data-label="Importe"><strong>{{ pago.importe|moneda }}</strong></td>
+                    <td data-label="Registró">{% if pago.registrado_por %}{{ pago.registrado_por.get_full_name|default:pago.registrado_por.username }}{% else %}Sin operador registrado{% endif %}</td>
+                    {% if mostrar_carga %}<td data-label="Cargado el">{{ pago.registrado_en|date:"d/m/Y H:i" }}</td>{% endif %}
+                </tr>
+            {% empty %}
+                <tr><td colspan="7" class="text-secondary py-4">No hay pagos para estos filtros.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include "includes/atencion_paginacion.html" %}

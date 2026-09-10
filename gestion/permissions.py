@@ -1,4 +1,6 @@
 GESTION_CONSULTAR_ASOCIADOS = "gestion.consultar_asociados"
+GESTION_VER_ATENCION_DIARIA = "gestion.ver_atencion_diaria"
+GESTION_VER_COBROS_EQUIPO = "gestion.ver_cobros_equipo"
 GESTION_EDITAR_ASOCIADOS = "gestion.editar_asociados"
 GESTION_IMPORTAR_ASOCIADOS = "gestion.importar_asociados"
 GESTION_EXPORTAR_ASOCIADOS = "gestion.exportar_asociados"
@@ -18,6 +20,8 @@ GESTION_REENVIAR_COMUNICACIONES = "gestion.reenviar_comunicaciones"
 
 
 GESTION_PERMISSION_LABELS = [
+    (GESTION_VER_ATENCION_DIARIA, "Puede consultar Atención diaria y sus propios cobros"),
+    (GESTION_VER_COBROS_EQUIPO, "Puede consultar los cobros de todo el equipo"),
     (GESTION_CONSULTAR_ASOCIADOS, "Puede consultar asociados"),
     (GESTION_EDITAR_ASOCIADOS, "Puede editar asociados"),
     (GESTION_IMPORTAR_ASOCIADOS, "Puede importar asociados"),
