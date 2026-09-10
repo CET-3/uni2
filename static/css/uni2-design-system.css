@@ -2325,6 +2325,7 @@ button.uni2-service-card:hover {
 .uni2-surface-card-warning { --uni2-component-accent: var(--brand-yellow); }
 
 .uni2-metric-card-danger,
+.uni2-metric-card-brand-red,
 .uni2-surface-card-danger { --uni2-component-accent: var(--brand-red); }
 
 /* Navegación compacta dentro de resúmenes; el color no indica un estado. */
@@ -2395,6 +2396,42 @@ button.uni2-service-card:hover {
 .uni2-metric-heading .bi { color: var(--color-action-on-surface); }
 
 .uni2-chart-frame { position: relative; height: 280px; min-width: 0; }
+.uni2-metrics-overview,
+.uni2-metrics-pair { display: grid; gap: 1rem; min-width: 0; }
+.uni2-metrics-overview { gap: 1.5rem; }
+.uni2-metrics-overview .card { min-width: 0; }
+@media (min-width: 576px) {
+  .uni2-metrics-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1200px) {
+  .uni2-metrics-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.uni2-metric-proportion {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+}
+.uni2-metric-proportion-blue { --proportion-accent: var(--brand-blue); }
+.uni2-metric-proportion-green { --proportion-accent: var(--brand-green); }
+.uni2-metric-proportion-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.uni2-metric-proportion-heading h2 { font-size: 1.1rem; line-height: 1.25; }
+.uni2-metric-proportion-value { font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.uni2-metric-progress {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 0.5rem;
+  border: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--color-border-subtle);
+  color: var(--proportion-accent);
+  margin-bottom: 1rem;
+}
+.uni2-metric-progress::-webkit-progress-bar { background: var(--color-border-subtle); }
+.uni2-metric-progress::-webkit-progress-value { background: var(--proportion-accent); }
+.uni2-metric-progress::-moz-progress-bar { background: var(--proportion-accent); }
 .uni2-metrics-page .uni2-metric-card-overview .uni2-metric-value {
   white-space: nowrap;
   font-size: clamp(1.15rem, 1.7vw, 1.55rem);

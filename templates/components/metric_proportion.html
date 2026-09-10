@@ -1,0 +1,12 @@
+{% load l10n %}
+<article class="uni2-metric-proportion uni2-metric-proportion-{{ metrica.color }} h-100">
+    <div class="uni2-metric-proportion-heading">
+        <div><h2 class="uni2-titulo-componente mb-1">{{ metrica.titulo }}</h2><p class="small text-secondary mb-0">{{ metrica.referencia }}</p></div>
+        <strong class="uni2-metric-proportion-value">{{ metrica.valor }}</strong>
+    </div>
+    {% if metrica.progreso != None %}
+        <progress class="uni2-metric-progress" max="100" value="{{ metrica.progreso|unlocalize }}" aria-label="{{ metrica.titulo }}">{{ metrica.valor }}</progress>
+    {% endif %}
+    <p class="small mb-0">{{ metrica.relacion }}</p>
+    {% if metrica.cambio %}<p class="small mt-2 mb-0 {{ metrica.cambio.clase }}">{{ metrica.cambio.flecha }} {{ metrica.cambio.texto }} vs. comparación</p>{% endif %}
+</article>

@@ -1,0 +1,13 @@
+<article class="card uni2-metric-card uni2-metric-card-overview uni2-metric-card-brand-{{ card.color }} h-100">
+    <div class="card-body">
+        <div class="uni2-metric-heading">
+            <h2 class="uni2-metric-label" title="{{ card.ayuda }}">{{ card.titulo }}</h2>
+            <i class="bi bi-{{ card.icono }}" aria-hidden="true"></i>
+        </div>
+        <div class="uni2-metric-value">{{ card.valor }}</div>
+        <p class="small text-secondary">{{ card.ayuda }}</p>
+        {% if card.cambio %}
+            <p class="small mb-0 {{ card.cambio.clase }}">{{ card.cambio.flecha }} {{ card.cambio.texto }}{% if card.cambio.porcentaje != None %} ({{ card.cambio.porcentaje|floatformat:1 }} %){% endif %}<span class="d-block">vs. comparación</span></p>
+        {% endif %}
+    </div>
+</article>

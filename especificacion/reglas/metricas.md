@@ -108,3 +108,22 @@ Listados nominales requieren además consultar_asociados; deuda también
 ver_deudores; solicitudes consultar_solicitudes_asociacion. Se validan del lado
 servidor, no sólo ocultando enlaces. Pantallas privadas no-store y sin datos
 offline. Sin registros de pagos ni modificaciones desde este tablero.
+
+## METRICAS-007 — Credenciales vigentes hoy
+
+Activas = personas cuyo estado administrativo actual es activo y que no tienen
+cuotas con saldo positivo exigibles para validar la credencial. La regla de
+cuotas/selectors.py es la misma que consume el comercio: hasta el día 10
+inclusive sólo bloquean cuotas de meses anteriores; desde el 11 también las
+del mes actual. Cuotas futuras no bloquean. Una persona de alta sin cuotas o
+con cuotas bonificadas sin saldo tiene credencial activa.
+
+Porcentaje = credenciales activas / personas de alta * 100. Si no hay personas
+de alta se muestra raya, sin barra. Inactivas por deuda = denominador - activas.
+Las bajas administrativas quedan fuera del denominador y del detalle nominal.
+Respeta el tipo de padrón seleccionado, pero no el período histórico ni su
+comparación. No mide uso de beneficios, logins, descarga ni presentación del QR.
+
+El detalle muestra cantidades y porcentaje por tipo y clasificación actual.
+Los motivos se ven sólo en gestión autorizada; la validación del comercio
+continúa sin exponer deuda ni motivos de inactividad.

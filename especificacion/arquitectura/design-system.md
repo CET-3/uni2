@@ -245,6 +245,19 @@ El espaciado y las grillas responsive usan las escalas de Bootstrap. Uni2 no def
 
 ## Alcance de esta decisión
 
+### Métrica de proporción
+
+`components/metric_proportion.html` recibe `metrica`: título, valor formateado,
+progreso numérico 0–100 (o nulo), relación, referencia temporal, acento green/blue
+y variación opcional en puntos porcentuales. `uni2-metric-proportion` usa
+superficie, borde sutil, radio y tipografía del sistema, sin borde superior de
+color ni enlaces. Usa `progress` nativo con nombre accesible y valor técnico no
+localizado. Sin denominador muestra raya y motivo, sin barra indeterminada.
+Los acentos son categorías, no umbrales de éxito/error. En Métricas ocupa media
+fila desde 768px y toda la fila en móvil. El catálogo muestra ambos formatos
+con datos sintéticos. Las cards numéricas distribuyen azul, verde, amarillo y
+rojo mediante las variantes brand, no mediante variantes semánticas.
+
 Los accesos de la home usan `uni2-home-actions` para ajustar las service cards
 al contenido, sin la altura mínima de las cards de servicios. Conservan los
 colores, iconos y espaciado interno del componente, pero no reservan un pie

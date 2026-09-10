@@ -12,8 +12,16 @@ Entrada `/gestion/metricas/`, desde la home administrativa según permiso.
 Filtros GET con errores visibles: período, comparación y padrón. Mantiene la
 maqueta aprobada y el design system productivo, no su CSS exploratorio.
 
-- Cuatro cards: activos al cierre, cuotas generadas, cobrado de esas cuotas,
-  cumplimiento. Altas/bajas/neto y pendiente en una línea secundaria.
+- Cuatro cards: padrón activo al cierre (azul), credenciales activas hoy (verde),
+  cuotas generadas (amarillo) y cobrado de esas cuotas (rojo). Acentos de
+  categoría, no juicios sobre resultados.
+- Debajo, dos métricas de proporción ocupan juntas todo el ancho: credenciales
+  activas sobre personas de alta hoy y cumplimiento por monto de las cuotas
+  del período. Porcentaje grande, barra, relación concreta y referencia temporal;
+  sin enlaces al pie. Altas/bajas/neto y pendiente en una línea secundaria.
+- En móvil las cards van una por fila. Desde 576px se agrupan por pares y desde
+  1200px quedan las cuatro en una fila. Las proporciones son dos columnas desde
+  768px y una por fila debajo de ese ancho.
 - Franjas compactas Quiénes somos y Solicitudes de asociación.
 - Ingresos por fecha efectiva separados de cobranza de cuotas.
 - Dos gráficos Chart.js: padrón (activos o altas/bajas) y generado/cobrado mensual.
@@ -38,3 +46,8 @@ accede a las fichas existentes con sus permisos. El gráfico de altas y bajas
 enlaza al segmento elegido cuando el usuario puede consultar personas.
 
 Ver [reglas y fórmulas](../reglas/metricas.md).
+
+El desglose de credenciales queda en un desplegable inferior, por tipo y
+clasificación de adherente. Los listados de personas con credencial activa
+requieren consultar_asociados; los de inactivas por deuda también ver_deudores.
+Sólo incluyen personas actualmente de alta.

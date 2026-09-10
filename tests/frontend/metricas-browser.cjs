@@ -53,6 +53,18 @@ async function main() {
             await evaluate(`if(window.__uni2Theme!=='${theme}') window.__uni2ToggleTheme()`);
             await pause(650);
             assert.equal(await evaluate('document.querySelectorAll(".uni2-metric-card").length'), 4);
+            assert.equal(await evaluate('document.querySelectorAll(".uni2-metric-proportion").length'), 2);
+            assert.equal(await evaluate('document.querySelectorAll(".uni2-metric-proportion a").length'), 0);
+            assert.deepEqual(await evaluate(`Array.from(document.querySelectorAll('.uni2-metric-card')).map(el => getComputedStyle(el).borderTopColor)`), ['rgb(63, 81, 181)', 'rgb(76, 203, 74)', 'rgb(255, 203, 48)', 'rgb(255, 43, 43)']);
+            assert(await evaluate(`(() => {
+                const cards = Array.from(document.querySelectorAll('.uni2-metrics-overview .uni2-metric-card')).map(el => el.getBoundingClientRect());
+                return innerWidth < 576 ? cards.every((r, i) => !i || r.top >= cards[i-1].bottom) : cards[0].top === cards[1].top;
+            })()`), 'Una card por fila en móvil; pares en pantallas más anchas');
+            assert.deepEqual(await evaluate('Array.from(document.querySelectorAll(".uni2-metric-progress")).map(el => el.value)'), [100, 100]);
+            assert(await evaluate(`(() => {
+                const cards = Array.from(document.querySelectorAll('.uni2-metric-proportion')).map(el => el.getBoundingClientRect());
+                return innerWidth < 768 ? cards[1].top >= cards[0].bottom : cards[0].top === cards[1].top;
+            })()`), 'Proporciones en dos columnas desde tablet; una en móvil');
             assert(await evaluate('document.documentElement.scrollWidth <= innerWidth'), JSON.stringify(await evaluate(`({width: innerWidth, overflow: Array.from(document.querySelectorAll('body *')).filter(el => el.getBoundingClientRect().right > innerWidth + 1 && el.getBoundingClientRect().width > 0).slice(0,12).map(el => ({tag: el.tagName, clase: el.className, text: el.textContent.slice(0,70), right: el.getBoundingClientRect().right}))})`)));
             assert(await evaluate('Array.from(document.querySelectorAll(".uni2-metric-value")).every(el => el.scrollWidth <= el.clientWidth)'), 'Importe grande cortado');
             assert.equal(await evaluate('Object.keys(Chart.instances).length'), 2);
@@ -61,7 +73,7 @@ async function main() {
             await evaluate('document.querySelector("#mostrar-movimientos").click()');
             assert.equal(await evaluate('Chart.getChart("grafico-padron").config.type'), 'bar');
             await evaluate('document.querySelector("#mostrar-activos").click()');
-            await evaluate('document.querySelector("[data-open-details]").click()');
+            await evaluate(`document.querySelector('a[href="#adherentes"]').click()`);
             assert(await evaluate('document.querySelector("#adherentes").open'));
             const r = await send('Page.captureScreenshot', {format: 'png', captureBeyondViewport: true});
             fs.writeFileSync(path.join(output, `metricas-${width}-${theme}.png`), Buffer.from(r.result.data, 'base64'));
@@ -69,6 +81,6 @@ async function main() {
     }
     assert.deepEqual(errors, []);
     socket.close();
-    console.log('OK: 4 cards, 2 gráficos reales, importes grandes, temas, toggles y mobile.');
+    console.log('OK: 4 cards, 2 proporciones, colores, gráficos, importes grandes, temas y mobile.');
 }
 main().catch(error => {console.error(error); process.exit(1);});

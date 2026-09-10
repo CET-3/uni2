@@ -659,6 +659,9 @@
         </div>
 
         <div class="col-12">
+            <p class="h6 text-muted">Métrica de proporción</p>
+            <p class="small text-muted">Porcentaje, barra, relación y referencia temporal. Sin borde superior ni enlace al pie. Acentos de categoría, no umbrales de éxito/error.</p>
+            <div class="row g-3 mb-4">{% for metrica in proporciones_ejemplo %}<div class="col-12 col-md-6">{% include "components/metric_proportion.html" with metrica=metrica only %}</div>{% endfor %}</div>
             <p class="h6 text-muted">Detalle de métricas</p>
             <details class="uni2-metrics-detail"><summary>Ver los números del gráfico</summary><div class="p-3">Detalle nativo con foco visible, utilizable sin JavaScript. Los gráficos usan <code>uni2-chart-frame</code> y datos calculados en Django.</div></details>
         </div>

@@ -15,6 +15,11 @@ en `Asociado`. Una baja administrativa o una deuda exigible la inactivan. Si el
 asociado permanece de alta y cancela toda la deuda exigible, la credencial
 vuelve a estar activa automáticamente en la siguiente consulta.
 
+La exigibilidad para credenciales se determina por mes: hasta el día 10
+inclusive la cuota del mes actual no bloquea; desde el 11 sí puede hacerlo.
+Las cuotas futuras no bloquean. El [tablero de Métricas](metricas.md#metricas-007--credenciales-vigentes-hoy)
+usa esta misma regla para contar credenciales, independientemente de sus filtros históricos.
+
 La credencial informa solamente el estado resultante. No expone la causa de la
 inactividad ni incorpora acciones de cobro; deuda y cuotas se consultan en su
 pantalla específica.
