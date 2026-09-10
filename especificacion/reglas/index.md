@@ -16,3 +16,6 @@
 * [Progressive Web App](pwa.md) - Instalación, caché, trabajo offline y actualización.
 * [Trazabilidad](trazabilidad.md) - Autoría, historial y control de bajas, anulaciones y eliminaciones.
 * [Comunicaciones](comunicaciones.md) - Mensajes, entregas y correo transaccional con preparación para canales futuros.
+# Métricas de gestión
+
+* [Métricas](metricas.md) - Cálculos, comparaciones, alcance e historia disponible.

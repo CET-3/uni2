@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo|default:"Detalle de métricas" }} | Uni2{% endblock %}
+{% block content %}<div class="container py-5">
+{% include "components/breadcrumbs.html" with root_url=tablero_url root_label="Métricas" current_label="Detalle" only %}
+<h1 class="uni2-titulo-componente">{{ titulo|default:"Detalle de métricas" }}</h1>
+{% if form.errors %}{% include "components/alert.html" with variant="warning" title="Filtros inválidos" message="Volvé al tablero y revisá el período elegido." is_static=True only %}{{ form.errors }}{% else %}
+<p class="small text-secondary">{{ page_obj.paginator.count }} registros{% if categoria == 'altas' or categoria == 'bajas' or categoria == 'solicitudes' %} · {{ periodo.desde|date:"d/m/Y" }} – {{ periodo.hasta|date:"d/m/Y" }}{% endif %}</p>
+<div class="card uni2-surface-card"><div class="card-body">
+{% for objeto in page_obj %}<a class="uni2-summary-link" href="{% if categoria == 'solicitudes' %}{% url 'gestion:solicitud_asociacion_detalle' objeto.pk %}{% else %}{% url 'gestion:asociado_detalle' objeto.pk %}{% endif %}"><span>{{ objeto.apellido }}, {{ objeto.nombre }}<small class="d-block text-secondary">{{ objeto.get_tipo_display }} · {{ objeto.get_estado_display }}</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>{% empty %}<p>No hay registros para estos filtros.</p>{% endfor %}
+{% include "includes/atencion_paginacion.html" %}
+</div></div>{% endif %}</div>{% endblock %}

@@ -6,6 +6,7 @@
 * [Asociado](asociado.md) — Asociado
 * [Gestión](gestion.md) — Gestión
 * [Atención diaria](atencion-diaria.md) — Control de cobros, altas y solicitudes pendientes
+* [Métricas](metricas.md) — Evolución, composición, cobranza y deuda de la mutual
 * [Comercio](comercio.md) — Comercio
 * [Progressive Web App](pwa.md) — Instalación, conexión, actualización y credencial offline
 * [Auditoría de gestión](auditoria.md) — Historial de operaciones de solo lectura

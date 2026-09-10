@@ -5,6 +5,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import time
+from threading import Lock
 
 import pytest
 from django.utils import timezone
@@ -13,9 +14,46 @@ from cuotas.models import Donacion, Pago
 from gestion.tests.test_atencion_diaria import pago, persona, usuario
 
 
+@pytest.fixture(autouse=True)
+def serializar_requests_sqlite_en_memoria(monkeypatch):
+    """El live server comparte una conexión SQLite entre sus hilos HTTP.
+
+    Las precargas PWA y la navegación pueden usarla simultáneamente. Procesar
+    esas requests en serie evita errores del driver sin cambiar la aplicación.
+    PostgreSQL no necesita esta adaptación del servidor de pruebas.
+    """
+    from django.core.handlers.wsgi import WSGIHandler
+    from django.db import connection
+
+    if connection.vendor != "sqlite" or not connection.is_in_memory_db():
+        return
+    lock = Lock()
+    original = WSGIHandler.__call__
+
+    def atender_en_serie(handler, environ, start_response):
+        with lock:
+            response = original(handler, environ, start_response)
+            try:
+                return list(response)
+            finally:
+                response.close()
+
+    monkeypatch.setattr(WSGIHandler, "__call__", atender_en_serie)
+
+
 @pytest.mark.browser
 @pytest.mark.django_db(transaction=True)
 def test_atencion_responsive_temas_y_filtros(live_server, client, tmp_path):
+    user = usuario(consultar=True, equipo=True)
+    a = persona(fecha=timezone.localdate())
+    for amount, method in (("10000.25", Pago.METODO_EFECTIVO), ("20000.50", Pago.METODO_BILLETERA)):
+        p = pago(a, user, amount, fecha=timezone.localdate(), metodo=method)
+        Donacion.objects.create(asociado=a,pago=p,fecha=p.fecha,importe=amount)
+    client.force_login(user)
+    ejecutar_navegador(live_server, client, tmp_path, "atencion-browser.cjs")
+
+
+def ejecutar_navegador(live_server, client, tmp_path, archivo):
     chrome = shutil.which("google-chrome") or shutil.which("chromium")
     node = os.environ.get("UNI2_BROWSER_NODE") or shutil.which("node")
     if not chrome or not node:
@@ -23,12 +61,6 @@ def test_atencion_responsive_temas_y_filtros(live_server, client, tmp_path):
     supports_websocket = subprocess.run([node, "-e", "process.exit(typeof WebSocket === 'function' ? 0 : 1)"], capture_output=True)
     if supports_websocket.returncode:
         pytest.skip("El runner CDP requiere Node 22+; indicar UNI2_BROWSER_NODE.")
-    user = usuario(consultar=True, equipo=True)
-    a = persona(fecha=timezone.localdate())
-    for amount, method in (("10000.25", Pago.METODO_EFECTIVO), ("20000.50", Pago.METODO_BILLETERA)):
-        p = pago(a, user, amount, fecha=timezone.localdate(), metodo=method)
-        Donacion.objects.create(asociado=a,pago=p,fecha=p.fecha,importe=amount)
-    client.force_login(user)
     profile = tmp_path / "chrome"
     with (tmp_path / "chrome.log").open("w") as log:
         browser = subprocess.Popen([
@@ -44,7 +76,7 @@ def test_atencion_responsive_temas_y_filtros(live_server, client, tmp_path):
                 time.sleep(.05)
             assert port_file.exists(), (tmp_path / "chrome.log").read_text()[-2000:]
             port = port_file.read_text().splitlines()[0]
-            runner = Path(__file__).with_name("atencion-browser.cjs")
+            runner = Path(__file__).with_name(archivo)
             result = subprocess.run(
                 [node, str(runner), port, live_server.url, str(tmp_path)],
                 env={**os.environ, "UNI2_TEST_SESSION": client.cookies["sessionid"].value},
@@ -58,3 +90,16 @@ def test_atencion_responsive_temas_y_filtros(live_server, client, tmp_path):
             except subprocess.TimeoutExpired:
                 browser.kill()
                 browser.wait(timeout=5)
+
+
+@pytest.mark.browser
+@pytest.mark.django_db(transaction=True)
+def test_metricas_graficos_temas_y_mobile(live_server, client, tmp_path):
+    from django.contrib.auth.models import Permission
+    from gestion.tests.test_metricas import cuota, pagar
+    user = usuario(consultar=True, equipo=True)
+    user.user_permissions.add(Permission.objects.get(content_type__app_label="gestion", codename="ver_metricas"))
+    a = persona(fecha=timezone.localdate())
+    pagar(cuota(a, 9, importe=26100000), timezone.localdate(), 26100000)
+    client.force_login(user)
+    ejecutar_navegador(live_server, client, tmp_path, "metricas-browser.cjs")

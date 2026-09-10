@@ -92,3 +92,6 @@ jobs:
 
       - name: Probar idempotencia y cobros concurrentes en PostgreSQL
         run: uv run --frozen pytest cuotas/tests/test_idempotencia.py -q
+
+      - name: Probar agregaciones de Métricas en PostgreSQL
+        run: uv run --frozen pytest gestion/tests/test_metricas.py gestion/tests/test_periodos_metricas.py -q

@@ -1,4 +1,5 @@
 from django.urls import path
+from .views_metricas import GestionMetricasView, GestionMetricasDetalleView
 
 from .views_atencion import (
     GestionAtencionDiariaView, GestionAtencionPagoView,
@@ -37,6 +38,8 @@ from .views_solicitudes import (
 app_name = "gestion"
 
 urlpatterns = [
+    path("gestion/metricas/", GestionMetricasView.as_view(), name="metricas"),
+    path("gestion/metricas/detalle/", GestionMetricasDetalleView.as_view(), name="metricas_detalle"),
     path("gestion/atencion-diaria/", GestionAtencionDiariaView.as_view(), name="atencion_diaria"),
     path("gestion/atencion-diaria/pagos/<int:pago_id>/", GestionAtencionPagoView.as_view(), name="atencion_pago"),
     path("gestion/atencion-diaria/altas/", GestionAtencionAltasView.as_view(), name="atencion_altas"),

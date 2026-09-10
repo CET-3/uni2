@@ -78,6 +78,7 @@ PERMISOS_POR_GRUPO = {
         "gestion.ver_design_system",
     ),
     ADMINISTRADOR_MUTUAL_GROUP: (
+        "gestion.ver_metricas",
         "gestion.ver_atencion_diaria",
         "gestion.ver_cobros_equipo",
         "gestion.consultar_asociados",
