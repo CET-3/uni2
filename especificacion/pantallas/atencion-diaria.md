@@ -28,7 +28,10 @@ No tiene buscador de asociados ni botón general para buscar o registrar cobros.
 - Con los permisos correspondientes: solicitudes pendientes actuales con
   enlaces por estado, y altas del período con su listado. Los dos bloques
   indican que abarcan todo el equipo, aun cuando se consultan cobros propios.
-- Alertas compartidas para pagos inconsistentes, importaciones históricas y
+- Resumen separado de pagos históricos sin fecha de cobro confirmada: cantidad
+  e importe por fecha de referencia y operador, excluidos de las cards y del
+  listado de cobros. No cambia el estado pagado de las cuotas.
+- Alertas compartidas para pagos inconsistentes y
   creaciones auditadas con una fecha distinta del pago.
 
 ## Detalles

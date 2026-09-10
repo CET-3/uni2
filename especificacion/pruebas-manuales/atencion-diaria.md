@@ -28,6 +28,11 @@ Usar datos de ejemplo en local o staging, no registrar cobros ficticios en Produ
    y sin JavaScript. Las filas se apilan y los importes mantienen dos decimales.
 10. Sin conexión, la PWA debe usar su respuesta offline habitual sin presentar
     el tablero ni datos de pagos cacheados.
+11. Con pagos de la importación histórica dentro del rango, comprobar que se
+    muestran separados como `Pagos históricos sin fecha de cobro confirmada`,
+    fuera de total, efectivo, billetera, cantidades, composición y listado de
+    cobros. Cambiar operador/rango debe filtrar ese resumen también. Las cuotas
+    y sus aplicaciones deben seguir pagadas, sin alterar la deuda.
 
 Pruebas automatizadas principales:
 `DB_ENGINE=sqlite .venv/bin/pytest gestion/tests/test_atencion_diaria.py -q`.
