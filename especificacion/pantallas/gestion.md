@@ -90,7 +90,7 @@ Las pantallas `Atención al asociado`, `Solicitudes de asociación`, `Nuevo asoc
 ## Tableros de administración
 
 Se acordaron dos pantallas complementarias de `gestion`. Atención diaria está
-implementada; Métricas continúa en diseño. Las maquetas usan datos ficticios y
+implementada; [Métricas](metricas.md) tiene su pantalla de análisis. Las maquetas usan datos ficticios y
 no constituyen una segunda aplicación ni reemplazan las pantallas operativas
 actuales.
 

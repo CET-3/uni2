@@ -12,7 +12,7 @@
             <p>{{ descripcion|truncatewords:20 }}</p>
         {% endif %}
     </div>
-    {% if url %}
+    {% if url and not ocultar_texto_enlace %}
         <span class="link">{{ texto_enlace|default:"Ver más" }}</span>
     {% endif %}
 {% if url %}

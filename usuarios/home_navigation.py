@@ -11,6 +11,7 @@ from gestion.permissions import (
     GESTION_CONSULTAR_SOLICITUDES_ASOCIACION,
     GESTION_VER_AUDITORIA,
     GESTION_VER_ATENCION_DIARIA,
+    GESTION_VER_METRICAS,
     GESTION_VER_DESIGN_SYSTEM,
     GESTION_VER_ESPECIFICACION,
 )
@@ -78,6 +79,12 @@ def _acciones_gestion(user):
             "Atención diaria",
             "gestion:atencion_diaria",
             "Controlar cobros, altas y solicitudes pendientes.",
+        ),
+        (
+            GESTION_VER_METRICAS,
+            "Métricas",
+            "gestion:metricas",
+            "Analizar padrón, cuotas, cobranza y deuda.",
         ),
         (
             GESTION_ADMINISTRAR_PERIODOS_CUOTA,

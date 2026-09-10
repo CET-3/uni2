@@ -50,3 +50,11 @@ El menú desplegable se organiza en tres secciones visuales:
 ## Sin memoria de la última experiencia
 
 El sistema no recuerda qué experiencia eligió la persona. Cada ingreso por `/` o por el logo vuelve a evaluar las experiencias disponibles.
+
+## Cards de acciones de la home
+
+Las cards de Más accesos son enlaces completos: título, descripción e icono
+permiten reconocer la acción. No agregan un botón o texto `Ir`, porque repite
+la navegación de la propia card. Se mantiene el foco visible por teclado.
+Su altura se ajusta al contenido, sin reservar espacio vacío para la acción
+eliminada. Esto se aplica tanto en escritorio como en móvil.

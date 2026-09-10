@@ -32,11 +32,11 @@
                     <p>Acciones disponibles para tu perfil.</p>
                 </div>
             </div>
-            <div class="row g-3">
+            <div class="row g-3 uni2-home-actions">
                 {% for action in home_navigation.extra_actions %}
                     <div class="col-12 col-md-6 col-lg-4">
                         {% cycle 'uni2-service-card-blue' 'uni2-service-card-green' 'uni2-service-card-yellow' 'uni2-service-card-red' as card_color silent %}
-                        {% include "components/service_card.html" with url=action.url color=card_color icono="arrow-up-right-circle" titulo=action.label descripcion=action.description texto_enlace="Ir" only %}
+                        {% include "components/service_card.html" with url=action.url color=card_color icono="arrow-up-right-circle" titulo=action.label descripcion=action.description ocultar_texto_enlace=True only %}
                     </div>
                 {% endfor %}
             </div>
