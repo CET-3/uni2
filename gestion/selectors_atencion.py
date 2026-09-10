@@ -18,6 +18,10 @@ from cuotas.models import Donacion, Pago, PagoCuota
 from .permissions import GESTION_VER_COBROS_EQUIPO
 
 
+# Identificación heredada del importador; no inferirla por falta de auditoría.
+PAGO_HISTORICO = Q(observaciones__startswith="Importado desde planilla historica de cuotas.")
+
+
 def pagos_visibles(user, *, equipo=False):
     pagos = Pago.objects.all()
     if not (equipo and user.has_perm(GESTION_VER_COBROS_EQUIPO)):
@@ -25,8 +29,18 @@ def pagos_visibles(user, *, equipo=False):
     return pagos
 
 
-def pagos_del_periodo(user, periodo, *, equipo=False):
-    return pagos_visibles(user, equipo=equipo).filter(fecha__range=(periodo.desde, periodo.hasta))
+def pagos_del_periodo(user, periodo, *, equipo=False, historicos=False):
+    pagos = pagos_visibles(user, equipo=equipo).filter(fecha__range=(periodo.desde, periodo.hasta))
+    # La fecha de los importados es una referencia del período, no del cobro.
+    return pagos.filter(PAGO_HISTORICO) if historicos else pagos.exclude(PAGO_HISTORICO)
+
+
+def resumir_pagos_historicos(user, periodo, *, equipo=False):
+    resumen = pagos_del_periodo(user, periodo, equipo=equipo, historicos=True).aggregate(
+        cantidad=Count("pk"), total=Sum("importe", default=0),
+    )
+    resumen["total"] = Decimal(resumen["total"]).quantize(Decimal("0.01"))
+    return resumen
 
 
 def _suma_por_pago(modelo):
@@ -55,7 +69,6 @@ def resumir_pagos(pagos):
         cuotas_recargos=Sum("total_cuotas", default=0),
         donaciones=Sum("total_donaciones", default=0),
         inconsistentes=Count("pk", filter=~Q(diferencia_aplicaciones=0)),
-        fechas_convencionales=Count("pk", filter=Q(observaciones__startswith="Importado desde planilla historica de cuotas.")),
     )
     for campo in ("total", "efectivo", "billetera", "cuotas_recargos", "donaciones"):
         resumen[campo] = Decimal(resumen[campo]).quantize(Decimal("0.01"))
@@ -80,7 +93,7 @@ def pagos_cargados_con_otra_fecha(user, periodo, *, equipo=False):
     )
     # Primero acotar a ids con creaciones en el rango. Sólo después consultar
     # su primera creación, para no reconstruir la carga de todos los pagos.
-    candidatos = pagos_visibles(user, equipo=equipo).alias(
+    candidatos = pagos_visibles(user, equipo=equipo).exclude(PAGO_HISTORICO).alias(
         id_auditoria=Cast("pk", output_field=CharField()),
     ).filter(id_auditoria__in=Subquery(creaciones.values("objeto_id")))
     # TruncDate usa el timezone activo; un timestamp UTC no define el día local.

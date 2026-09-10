@@ -15,7 +15,7 @@ from .permissions import (
 from .selectors_atencion import (
     altas_del_periodo, con_aplicaciones, con_fecha_carga, pagos_cargados_con_otra_fecha,
     pagos_del_periodo, pagos_visibles, preparar_lista_pagos, resumir_altas,
-    resumir_pagos, solicitudes_pendientes,
+    resumir_pagos, resumir_pagos_historicos, solicitudes_pendientes,
 )
 from .views import GestionPermissionRequiredMixin
 
@@ -55,6 +55,7 @@ class GestionAtencionDiariaView(AtencionPermissionMixin, FiltrosAtencionMixin, T
             return context
         pagos = pagos_del_periodo(self.request.user, periodo, equipo=context["equipo"])
         context["resumen"] = resumir_pagos(pagos)
+        context["historicos"] = resumir_pagos_historicos(self.request.user, periodo, equipo=context["equipo"])
         context["titulo_total"] = {
             "hoy": "Cobrado hoy", "ayer": "Cobrado ayer",
             "esta_semana": "Cobrado esta semana", "personalizado": "Cobrado en el período",

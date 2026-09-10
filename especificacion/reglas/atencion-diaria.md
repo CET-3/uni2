@@ -24,6 +24,9 @@ una consulta más amplia. Cambiar filtros vuelve a la primera página.
 Los ingresos se seleccionan por **`Pago.fecha`**, no por período de cuota ni por
 fecha de carga. Una cuota de agosto pagada en septiembre suma a los ingresos
 de septiembre. No se calcula cumplimiento ni se proyecta recaudación.
+Se excluyen las importaciones históricas identificadas en ATENCION-005: no
+aportan importes, cantidades ni aplicaciones a estos indicadores o al listado
+principal porque no tienen una fecha efectiva de cobro confirmada.
 
 | Indicador | Cálculo sobre los pagos del período y operador autorizado |
 | --- | --- |
@@ -87,8 +90,15 @@ efectiva, se cuentan en otro día. También detecta discrepancias entre días de
 un mismo rango; su listado muestra ambas fechas.
 
 Las importaciones heredadas conocidas se identifican por la observación que
-escribe el importador de cuotas históricas. Se advierte que asignaron fechas
-convencionales y que esas fechas no garantizan el día de recepción del dinero.
+escribe el importador de cuotas históricas. Ese importador asigna el día 10 del
+mes de la cuota como fecha del pago, sin confirmar cuándo se recibió el dinero.
+Se excluyen de los cobros operativos y del aviso de cargas con otra fecha.
+Un bloque independiente, `Pagos históricos sin fecha de cobro confirmada`,
+muestra cantidad e importe con el mismo alcance de operador y el rango aplicado
+a su fecha de referencia. No debe interpretarse como dinero ingresado en ese
+rango. No modifica pagos, aplicaciones, estado de cuotas ni cálculo de deuda;
+las cuotas históricas pagadas siguen pagadas. El bloque se oculta si no hay
+importados en ese rango y alcance.
 La falta de auditoría o de información original no se resuelve con una fecha
 estimada. El aviso no detecta cargas externas que carezcan de esa identificación.
 

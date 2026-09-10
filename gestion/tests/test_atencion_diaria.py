@@ -15,6 +15,43 @@ from cuotas.models import Cuota, Donacion, Pago, PagoCuota, PeriodoCuota
 HOY = date(2026, 9, 30)
 
 
+@pytest.mark.django_db
+def test_importados_separados_respetan_periodo_operador_y_conservan_cuota(client):
+    from gestion.periodos import Periodo
+    from gestion.selectors_atencion import pagos_del_periodo
+
+    user = usuario(equipo=True)
+    otro = usuario("otro")
+    asociado = persona()
+    normal = pago(asociado, user, "25", metodo=Pago.METODO_BILLETERA)
+    Donacion.objects.create(pago=normal, asociado=asociado, fecha=HOY, importe=25)
+    historico = pago(asociado, user, "100")
+    ajeno = pago(asociado, otro, "200")
+    anterior = pago(asociado, user, "900", fecha=date(2026, 9, 29))
+    for item in (historico, ajeno, anterior):
+        item.observaciones = "Importado desde planilla historica de cuotas. Fila original 2."
+        item.save(update_fields=["observaciones"])
+    ciclo = CicloLectivo.objects.create(anio=2026)
+    periodo = PeriodoCuota.objects.create(ciclo_lectivo=ciclo, mes=9, importe=100, fecha_vencimiento=HOY)
+    cuota = Cuota.objects.create(asociado=asociado, periodo=periodo, importe=100, importe_pagado=100, estado=Cuota.ESTADO_PAGADA)
+    PagoCuota.objects.create(pago=historico, cuota=cuota, importe=100)
+
+    assert list(pagos_del_periodo(user, Periodo(HOY, HOY))) == [normal]
+    client.force_login(user)
+    response = client.get(reverse("gestion:atencion_diaria"), {"operador": "propios"})
+    resumen = response.context["resumen"]
+    assert (resumen["total"], resumen["cantidad"], resumen["efectivo"], resumen["billetera"]) == (25, 1, 0, 25)
+    assert (resumen["cuotas_recargos"], resumen["donaciones"]) == (0, 25)
+    assert response.context["historicos"] == {"cantidad": 1, "total": Decimal("100.00")}
+    assert [p.pk for p in response.context["page_obj"]] == [normal.pk]
+    equipo = client.get(reverse("gestion:atencion_diaria"), {"operador": "equipo"})
+    assert equipo.context["historicos"] == {"cantidad": 2, "total": Decimal("300.00")}
+    assert equipo.context["resumen"]["total"] == 25
+    cuota.refresh_from_db()
+    assert (cuota.estado, cuota.importe_pagado) == (Cuota.ESTADO_PAGADA, 100)
+    assert cuota.aplicaciones.count() == 1
+
+
 @pytest.fixture(autouse=True)
 def fijar_hoy(monkeypatch):
     original = timezone.localdate
@@ -240,8 +277,11 @@ def test_advertencia_importacion_y_primera_carga_sin_inventar(client):
     assert con_fecha_carga(Pago.objects.filter(pk=p.pk)).get().registrado_en is None
     client.force_login(user)
     response = client.get(reverse("gestion:atencion_diaria"))
-    assert response.context["resumen"]["fechas_convencionales"] == 1
-    assert "Pagos históricos importados" in response.content.decode()
+    assert response.context["resumen"]["total"] == 0
+    assert response.context["resumen"]["cantidad"] == 0
+    assert response.context["historicos"] == {"cantidad": 1, "total": Decimal("100.00")}
+    assert list(response.context["page_obj"]) == []
+    assert "Pagos históricos sin fecha de cobro confirmada" in response.content.decode()
     auditar(p,datetime(2026,9,29,12,tzinfo=ZoneInfo("UTC")))
     auditar(p,datetime(2026,9,30,12,tzinfo=ZoneInfo("UTC")))
     assert not pagos_cargados_con_otra_fecha(user,Periodo(HOY,HOY)).exists()

@@ -35,8 +35,12 @@
         {% if resumen.inconsistentes %}
             <div class="mb-3">{% include "components/alert.html" with variant="warning" title="Hay pagos que requieren revisión" message="El importe de algunos pagos no coincide con sus aplicaciones a cuotas y donaciones. El total recibido conserva el importe registrado; no se asigna la diferencia a cuotas." is_static=True only %}</div>
         {% endif %}
-        {% if resumen.fechas_convencionales %}
-            <div class="mb-3">{% include "components/alert.html" with variant="warning" title="Pagos históricos importados" message="El período contiene pagos importados con fechas convencionales. Esas fechas no garantizan el día efectivo en que se recibió el dinero." is_static=True only %}</div>
+        {% if historicos.cantidad %}
+            <section class="card uni2-surface-card mb-4" aria-labelledby="historicos-title"><div class="card-body">
+                <h2 id="historicos-title" class="uni2-titulo-componente">Pagos históricos sin fecha de cobro confirmada</h2>
+                <p><strong>{{ historicos.total|moneda }}</strong> · {{ historicos.cantidad }} pago{{ historicos.cantidad|pluralize }} importado{{ historicos.cantidad|pluralize }}</p>
+                <p class="small text-secondary mb-0">No se incluyen en el total cobrado ni en el listado de cobros. Siguen contando como cuotas pagadas. Se muestran aparte porque su fecha de referencia cae dentro del rango elegido, pero no conocemos el día en que se cobró el dinero.</p>
+            </div></section>
         {% endif %}
         <div class="row g-4">
             <div class="{% if solicitudes or altas %}col-xl-8{% else %}col-12{% endif %}">
