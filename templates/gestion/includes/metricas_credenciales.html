@@ -1,0 +1,25 @@
+<details id="credenciales" class="uni2-metrics-detail mb-4">
+    <summary>Credenciales · hoy</summary>
+    <div class="p-3">
+        <p>Entre las {{ datos.credenciales.total }} personas de alta del padrón seleccionado: {{ datos.credenciales.activas }} credenciales activas y {{ datos.credenciales.inactivas }} inactivas por deuda. No depende del período elegido.</p>
+        <div class="table-responsive">
+            <table class="table">
+                <caption>Credenciales de personas de alta · hoy</caption>
+                <thead><tr><th>Tipo</th><th class="text-end">Activas</th><th class="text-end">Inactivas por deuda</th><th class="text-end">% activas</th></tr></thead>
+                <tbody>{% for fila in datos.credenciales.por_tipo %}<tr><th scope="row">{{ fila.nombre }}</th><td class="text-end">{{ fila.activas }}</td><td class="text-end">{{ fila.inactivas }}</td><td class="text-end">{% if fila.porcentaje != None %}{{ fila.porcentaje|floatformat:1 }} %{% else %}—{% endif %}</td></tr>{% endfor %}</tbody>
+            </table>
+        </div>
+        {% if datos.credenciales.clasificaciones %}
+        <div class="table-responsive">
+            <table class="table">
+                <caption>Adherentes por clasificación actual</caption>
+                <thead><tr><th>Clasificación</th><th class="text-end">Activas</th><th class="text-end">Inactivas por deuda</th><th class="text-end">% activas</th></tr></thead>
+                <tbody>{% for fila in datos.credenciales.clasificaciones %}<tr><th scope="row">{{ fila.nombre }}</th><td class="text-end">{{ fila.activas }}</td><td class="text-end">{{ fila.inactivas }}</td><td class="text-end">{{ fila.porcentaje|floatformat:1 }} %</td></tr>{% endfor %}</tbody>
+            </table>
+        </div>
+        {% endif %}
+        {% if credenciales_activas_url %}<a class="uni2-summary-link" href="{{ credenciales_activas_url }}">Ver personas con credencial activa <i class="bi bi-arrow-right" aria-hidden="true"></i></a>{% endif %}
+        {% if credenciales_inactivas_url %}<a class="uni2-summary-link" href="{{ credenciales_inactivas_url }}">Ver personas con credencial inactiva por deuda <i class="bi bi-arrow-right" aria-hidden="true"></i></a>{% endif %}
+        <p class="small text-secondary mt-2 mb-0">Se usa la misma regla que al validar la credencial: hasta el día 10 inclusive la cuota del mes no la inactiva. Las bajas administrativas no integran este porcentaje.</p>
+    </div>
+</details>

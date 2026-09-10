@@ -27,6 +27,11 @@ El código está organizado por dominio de negocio y por experiencia de usuario.
   en `views_metricas.py` coordinan permisos, contexto y detalles paginados.
   Chart.js se sirve localmente y recibe datasets seguros mediante `json_script`;
   no calcula reglas financieras en el navegador. Ver [Métricas](../reglas/metricas.md).
+- Credenciales comparte `limite_periodo_credencial` entre validación individual
+  y agregados. `cuotas_con_saldo` centraliza la expresión SQL de saldo/recargos
+  para credenciales y deuda en `cuotas/selectors.py`. Métricas usa `Exists` para
+  identificar deuda exigible y agrega por tipo/clasificación en una consulta.
+  Los porcentajes se componen en services; el componente visual no calcula reglas.
 - `asociados`: experiencia del asociado autenticado y su dominio.
 - `comercios`: validación y panel del comercio adherido.
 - `cuotas`: modelos y servicios de cuotas, deuda y pagos.
