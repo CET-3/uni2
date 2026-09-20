@@ -28,11 +28,9 @@
     >
         {% for publicidad in publicidades %}
             {% if publicidad.producto_servicio_id %}
-                {% url 'web:producto_servicio_detalle' publicidad.producto_servicio_id as detalle_url %}
-                {% include "components/advertisement_card.html" with foto=publicidad.foto etiqueta_principal=publicidad.etiqueta_principal titulo=publicidad.titulo etiqueta_secundaria=publicidad.etiqueta_secundaria descripcion=publicidad.descripcion url=detalle_url only %}
+                {% include "components/advertisement_card.html" with foto=publicidad.foto etiqueta_principal=publicidad.etiqueta_principal titulo=publicidad.titulo etiqueta_secundaria=publicidad.etiqueta_secundaria descripcion=publicidad.descripcion url=publicidad.get_absolute_url only %}
             {% elif publicidad.comercio_id %}
-                {% url 'web:comercio_detalle' publicidad.comercio_id as detalle_url %}
-                {% include "components/advertisement_card.html" with foto=publicidad.foto etiqueta_principal=publicidad.etiqueta_principal titulo=publicidad.titulo etiqueta_secundaria=publicidad.etiqueta_secundaria descripcion=publicidad.descripcion url=detalle_url only %}
+                {% include "components/advertisement_card.html" with foto=publicidad.foto etiqueta_principal=publicidad.etiqueta_principal titulo=publicidad.titulo etiqueta_secundaria=publicidad.etiqueta_secundaria descripcion=publicidad.descripcion url=publicidad.get_absolute_url only %}
             {% else %}
                 {% include "components/advertisement_card.html" with foto=publicidad.foto etiqueta_principal=publicidad.etiqueta_principal titulo=publicidad.titulo etiqueta_secundaria=publicidad.etiqueta_secundaria descripcion=publicidad.descripcion only %}
             {% endif %}

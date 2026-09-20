@@ -3,12 +3,16 @@ from django.utils.cache import patch_cache_control, patch_vary_headers
 
 PUBLIC_WEB_VIEW_NAMES = {
     "actividad_comercial_detalle",
+    "actividad_comercial_detalle_seo",
     "categoria_detalle",
+    "categoria_detalle_seo",
     "comercio_detalle",
+    "comercio_detalle_seo",
     "comercios",
     "home",
     "inicio",
     "producto_servicio_detalle",
+    "producto_servicio_detalle_seo",
     "productos_servicios",
 }
 

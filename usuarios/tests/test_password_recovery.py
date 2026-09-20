@@ -259,6 +259,11 @@ def test_confirmacion_no_se_puede_abrir_sin_una_solicitud_valida(client):
     assert respuesta.url == reverse("usuarios:recuperar_contrasena")
 
 
+def test_formulario_de_recuperacion_no_se_indexa(client):
+    respuesta = client.get(reverse("usuarios:recuperar_contrasena"))
+    assert respuesta["X-Robots-Tag"] == "noindex, nofollow"
+
+
 @pytest.mark.django_db
 def test_datos_existentes_avanzan_a_la_confirmacion(client, asociado):
     respuesta = client.post(

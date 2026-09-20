@@ -87,7 +87,7 @@ def test_modal_comercio_firmado_muestra_solo_datos_publicos(client, comercio_fir
     assert "Mitre 123" in content
     assert "299 4000000" in content
     assert "libreria@example.com" in content
-    assert reverse("web:comercio_detalle", args=[comercio_firmado.pk]) in content
+    assert comercio_firmado.get_absolute_url() in content
     assert "Ver ficha completa" in content
     assert "breadcrumb" not in content.lower()
 
@@ -134,11 +134,11 @@ def test_listado_conserva_href_completo_y_declara_endpoint_modal(
     client, actividad, comercio_firmado
 ):
     response = client.get(
-        reverse("web:actividad_comercial_detalle", args=[actividad.pk])
+        actividad.get_absolute_url()
     )
 
     page = parse_html(response.content.decode())
-    full_url = reverse("web:comercio_detalle", args=[comercio_firmado.pk])
+    full_url = comercio_firmado.get_absolute_url()
     modal_url = reverse("web:comercio_detalle_modal", args=[comercio_firmado.pk])
     links = [
         attrs

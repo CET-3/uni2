@@ -48,6 +48,7 @@ def test_login_presenta_controles_claros_y_autocompletables(client):
     assert 'autocomplete="username"' in content
     assert 'autocomplete="current-password"' in content
     assert "Ingresar a Uni2" in content
+    assert response["X-Robots-Tag"] == "noindex, nofollow"
 
 
 @pytest.mark.django_db

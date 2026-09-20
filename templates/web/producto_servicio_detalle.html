@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% load formatos %}
 
-{% block title %}{{ producto_servicio.nombre }} | Uni2{% endblock %}
+{% block title %}{{ producto_servicio.nombre }} | UNI2{% endblock %}
 
 {% block body_class %} uni2-detail-page{% endblock %}
 
 {% block content %}
 <div class="container py-3">
   {% url "web:home" as breadcrumb_home_url %}
-  {% url "web:categoria_detalle" producto_servicio.categoria_id as breadcrumb_categoria_url %}
-  {% include "components/breadcrumbs.html" with root_url=breadcrumb_home_url|add:"#productos-servicios" root_label="Productos y servicios" ancestor_url=breadcrumb_categoria_url ancestor_label=producto_servicio.categoria.nombre current_label=producto_servicio.nombre only %}
+  {% include "components/breadcrumbs.html" with root_url=breadcrumb_home_url|add:"#productos-servicios" root_label="Productos y servicios" ancestor_url=producto_servicio.categoria.get_absolute_url ancestor_label=producto_servicio.categoria.nombre current_label=producto_servicio.nombre only %}
 </div>
 
 <section class="uni2-service-detail" aria-labelledby="ps-title">

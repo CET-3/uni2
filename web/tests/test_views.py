@@ -576,8 +576,8 @@ def test_home_muestra_publicidades_activas_con_foto_y_links(client):
     assert contenido.index("Anillado destacado") < contenido.index("Librería destacada")
     assert "Oculta" not in contenido
     assert "publicidades/anillado.webp" in contenido
-    assert reverse("web:producto_servicio_detalle", args=[producto.id]) in contenido
-    assert reverse("web:comercio_detalle", args=[comercio.id]) in contenido
+    assert producto.get_absolute_url() in contenido
+    assert comercio.get_absolute_url() in contenido
     assert 'aria-roledescription="carrusel"' in contenido
     assert 'data-slider-toggle="publicidades-carousel"' in contenido
     assert 'aria-label="Pausar carrusel"' in contenido
@@ -827,7 +827,7 @@ def test_detalle_producto_servicio_publico_muestra_producto_activo(client):
         activo=True,
     )
 
-    response = client.get(reverse("web:producto_servicio_detalle", args=[producto.id]))
+    response = client.get(producto.get_absolute_url())
 
     contenido = response.content.decode()
     assert response.status_code == 200
@@ -837,7 +837,7 @@ def test_detalle_producto_servicio_publico_muestra_producto_activo(client):
     assert 'aria-current="page">Anillado' in contenido
     breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
     assert f'href="{reverse("web:home")}#productos-servicios">Productos y servicios</a>' in breadcrumb
-    assert f'href="{reverse("web:categoria_detalle", args=[categoria.pk])}">Impresiones</a>' in breadcrumb
+    assert f'href="{categoria.get_absolute_url()}">Impresiones</a>' in breadcrumb
     assert "Inicio" not in breadcrumb
     assert "← Todos los productos" not in contenido
 
@@ -861,8 +861,8 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
         estado=Comercio.ESTADO_PENDIENTE,
     )
 
-    response = client.get(reverse("web:comercio_detalle", args=[comercio.id]))
-    response_pendiente = client.get(reverse("web:comercio_detalle", args=[pendiente.id]))
+    response = client.get(comercio.get_absolute_url())
+    response_pendiente = client.get(pendiente.get_absolute_url())
 
     contenido = response.content.decode()
     assert response.status_code == 200
@@ -880,7 +880,7 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
     breadcrumb = re.search(r'<nav class="uni2-breadcrumbs".*?</nav>', contenido, re.DOTALL).group()
     assert f'href="{reverse("web:home")}#beneficios">Comercios</a>' in breadcrumb
     assert (
-        f'href="{reverse("web:actividad_comercial_detalle", args=[actividad.pk])}">'
+        f'href="{actividad.get_absolute_url()}">'
         "Librería</a>"
     ) in breadcrumb
     assert "Inicio" not in breadcrumb
@@ -895,7 +895,7 @@ def test_detalle_comercio_publico_muestra_solo_comercio_firmado(client):
     ).group()
     assert f'href="{reverse("web:home")}#beneficios">Comercios</a>' in breadcrumb_pendiente
     assert (
-        f'href="{reverse("web:actividad_comercial_detalle", args=[actividad.pk])}">'
+        f'href="{actividad.get_absolute_url()}">'
         "Librería</a>"
     ) in breadcrumb_pendiente
     assert "Inicio" not in breadcrumb_pendiente
@@ -915,7 +915,7 @@ def test_detalle_comercio_sin_direccion_no_muestra_bloque_vacio(client):
         direccion="",
     )
 
-    response = client.get(reverse("web:comercio_detalle", args=[comercio.id]))
+    response = client.get(comercio.get_absolute_url())
 
     contenido = response.content.decode()
     assert response.status_code == 200
@@ -998,7 +998,7 @@ def test_categoria_detalle_muestra_sus_productos_activos(client):
         orden=2,
     )
 
-    url = reverse("web:categoria_detalle", args=[categoria.pk])
+    url = categoria.get_absolute_url()
     response = client.get(url)
 
     assert response.status_code == 200
@@ -1086,7 +1086,7 @@ def test_categoria_detalle_presenta_fotos_imagen_informativa_y_cuatro_casos_de_p
         orden=6,
     )
 
-    contenido = client.get(reverse("web:categoria_detalle", args=[categoria.pk])).content.decode()
+    contenido = client.get(categoria.get_absolute_url()).content.decode()
 
     assert 'data-price-type="diferenciado"' in contenido
     assert 'data-price-type="unico"' in contenido
@@ -1097,12 +1097,12 @@ def test_categoria_detalle_presenta_fotos_imagen_informativa_y_cuatro_casos_de_p
     assert "Solo asociados" in contenido
     assert "Sin precio" in contenido
     assert "$ 0,00" not in contenido
-    assert f'href="{reverse("web:producto_servicio_detalle", args=[diferenciado.pk])}"' in contenido
-    assert f'href="{reverse("web:producto_servicio_detalle", args=[unico.pk])}"' in contenido
-    assert f'href="{reverse("web:producto_servicio_detalle", args=[solo_asociados.pk])}"' in contenido
-    assert f'href="{reverse("web:producto_servicio_detalle", args=[servicio.pk])}"' in contenido
-    assert f'href="{reverse("web:producto_servicio_detalle", args=[servicio_con_precio.pk])}"' in contenido
-    assert f'href="{reverse("web:producto_servicio_detalle", args=[superior.pk])}"' in contenido
+    assert f'href="{diferenciado.get_absolute_url()}"' in contenido
+    assert f'href="{unico.get_absolute_url()}"' in contenido
+    assert f'href="{solo_asociados.get_absolute_url()}"' in contenido
+    assert f'href="{servicio.get_absolute_url()}"' in contenido
+    assert f'href="{servicio_con_precio.get_absolute_url()}"' in contenido
+    assert f'href="{superior.get_absolute_url()}"' in contenido
     filas = re.findall(r'<tr class="uni2-product-row">.*?</tr>', contenido, re.DOTALL)
     assert len(filas) == 6
     assert all(fila.count("href=") == 1 for fila in filas)
@@ -1159,7 +1159,7 @@ def test_categoria_con_un_solo_ciclo_no_muestra_selector_mobile(client):
         precio_no_asociados=5000,
     )
 
-    contenido = client.get(reverse("web:categoria_detalle", args=[categoria.pk])).content.decode()
+    contenido = client.get(categoria.get_absolute_url()).content.decode()
 
     assert 'role="tablist"' not in contenido
     assert 'class="uni2-cycles-grid"' in contenido
@@ -1187,7 +1187,7 @@ def test_detalle_producto_muestra_foto_destinatario_e_imagen_informativa(client)
         precio_no_asociados=12000,
     )
 
-    contenido = client.get(reverse("web:producto_servicio_detalle", args=[producto.pk])).content.decode()
+    contenido = client.get(producto.get_absolute_url()).content.decode()
 
     assert 'class="uni2-product-photo"' in contenido
     assert 'class="uni2-detail-layout"' in contenido
@@ -1225,9 +1225,9 @@ def test_detalles_adaptan_presentacion_a_precio_unico_solo_asociados_y_servicio_
         precio_no_asociados=None,
     )
 
-    contenido_unico = client.get(reverse("web:producto_servicio_detalle", args=[unico.pk])).content.decode()
-    contenido_exclusivo = client.get(reverse("web:producto_servicio_detalle", args=[exclusivo.pk])).content.decode()
-    contenido_sin_precio = client.get(reverse("web:producto_servicio_detalle", args=[sin_precio.pk])).content.decode()
+    contenido_unico = client.get(unico.get_absolute_url()).content.decode()
+    contenido_exclusivo = client.get(exclusivo.get_absolute_url()).content.decode()
+    contenido_sin_precio = client.get(sin_precio.get_absolute_url()).content.decode()
 
     assert "Precio general" in contenido_unico
     assert contenido_unico.count("$ 5.000,00") == 1
@@ -1287,7 +1287,7 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
         orden=3,
     )
 
-    url = reverse("web:actividad_comercial_detalle", args=[actividad.pk])
+    url = actividad.get_absolute_url()
     response = client.get(url)
 
     assert response.status_code == 200
@@ -1314,7 +1314,7 @@ def test_actividad_comercial_detalle_muestra_sus_comercios_firmados(client):
     assert "10% de descuento" in contenido
     assert "Lo de Carlitos" in contenido
     assert "Milanesas y comidas caseras." in contenido
-    detalle_parrilla_url = reverse("web:comercio_detalle", args=[parrilla.pk])
+    detalle_parrilla_url = parrilla.get_absolute_url()
     assert (
         f'<a class="uni2-benefit-detail-link js-commerce-modal-link"\n'
         f'               href="{detalle_parrilla_url}"' in contenido
@@ -1342,8 +1342,8 @@ def test_visitar_online_abre_la_presencia_web_en_una_pestania_nueva(client):
 
     page_urls = (
         reverse("web:comercios"),
-        reverse("web:comercio_detalle", args=[comercio.pk]),
-        reverse("web:actividad_comercial_detalle", args=[actividad.pk]),
+        comercio.get_absolute_url(),
+        actividad.get_absolute_url(),
     )
     for page_url in page_urls:
         response = client.get(page_url)
@@ -1352,7 +1352,7 @@ def test_visitar_online_abre_la_presencia_web_en_una_pestania_nueva(client):
         assert response.status_code == 200
         assert expected_link.search(content)
 
-    assert reverse("web:comercio_detalle", args=[comercio.pk]) in content
+    assert comercio.get_absolute_url() in content
 
 
 @pytest.mark.django_db
