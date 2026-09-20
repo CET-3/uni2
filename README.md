@@ -161,8 +161,8 @@ git add pyproject.toml uv.lock
 
 Prueba de circuito determinista de deploy: septiembre de 2026.
 
-La versión pública de Production está en <https://www.uni2.app/>. El dominio
-raíz <https://uni2.app/> redirige hacia esa dirección. La URL
+La versión pública de Production está en <https://uni2.app/>. El subdominio
+<https://www.uni2.app/> redirige hacia esa dirección. La URL
 <https://uni2-ashy.vercel.app/> se conserva como acceso técnico secundario.
 
 Vercel acepta deploys Git automáticos únicamente desde `main`. Los previews de

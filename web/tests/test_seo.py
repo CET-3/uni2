@@ -254,19 +254,23 @@ def test_listados_publicos_enlazan_fichas_legibles(client):
     assert comercio.get_absolute_url() in client.get("/comercios/").content.decode()
 
 
-@override_settings(UNI2_SITE_URL="https://www.uni2.app", ALLOWED_HOSTS=["uni2-ashy.vercel.app"])
+@override_settings(UNI2_SITE_URL="https://uni2.app", ALLOWED_HOSTS=["uni2-ashy.vercel.app"])
 @pytest.mark.django_db
 def test_canonicas_y_sitemap_usan_dominio_publico_aunque_llegue_por_host_tecnico(client):
     home_response = client.get("/", HTTP_HOST="uni2-ashy.vercel.app")
     home = home_response.content.decode()
     sitemap = client.get("/sitemap.xml", HTTP_HOST="uni2-ashy.vercel.app").content.decode()
     robots = client.get("/robots.txt", HTTP_HOST="uni2-ashy.vercel.app").content.decode()
-    assert '<link rel="canonical" href="https://www.uni2.app/">' in home
-    assert '<meta property="og:image" content="https://www.uni2.app/static/pwa/icons/icon-512.png">' in home
-    assert structured_data(home_response)["@graph"][0]["url"] == "https://www.uni2.app/"
-    assert "https://www.uni2.app/" in sitemap
+    assert '<link rel="canonical" href="https://uni2.app/">' in home
+    assert '<meta property="og:image" content="https://uni2.app/static/pwa/icons/icon-512.png">' in home
+    assert '<meta property="og:url" content="https://uni2.app/">' in home
+    assert [node["url"] for node in structured_data(home_response)["@graph"]] == [
+        "https://uni2.app/", "https://uni2.app/",
+    ]
+    locations = [node.text for node in ElementTree.fromstring(sitemap).iter() if node.tag.endswith("loc")]
+    assert locations and all(url.startswith("https://uni2.app/") for url in locations)
     assert "uni2-ashy.vercel.app" not in sitemap
-    assert "Sitemap: https://www.uni2.app/sitemap.xml" in robots
+    assert "Sitemap: https://uni2.app/sitemap.xml" in robots
 
 
 @override_settings(PWA_ICON_DIRECTORY="pwa/icons/staging")
