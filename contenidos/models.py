@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 from asociados.models import Curso
 from comercios.models import Comercio
@@ -64,6 +65,9 @@ class CategoriaProductoServicio(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def get_absolute_url(self):
+        return reverse("web:categoria_detalle_seo", args=[self.pk, slugify(self.nombre) or "detalle"])
 
     def clean(self):
         super().clean()
@@ -158,6 +162,9 @@ class ProductoServicio(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def get_absolute_url(self):
+        return reverse("web:producto_servicio_detalle_seo", args=[self.pk, slugify(self.nombre) or "detalle"])
 
     def clean(self):
         super().clean()
@@ -265,7 +272,7 @@ class Publicidad(models.Model):
 
     def get_absolute_url(self):
         if self.producto_servicio_id:
-            return reverse("web:producto_servicio_detalle", args=[self.producto_servicio_id])
+            return self.producto_servicio.get_absolute_url()
         if self.comercio_id:
-            return reverse("web:comercio_detalle", args=[self.comercio_id])
+            return self.comercio.get_absolute_url()
         return ""

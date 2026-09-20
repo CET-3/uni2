@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load formatos %}
 
-{% block title %}Productos y servicios | Uni2{% endblock %}
+{% block title %}Productos y servicios | UNI2{% endblock %}
 
 {% block content %}
 
@@ -35,7 +35,7 @@
             <article class="uni2-service-card uni2-service-card-static uni2-service-card-blue">
               <div>
                 <div class="d-flex justify-content-between gap-3 align-start">
-                  <h3>{{ item.nombre }}</h3>
+                  <h3><a href="{{ item.get_absolute_url }}">{{ item.nombre }}</a></h3>
                   <span class="uni2-badge">{{ item.es_servicio|yesno:"Servicio,Producto" }}</span>
                 </div>
                 {% if item.descripcion %}

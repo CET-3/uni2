@@ -12,6 +12,7 @@ class CredentialPrivacyHeadersMixin:
         response = super().dispatch(request, *args, **kwargs)
         response.headers["Cache-Control"] = "private, no-store"
         response.headers["Referrer-Policy"] = "same-origin"
+        response.headers["X-Robots-Tag"] = "noindex, nofollow"
         return response
 
 

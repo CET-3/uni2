@@ -20,7 +20,7 @@
         {% for item in grupo.items %}
           <tr class="uni2-product-row">
             <th scope="row">
-              <a class="uni2-product-row-link" href="{% url 'web:producto_servicio_detalle' item.pk %}">
+              <a class="uni2-product-row-link" href="{{ item.get_absolute_url }}">
                 {% if item.foto %}
                   <img class="uni2-product-thumb" src="{{ item.foto.url }}" alt="">
                 {% endif %}

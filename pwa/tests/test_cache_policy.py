@@ -4,6 +4,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.urls import reverse
 
 from asociados.services import create_asociado
+from contenidos.models import CategoriaProductoServicio
 
 
 def cache_control_directives(response):
@@ -22,6 +23,15 @@ def test_home_anonima_es_la_unica_clase_de_html_cacheable_publico(client):
     assert "Cookie" in response.headers["Vary"]
     assert "no-cache" in cache_control_directives(response)
     assert "no-store" not in cache_control_directives(response)
+
+
+@pytest.mark.django_db
+def test_ficha_con_url_legible_es_cacheable_publica(client):
+    categoria = CategoriaProductoServicio.objects.create(nombre="Fotocopias")
+    response = client.get(categoria.get_absolute_url())
+
+    assert response.status_code == 200
+    assert response.headers["X-Uni2-PWA-Cacheable"] == "public"
 
 
 @pytest.mark.django_db
