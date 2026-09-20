@@ -265,6 +265,24 @@ La configuración completa y el circuito de promoción están en
 El inventario de variables y secretos está en
 [Configuración de deploy](especificacion/arquitectura/deploy.md).
 
+### Backups de producción
+
+`scripts/backup_production.py` crea un dump cifrado de `public`, lo sube al
+bucket privado `uni2-backup` y verifica la copia descargada. Para una ejecución
+local, copiar `.env.backup.example` a `.env.backup`, completar las credenciales
+R2, guardar la frase de recuperación en un gestor de contraseñas y ejecutar:
+
+```bash
+uv run --env-file .env.production --env-file .env.backup python scripts/backup_production.py
+```
+
+La copia diaria usa `.github/workflows/backup-production.yml`. Para activarla,
+guardar en GitHub Actions los secrets `BACKUP_DATABASE_URL` (URL Session pooler),
+`BACKUP_R2_ENDPOINT`, `BACKUP_R2_ACCESS_KEY_ID`, `BACKUP_R2_SECRET_ACCESS_KEY` y
+`BACKUP_PASSPHRASE`. En R2 configurar una regla de ciclo de vida que elimine los
+objetos de `uni2-backup` después de 30 días. Ver
+[Backups de producción](especificacion/arquitectura/backups.md).
+
 ### Migraciones en producción
 
 El arranque de la aplicación en Vercel no ejecuta migraciones ni comandos de
