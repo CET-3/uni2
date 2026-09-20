@@ -87,6 +87,11 @@ def test_produccion_lee_el_identificador_de_google_analytics():
     assert production["analytics_measurement_id"] == "G-TEST123"
 
 
+def test_produccion_usa_dominio_publico_para_enlaces_canonicos():
+    production = load_production_settings(UNI2_SITE_URL="")
+    assert production["site_url"] == "https://www.uni2.app"
+
+
 def test_produccion_no_permite_activar_debug_desde_el_entorno():
     production = load_production_settings(DEBUG="True")
 

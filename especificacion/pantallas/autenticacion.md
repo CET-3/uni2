@@ -39,5 +39,7 @@ disponible y permite volver a solicitar otro. `Guardar contraseña` usa
 `bi-key` y `Solicitar un enlace nuevo` usa `bi-envelope`. Después del cambio
 correcto se ofrece ingresar a Uni2.
 
-Todas las pantallas de autenticación y sus respuestas usan `no-store` y no se
-incorporan al service worker ni a la navegación offline.
+El login y las pantallas públicas de recuperación de contraseña responden con
+`X-Robots-Tag: noindex, nofollow` para quedar fuera de los resultados de
+búsqueda. Todas las pantallas de autenticación y sus respuestas usan `no-store`
+y no se incorporan al service worker ni a la navegación offline.

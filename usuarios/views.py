@@ -30,7 +30,7 @@ from .services import (
 RECUPERACION_SOLICITADA_SESSION_KEY = "usuarios_recuperacion_solicitada"
 
 
-class Uni2LoginView(LoginView):
+class Uni2LoginView(CredentialPrivacyHeadersMixin, LoginView):
     template_name = "registration/login.html"
     authentication_form = Uni2AuthenticationForm
     redirect_authenticated_user = True

@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
+from django.utils.text import slugify
 
 
 class ActividadComercial(models.Model):
@@ -22,6 +24,9 @@ class ActividadComercial(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def get_absolute_url(self):
+        return reverse("web:actividad_comercial_detalle_seo", args=[self.pk, slugify(self.nombre) or "detalle"])
 
 
 class Comercio(models.Model):
@@ -161,3 +166,6 @@ class Comercio(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def get_absolute_url(self):
+        return reverse("web:comercio_detalle_seo", args=[self.pk, slugify(self.nombre) or "detalle"])

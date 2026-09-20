@@ -37,6 +37,6 @@
 
   <div class="uni2-commerce-modal-actions">
     <a class="btn btn-outline-primary btn-sm"
-       href="{% url 'web:comercio_detalle' comercio.pk %}">Ver ficha completa</a>
+       href="{{ comercio.get_absolute_url }}">Ver ficha completa</a>
   </div>
 </article>

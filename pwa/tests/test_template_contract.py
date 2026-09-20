@@ -101,7 +101,7 @@ def test_base_identifica_staging_y_expone_epoch_para_datos_privados(client):
     assert 'data-deployment-environment="staging"' in content
     assert "STAGING · DATOS REALES" in content
     assert 'class="uni2-environment-badge">STAGING</span>' in content
-    assert "<title>Inicio | Uni2 · STAGING</title>" in content
+    assert "<title>UNI2 | Mutual Escolar · STAGING</title>" in content
     assert 'content="UNI2 STG"' in content
     assert 'data-pwa-private-data-epoch="2026-08-02-01"' in content
     assert 'data-pwa-theme-color-light="#fff4e8"' in content
