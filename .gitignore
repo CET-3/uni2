@@ -3,6 +3,7 @@
 .env.prod
 .env.production
 .env.staging
+.env.backup
 
 # Entornos, cachés y archivos locales de Python
 .venv/

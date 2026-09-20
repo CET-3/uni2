@@ -4,6 +4,7 @@
 
 * [Arquitectura actual del código](codigo.md) - Apps, separación de responsabilidades y entradas de navegación.
 * [Base de datos por entorno](base-de-datos.md) - SQLite para alumnos, PostgreSQL para desarrollo avanzado y producción.
+* [Backups de producción](backups.md) - Copia diaria cifrada de PostgreSQL en R2.
 * [Despliegue en Vercel](despliegue.md) - Seguridad, ramas desplegables y operación de migraciones.
 * [Entorno de staging](staging.md) - Separación, protección, despliegue y promoción previos a Producción.
 * [Refresco de datos de staging](refresco-staging.md) - Copia controlada de Producción y endurecimiento del destino.
