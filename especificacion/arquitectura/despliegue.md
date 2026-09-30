@@ -77,8 +77,8 @@ pertenecer a la organización. Todo cambio se entrega mediante un PR. La rama
 también a administradores y no admite force-push ni borrado. No se exige una
 segunda aprobación mientras el proyecto tenga una única mantenedora.
 
-El dominio público canónico de Production es `https://www.uni2.app/`.
-`https://uni2.app/` redirige hacia el dominio canónico y
+El dominio público canónico de Production es `https://uni2.app/`.
+`https://www.uni2.app/` redirige hacia el dominio canónico y
 `https://uni2-ashy.vercel.app/` permanece admitido como dirección técnica
 secundaria; no se comunica como acceso público principal.
 `UNI2_SITE_URL` debe apuntar al dominio público canónico: se usa para los
@@ -89,7 +89,7 @@ cuando se publique el cambio. Las URLs antiguas de fichas redirigen con 301.
 Porkbun conserva los nameservers autoritativos y administra el DNS. El dominio
 raíz usa el registro `A` indicado por Vercel y `www` usa el `CNAME` específico
 asignado al proyecto. Vercel termina HTTPS, publica la aplicación y aplica la
-redirección del dominio raíz. Las URLs técnicas de deployments y previews
+redirección permanente desde `www` hacia el dominio raíz. Las URLs técnicas de deployments y previews
 permanecen detrás de Standard Protection de Vercel.
 
 Nunca se configura un Preview con `DATABASE_URL`, `SECRET_KEY` o credenciales

@@ -30,7 +30,7 @@ if UNI2_TRANSACTIONAL_EMAIL_MODE not in {"disabled", "enabled"}:
         "UNI2_TRANSACTIONAL_EMAIL_MODE debe ser 'disabled' o 'enabled'."
     )
 
-UNI2_SITE_URL = os.getenv("UNI2_SITE_URL", "").strip().rstrip("/") or "https://www.uni2.app"
+UNI2_SITE_URL = os.getenv("UNI2_SITE_URL", "").strip().rstrip("/") or "https://uni2.app"
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "").strip()
 if UNI2_TRANSACTIONAL_EMAIL_MODE == "enabled":
     required_email_settings = (
