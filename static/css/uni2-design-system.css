@@ -3692,6 +3692,10 @@ button.uni2-service-card:hover {
   font-weight: 800;
 }
 
+.uni2-price-table td.uni2-price-column {
+  white-space: nowrap;
+}
+
 .uni2-price-table .uni2-price-column {
   text-align: right;
 }
@@ -4144,6 +4148,11 @@ button.uni2-service-card:hover {
 
   .uni2-price-table-compact {
     min-width: 0;
+  }
+
+  .uni2-price-table th,
+  .uni2-price-table td {
+    padding: 12px 8px;
   }
 
   .uni2-detail-panel {
